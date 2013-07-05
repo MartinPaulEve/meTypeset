@@ -1,0 +1,8 @@
+BookChapterByWithSeries
+Schaub, Thomas Hill, Don DeLillo: Mao II, Underworld, Falling man (London: Continuum, 2011)
+PublisherName|:|Continuum
+BookTitle|:|Don DeLillo: Mao II, Underworld, Falling man
+Year|:|2011
+Place|:|London
+Authors|:|Schaub, Thomas Hill
+Type|:|Book

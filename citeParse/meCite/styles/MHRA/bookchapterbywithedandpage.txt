@@ -1,0 +1,13 @@
+MHRA
+BookChapter
+^(?P<Authors>(.+?),?),\s?[‘'](?P<Title>.+?)['’]\s?,\s?in\s(?P<BookTitle>.+?),\sby\s(?P<BookAuthor>.+?),\sed\.\sby\s(?P<Editor>.+?)\s?\((?P<Place>.+?):\s?((?P<PublisherName>.+?),?),\s(?P<Year>\d{4})\),\s?p\.?\s?(?P<PageStart>\d+)\.?$
+Authors,Authors
+Title,Title
+BookTitle,BookTitle
+BookAuthor,BookAuthor
+Place,Place
+PublisherName,PublisherName
+Year,Year
+Editor,Editor
+PageStart,PageStart
+PageStart,PageEnd

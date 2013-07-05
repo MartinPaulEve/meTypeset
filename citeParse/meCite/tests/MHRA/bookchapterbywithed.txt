@@ -1,0 +1,11 @@
+BookChapterByWithEd
+Schaub, Thomas Hill, ‘Underworld, Memory and the Recycling of Cold War Narrative’, in Don DeLillo: Mao II, Underworld, Falling man, by Author Name, ed. by Stacey Michele Olster (London: Continuum, 2011)
+PublisherName|:|Continuum
+Title|:|Underworld, Memory and the Recycling of Cold War Narrative
+BookTitle|:|Don DeLillo: Mao II, Underworld, Falling man
+Year|:|2011
+Place|:|London
+Editor|:|Stacey Michele Olster
+Authors|:|Schaub, Thomas Hill
+Type|:|BookChapter
+BookAuthor|:|Author Name
