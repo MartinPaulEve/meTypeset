@@ -261,6 +261,10 @@ of this software, even if advised of the possibility of such damage.
     </doc>
     <xsl:template match="tei:gloss//tei:g[@ref='x:tab']" mode="pass2"/>
     
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl"  >
+    <desc>Treat entirely bolded paragraphs as headings</desc></doc>
+   
+
     
     <!-- removed 2010-03-15, seems to screw up formulae
     <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
@@ -377,6 +381,19 @@ of this software, even if advised of the possibility of such damage.
       </xsl:otherwise>
     </xsl:choose>
    </xsl:template>
+  
+  <xsl:template match="tei:p[tei:hi[@rend='bold']]" mode="pass2">
+    <xsl:choose>
+      <xsl:when test="count(*[not[@rend='bold']]) = 0">
+        <!--//TODO: this needs to preserve other attributes, such as italics-->
+        <head><xsl:value-of select="."></xsl:value-of></head>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of select="."></xsl:copy-of>
+        <xsl:apply-templates />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
    <xsl:template name="nextHi">
       <xsl:param name="r"/>
