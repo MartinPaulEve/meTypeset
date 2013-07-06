@@ -46,6 +46,12 @@ $javacmd
 
 mv $OUTFILE.tmp $scriptdir/../nlm/in.file
 
+if [ -d ./word/media ];
+then
+	echo "INFO: Ripping out media directory"
+	cp -r ./word/media $scriptdir/media
+fi
+
 rm "[Content_Types].xml"
 rm -rf ./word
 rm -rf ./_rels
@@ -59,5 +65,6 @@ echo "INFO: Running saxon transform (TEI->NLM): $javacmd"
 $javacmd
 
 mv out.xml $scriptdir/$OUTFILE
+
 cd $scriptdir
 
