@@ -207,7 +207,20 @@
       <xsl:element name="back">
         <!-- footnotes -->
         <xsl:element name="fn-group">
-          <xsl:apply-templates select="TEI/text/body/*/*/note" mode="footnote"/>
+          <xsl:for-each select="TEI/text/body/div/p/hi/note">
+            <xsl:element name="fn">
+            <xsl:choose>
+              <xsl:when test="not(child::p)">
+                <xsl:element name="p">
+                  <xsl:apply-templates />
+                </xsl:element>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates />
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:element>
+          </xsl:for-each>
         </xsl:element>
         
         
@@ -492,19 +505,20 @@ be given the recommended @ref-type. -->
       <xsl:attribute name="ref-type">fn</xsl:attribute>
     </xsl:element>
   </xsl:template>
+
   
-  <xsl:template match="note" mode="footnote">
+  <xsl:template match="tei:p[@tei:rend='EndnoteText']" mode="footnote">
     <fn>
-    <xsl:choose>
-      <xsl:when test="not(child::p)">
-        <xsl:element name="p">
+      <xsl:choose>
+        <xsl:when test="not(child::p)">
+          <xsl:element name="p">
+            <xsl:apply-templates />
+          </xsl:element>
+        </xsl:when>
+        <xsl:otherwise>
           <xsl:apply-templates />
-        </xsl:element>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates />
-      </xsl:otherwise>
-    </xsl:choose>
+        </xsl:otherwise>
+      </xsl:choose>
     </fn>
   </xsl:template>
   
