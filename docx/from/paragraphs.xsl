@@ -68,6 +68,7 @@ of this software, even if advised of the possibility of such damage.
          <p>Author: See AUTHORS</p>
          <p>Id: $Id: paragraphs.xsl 11233 2012-12-18 19:18:07Z rahtz $</p>
          <p>Copyright: 2008, TEI Consortium</p>
+      	<p>Modifications copyright 2013 Martin Paul Eve</p>
       </desc>
    </doc>
     

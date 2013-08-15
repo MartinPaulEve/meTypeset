@@ -2,7 +2,9 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns="" xpath-default-namespace="http://www.tei-c.org/ns/1.0" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exclude-result-prefixes="#all">
 
   <!--
-        Written by Martin Holmes, University of Victoria Humanities Computing and 
+    Modifications copyright Martin Paul Eve (https://www.martineve.com) 2013
+    
+    Originally written by Martin Holmes, University of Victoria Humanities Computing and 
     Media Centre, beginning in 2008.
     
     This file is released under the Mozilla Public Licence version 1.1 (MPL 1.1).

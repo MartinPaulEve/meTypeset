@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article
+  PUBLIC "-//NLM//DTD Journal Publishing DTD v3.0 20080202//EN" "http://dtd.nlm.nih.gov/publishing/3.0/journalpublishing3.dtd">
+<article dtd-version="3.0" article-type="other">
+   <front>
+      <journal-meta>
+         <journal-id journal-id-type="publisher"/>
+         <issn/>
+         <publisher>
+            <publisher-name/>
+         </publisher>
+      </journal-meta>
+      <article-meta>
+         <article-id pub-id-type="other"/>
+         <article-categories>
+            <subj-group>
+               <subject/>
+            </subj-group>
+         </article-categories>
+         <title-group>
+            <article-title/>
+            <subtitle/>
+         </title-group>
+         <contrib-group>
+            <contrib contrib-type="author">
+               <aff/>
+            </contrib>
+         </contrib-group>
+         <pub-date>
+            <day>06</day>
+            <month>07</month>
+            <year>2013</year>
+         </pub-date>
+         <volume/>
+         <issue/>
+         <elocation-id/>
+      </article-meta>
+   </front>
+   <body>
+      <sec>
+         <title>Heading 1</title> 
+         <title>Heading without styling</title> 
+         <sec>
+            <title>Heading2</title>
+         </sec>
+      </sec> 
+      <sec>
+         <title>Heading 3 (Heading 1)</title>
+      </sec>
+   </body>
+   <back>
+      <fn-group/>
+   </back>
+</article>

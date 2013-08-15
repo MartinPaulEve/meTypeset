@@ -386,7 +386,21 @@ of this software, even if advised of the possibility of such damage.
     <xsl:choose>
       <xsl:when test="count(*[not[@rend='bold']]) = 0">
         <!--//TODO: this needs to preserve other attributes, such as italics-->
-        <head><xsl:value-of select="."></xsl:value-of></head>
+        <head>
+          <xsl:for-each select=".">
+            <xsl:choose>
+              <xsl:when test="@rend='italic'">
+                <emph>
+                  <xsl:value-of select="."></xsl:value-of>
+                </emph>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="."></xsl:value-of>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+          
+        </head>
       </xsl:when>
       <xsl:otherwise>
         <xsl:copy-of select="."></xsl:copy-of>
