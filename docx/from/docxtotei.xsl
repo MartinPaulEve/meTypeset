@@ -106,6 +106,7 @@ of this software, even if advised of the possibility of such damage.
          <p>Author: See AUTHORS</p>
          <p>Id: $Id: docxtotei.xsl 11487 2013-01-20 15:46:41Z rahtz $</p>
          <p>Copyright: 2008, TEI Consortium</p>
+      	<p>Modifications copyright Martin Paul Eve (https://www.martineve.com) 2013</p>
       </desc>
    </doc>
 
