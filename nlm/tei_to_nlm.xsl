@@ -100,6 +100,51 @@
       <!--      This is the metadata block, essentially. -->
       <xsl:element name="front">
 
+<!--
+          Sample:
+                <journal-meta>
+         <journal-id>Orbit: Writing Around Pynchon</journal-id>
+         <issn>2044-4095</issn>
+         <publisher><publisher-name>Orbit: Writing Around Pynchon</publisher-name></publisher>
+      </journal-meta>
+      <article-meta>
+         <article-id pub-id-type="doi">10.7766/orbit.v2.1.47</article-id>
+         <title-group>
+            <article-title>To Cry from Within or Without? Pynchon and the Modern – Postmodern Divide</article-title>
+         </title-group>
+         
+         <contrib-group>
+            
+            <contrib contrib-type="author">
+               <name><surname>Harvey</surname>
+                  <given-names>Lawrence Russell</given-names>
+               </name>     
+               <xref ref-type="aff">
+                  
+               </xref>
+            </contrib>
+         </contrib-group>
+         
+         <aff>Barton Peveril College, UK</aff>
+         
+         <pub-date pub-type="pub">
+            <year>2013</year>
+         </pub-date>
+         <volume>2</volume>
+         <issue>1</issue>
+         <permissions>
+            <copyright-statement>Copyright &#x00A9; 2013, Lawrence Russell Harvey</copyright-statement>
+            <license license-type="open-access" xlink:href="http://creativecommons.org/licenses/by/2.0/">
+               <license-p>This is an open-access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited.</license-p>
+            </license>
+         </permissions>
+         
+         <self-uri>https://www.pynchon.net/owap/article/view/47</self-uri>
+         
+         <abstract><p>This article interrogates the demarcation of modern and postmodern literature within the context of a critical and inter-textual reading of Thomas Pynchon’s <italic>The Crying of Lot 49</italic>. Approaching Pynchon’s text from what is essentially a formalist perspective, this reading readdresses the question as to whether or not <italic>The Crying of Lot 49 </italic>breaks through to a mode of fiction beyond modernism itself. Critics such as Brain McHale have forwarded <italic>The Crying of Lot 49</italic> as a paradigmatic late modernist work; a work that does not break through to a mode of fiction beyond underlying epistemological presuppositions. Via a comparative reading that draws on the work of Paul Auster, Bret Easton Ellis <italic>et al.</italic>, it is argued herein that McHale’s otherwise scholarly reading is somewhat myopic. In short, it is argued that although Pynchon’s heroine is driven by an epistemological agenda, the text-scape she inhabits is postmodern.</p></abstract>
+          -->
+
+
         <!-- Here we dig through the teiHeader to extract what we need to create journal metadata
      and article metadata. First, journal metadata: -->
         <xsl:element name="journal-meta">
@@ -137,10 +182,19 @@
         </xsl:element>
 
         <!--        Next, article metadata. -->
+        
         <xsl:element name="article-meta">
-          <article-id pub-id-type="other">
-            <xsl:value-of select="TEI/@xml:id"></xsl:value-of>
-          </article-id>
+          
+          <!-- OK, so the way OxGarage handled this was flawed, it used to use the id attribute on the TEI element
+          this doesn't allow, though, for multiple IDs, or to specify the type, which we might want. SO, I've
+          introduced a technically non-compliant additional TEI/teiHeader/articleID/id element. -->
+          <xsl:for-each select="TEI/teiHeader/articleIDs/*">
+            
+            <xsl:element name="article-id">
+              <xsl:attribute name="pub-id-type"><xsl:value-of select="@type"/></xsl:attribute>
+              <xsl:value-of select="."></xsl:value-of>
+            </xsl:element>
+          </xsl:for-each>
           <article-categories>
             <subj-group>
               <subject><xsl:value-of select="TEI/@rend" /></subject>
