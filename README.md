@@ -19,7 +19,7 @@ First off, ensure you have the correct stack installed for your environment. meT
 
 To run the typesetter use:
 
-./tools/gennlm.sh <path_to_docx>
+./tools/gennlm.sh <path_to_docx> [metadataFile]
 
 Developer information
 =========
@@ -31,6 +31,7 @@ Unzip the docx
 Transform the docx document.xml to intermediary TEI format
 Rip out the media directory from the docx (if it exists)
 Transform the TEI to NLM
+Merge the contents of the metadataFile into the NLM (see metadata/metadataSample.xml)
 
 
 
