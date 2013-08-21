@@ -20,7 +20,7 @@ First off, ensure you have the correct stack installed for your environment. meT
 
 To run the typesetter use:
 
-./tools/gennlm.sh <path_to_docx> [metadataFile]
+./tools/gennlm.sh path_to_docx [metadataFile]
 
 Developer information
 =========
