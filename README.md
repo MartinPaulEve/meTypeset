@@ -28,7 +28,7 @@ Most of the heavy lifting for the transforms is done in the files within the doc
 
 The process is as follows:
 
-1.Unzip the docx
+1. Unzip the docx
 
 2. Transform the docx document.xml to intermediary TEI format
 
