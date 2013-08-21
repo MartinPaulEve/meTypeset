@@ -20,6 +20,8 @@ infile=$1
 filename=$(basename "$1")
 filename=${filename%.*}
 
+metadata=$2
+
 OUTFILE="./$(date +'%-m-%-e-%Y')-$filename.xml"
 
 javacmd="java -jar $saxon -o $OUTFILE.tmp ./word/document.xml ./from/docxtotei.xsl"
@@ -33,6 +35,18 @@ fi
 if [ ! -f $scriptdir/../docx/from/docxtotei.xsl ];
 then
     echo "ERROR: Unable to locate $scriptdir/../docx/from/docxtotei.xsl."
+    exit
+fi
+
+if [$metadata == ""]
+then
+    echo "WARNING: metadata file wasn't specified. Falling back to $scriptdir/../metadata/metadataSample.xml."
+    metadata="$scriptdir/../metadata/metadataSample.xml"
+fi
+
+if [ ! -f $metadata ];
+then
+    echo "ERROR: metadata file does not exist."
     exit
 fi
 
@@ -64,7 +78,18 @@ javacmd="java -jar $saxon -o ./out.xml ./in.file ./tei_to_nlm.xsl autoBlockQuote
 echo "INFO: Running saxon transform (TEI->NLM): $javacmd"
 $javacmd
 
-mv out.xml $scriptdir/$OUTFILE
+mv out.xml $scriptdir/out.xml
 
 cd $scriptdir
+
+echo "INFO: merging metadata"
+
+echo "METADATA: $metadata"
+
+javacmd="java -jar $saxon -o $scriptdir/$OUTFILE $scriptdir/out.xml ../metadata/metadata.xsl metadataFile=$metadata"
+echo "INFO: Running saxon transform (metadata->NLM): $javacmd"
+$javacmd
+
+rm $scriptdir/out.xml
+
 
