@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<metadata>
+<metadata
+    xmlns:mml="http://www.w3.org/1998/Math/MathML" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <journal-meta>
-        <journal-id>Orbit: Writing Around Pynchon</journal-id>
-        <issn>2044-4095</issn>
-        <publisher><publisher-name>Orbit: Writing Around Pynchon</publisher-name></publisher>
+        <journal-id>The Journal Name</journal-id>
+        <issn>The ISSN</issn>
+        <publisher><publisher-name>The Publisher Name</publisher-name></publisher>
     </journal-meta>
     <article-meta>
-        <article-id pub-id-type="doi">10.7766/orbit.v2.1.47</article-id>
+        <article-id pub-id-type="doi">xx.XXXX/articleDoi</article-id>
         <title-group>
-            <article-title>To Cry from Within or Without? Pynchon and the Modern – Postmodern Divide</article-title>
+            <article-title>A Sample Article Title</article-title>
         </title-group>
         
         <contrib-group>
             
             <contrib contrib-type="author">
-                <name><surname>Harvey</surname>
-                    <given-names>Lawrence Russell</given-names>
+                <name><surname>Eve</surname>
+                    <given-names>Martin Paul</given-names>
                 </name>     
                 <xref ref-type="aff">
                     
@@ -24,22 +27,22 @@
             </contrib>
         </contrib-group>
         
-        <aff>Barton Peveril College, UK</aff>
+        <aff>University of Lincoln</aff>
         
         <pub-date pub-type="pub">
             <year>2013</year>
         </pub-date>
-        <volume>2</volume>
+        <volume>1</volume>
         <issue>1</issue>
         <permissions>
-            <copyright-statement>Copyright &#x00A9; 2013, Lawrence Russell Harvey</copyright-statement>
+            <copyright-statement>Copyright &#x00A9; 2013, Martin Paul Eve</copyright-statement>
             <license license-type="open-access" xlink:href="http://creativecommons.org/licenses/by/2.0/">
                 <license-p>This is an open-access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited.</license-p>
             </license>
         </permissions>
         
-        <self-uri>https://www.pynchon.net/owap/article/view/47</self-uri>
+        <self-uri>https://www.martineve.com/</self-uri>
         
-        <abstract><p>This article interrogates the demarcation of modern and postmodern literature within the context of a critical and inter-textual reading of Thomas Pynchon’s <italic>The Crying of Lot 49</italic>. Approaching Pynchon’s text from what is essentially a formalist perspective, this reading readdresses the question as to whether or not <italic>The Crying of Lot 49 </italic>breaks through to a mode of fiction beyond modernism itself. Critics such as Brain McHale have forwarded <italic>The Crying of Lot 49</italic> as a paradigmatic late modernist work; a work that does not break through to a mode of fiction beyond underlying epistemological presuppositions. Via a comparative reading that draws on the work of Paul Auster, Bret Easton Ellis <italic>et al.</italic>, it is argued herein that McHale’s otherwise scholarly reading is somewhat myopic. In short, it is argued that although Pynchon’s heroine is driven by an epistemological agenda, the text-scape she inhabits is postmodern.</p></abstract>
+        <abstract><p>This is a sample abstract that forms part of the metadataSample.xml file in meTypeset.</p></abstract>
     </article-meta>
 </metadata>

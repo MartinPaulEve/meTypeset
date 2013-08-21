@@ -1,47 +1,43 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.tei-c.org/ns/1.0" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    version="1.0">
+<?xml version="1.0"?>
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns="" xpath-default-namespace="http://www.tei-c.org/ns/1.0" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exclude-result-prefixes="#all">
     <!--
     Copyright 2013 Martin Paul Eve (https://www.martineve.com)
     
     This file is released under the Mozilla Public Licence version 1.1 (MPL 1.1).
     
-    This transformation is designed to populate the intermediary TEI metadata with output from
-    a journal publishing platform, such as OJS.
+    This transformation is designed to rewrite a blank NLM/JATS XML header with valid data.
     
+    It requires one parameter: metadataFile
+    This should point to a metdata-only XML file with a root element "metadata" that is otherwise
+    identical to the desired NLM "front" element.
+    
+    For an example, see the enclosed metadataSample.xml.
+    
+    This process is not particularly schema aware, so ensure that your metadata is well-formed.    
     -->
     
-    <!--
-        TODOs:
-        
-        1.) Need to work out how to handle multiple elements here; param may not be best approach
-        -->
+    <xsl:param name="metadataFile">metadata.xml</xsl:param>
+    <xsl:param name="metadata" select="document($metadataFile)" />
     
-    <xsl:output method="xml" doctype-public="http://www.tei-c.org/ns/1.0" xmlns="http://www.tei-c.org/ns/1.0" indent="yes"></xsl:output>
+    <xsl:output method="xml" doctype-public="-//NLM//DTD Journal Publishing DTD v3.0 20080202//EN" doctype-system="http://dtd.nlm.nih.gov/publishing/3.0/journalpublishing3.dtd" xpath-default-namespace="" indent="yes"></xsl:output>
     
     <xsl:param name="verbose">False</xsl:param>
-    
-    <xsl:param name="article-title">Article Title</xsl:param>
-    <xsl:param name="article-id">Article ID (DOI or PMID etc)</xsl:param>
-    <xsl:param name="article-id-type">Article ID type (DOI or PMID etc)</xsl:param>
-    
-    <xsl:param name="author-forename">Author Forename</xsl:param>
-    <xsl:param name="author-surname">Article Surname</xsl:param>
+
     
     <xsl:template match="/">
         <xsl:if test="$verbose='true'">
             <xsl:message>Beginning metadata process</xsl:message>
         </xsl:if>
-        <xsl:element name="TEI">
-            <xsl:attribute xmlns="xml" name="id"><xsl:value-of select="$article-id"/></xsl:attribute>
+        
+        <xsl:element name="article">
             <xsl:call-template name="header"/>
             
             <xsl:if test="$verbose='true'">
                 <xsl:message>Copying other elements</xsl:message>
             </xsl:if>
-            <xsl:element name="text">
-                <xsl:apply-templates select="tei:TEI/tei:text/*"/>
-            </xsl:element>
+            
+            <xsl:apply-templates select="/*"/>
+            
         </xsl:element>
     </xsl:template>
     
@@ -52,48 +48,19 @@
         <xsl:if test="$verbose='true'">
             <xsl:message>Beginning metadata transform</xsl:message>
         </xsl:if>
-        <xsl:element name="teiHeader">
-            <xsl:element name="fileDesc">
-                <xsl:element name="titleStmt">
-                    <xsl:element name="title">
-                        <xsl:attribute name="type">main</xsl:attribute>
-                        <xsl:copy-of select="$article-title"/>
-                    </xsl:element>
-                    <!-- TODO: figure out how to handle multiple authors-->
-                    <xsl:element name="author">
-                        <xsl:element name="name">
-                            <xsl:attribute name="type">person</xsl:attribute>
-                            <xsl:element name="forename">
-                                <xsl:copy-of select="$author-forename"/>
-                            </xsl:element>
-                            <xsl:element name="surname">
-                                <xsl:copy-of select="$author-surname"/>
-                            </xsl:element>
-                        </xsl:element>
-                    </xsl:element>
-                </xsl:element>
-                <xsl:element name="sourceDesc">
-                    <p>Converted from a Microsoft Word document</p>
-                </xsl:element>
-            </xsl:element>
-            
-            <xsl:element name="articleIDs">
-                <xsl:element name="id">
-                    <xsl:attribute name="type"><xsl:value-of select="$article-id-type"/></xsl:attribute>
-                    <xsl:value-of select="$article-id"/>
-                </xsl:element>
-            </xsl:element>
-            
+        
+        <xsl:element name="front">
+            <xsl:copy-of select="$metadata/*/*"/>
         </xsl:element>
-
     </xsl:template>
     
-    <xsl:template name="copy-all" match="tei:TEI/tei:text/*">
-        <xsl:if test="$verbose='true'">
-            <!-- TODO: change to display element name, not value (I'm writing this on a plane and can't remember the xpath syntax!) -->
-            <xsl:message>Copying element <xsl:value-of select="."/></xsl:message>
-        </xsl:if>
-        <xsl:copy-of select="."/>
+    <xsl:template name="copy-all" match="/*">
+        <xsl:for-each select="/*/*[not(name()='front')]">
+            <xsl:if test="$verbose='true'">
+                <xsl:message>Copying element <xsl:value-of select="name()"/></xsl:message>
+            </xsl:if>
+            <xsl:copy-of select="self::node()[not(/*/front/*[name()=name(current())])]"/>
+        </xsl:for-each>
     </xsl:template>
     
 </xsl:stylesheet>
