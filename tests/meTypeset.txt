@@ -1,0 +1,18 @@
+*** Settings ***
+Library           Process
+Library           OperatingSystem
+
+*** Test Cases ***
+000 Environment
+    ${result} =    Run Process    ../tools/gennlm.sh 001.docx ./000    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    Should Not Contain    ${result.stderr}    cannot find or open
+    Should Not Contain    ${result.stdout}    ERROR
+    [Teardown]    Remove Directory    000    recursive=True
+
+001 Basic paragraph
+    ${result} =    Run Process    ../tools/gennlm.sh 001.docx ./001    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    [Teardown]    Remove Directory    001    recursive=True
