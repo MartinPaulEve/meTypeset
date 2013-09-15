@@ -1,4 +1,5 @@
 *** Settings ***
+Documentation     This series of test cases evaluiates the basic environment setup and the ability to parse basic documents.
 Library           Process
 Library           OperatingSystem
 Library           XML
