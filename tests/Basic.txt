@@ -31,12 +31,21 @@ Library           XML
     Elements Should Match    ${paragraph}    <p>A document <italic>with</italic> an italic word.</p>
     [Teardown]    Remove Directory    002    recursive=True
 
-003 Metadata merge
-    [Tags]    metadata
-    ${result} =    Run Process    ../tools/gennlm.sh 002.docx ./002    shell=True
+003 Basic paragraph with bold
+    ${result} =    Run Process    ../tools/gennlm.sh 003.docx ./003    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./002/002.xml
+    ${xml}=    Parse XML    ./003/003.xml
+    ${paragraph}=    Get Element    ${xml}    body/sec/p
+    Elements Should Match    ${paragraph}    <p>A document <bold>with</bold> a bold word.</p>
+    [Teardown]    Remove Directory    003    recursive=True
+
+004 Metadata merge
+    [Tags]    metadata
+    ${result} =    Run Process    ../tools/gennlm.sh 002.docx ./004    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./004/002.xml
     ${journalid}=    Get Element    ${xml}    front/journal-meta/journal-id
     Elements Should Match    ${journalid}    <journal-id>The Journal Name</journal-id>
     ${issn}=    Get Element    ${xml}    front/journal-meta/issn
@@ -65,4 +74,4 @@ Library           XML
     Elements Should Match    ${uri}    <self-uri>https://www.martineve.com/</self-uri>
     ${abstract}=    Get Element    ${xml}    front/article-meta/abstract/p
     Elements Should Match    ${abstract}    <p>This is a sample abstract that forms part of the metadataSample.xml file in meTypeset.</p>
-    [Teardown]    Remove Directory    002    recursive=True
+    [Teardown]    Remove Directory    004    recursive=True
