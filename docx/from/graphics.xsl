@@ -77,6 +77,10 @@ of this software, even if advised of the possibility of such damage.
         Convert Word drawing objects
     </desc>
    </doc>
+
+    <xsl:key name="W" match="image" use="@url"/>
+    <xsl:key name="H" match="image" use="@url"/>
+
     <xsl:template match="w:drawing">
       <xsl:param name="n" tunnel="yes"/>
         <xsl:choose>
