@@ -3,6 +3,7 @@ Documentation     This series of test cases evaluates the basic environment setu
 Library           Process
 Library           OperatingSystem
 Library           XML
+Library           Collections
 
 *** Test Cases ***
 000 Environment
@@ -75,3 +76,20 @@ Library           XML
     ${abstract}=    Get Element    ${xml}    front/article-meta/abstract/p
     Elements Should Match    ${abstract}    <p>This is a sample abstract that forms part of the metadataSample.xml file in meTypeset.</p>
     [Teardown]    Remove Directory    004    recursive=True
+
+005 Title, non-title, title (from bolded text)
+    [Tags]    formatting    bold    title
+    ${result} =    Run Process    ../tools/gennlm.sh 005.docx ./005    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./005/005.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    005    recursive=True
