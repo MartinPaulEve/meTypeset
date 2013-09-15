@@ -32,10 +32,37 @@ Library           XML
     [Teardown]    Remove Directory    002    recursive=True
 
 003 Metadata merge
+    [Tags]    metadata
     ${result} =    Run Process    ../tools/gennlm.sh 002.docx ./002    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./002/002.xml
-    ${paragraph}=    Get Element    ${xml}    body/sec/p
-    Elements Should Match    ${paragraph}    <p>A document <italic>with</italic> an italic word.</p>
+    ${journalid}=    Get Element    ${xml}    front/journal-meta/journal-id
+    Elements Should Match    ${journalid}    <journal-id>The Journal Name</journal-id>
+    ${issn}=    Get Element    ${xml}    front/journal-meta/issn
+    Elements Should Match    ${issn}    <issn>The ISSN</issn>
+    ${doi}=    Get Element    ${xml}    front/article-meta/article-id[@pub-id-type="doi"]
+    Elements Should Match    ${doi}    <article-id pub-id-type="doi">xx.XXXX/articleDoi</article-id>
+    ${title}=    Get Element    ${xml}    front/article-meta/title-group/article-title
+    Elements Should Match    ${title}    <article-title>A Sample Article Title</article-title>
+    ${firstname}=    Get Element    ${xml}    front/article-meta/contrib-group/contrib/name/given-names
+    Elements Should Match    ${firstname}    <given-names>Martin Paul</given-names>
+    ${surname}=    Get Element    ${xml}    front/article-meta/contrib-group/contrib/name/surname
+    Elements Should Match    ${surname}    <surname>Eve</surname>
+    ${aff}=    Get Element    ${xml}    front/article-meta/aff
+    Elements Should Match    ${aff}    <aff>University of Lincoln</aff>
+    ${year}=    Get Element    ${xml}    front/article-meta/pub-date/year
+    Elements Should Match    ${year}    <year>2013</year>
+    ${volume}=    Get Element    ${xml}    front/article-meta/volume
+    Elements Should Match    ${volume}    <volume>1</volume>
+    ${issue}=    Get Element    ${xml}    front/article-meta/issue
+    Elements Should Match    ${issue}    <issue>1</issue>
+    ${copyright}=    Get Element    ${xml}    front/article-meta/permissions/copyright-statement
+    Elements Should Match    ${copyright}    <copyright-statement>Copyright © 2013, Martin Paul Eve</copyright-statement>
+    ${license}=    Get Element    ${xml}    front/article-meta/permissions/license/license-p
+    Elements Should Match    ${license}    <license-p>This is an open-access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited. The citation of this article must include: the name(s) of the authors, the name of the journal, the full URL of the article (in a hyperlinked format if distributed online) and the DOI number of the article.</license-p>
+    ${uri}=    Get Element    ${xml}    front/article-meta/self-uri
+    Elements Should Match    ${uri}    <self-uri>https://www.martineve.com/</self-uri>
+    ${abstract}=    Get Element    ${xml}    front/article-meta/abstract/p
+    Elements Should Match    ${abstract}    <p>This is a sample abstract that forms part of the metadataSample.xml file in meTypeset.</p>
     [Teardown]    Remove Directory    002    recursive=True
