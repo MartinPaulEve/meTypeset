@@ -381,11 +381,15 @@ of this software, even if advised of the possibility of such damage.
       </xsl:otherwise>
     </xsl:choose>
    </xsl:template>
-  
+
+
+  <!-- this block was supposed to detect bolded elements and move them into a <head> section. Will be better handled in TEI->NLM phase, so reworking -->  
+
+  <!--
   <xsl:template match="tei:p[tei:hi[@rend='bold']]" mode="pass2">
     <xsl:choose>
+
       <xsl:when test="count(*[not[@rend='bold']]) = 0">
-        <!--//TODO: this needs to preserve other attributes, such as italics-->
         <head>
           <xsl:for-each select=".">
             <xsl:choose>
@@ -408,6 +412,8 @@ of this software, even if advised of the possibility of such damage.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+ -->
 
    <xsl:template name="nextHi">
       <xsl:param name="r"/>
