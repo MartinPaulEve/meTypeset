@@ -69,7 +69,10 @@ then
     exit
 fi
 
+# make the output directory and remap it to an absolute path
+
 mkdir "$outputfolder"
+outputfolder=$(readlink -f "$outputfolder")
 
 # OK, this is the grimmest part: XSLT using relative filenames expects the "rels" directory to be found
 # relative to itself, not the file to which the transform is being applied, so we have to copy it
@@ -82,13 +85,17 @@ cp -r "$scriptdir/../common2" "$outputfolder"
 cp "$infile" "$outputfolder/docx"
 
 # remap the input file
+# first to the output folder
 
 infile=$(basename "$infile")
 infile="$outputfolder/docx/$infile"
 
-# decompress the docx
+# then to an absolute path
+infile=$(readlink -f "$infile")
 
 cd "$outputfolder/docx"
+
+# decompress the docx
 
 echo "INFO: Decompressing $infile."
 unzip "$infile"
