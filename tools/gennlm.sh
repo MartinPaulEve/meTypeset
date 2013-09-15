@@ -13,7 +13,7 @@ do
   DIR="$( cd -P "$( dirname "$SOURCE"  )" && pwd )"
 done
 scriptdir="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-saxon="$scriptdir/../runtime/saxon9he.jar:$scriptdir/../runtime/xml-resolver-1.1.jar"
+saxon="$scriptdir/../runtime/saxon9.jar:$scriptdir/../runtime/xml-resolver-1.1.jar"
 
 
 usage="Usage: gennlm.sh [source.docx] [output folder] <metadata file.xml>"
@@ -102,7 +102,7 @@ unzip "$infile"
 
 # transform to TEI
 
-javacmd="java -classpath $saxon net.sf.saxon.Transform -catalog:$scriptdir/../runtime/catalog.xml -o:$OUTFILE.tmp ./word/document.xml ./from/docxtotei.xsl"
+javacmd="java -classpath $saxon -Dxml.catalog.files=$scriptdir/../runtime/catalog.xml net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o $OUTFILE.tmp ./word/document.xml ./from/docxtotei.xsl"
 echo "INFO: Running saxon transform (DOCX->TEI): $javacmd"
 $javacmd
 mv "$OUTFILE.tmp" "$outputfolder/in.file"
@@ -122,14 +122,14 @@ rm -rf "./docx"
 
 # transform to NLM
 
-javacmd="java -classpath $saxon net.sf.saxon.Transform -catalog:$scriptdir/../runtime/catalog.xml -o:./out.xml ./in.file $scriptdir/../nlm/tei_to_nlm.xsl autoBlockQuote=true"
+javacmd="java -classpath $saxon -Dxml.catalog.files=$scriptdir/../runtime/catalog.xml net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o ./out.xml ./in.file $scriptdir/../nlm/tei_to_nlm.xsl autoBlockQuote=true"
 echo "INFO: Running saxon transform (TEI->NLM): $javacmd"
 $javacmd
 
 # merge in metadata file
 
 echo "INFO: merging metadata FILE $metadata"
-javacmd="java -classpath $saxon net.sf.saxon.Transform -catalog:$scriptdir/../runtime/catalog.xml -o:$outputfolder/$OUTFILE ./out.xml $scriptdir/../metadata/metadata.xsl metadataFile=$metadata"
+javacmd="java -classpath $saxon -Dxml.catalog.files=$scriptdir/../runtime/catalog.xml net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o $outputfolder/$OUTFILE ./out.xml $scriptdir/../metadata/metadata.xsl metadataFile=$metadata"
 echo "INFO: Running saxon transform (metadata->NLM): $javacmd"
 $javacmd
 

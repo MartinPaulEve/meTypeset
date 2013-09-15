@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     This series of test cases evaluiates the basic environment setup and the ability to parse basic documents.
+Documentation     This series of test cases evaluates the basic environment setup and the ability to parse basic documents.
 Library           Process
 Library           OperatingSystem
 Library           XML
@@ -21,3 +21,12 @@ Library           XML
     ${paragraph}=    Get Element    ${xml}    body/sec/p
     Elements Should Match    ${paragraph}    <p>The most basic document possible.</p>
     [Teardown]    Remove Directory    001    recursive=True
+
+002 Basic paragraph
+    ${result} =    Run Process    ../tools/gennlm.sh 002.docx ./002    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./002/002.xml
+    ${paragraph}=    Get Element    ${xml}    body/sec/p
+    Elements Should Match    ${paragraph}    <p>A document <italic>with</italic> an italic word.</p>
+    [Teardown]    Remove Directory    002    recursive=True
