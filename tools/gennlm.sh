@@ -27,7 +27,7 @@ outputfolder="$2"
 
 metadata="$3"
 
-OUTFILE="./$(date +'%-m-%-e-%Y')-$filename.xml"
+OUTFILE="$filename.xml"
 
 if [ ! -f "$infile" ];
 then
