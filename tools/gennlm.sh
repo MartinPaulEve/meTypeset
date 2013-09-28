@@ -21,7 +21,7 @@ usage="Usage: gennlm.sh [source.docx] [output folder] <metadata file.xml>"
 # setup variables from input
 infile="$1"
 filename=$(basename "$1")
-filename=${filename%.*}
+filename="${filename%.*}"
 
 outputfolder="$2"
 
@@ -102,9 +102,10 @@ unzip "$infile"
 
 # transform to TEI
 
-javacmd="java -classpath $saxon -Dxml.catalog.files=$scriptdir/../runtime/catalog.xml net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o $OUTFILE.tmp ./word/document.xml ./from/docxtotei.xsl"
-echo "INFO: Running saxon transform (DOCX->TEI): $javacmd"
-$javacmd
+# javacmd="java -classpath $saxon -Dxml.catalog.files=$scriptdir/../runtime/catalog.xml net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o $OUTFILE.tmp ./word/document.xml ./from/docxtotei.xsl"
+# echo "INFO: Running saxon transform (DOCX->TEI): $javacmd"
+java -classpath "$saxon" -Dxml.catalog.files="$scriptdir/../runtime/catalog.xml" net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o "$OUTFILE.tmp" ./word/document.xml ./from/docxtotei.xsl
+#$javacmd
 mv "$OUTFILE.tmp" "$outputfolder/in.file"
 
 # if there's any media, move it to the output directory (we're still in ./docx)
@@ -122,16 +123,18 @@ rm -rf "./docx"
 
 # transform to NLM
 
-javacmd="java -classpath $saxon -Dxml.catalog.files=$scriptdir/../runtime/catalog.xml net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o ./out.xml ./in.file $scriptdir/../nlm/tei_to_nlm.xsl autoBlockQuote=true"
-echo "INFO: Running saxon transform (TEI->NLM): $javacmd"
-$javacmd
+#javacmd="java -classpath $saxon -Dxml.catalog.files=$scriptdir/../runtime/catalog.xml net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o ./out.xml ./in.file $scriptdir/../nlm/tei_to_nlm.xsl autoBlockQuote=true"
+#echo "INFO: Running saxon transform (TEI->NLM): $javacmd"
+#$javacmd
+java -classpath "$saxon" -Dxml.catalog.files="$scriptdir/../runtime/catalog.xml" net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o ./out.xml ./in.file "$scriptdir/../nlm/tei_to_nlm.xsl" autoBlockQuote=true
 
 # merge in metadata file
 
-echo "INFO: merging metadata FILE $metadata"
-javacmd="java -classpath $saxon -Dxml.catalog.files=$scriptdir/../runtime/catalog.xml net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o $outputfolder/$OUTFILE ./out.xml $scriptdir/../metadata/metadata.xsl metadataFile=$metadata"
-echo "INFO: Running saxon transform (metadata->NLM): $javacmd"
-$javacmd
+#echo "INFO: merging metadata FILE $metadata"
+#javacmd="java -classpath $saxon -Dxml.catalog.files=$scriptdir/../runtime/catalog.xml net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o $outputfolder/$OUTFILE ./out.xml $scriptdir/../metadata/metadata.xsl metadataFile=$metadata"
+#echo "INFO: Running saxon transform (metadata->NLM): $javacmd"
+#$javacmd
+java -classpath "$saxon" -Dxml.catalog.files="$scriptdir/../runtime/catalog.xml" net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o "$outputfolder/$OUTFILE" ./out.xml "$scriptdir/../metadata/metadata.xsl" metadataFile=$metadata
 
 # cleanup
 rm "$outputfolder/out.xml"
