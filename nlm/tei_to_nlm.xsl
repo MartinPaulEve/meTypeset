@@ -362,8 +362,17 @@
   
   <xsl:template match="p | ab">
     <xsl:element name="p">
-      <xsl:apply-templates />
-    </xsl:element>
+      <xsl:choose>
+        <xsl:when test="./@rend">
+          <xsl:call-template name="doTags">
+            <xsl:with-param name="tags" select="./@rend"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>        
+          <xsl:apply-templates />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:element>    
   </xsl:template>
   
   <xsl:template match="list">
@@ -810,22 +819,125 @@ have a shot at styling it. -->
     </named-content>  
   </xsl:template>
   
-<!--  Text style markup. -->
+<!--  Text style markup. -->  
+  <xsl:template match="hi">
+    <xsl:call-template name="doTags">
+      <xsl:with-param name="tags" select="./@rend"/>
+    </xsl:call-template>
+  </xsl:template>
+  
+  <xsl:template name="doTags">
+    <xsl:param name="tags"/>
+    <xsl:choose>
+      <xsl:when test="contains($tags,'bold')">
+        <xsl:element name="bold">
+          <xsl:variable name="newTags">            
+            <xsl:call-template name="replace-string">
+              <xsl:with-param name="text" select="$tags"/>
+              <xsl:with-param name="replace" select="'bold'" />
+              <xsl:with-param name="with" select="''"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:call-template name="doTags">
+            <xsl:with-param name="tags" select="$newTags"/>
+          </xsl:call-template>
+        </xsl:element>
+      </xsl:when>
+      <xsl:when test="contains($tags,'italic')">
+        <xsl:element name="italic">
+          <xsl:variable name="newTags">            
+            <xsl:call-template name="replace-string">
+              <xsl:with-param name="text" select="$tags"/>
+              <xsl:with-param name="replace" select="'italic'" />
+              <xsl:with-param name="with" select="''"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:call-template name="doTags">            
+            <xsl:with-param name="tags" select="$newTags"/>
+          </xsl:call-template>
+        </xsl:element>
+      </xsl:when>      
+      <xsl:when test="contains($tags,'underline')">
+        <xsl:element name="underline">
+          <xsl:variable name="newTags">            
+            <xsl:call-template name="replace-string">
+              <xsl:with-param name="text" select="$tags"/>
+              <xsl:with-param name="replace" select="'underline'" />
+              <xsl:with-param name="with" select="''"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:call-template name="doTags">
+            <xsl:with-param name="tags" select="$newTags"/>
+          </xsl:call-template>
+        </xsl:element>
+      </xsl:when>
+      <xsl:when test="contains($tags,'overline')">
+        <xsl:element name="overline">
+          <xsl:variable name="newTags">            
+            <xsl:call-template name="replace-string">
+              <xsl:with-param name="text" select="$tags"/>
+              <xsl:with-param name="replace" select="'overline'" />
+              <xsl:with-param name="with" select="''"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:call-template name="doTags">
+            <xsl:with-param name="tags" select="$newTags"/>
+          </xsl:call-template>
+        </xsl:element>
+      </xsl:when>
+      <xsl:when test="empty($tags)">
+        <xsl:apply-templates/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates/>
+      </xsl:otherwise>
+    </xsl:choose>
+    
+  </xsl:template>
+  
+  <!-- 
+  Template to act as a replace function of php
+  input three parameters:
+  First: complete text
+  Second: needle
+  Third: replacement text
+  -->
+  <xsl:template name="replace-string">
+    <xsl:param name="text"/>
+    <xsl:param name="replace"/>
+    <xsl:param name="with"/>
+    <xsl:choose>
+      <xsl:when test="contains($text,$replace)">
+        <xsl:value-of select="substring-before($text,$replace)"/>
+        <xsl:value-of select="$with"/>
+        <xsl:call-template name="replace-string">
+          <xsl:with-param name="text"
+            select="substring-after($text,$replace)"/>
+          <xsl:with-param name="replace" select="$replace"/>
+          <xsl:with-param name="with" select="$with"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$text"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
 <!--  Bold. -->
-  <xsl:template match="hi[@rend='bold']">
+  <!--xsl:template match="hi[@rend='bold']">
     <xsl:element name="bold"><xsl:apply-templates /></xsl:element>
-  </xsl:template>
+  </xsl:template-->
 <!--  Italics. -->
-  <xsl:template match="hi[@rend='italic']">
+  <!--xsl:template match="hi[@rend='italic']">
     <xsl:element name="italic"><xsl:apply-templates /></xsl:element>
-  </xsl:template> 
+  </xsl:template--> 
 <!--  Underline. -->
-  <xsl:template match="hi[@rend='underline']">
+  <!--xsl:template match="hi[@rend='underline']">
     <xsl:element name="underline"><xsl:apply-templates /></xsl:element>
-  </xsl:template>
+  </xsl:template-->
 <!--  Overline. -->
-  <xsl:template match="hi[@rend='overline']">
+  <!--xsl:template match="hi[@rend='overline']">
     <xsl:element name="overline"><xsl:apply-templates /></xsl:element>
-  </xsl:template>
+  </xsl:template-->
 
 </xsl:stylesheet>

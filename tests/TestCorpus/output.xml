@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generated="20131028 13:01:14.808" generator="Robot 2.8.1 (Python 2.7.3 on linux2)">
-<suite source="/home/jos/workspace/meTypeset/tests/TestCorpus/TestCorpusBIU.txt" id="s1" name="TestCorpusBIU">
+<robot generated="20131028 14:16:33.142" generator="Robot 2.8.1 (Python 2.7.3 on linux2)">
+<suite source="/home/jos/Documents/git/meTypeset/tests/TestCorpus/TestCorpusBIU.txt" id="s1" name="TestCorpusBIU">
 <test id="s1-t1" name="000 Environment">
 <kw type="kw" name="${result} = Process.Run Process">
 <doc>Runs a process and waits for it to complete.</doc>
@@ -8,21 +8,21 @@
 <arg>../../tools/gennlm.sh corpusItalics.docx ./000</arg>
 <arg>shell=True</arg>
 </arguments>
-<msg timestamp="20131028 13:01:14.884" level="INFO">Starting process:
+<msg timestamp="20131028 14:16:33.219" level="INFO">Starting process:
 ../../tools/gennlm.sh corpusItalics.docx ./000</msg>
-<msg timestamp="20131028 13:01:14.887" level="INFO">Waiting for process to complete.</msg>
-<msg timestamp="20131028 13:01:20.189" level="INFO">Process completed.</msg>
-<msg timestamp="20131028 13:01:20.190" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:20.189" starttime="20131028 13:01:14.884"></status>
+<msg timestamp="20131028 14:16:33.222" level="INFO">Waiting for process to complete.</msg>
+<msg timestamp="20131028 14:16:38.678" level="INFO">Process completed.</msg>
+<msg timestamp="20131028 14:16:38.679" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:38.678" starttime="20131028 14:16:33.218"></status>
 </kw>
 <kw type="kw" name="BuiltIn.Log">
 <doc>Logs the given message with the given level.</doc>
 <arguments>
 <arg>${result.stdout}</arg>
 </arguments>
-<msg timestamp="20131028 13:01:20.191" level="INFO">WARNING: metadata file wasn't specified. Falling back to /home/jos/workspace/meTypeset/tools/../metadata/metadataSample.xml.
-INFO: Decompressing /home/jos/workspace/meTypeset/tests/TestCorpus/000/docx/corpusItalics.docx.
-Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/000/docx/corpusItalics.docx
+<msg timestamp="20131028 14:16:38.680" level="INFO">WARNING: metadata file wasn't specified. Falling back to /home/jos/Documents/git/meTypeset/tools/../metadata/metadataSample.xml.
+INFO: Decompressing /home/jos/Documents/git/meTypeset/tests/TestCorpus/000/docx/corpusItalics.docx.
+Archive:  /home/jos/Documents/git/meTypeset/tests/TestCorpus/000/docx/corpusItalics.docx
   inflating: _rels/.rels             
   inflating: word/fontTable.xml      
   inflating: word/_rels/document.xml.rels  
@@ -32,15 +32,15 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/000/docx/corpusItalics.
   inflating: docProps/app.xml        
   inflating: docProps/core.xml       
   inflating: [Content_Types].xml     </msg>
-<status status="PASS" endtime="20131028 13:01:20.191" starttime="20131028 13:01:20.190"></status>
+<status status="PASS" endtime="20131028 14:16:38.680" starttime="20131028 14:16:38.679"></status>
 </kw>
 <kw type="kw" name="BuiltIn.Log">
 <doc>Logs the given message with the given level.</doc>
 <arguments>
 <arg>${result.stderr}</arg>
 </arguments>
-<msg timestamp="20131028 13:01:20.192" level="INFO"></msg>
-<status status="PASS" endtime="20131028 13:01:20.192" starttime="20131028 13:01:20.191"></status>
+<msg timestamp="20131028 14:16:38.681" level="INFO"></msg>
+<status status="PASS" endtime="20131028 14:16:38.681" starttime="20131028 14:16:38.680"></status>
 </kw>
 <kw type="kw" name="BuiltIn.Should Not Contain">
 <doc>Fails if `item1` contains `item2` one or more times.</doc>
@@ -48,7 +48,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/000/docx/corpusItalics.
 <arg>${result.stderr}</arg>
 <arg>cannot find or open</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:20.193" starttime="20131028 13:01:20.192"></status>
+<status status="PASS" endtime="20131028 14:16:38.682" starttime="20131028 14:16:38.681"></status>
 </kw>
 <kw type="kw" name="BuiltIn.Should Not Contain">
 <doc>Fails if `item1` contains `item2` one or more times.</doc>
@@ -56,7 +56,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/000/docx/corpusItalics.
 <arg>${result.stdout}</arg>
 <arg>ERROR</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:20.194" starttime="20131028 13:01:20.193"></status>
+<status status="PASS" endtime="20131028 14:16:38.682" starttime="20131028 14:16:38.682"></status>
 </kw>
 <kw type="teardown" name="OperatingSystem.Remove Directory">
 <doc>Removes the directory pointed to by the given `path`.</doc>
@@ -64,13 +64,13 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/000/docx/corpusItalics.
 <arg>000</arg>
 <arg>recursive=True</arg>
 </arguments>
-<msg timestamp="20131028 13:01:20.195" html="yes" level="INFO">Removed directory '&lt;a href="file:///home/jos/workspace/meTypeset/tests/TestCorpus/000"&gt;/home/jos/workspace/meTypeset/tests/TestCorpus/000&lt;/a&gt;'</msg>
-<status status="PASS" endtime="20131028 13:01:20.195" starttime="20131028 13:01:20.195"></status>
+<msg timestamp="20131028 14:16:38.683" html="yes" level="INFO">Removed directory '&lt;a href="file:///home/jos/Documents/git/meTypeset/tests/TestCorpus/000"&gt;/home/jos/Documents/git/meTypeset/tests/TestCorpus/000&lt;/a&gt;'</msg>
+<status status="PASS" endtime="20131028 14:16:38.684" starttime="20131028 14:16:38.683"></status>
 </kw>
 <doc></doc>
 <tags>
 </tags>
-<status status="PASS" endtime="20131028 13:01:20.196" critical="yes" starttime="20131028 13:01:14.883"></status>
+<status status="PASS" endtime="20131028 14:16:38.684" critical="yes" starttime="20131028 14:16:33.218"></status>
 </test>
 <test id="s1-t2" name="001 Matching All permutations of Italics">
 <kw type="kw" name="${result} = Process.Run Process">
@@ -79,21 +79,21 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/000/docx/corpusItalics.
 <arg>../../tools/gennlm.sh corpusItalics.docx ./001</arg>
 <arg>shell=True</arg>
 </arguments>
-<msg timestamp="20131028 13:01:20.198" level="INFO">Starting process:
+<msg timestamp="20131028 14:16:38.686" level="INFO">Starting process:
 ../../tools/gennlm.sh corpusItalics.docx ./001</msg>
-<msg timestamp="20131028 13:01:20.202" level="INFO">Waiting for process to complete.</msg>
-<msg timestamp="20131028 13:01:25.569" level="INFO">Process completed.</msg>
-<msg timestamp="20131028 13:01:25.569" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.569" starttime="20131028 13:01:20.198"></status>
+<msg timestamp="20131028 14:16:38.692" level="INFO">Waiting for process to complete.</msg>
+<msg timestamp="20131028 14:16:43.812" level="INFO">Process completed.</msg>
+<msg timestamp="20131028 14:16:43.813" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.813" starttime="20131028 14:16:38.686"></status>
 </kw>
 <kw type="kw" name="BuiltIn.Log">
 <doc>Logs the given message with the given level.</doc>
 <arguments>
 <arg>${result.stdout}</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.571" level="INFO">WARNING: metadata file wasn't specified. Falling back to /home/jos/workspace/meTypeset/tools/../metadata/metadataSample.xml.
-INFO: Decompressing /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.docx.
-Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.docx
+<msg timestamp="20131028 14:16:43.815" level="INFO">WARNING: metadata file wasn't specified. Falling back to /home/jos/Documents/git/meTypeset/tools/../metadata/metadataSample.xml.
+INFO: Decompressing /home/jos/Documents/git/meTypeset/tests/TestCorpus/001/docx/corpusItalics.docx.
+Archive:  /home/jos/Documents/git/meTypeset/tests/TestCorpus/001/docx/corpusItalics.docx
   inflating: _rels/.rels             
   inflating: word/fontTable.xml      
   inflating: word/_rels/document.xml.rels  
@@ -103,23 +103,23 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
   inflating: docProps/app.xml        
   inflating: docProps/core.xml       
   inflating: [Content_Types].xml     </msg>
-<status status="PASS" endtime="20131028 13:01:25.571" starttime="20131028 13:01:25.570"></status>
+<status status="PASS" endtime="20131028 14:16:43.815" starttime="20131028 14:16:43.814"></status>
 </kw>
 <kw type="kw" name="BuiltIn.Log">
 <doc>Logs the given message with the given level.</doc>
 <arguments>
 <arg>${result.stderr}</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.572" level="INFO"></msg>
-<status status="PASS" endtime="20131028 13:01:25.572" starttime="20131028 13:01:25.571"></status>
+<msg timestamp="20131028 14:16:43.817" level="INFO"></msg>
+<status status="PASS" endtime="20131028 14:16:43.817" starttime="20131028 14:16:43.816"></status>
 </kw>
 <kw type="kw" name="${xml} = XML.Parse Xml">
 <doc>Parses the given XML file or string into an element structure.</doc>
 <arguments>
 <arg>./001/corpusItalics.xml</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.574" level="INFO">${xml} = &lt;Element 'article' at 0x25fa210&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.573" starttime="20131028 13:01:25.572"></status>
+<msg timestamp="20131028 14:16:43.820" level="INFO">${xml} = &lt;Element 'article' at 0x172b2a0&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.819" starttime="20131028 14:16:43.817"></status>
 </kw>
 <kw type="kw" name="${sections} = XML.Get Elements">
 <doc>Returns a list of elements in the `source` matching the `xpath`.</doc>
@@ -127,8 +127,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${xml}</arg>
 <arg>body/sec</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.575" level="INFO">${sections} = [&lt;Element 'sec' at 0x25fc3c0&gt;]</msg>
-<status status="PASS" endtime="20131028 13:01:25.575" starttime="20131028 13:01:25.574"></status>
+<msg timestamp="20131028 14:16:43.821" level="INFO">${sections} = [&lt;Element 'sec' at 0x172c450&gt;]</msg>
+<status status="PASS" endtime="20131028 14:16:43.821" starttime="20131028 14:16:43.820"></status>
 </kw>
 <kw type="kw" name="${firstsection} = Collections.Get From List">
 <doc>Returns the value specified with an `index` from `list`.</doc>
@@ -136,8 +136,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${sections}</arg>
 <arg>0</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.576" level="INFO">${firstsection} = &lt;Element 'sec' at 0x25fc3c0&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.576" starttime="20131028 13:01:25.575"></status>
+<msg timestamp="20131028 14:16:43.823" level="INFO">${firstsection} = &lt;Element 'sec' at 0x172c450&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.823" starttime="20131028 14:16:43.822"></status>
 </kw>
 <kw type="kw" name="${firstParagItalicOne} = XML.Get Element">
 <doc>Returns an element in the `source` matching the `xpath`.</doc>
@@ -145,8 +145,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${firstsection}</arg>
 <arg>p[1]/italic[1]</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.577" level="INFO">${firstParagItalicOne} = &lt;Element 'italic' at 0x25fc510&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.577" starttime="20131028 13:01:25.576"></status>
+<msg timestamp="20131028 14:16:43.825" level="INFO">${firstParagItalicOne} = &lt;Element 'italic' at 0x172c5a0&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.825" starttime="20131028 14:16:43.823"></status>
 </kw>
 <kw type="kw" name="${firstParagItalicTwo} = XML.Get Element">
 <doc>Returns an element in the `source` matching the `xpath`.</doc>
@@ -154,8 +154,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${firstsection}</arg>
 <arg>p[1]/italic[2]</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.578" level="INFO">${firstParagItalicTwo} = &lt;Element 'italic' at 0x25fc570&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.578" starttime="20131028 13:01:25.578"></status>
+<msg timestamp="20131028 14:16:43.827" level="INFO">${firstParagItalicTwo} = &lt;Element 'italic' at 0x172c600&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.827" starttime="20131028 14:16:43.826"></status>
 </kw>
 <kw type="kw" name="${firstParagItalicThree} = XML.Get Element">
 <doc>Returns an element in the `source` matching the `xpath`.</doc>
@@ -163,8 +163,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${firstsection}</arg>
 <arg>p[1]/italic[3]</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.580" level="INFO">${firstParagItalicThree} = &lt;Element 'italic' at 0x25fc5d0&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.579" starttime="20131028 13:01:25.579"></status>
+<msg timestamp="20131028 14:16:43.829" level="INFO">${firstParagItalicThree} = &lt;Element 'italic' at 0x172c660&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.829" starttime="20131028 14:16:43.828"></status>
 </kw>
 <kw type="kw" name="${firstParagItalicFour} = XML.Get Element">
 <doc>Returns an element in the `source` matching the `xpath`.</doc>
@@ -172,8 +172,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${firstsection}</arg>
 <arg>p[1]/italic[4]</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.581" level="INFO">${firstParagItalicFour} = &lt;Element 'italic' at 0x25fc630&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.581" starttime="20131028 13:01:25.580"></status>
+<msg timestamp="20131028 14:16:43.831" level="INFO">${firstParagItalicFour} = &lt;Element 'italic' at 0x172c6c0&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.831" starttime="20131028 14:16:43.830"></status>
 </kw>
 <kw type="kw" name="${secondParag} = XML.Get Element">
 <doc>Returns an element in the `source` matching the `xpath`.</doc>
@@ -181,8 +181,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${firstsection}</arg>
 <arg>p[2]/italic[1]</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.582" level="INFO">${secondParag} = &lt;Element 'italic' at 0x25fc810&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.582" starttime="20131028 13:01:25.582"></status>
+<msg timestamp="20131028 14:16:43.833" level="INFO">${secondParag} = &lt;Element 'italic' at 0x172c8a0&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.833" starttime="20131028 14:16:43.832"></status>
 </kw>
 <kw type="kw" name="${thirdParagItalicOne} = XML.Get Element">
 <doc>Returns an element in the `source` matching the `xpath`.</doc>
@@ -190,8 +190,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${firstsection}</arg>
 <arg>p[3]/italic[1]</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.583" level="INFO">${thirdParagItalicOne} = &lt;Element 'italic' at 0x25fc8a0&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.583" starttime="20131028 13:01:25.583"></status>
+<msg timestamp="20131028 14:16:43.834" level="INFO">${thirdParagItalicOne} = &lt;Element 'italic' at 0x172c930&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.834" starttime="20131028 14:16:43.833"></status>
 </kw>
 <kw type="kw" name="${thirdParagItalicTwo} = XML.Get Element">
 <doc>Returns an element in the `source` matching the `xpath`.</doc>
@@ -199,8 +199,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${firstsection}</arg>
 <arg>p[3]/italic[2]</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.584" level="INFO">${thirdParagItalicTwo} = &lt;Element 'italic' at 0x25fc8d0&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.584" starttime="20131028 13:01:25.584"></status>
+<msg timestamp="20131028 14:16:43.835" level="INFO">${thirdParagItalicTwo} = &lt;Element 'italic' at 0x172c960&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.835" starttime="20131028 14:16:43.834"></status>
 </kw>
 <kw type="kw" name="${fourParagItalicOne} = XML.Get Element">
 <doc>Returns an element in the `source` matching the `xpath`.</doc>
@@ -208,8 +208,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${firstsection}</arg>
 <arg>table-wrap[1]/table[1]/tr[3]/td[6]/italic[1]</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.585" level="INFO">${fourParagItalicOne} = &lt;Element 'italic' at 0x25ff450&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.585" starttime="20131028 13:01:25.585"></status>
+<msg timestamp="20131028 14:16:43.836" level="INFO">${fourParagItalicOne} = &lt;Element 'italic' at 0x17314e0&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.836" starttime="20131028 14:16:43.835"></status>
 </kw>
 <kw type="kw" name="${fourParagItalicTwo} = XML.Get Element">
 <doc>Returns an element in the `source` matching the `xpath`.</doc>
@@ -217,8 +217,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${firstsection}</arg>
 <arg>table-wrap[1]/table[1]/tr[6]/td[7]/italic[1]</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.587" level="INFO">${fourParagItalicTwo} = &lt;Element 'italic' at 0x25ff9c0&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.586" starttime="20131028 13:01:25.586"></status>
+<msg timestamp="20131028 14:16:43.837" level="INFO">${fourParagItalicTwo} = &lt;Element 'italic' at 0x1731a50&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.837" starttime="20131028 14:16:43.837"></status>
 </kw>
 <kw type="kw" name="${fourParagItalicThree} = XML.Get Element">
 <doc>Returns an element in the `source` matching the `xpath`.</doc>
@@ -226,8 +226,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${firstsection}</arg>
 <arg>table-wrap[1]/table[1]/tr[7]/td[6]/italic[1]</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.588" level="INFO">${fourParagItalicThree} = &lt;Element 'italic' at 0x25ffba0&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.588" starttime="20131028 13:01:25.587"></status>
+<msg timestamp="20131028 14:16:43.838" level="INFO">${fourParagItalicThree} = &lt;Element 'italic' at 0x1731c30&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.838" starttime="20131028 14:16:43.838"></status>
 </kw>
 <kw type="kw" name="${fiveParagItalicOne} = XML.Get Element">
 <doc>Returns an element in the `source` matching the `xpath`.</doc>
@@ -235,8 +235,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${firstsection}</arg>
 <arg>list[2]/list-item[2]/p[1]/italic[1]</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.589" level="INFO">${fiveParagItalicOne} = &lt;Element 'italic' at 0x25ffde0&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.589" starttime="20131028 13:01:25.588"></status>
+<msg timestamp="20131028 14:16:43.839" level="INFO">${fiveParagItalicOne} = &lt;Element 'italic' at 0x1731e70&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.839" starttime="20131028 14:16:43.839"></status>
 </kw>
 <kw type="kw" name="${fiveParagItalicTwo} = XML.Get Element">
 <doc>Returns an element in the `source` matching the `xpath`.</doc>
@@ -244,8 +244,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${firstsection}</arg>
 <arg>list[2]/list-item[3]/p[1]/italic[1]</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.590" level="INFO">${fiveParagItalicTwo} = &lt;Element 'italic' at 0x25ffe70&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.590" starttime="20131028 13:01:25.589"></status>
+<msg timestamp="20131028 14:16:43.841" level="INFO">${fiveParagItalicTwo} = &lt;Element 'italic' at 0x1731f00&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.841" starttime="20131028 14:16:43.840"></status>
 </kw>
 <kw type="kw" name="${fiveParagItalicThree} = XML.Get Element">
 <doc>Returns an element in the `source` matching the `xpath`.</doc>
@@ -253,8 +253,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${firstsection}</arg>
 <arg>list[2]/list-item[4]/p[1]/italic[1]</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.591" level="INFO">${fiveParagItalicThree} = &lt;Element 'italic' at 0x25fff00&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.591" starttime="20131028 13:01:25.590"></status>
+<msg timestamp="20131028 14:16:43.842" level="INFO">${fiveParagItalicThree} = &lt;Element 'italic' at 0x1731f90&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.842" starttime="20131028 14:16:43.841"></status>
 </kw>
 <kw type="kw" name="${fiveParagItalicFour} = XML.Get Element">
 <doc>Returns an element in the `source` matching the `xpath`.</doc>
@@ -262,8 +262,8 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>${firstsection}</arg>
 <arg>list[2]/list-item[6]/p[1]/italic[1]</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.592" level="INFO">${fiveParagItalicFour} = &lt;Element 'italic' at 0x2604060&gt;</msg>
-<status status="PASS" endtime="20131028 13:01:25.592" starttime="20131028 13:01:25.591"></status>
+<msg timestamp="20131028 14:16:43.843" level="INFO">${fiveParagItalicFour} = &lt;Element 'italic' at 0x17350f0&gt;</msg>
+<status status="PASS" endtime="20131028 14:16:43.843" starttime="20131028 14:16:43.843"></status>
 </kw>
 <kw type="kw" name="XML.Elements Should Match">
 <doc>Verifies that the given `source` element matches `expected`.</doc>
@@ -272,7 +272,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>&lt;italic&gt;in-vitro&lt;/italic&gt;</arg>
 <arg>normalize_whitespace=yes</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:25.593" starttime="20131028 13:01:25.592"></status>
+<status status="PASS" endtime="20131028 14:16:43.845" starttime="20131028 14:16:43.844"></status>
 </kw>
 <kw type="kw" name="XML.Elements Should Match">
 <doc>Verifies that the given `source` element matches `expected`.</doc>
@@ -281,7 +281,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>&lt;italic&gt;in vitro.&lt;/italic&gt;</arg>
 <arg>normalize_whitespace=yes</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:25.594" starttime="20131028 13:01:25.594"></status>
+<status status="PASS" endtime="20131028 14:16:43.846" starttime="20131028 14:16:43.845"></status>
 </kw>
 <kw type="kw" name="XML.Elements Should Match">
 <doc>Verifies that the given `source` element matches `expected`.</doc>
@@ -290,7 +290,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>&lt;italic&gt;in-vitro&lt;/italic&gt;</arg>
 <arg>normalize_whitespace=yes</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:25.595" starttime="20131028 13:01:25.595"></status>
+<status status="PASS" endtime="20131028 14:16:43.847" starttime="20131028 14:16:43.846"></status>
 </kw>
 <kw type="kw" name="XML.Elements Should Match">
 <doc>Verifies that the given `source` element matches `expected`.</doc>
@@ -299,7 +299,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>&lt;italic&gt;in vivo,&lt;/italic&gt;</arg>
 <arg>normalize_whitespace=yes</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:25.597" starttime="20131028 13:01:25.596"></status>
+<status status="PASS" endtime="20131028 14:16:43.848" starttime="20131028 14:16:43.847"></status>
 </kw>
 <kw type="kw" name="XML.Elements Should Match">
 <doc>Verifies that the given `source` element matches `expected`.</doc>
@@ -308,7 +308,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>&lt;italic&gt;Staphylococcus aureus&lt;/italic&gt;</arg>
 <arg>normalize_whitespace=yes</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:25.598" starttime="20131028 13:01:25.597"></status>
+<status status="PASS" endtime="20131028 14:16:43.849" starttime="20131028 14:16:43.848"></status>
 </kw>
 <kw type="kw" name="XML.Elements Should Match">
 <doc>Verifies that the given `source` element matches `expected`.</doc>
@@ -317,7 +317,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>&lt;italic&gt;n&lt;/italic&gt;</arg>
 <arg>normalize_whitespace=yes</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:25.599" starttime="20131028 13:01:25.598"></status>
+<status status="PASS" endtime="20131028 14:16:43.850" starttime="20131028 14:16:43.849"></status>
 </kw>
 <kw type="kw" name="XML.Elements Should Match">
 <doc>Verifies that the given `source` element matches `expected`.</doc>
@@ -326,7 +326,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>&lt;italic&gt;Pseudomonas aeruginosa&lt;/italic&gt;</arg>
 <arg>normalize_whitespace=yes</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:25.600" starttime="20131028 13:01:25.599"></status>
+<status status="PASS" endtime="20131028 14:16:43.851" starttime="20131028 14:16:43.850"></status>
 </kw>
 <kw type="kw" name="XML.Elements Should Match">
 <doc>Verifies that the given `source` element matches `expected`.</doc>
@@ -335,7 +335,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>&lt;italic&gt;p&lt;/italic&gt;</arg>
 <arg>normalize_whitespace=yes</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:25.601" starttime="20131028 13:01:25.600"></status>
+<status status="PASS" endtime="20131028 14:16:43.852" starttime="20131028 14:16:43.851"></status>
 </kw>
 <kw type="kw" name="XML.Elements Should Match">
 <doc>Verifies that the given `source` element matches `expected`.</doc>
@@ -344,7 +344,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>&lt;italic&gt;S. aureus&lt;/italic&gt;</arg>
 <arg>normalize_whitespace=yes</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:25.602" starttime="20131028 13:01:25.601"></status>
+<status status="PASS" endtime="20131028 14:16:43.852" starttime="20131028 14:16:43.852"></status>
 </kw>
 <kw type="kw" name="XML.Elements Should Match">
 <doc>Verifies that the given `source` element matches `expected`.</doc>
@@ -353,7 +353,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>&lt;italic&gt;p&lt;/italic&gt;</arg>
 <arg>normalize_whitespace=yes</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:25.603" starttime="20131028 13:01:25.602"></status>
+<status status="PASS" endtime="20131028 14:16:43.853" starttime="20131028 14:16:43.853"></status>
 </kw>
 <kw type="kw" name="XML.Elements Should Match">
 <doc>Verifies that the given `source` element matches `expected`.</doc>
@@ -362,7 +362,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>&lt;italic&gt;Clinical Microbiology Reviews&lt;/italic&gt;</arg>
 <arg>normalize_whitespace=yes</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:25.604" starttime="20131028 13:01:25.603"></status>
+<status status="PASS" endtime="20131028 14:16:43.854" starttime="20131028 14:16:43.854"></status>
 </kw>
 <kw type="kw" name="XML.Elements Should Match">
 <doc>Verifies that the given `source` element matches `expected`.</doc>
@@ -371,7 +371,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>&lt;italic&gt;Principles and Practice of Disinfection, Preservation and Sterilization, Third Edition.&lt;/italic&gt;</arg>
 <arg>normalize_whitespace=yes</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:25.605" starttime="20131028 13:01:25.604"></status>
+<status status="PASS" endtime="20131028 14:16:43.856" starttime="20131028 14:16:43.855"></status>
 </kw>
 <kw type="kw" name="XML.Elements Should Match">
 <doc>Verifies that the given `source` element matches `expected`.</doc>
@@ -380,7 +380,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>&lt;italic&gt;Dermatology&lt;/italic&gt;</arg>
 <arg>normalize_whitespace=yes</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:25.606" starttime="20131028 13:01:25.606"></status>
+<status status="PASS" endtime="20131028 14:16:43.857" starttime="20131028 14:16:43.856"></status>
 </kw>
 <kw type="kw" name="XML.Elements Should Match">
 <doc>Verifies that the given `source` element matches `expected`.</doc>
@@ -389,7 +389,7 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>&lt;italic&gt;Clinical Practice Guideline Number 15: Treatment of Pressure Ulcers.&lt;/italic&gt;</arg>
 <arg>normalize_whitespace=yes</arg>
 </arguments>
-<status status="PASS" endtime="20131028 13:01:25.608" starttime="20131028 13:01:25.607"></status>
+<status status="PASS" endtime="20131028 14:16:43.858" starttime="20131028 14:16:43.857"></status>
 </kw>
 <kw type="teardown" name="OperatingSystem.Remove Directory">
 <doc>Removes the directory pointed to by the given `path`.</doc>
@@ -397,19 +397,19 @@ Archive:  /home/jos/workspace/meTypeset/tests/TestCorpus/001/docx/corpusItalics.
 <arg>001</arg>
 <arg>recursive=True</arg>
 </arguments>
-<msg timestamp="20131028 13:01:25.609" html="yes" level="INFO">Removed directory '&lt;a href="file:///home/jos/workspace/meTypeset/tests/TestCorpus/001"&gt;/home/jos/workspace/meTypeset/tests/TestCorpus/001&lt;/a&gt;'</msg>
-<status status="PASS" endtime="20131028 13:01:25.609" starttime="20131028 13:01:25.608"></status>
+<msg timestamp="20131028 14:16:43.859" html="yes" level="INFO">Removed directory '&lt;a href="file:///home/jos/Documents/git/meTypeset/tests/TestCorpus/001"&gt;/home/jos/Documents/git/meTypeset/tests/TestCorpus/001&lt;/a&gt;'</msg>
+<status status="PASS" endtime="20131028 14:16:43.859" starttime="20131028 14:16:43.858"></status>
 </kw>
 <doc></doc>
 <tags>
 <tag>italic</tag>
 </tags>
-<status status="PASS" endtime="20131028 13:01:25.609" critical="yes" starttime="20131028 13:01:20.196"></status>
+<status status="PASS" endtime="20131028 14:16:43.859" critical="yes" starttime="20131028 14:16:38.684"></status>
 </test>
 <doc>This series of test cases evaluates the basic environment setup and the ability to parse basic documents.</doc>
 <metadata>
 </metadata>
-<status status="PASS" endtime="20131028 13:01:25.610" starttime="20131028 13:01:14.808"></status>
+<status status="PASS" endtime="20131028 14:16:43.860" starttime="20131028 14:16:33.142"></status>
 </suite>
 <statistics>
 <total>
