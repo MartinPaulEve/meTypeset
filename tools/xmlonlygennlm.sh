@@ -1,0 +1,121 @@
+#!/bin/bash
+
+# Copyright (c) 2013 Martin Paul Eve
+# Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+
+# determine the directory of the running script so we can find resources
+SOURCE="${BASH_SOURCE[0]}"
+DIR="$( dirname "$SOURCE" )"
+while [ -h "$SOURCE" ]
+do 
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+  DIR="$( cd -P "$( dirname "$SOURCE"  )" && pwd )"
+done
+scriptdir="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+saxon="$scriptdir/../runtime/saxon9.jar:$scriptdir/../runtime/xml-resolver-1.1.jar"
+
+
+usage="Usage: gennlm.sh [source docx XML folder] [output folder] <metadata file.xml>"
+
+# setup variables from input
+infile="$1"
+filename=$(basename "$1")
+filename="${filename%.*}"
+
+outputfolder="$2"
+
+metadata="$3"
+
+OUTFILE="$filename.xml"
+
+if [ ! -d "$infile" ];
+then
+    echo "ERROR: Unable to locate $infile."
+    echo "$usage"
+    exit
+fi
+
+if [ ! -f "$scriptdir/../docx/from/docxtotei.xsl" ];
+then
+    echo "ERROR: Unable to locate $scriptdir/../docx/from/docxtotei.xsl."
+    echo "$usage"
+    exit
+fi
+
+if [ "$outputfolder" == "" ];
+then
+    echo "ERROR: No output folder specified."
+    echo "$usage"
+    exit
+fi
+
+if [ -d "$outputfolder" ];
+then
+    echo "ERROR: Output directory $outputfolder already exists."
+    echo "$usage"
+    exit
+fi
+
+if [ "$metadata" == "" ];
+then
+    echo "WARNING: metadata file wasn't specified. Falling back to $scriptdir/../metadata/metadataSample.xml."
+    metadata="$scriptdir/../metadata/metadataSample.xml"
+fi
+
+if [ ! -f "$metadata" ];
+then
+    echo "ERROR: metadata file does not exist."
+    exit
+fi
+
+# copy the files into the docx subfolder for relative paths to work
+mkdir "$outputfolder"
+
+# remap the output directory and remap it to an absolute path
+outputfolder=$(readlink -f "$outputfolder")
+
+# OK, this is the grimmest part: XSLT using relative filenames expects the "rels" directory to be found
+# relative to itself, not the file to which the transform is being applied, so we have to copy it
+
+cp -r "$scriptdir/../docx" "$outputfolder"
+cp -r "$scriptdir/../common2" "$outputfolder"
+
+cp -ra "$infile/." "$outputfolder/docx/"
+
+cd "$outputfolder/docx"
+
+# transform to TEI
+
+# javacmd="java -classpath $saxon -Dxml.catalog.files=$scriptdir/../runtime/catalog.xml net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o $OUTFILE.tmp ./word/document.xml ./from/docxtotei.xsl"
+# echo "INFO: Running saxon transform (DOCX->TEI): $javacmd"
+java -classpath "$saxon" -Dxml.catalog.files="$scriptdir/../runtime/catalog.xml" net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o "$OUTFILE.tmp" ./word/document.xml ./from/docxtotei.xsl
+#$javacmd
+mv "$OUTFILE.tmp" "$outputfolder/in.file"
+
+# move out of docx folder and cleanup
+
+cd "$outputfolder"
+rm -rf "./docx"
+
+# transform to NLM
+
+#javacmd="java -classpath $saxon -Dxml.catalog.files=$scriptdir/../runtime/catalog.xml net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o ./out.xml ./in.file $scriptdir/../nlm/tei_to_nlm.xsl autoBlockQuote=true"
+#echo "INFO: Running saxon transform (TEI->NLM): $javacmd"
+#$javacmd
+java -classpath "$saxon" -Dxml.catalog.files="$scriptdir/../runtime/catalog.xml" net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o ./out.xml ./in.file "$scriptdir/../nlm/tei_to_nlm.xsl" autoBlockQuote=true
+
+# merge in metadata file
+
+#echo "INFO: merging metadata FILE $metadata"
+#javacmd="java -classpath $saxon -Dxml.catalog.files=$scriptdir/../runtime/catalog.xml net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o $outputfolder/$OUTFILE ./out.xml $scriptdir/../metadata/metadata.xsl metadataFile=$metadata"
+#echo "INFO: Running saxon transform (metadata->NLM): $javacmd"
+#$javacmd
+java -classpath "$saxon" -Dxml.catalog.files="$scriptdir/../runtime/catalog.xml" net.sf.saxon.Transform -x org.apache.xml.resolver.tools.ResolvingXMLReader -y org.apache.xml.resolver.tools.ResolvingXMLReader -r org.apache.xml.resolver.tools.CatalogResolver -o "$outputfolder/$OUTFILE" ./out.xml "$scriptdir/../metadata/metadata.xsl" metadataFile=$metadata
+
+# cleanup
+rm "$outputfolder/out.xml"
+rm "$outputfolder/in.file"
+rm -rf "$outputfolder/common2"
+
+
