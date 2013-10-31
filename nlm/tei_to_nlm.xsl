@@ -885,6 +885,34 @@ have a shot at styling it. -->
           </xsl:call-template>
         </xsl:element>
       </xsl:when>
+      <xsl:when test="contains($tags,'superscript')">
+        <xsl:element name="sup">
+          <xsl:variable name="newTags">            
+            <xsl:call-template name="replace-string">
+              <xsl:with-param name="text" select="$tags"/>
+              <xsl:with-param name="replace" select="'superscript'" />
+              <xsl:with-param name="with" select="''"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:call-template name="doTags">
+            <xsl:with-param name="tags" select="$newTags"/>
+          </xsl:call-template>
+        </xsl:element>
+      </xsl:when>
+      <xsl:when test="contains($tags,'subscript')">
+        <xsl:element name="sub">
+          <xsl:variable name="newTags">            
+            <xsl:call-template name="replace-string">
+              <xsl:with-param name="text" select="$tags"/>
+              <xsl:with-param name="replace" select="'subscript'" />
+              <xsl:with-param name="with" select="''"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:call-template name="doTags">
+            <xsl:with-param name="tags" select="$newTags"/>
+          </xsl:call-template>
+        </xsl:element>
+      </xsl:when>
       <xsl:when test="empty($tags)">
         <xsl:apply-templates/>
       </xsl:when>

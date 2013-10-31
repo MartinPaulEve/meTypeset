@@ -1,0 +1,51 @@
+*** Settings ***
+Documentation     This series of test cases evaluates the basic environment setup and the ability to parse basic documents.
+Library           Process
+Library           OperatingSystem
+Library           XML
+Library           Collections
+
+*** Test Cases ***
+000 Environment
+    ${result} =    Run Process    ../../tools/gennlm.sh valuechain.docx ./000    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    Should Not Contain    ${result.stderr}    cannot find or open
+    Should Not Contain    ${result.stdout}    ERROR
+    [Teardown]    Remove Directory    000    recursive=True
+
+
+
+
+001 Matching All permutations of Italics
+    [Tags]    italic
+    ${result} =    Run Process    ../../tools/gennlm.sh valuechain.docx ./001    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./001/valuechain.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+
+    ${BodyFirstParItalic}=    Get Element    ${firstsection}    p[4]
+
+    ${BodySecondParItalic}=    Get Element    ${firstsection}    p[5]
+
+    ${BodyFirstItalic}=    Get Element    ${firstsection}    p[4]/italic[1]
+    ${BodySecondItalic}=    Get Element    ${firstsection}    p[4]/italic[2]
+    ${BodyThirdItalic}=    Get Element    ${firstsection}    p[4]/italic[3]
+    ${BodyFourthItalic}=    Get Element    ${firstsection}    p[4]/italic[4]
+    ${BodyFifthItalic}=    Get Element    ${firstsection}    p[4]/italic[5]
+ 
+    Elements Should Match    ${BodyFirstParItalic}    <p>[<italic>Richard Normann is founder of the SMG Group, a European management consulting firm specialising in strategy and business systems design. He is the author of</italic><italic><underline>Management for Growth</underline></italic><italic>and</italic><italic><underline>Service Management</underline></italic><italic>. Rafael Ramírez is a vice president of SMG and a visiting professor at the Institute Supérieur des Affaires, HEC. Both live in Paris</italic>.]</p>    normalize_whitespace=yes
+
+    Elements Should Match    ${BodySecondParItalic}    <p>Strategy is the art of creating value. It provides the intellectual frameworks, conceptual models, and governing ideas that allow a company's managers to identify opportunities for bringing value to customers and for delivering that value at a profit. In this respect, strategy is the way a company defines its business and links together the only two resources that really matter in today’s economy: knowledge and relationships or an organisation’s competencies and customers.<!--There should be a line-break here.--> <!--There should be a line-break here.-->But in a fast-changing competitive environment, the fundamental logic of value creation is also changing and in a way that makes clear strategic thinking simultaneously more important and more difficult. Our traditional thinking about value is grounded in the assumptions and the model of an industrial economy. According to this view, every company occupies a position on a value chain. Upstream, suppliers provide inputs. The company then adds value to these inputs, before passing them downstream to the next actor in the chain, the customer (whether another business or the final consumer). Seen from this perspective, strategy is primarily the art of positioning a company in the right place on the value chain - the right business, the right products and market segments, the right value adding activities.<!--There should be a line-break here.--> <!--There should be a line-break here.-->Today, however, this understanding of value is as outmoded as the old assembly line that it resembles and so is the view of strategy that goes with it. Global competition, changing markets, and new technologies are opening up qualitatively new ways of creating value. The options available to companies, customers, and suppliers are proliferating in ways Henry Ford never dreamed of.<!--There should be a line-break here.--> <!--There should be a line-break here.-->Of course, more opportunities also mean more uncertainty and greater risk. Forecasts based on projections from the past become unreliable. Factors that have always seemed peripheral turn out to be key drivers of change in a company’s key markets. Invaders from previously unrelated sectors change the rules of the game overnight. <!--There should be a line-break here.--> <!--There should be a line-break here.-->In so volatile a competitive environment, strategy is no longer a matter of positioning a fixed set of activities along a value chain. Increasingly, successful companies do not just <italic>add </italic> value, they <italic>reinvent </italic>it. Their focus of strategic analysis is not the company or even the industry but the <italic>value-creating system</italic> itself, within which different economic actors--suppliers, business partners, allies, customers--work together to <italic>co-produce</italic> value. Their key strategic task is the <italic>reconfiguration </italic>of roles and relationships among this constellation of actors in order to mobilise the creation of value in new forms and by new players. And their underlying strategic goal is to create an ever-improving fit between competencies and customers.<!--There should be a line-break here.--></p>    normalize_whitespace=yes
+
+    Elements Should Match    ${BodyFirstItalic}    <italic>Richard Normann is founder of the SMG Group, a European management consulting firm specialising in strategy and business systems design. He is the author of</italic>    normalize_whitespace=yes
+
+    Elements Should Match    ${BodySecondItalic}    <italic><underline>Management for Growth</underline></italic>    normalize_whitespace=yes
+    Elements Should Match    ${BodyThirdItalic}    <italic>and</italic>    normalize_whitespace=yes
+    Elements Should Match    ${BodyFourthItalic}    <italic><underline>Service Management</underline></italic>    normalize_whitespace=yes
+    Elements Should Match    ${BodyFifthItalic}    <italic>. Rafael Ramírez is a vice president of SMG and a visiting professor at the Institute Supérieur des Affaires, HEC. Both live in Paris</italic>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    001    recursive=True
+
+
