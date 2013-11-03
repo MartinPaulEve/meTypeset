@@ -1,0 +1,69 @@
+*** Settings ***
+Documentation     This series of test cases evaluates the basic environment setup and the ability to parse basic documents.
+Library           Process
+Library           OperatingSystem
+Library           XML
+Library           Collections
+
+*** Test Cases ***
+000 Environment
+    ${result} =    Run Process    ../../tools/gennlm.sh corpusItalics.docx ./000    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    Should Not Contain    ${result.stderr}    cannot find or open
+    Should Not Contain    ${result.stdout}    ERROR
+    [Teardown]    Remove Directory    000    recursive=True
+
+
+
+
+001 Matching All permutations of Italics
+    [Tags]    italic
+    ${result} =    Run Process    ../../tools/gennlm.sh corpusItalics.docx ./001    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./001/corpusItalics.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstParagItalicOne}=    Get Element    ${firstsection}    p[1]/italic[1]
+    ${firstParagItalicTwo}=    Get Element    ${firstsection}    p[1]/italic[2]
+    ${firstParagItalicThree}=    Get Element    ${firstsection}    p[1]/italic[3]
+    ${firstParagItalicFour}=    Get Element    ${firstsection}    p[1]/italic[4]
+
+    ${secondParag}=    Get Element    ${firstsection}    p[2]/italic[1]
+
+    ${thirdParagItalicOne}=    Get Element    ${firstsection}    p[3]/italic[1]
+    ${thirdParagItalicTwo}=    Get Element    ${firstsection}    p[3]/italic[2]
+
+    ${fourParagItalicOne}=    Get Element    ${firstsection}    table-wrap[1]/table[1]/tr[3]/td[6]/italic[1]
+    ${fourParagItalicTwo}=    Get Element    ${firstsection}    table-wrap[1]/table[1]/tr[6]/td[7]/italic[1]
+    ${fourParagItalicThree}=    Get Element    ${firstsection}    table-wrap[1]/table[1]/tr[7]/td[6]/italic[1]
+
+    ${fiveParagItalicOne}=    Get Element    ${firstsection}    list[2]/list-item[2]/p[1]/italic[1]
+    ${fiveParagItalicTwo}=    Get Element    ${firstsection}    list[2]/list-item[3]/p[1]/italic[1]
+    ${fiveParagItalicThree}=    Get Element    ${firstsection}    list[2]/list-item[4]/p[1]/italic[1]
+    ${fiveParagItalicFour}=    Get Element    ${firstsection}    list[2]/list-item[5]/p[1]/italic[1]
+   
+
+    Elements Should Match    ${firstParagItalicOne}    <italic>in-vitro</italic>    normalize_whitespace=yes
+    Elements Should Match    ${firstParagItalicTwo}    <italic>in vitro.</italic>    normalize_whitespace=yes
+    Elements Should Match    ${firstParagItalicThree}    <italic>in-vitro</italic>    normalize_whitespace=yes
+    Elements Should Match    ${firstParagItalicFour}    <italic>in vivo,</italic>    normalize_whitespace=yes
+
+    Elements Should Match    ${secondParag}    <italic>Staphylococcus aureus</italic>    normalize_whitespace=yes
+
+    Elements Should Match    ${thirdParagItalicOne}    <italic>n</italic>    normalize_whitespace=yes
+    Elements Should Match    ${thirdParagItalicTwo}    <italic>Pseudomonas aeruginosa</italic>    normalize_whitespace=yes
+
+    Elements Should Match    ${fourParagItalicOne}    <italic>p</italic>    normalize_whitespace=yes
+    Elements Should Match    ${fourParagItalicTwo}    <italic>S. aureus</italic>    normalize_whitespace=yes
+    Elements Should Match    ${fourParagItalicThree}    <italic>p</italic>    normalize_whitespace=yes
+
+    Elements Should Match    ${fiveParagItalicOne}    <italic>Clinical Microbiology Reviews</italic>    normalize_whitespace=yes
+    Elements Should Match    ${fiveParagItalicTwo}    <italic>Principles and Practice of Disinfection, Preservation and Sterilization, Third Edition.</italic>    normalize_whitespace=yes
+    Elements Should Match    ${fiveParagItalicThree}    <italic>Dermatology</italic>    normalize_whitespace=yes
+    Elements Should Match    ${fiveParagItalicFour}    <italic>Clinical Practice Guideline Number 15: Treatment of Pressure Ulcers.</italic>    normalize_whitespace=yes
+
+    [Teardown]    Remove Directory    001    recursive=True
+
+

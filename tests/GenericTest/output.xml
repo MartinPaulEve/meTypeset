@@ -1,0 +1,820 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generated="20131028 14:16:55.701" generator="Robot 2.8.1 (Python 2.7.3 on linux2)">
+<suite source="/home/jos/Documents/git/meTypeset/tests/GenericTest/GenericTestBIU.txt" id="s1" name="GenericTestBIU">
+<test id="s1-t1" name="000 Environment">
+<kw type="kw" name="${result} = Process.Run Process">
+<doc>Runs a process and waits for it to complete.</doc>
+<arguments>
+<arg>../../tools/gennlm.sh 006_Bold_Italics_Underline.docx ./000</arg>
+<arg>shell=True</arg>
+</arguments>
+<msg timestamp="20131028 14:16:55.779" level="INFO">Starting process:
+../../tools/gennlm.sh 006_Bold_Italics_Underline.docx ./000</msg>
+<msg timestamp="20131028 14:16:55.782" level="INFO">Waiting for process to complete.</msg>
+<msg timestamp="20131028 14:17:00.783" level="INFO">Process completed.</msg>
+<msg timestamp="20131028 14:17:00.784" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:00.783" starttime="20131028 14:16:55.778"></status>
+</kw>
+<kw type="kw" name="BuiltIn.Log">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${result.stdout}</arg>
+</arguments>
+<msg timestamp="20131028 14:17:00.786" level="INFO">WARNING: metadata file wasn't specified. Falling back to /home/jos/Documents/git/meTypeset/tools/../metadata/metadataSample.xml.
+INFO: Decompressing /home/jos/Documents/git/meTypeset/tests/GenericTest/000/docx/006_Bold_Italics_Underline.docx.
+Archive:  /home/jos/Documents/git/meTypeset/tests/GenericTest/000/docx/006_Bold_Italics_Underline.docx
+  inflating: _rels/.rels             
+  inflating: word/fontTable.xml      
+  inflating: word/_rels/document.xml.rels  
+  inflating: word/numbering.xml      
+  inflating: word/footer1.xml        
+  inflating: word/document.xml       
+  inflating: word/styles.xml         
+  inflating: docProps/app.xml        
+  inflating: docProps/core.xml       
+  inflating: [Content_Types].xml     </msg>
+<status status="PASS" endtime="20131028 14:17:00.786" starttime="20131028 14:17:00.785"></status>
+</kw>
+<kw type="kw" name="BuiltIn.Log">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${result.stderr}</arg>
+</arguments>
+<msg timestamp="20131028 14:17:00.788" level="INFO"></msg>
+<status status="PASS" endtime="20131028 14:17:00.788" starttime="20131028 14:17:00.787"></status>
+</kw>
+<kw type="kw" name="BuiltIn.Should Not Contain">
+<doc>Fails if `item1` contains `item2` one or more times.</doc>
+<arguments>
+<arg>${result.stderr}</arg>
+<arg>cannot find or open</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:00.789" starttime="20131028 14:17:00.788"></status>
+</kw>
+<kw type="kw" name="BuiltIn.Should Not Contain">
+<doc>Fails if `item1` contains `item2` one or more times.</doc>
+<arguments>
+<arg>${result.stdout}</arg>
+<arg>ERROR</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:00.791" starttime="20131028 14:17:00.790"></status>
+</kw>
+<kw type="teardown" name="OperatingSystem.Remove Directory">
+<doc>Removes the directory pointed to by the given `path`.</doc>
+<arguments>
+<arg>000</arg>
+<arg>recursive=True</arg>
+</arguments>
+<msg timestamp="20131028 14:17:00.793" html="yes" level="INFO">Removed directory '&lt;a href="file:///home/jos/Documents/git/meTypeset/tests/GenericTest/000"&gt;/home/jos/Documents/git/meTypeset/tests/GenericTest/000&lt;/a&gt;'</msg>
+<status status="PASS" endtime="20131028 14:17:00.793" starttime="20131028 14:17:00.792"></status>
+</kw>
+<doc></doc>
+<tags>
+</tags>
+<status status="PASS" endtime="20131028 14:17:00.793" critical="yes" starttime="20131028 14:16:55.777"></status>
+</test>
+<test id="s1-t2" name="006 Matching All permutations of Italics">
+<kw type="kw" name="${result} = Process.Run Process">
+<doc>Runs a process and waits for it to complete.</doc>
+<arguments>
+<arg>../../tools/gennlm.sh 006_Bold_Italics_Underline.docx ./006</arg>
+<arg>shell=True</arg>
+</arguments>
+<msg timestamp="20131028 14:17:00.798" level="INFO">Starting process:
+../../tools/gennlm.sh 006_Bold_Italics_Underline.docx ./006</msg>
+<msg timestamp="20131028 14:17:00.803" level="INFO">Waiting for process to complete.</msg>
+<msg timestamp="20131028 14:17:05.954" level="INFO">Process completed.</msg>
+<msg timestamp="20131028 14:17:05.954" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.954" starttime="20131028 14:17:00.797"></status>
+</kw>
+<kw type="kw" name="BuiltIn.Log">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${result.stdout}</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.955" level="INFO">WARNING: metadata file wasn't specified. Falling back to /home/jos/Documents/git/meTypeset/tools/../metadata/metadataSample.xml.
+INFO: Decompressing /home/jos/Documents/git/meTypeset/tests/GenericTest/006/docx/006_Bold_Italics_Underline.docx.
+Archive:  /home/jos/Documents/git/meTypeset/tests/GenericTest/006/docx/006_Bold_Italics_Underline.docx
+  inflating: _rels/.rels             
+  inflating: word/fontTable.xml      
+  inflating: word/_rels/document.xml.rels  
+  inflating: word/numbering.xml      
+  inflating: word/footer1.xml        
+  inflating: word/document.xml       
+  inflating: word/styles.xml         
+  inflating: docProps/app.xml        
+  inflating: docProps/core.xml       
+  inflating: [Content_Types].xml     </msg>
+<status status="PASS" endtime="20131028 14:17:05.955" starttime="20131028 14:17:05.955"></status>
+</kw>
+<kw type="kw" name="BuiltIn.Log">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${result.stderr}</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.956" level="INFO"></msg>
+<status status="PASS" endtime="20131028 14:17:05.956" starttime="20131028 14:17:05.956"></status>
+</kw>
+<kw type="kw" name="${xml} = XML.Parse Xml">
+<doc>Parses the given XML file or string into an element structure.</doc>
+<arguments>
+<arg>./006/006_Bold_Italics_Underline.xml</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.958" level="INFO">${xml} = &lt;Element 'article' at 0x28a2240&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.958" starttime="20131028 14:17:05.957"></status>
+</kw>
+<kw type="kw" name="${sections} = XML.Get Elements">
+<doc>Returns a list of elements in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${xml}</arg>
+<arg>body/sec</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.959" level="INFO">${sections} = [&lt;Element 'sec' at 0x28a43f0&gt;]</msg>
+<status status="PASS" endtime="20131028 14:17:05.959" starttime="20131028 14:17:05.959"></status>
+</kw>
+<kw type="kw" name="${firstsection} = Collections.Get From List">
+<doc>Returns the value specified with an `index` from `list`.</doc>
+<arguments>
+<arg>${sections}</arg>
+<arg>0</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.960" level="INFO">${firstsection} = &lt;Element 'sec' at 0x28a43f0&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.960" starttime="20131028 14:17:05.959"></status>
+</kw>
+<kw type="kw" name="${firstsectionFirstItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[10]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.962" level="INFO">${firstsectionFirstItalic} = &lt;Element 'p' at 0x28a4c00&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.962" starttime="20131028 14:17:05.960"></status>
+</kw>
+<kw type="kw" name="${firstsectionSecondItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[11]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.963" level="INFO">${firstsectionSecondItalic} = &lt;Element 'p' at 0x28a4d50&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.963" starttime="20131028 14:17:05.962"></status>
+</kw>
+<kw type="kw" name="${firstsectionThirdItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[12]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.965" level="INFO">${firstsectionThirdItalic} = &lt;Element 'p' at 0x28a4ed0&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.964" starttime="20131028 14:17:05.963"></status>
+</kw>
+<kw type="kw" name="${firstsectionFourItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[13]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.966" level="INFO">${firstsectionFourItalic} = &lt;Element 'p' at 0x28ab090&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.966" starttime="20131028 14:17:05.965"></status>
+</kw>
+<kw type="kw" name="${secondsectionFirstItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[14]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.968" level="INFO">${secondsectionFirstItalic} = &lt;Element 'p' at 0x28ab8a0&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.967" starttime="20131028 14:17:05.966"></status>
+</kw>
+<kw type="kw" name="${secondsectionSecondItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[15]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.969" level="INFO">${secondsectionSecondItalic} = &lt;Element 'p' at 0x28ab9c0&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.969" starttime="20131028 14:17:05.968"></status>
+</kw>
+<kw type="kw" name="${secondsectionThirdItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[16]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.971" level="INFO">${secondsectionThirdItalic} = &lt;Element 'p' at 0x28abae0&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.970" starttime="20131028 14:17:05.969"></status>
+</kw>
+<kw type="kw" name="${secondsectionFourItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[17]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.972" level="INFO">${secondsectionFourItalic} = &lt;Element 'p' at 0x28abd20&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.972" starttime="20131028 14:17:05.971"></status>
+</kw>
+<kw type="kw" name="${thirdsectionFirstItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[18]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.973" level="INFO">${thirdsectionFirstItalic} = &lt;Element 'p' at 0x28abf00&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.973" starttime="20131028 14:17:05.972"></status>
+</kw>
+<kw type="kw" name="${thirdsectionSecondItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[19]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.975" level="INFO">${thirdsectionSecondItalic} = &lt;Element 'p' at 0x28ae060&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.975" starttime="20131028 14:17:05.974"></status>
+</kw>
+<kw type="kw" name="${thirdsectionThirdItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[20]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.976" level="INFO">${thirdsectionThirdItalic} = &lt;Element 'p' at 0x28ae180&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.976" starttime="20131028 14:17:05.975"></status>
+</kw>
+<kw type="kw" name="${foursectionFirstItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[21]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.978" level="INFO">${foursectionFirstItalic} = &lt;Element 'p' at 0x28ae480&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.978" starttime="20131028 14:17:05.977"></status>
+</kw>
+<kw type="kw" name="${foursectionSecondItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[22]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.979" level="INFO">${foursectionSecondItalic} = &lt;Element 'p' at 0x28ae630&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.979" starttime="20131028 14:17:05.978"></status>
+</kw>
+<kw type="kw" name="${foursectionThirdItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[23]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.981" level="INFO">${foursectionThirdItalic} = &lt;Element 'p' at 0x28ae7e0&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.981" starttime="20131028 14:17:05.980"></status>
+</kw>
+<kw type="kw" name="${foursectionFifthItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[25]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.983" level="INFO">${foursectionFifthItalic} = &lt;Element 'p' at 0x28aeae0&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.982" starttime="20131028 14:17:05.981"></status>
+</kw>
+<kw type="kw" name="${foursectionSevenItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[27]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.984" level="INFO">${foursectionSevenItalic} = &lt;Element 'p' at 0x28aec60&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.984" starttime="20131028 14:17:05.983"></status>
+</kw>
+<kw type="kw" name="${foursectionThirdtenItalic} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[33]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:05.986" level="INFO">${foursectionThirdtenItalic} = &lt;Element 'p' at 0x28b2060&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:05.986" starttime="20131028 14:17:05.985"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${firstsectionFirstItalic}</arg>
+<arg>&lt;p&gt;&lt;italic&gt;The selected text will become bold.&lt;/italic&gt; &lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:05.987" starttime="20131028 14:17:05.986"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${firstsectionSecondItalic}</arg>
+<arg>&lt;p&gt;&lt;italic&gt;All selected text will become bold.&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:05.989" starttime="20131028 14:17:05.988"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${firstsectionThirdItalic}</arg>
+<arg>&lt;p&gt;&lt;italic&gt;Selected text will be italicised.&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:05.990" starttime="20131028 14:17:05.989"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${firstsectionFourItalic}</arg>
+<arg>&lt;p&gt;&lt;italic&gt;Selected text will be underlined.&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:05.991" starttime="20131028 14:17:05.990"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${secondsectionFirstItalic}</arg>
+<arg>&lt;p&gt;&lt;italic&gt;This will bring up the Font Dialog.&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:05.993" starttime="20131028 14:17:05.991"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${secondsectionSecondItalic}</arg>
+<arg>&lt;p&gt;&lt;italic&gt;You can see the result of this selection in the preview window of the dialog.&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:05.994" starttime="20131028 14:17:05.993"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${secondsectionThirdItalic}</arg>
+<arg>&lt;p&gt;&lt;italic&gt;The selected text will become bold.&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:05.995" starttime="20131028 14:17:05.994"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${secondsectionFourItalic}</arg>
+<arg>&lt;p&gt;&lt;italic&gt;The selected text will be underlined.&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:05.996" starttime="20131028 14:17:05.995"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${thirdsectionFirstItalic}</arg>
+<arg>&lt;p&gt;&lt;italic&gt;Selected text will become bold.&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:05.997" starttime="20131028 14:17:05.997"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${thirdsectionSecondItalic}</arg>
+<arg>&lt;p&gt;&lt;italic&gt;The selected text will be underlined&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:05.999" starttime="20131028 14:17:05.998"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${thirdsectionThirdItalic}</arg>
+<arg>&lt;p&gt;&lt;italic&gt;The selected text will become italicized.&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:06.000" starttime="20131028 14:17:05.999"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${foursectionFirstItalic}</arg>
+<arg>&lt;p&gt;&lt;italic&gt;Selected text will become bold.&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:06.001" starttime="20131028 14:17:06.000"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${foursectionSecondItalic}</arg>
+<arg>&lt;p&gt;&lt;italic&gt;The selected text will be underlined.&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:06.002" starttime="20131028 14:17:06.001"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${foursectionThirdItalic}</arg>
+<arg>&lt;p&gt;&lt;italic&gt;The selected text will be italicised.&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:06.003" starttime="20131028 14:17:06.002"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${foursectionFifthItalic}</arg>
+<arg>&lt;p&gt;&lt;bold&gt;&lt;italic&gt;&lt;underline&gt;Examination Schedule&lt;/underline&gt;&lt;/italic&gt;&lt;/bold&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:06.005" starttime="20131028 14:17:06.004"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${foursectionSevenItalic}</arg>
+<arg>&lt;p&gt;&lt;bold&gt;Venue&lt;/bold&gt;: &lt;italic&gt;Patna Science College&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:06.006" starttime="20131028 14:17:06.005"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${foursectionThirdtenItalic}</arg>
+<arg>&lt;p&gt;&lt;bold&gt;Venue&lt;/bold&gt;: &lt;italic&gt;Patna Science College&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:06.007" starttime="20131028 14:17:06.006"></status>
+</kw>
+<kw type="teardown" name="OperatingSystem.Remove Directory">
+<doc>Removes the directory pointed to by the given `path`.</doc>
+<arguments>
+<arg>006</arg>
+<arg>recursive=True</arg>
+</arguments>
+<msg timestamp="20131028 14:17:06.008" html="yes" level="INFO">Removed directory '&lt;a href="file:///home/jos/Documents/git/meTypeset/tests/GenericTest/006"&gt;/home/jos/Documents/git/meTypeset/tests/GenericTest/006&lt;/a&gt;'</msg>
+<status status="PASS" endtime="20131028 14:17:06.008" starttime="20131028 14:17:06.008"></status>
+</kw>
+<doc></doc>
+<tags>
+<tag>italic</tag>
+</tags>
+<status status="PASS" endtime="20131028 14:17:06.009" critical="yes" starttime="20131028 14:17:00.794"></status>
+</test>
+<test id="s1-t3" name="007 Matching All permutations of Bold (In body not headers)">
+<kw type="kw" name="${result} = Process.Run Process">
+<doc>Runs a process and waits for it to complete.</doc>
+<arguments>
+<arg>../../tools/gennlm.sh 006_Bold_Italics_Underline.docx ./007</arg>
+<arg>shell=True</arg>
+</arguments>
+<msg timestamp="20131028 14:17:06.011" level="INFO">Starting process:
+../../tools/gennlm.sh 006_Bold_Italics_Underline.docx ./007</msg>
+<msg timestamp="20131028 14:17:06.015" level="INFO">Waiting for process to complete.</msg>
+<msg timestamp="20131028 14:17:11.274" level="INFO">Process completed.</msg>
+<msg timestamp="20131028 14:17:11.274" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.274" starttime="20131028 14:17:06.011"></status>
+</kw>
+<kw type="kw" name="BuiltIn.Log">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${result.stdout}</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.275" level="INFO">WARNING: metadata file wasn't specified. Falling back to /home/jos/Documents/git/meTypeset/tools/../metadata/metadataSample.xml.
+INFO: Decompressing /home/jos/Documents/git/meTypeset/tests/GenericTest/007/docx/006_Bold_Italics_Underline.docx.
+Archive:  /home/jos/Documents/git/meTypeset/tests/GenericTest/007/docx/006_Bold_Italics_Underline.docx
+  inflating: _rels/.rels             
+  inflating: word/fontTable.xml      
+  inflating: word/_rels/document.xml.rels  
+  inflating: word/numbering.xml      
+  inflating: word/footer1.xml        
+  inflating: word/document.xml       
+  inflating: word/styles.xml         
+  inflating: docProps/app.xml        
+  inflating: docProps/core.xml       
+  inflating: [Content_Types].xml     </msg>
+<status status="PASS" endtime="20131028 14:17:11.275" starttime="20131028 14:17:11.275"></status>
+</kw>
+<kw type="kw" name="BuiltIn.Log">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${result.stderr}</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.276" level="INFO"></msg>
+<status status="PASS" endtime="20131028 14:17:11.276" starttime="20131028 14:17:11.276"></status>
+</kw>
+<kw type="kw" name="${xml} = XML.Parse Xml">
+<doc>Parses the given XML file or string into an element structure.</doc>
+<arguments>
+<arg>./007/006_Bold_Italics_Underline.xml</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.278" level="INFO">${xml} = &lt;Element 'article' at 0x28aed20&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.278" starttime="20131028 14:17:11.277"></status>
+</kw>
+<kw type="kw" name="${sections} = XML.Get Elements">
+<doc>Returns a list of elements in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${xml}</arg>
+<arg>body/sec</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.279" level="INFO">${sections} = [&lt;Element 'sec' at 0x28a2c30&gt;]</msg>
+<status status="PASS" endtime="20131028 14:17:11.279" starttime="20131028 14:17:11.279"></status>
+</kw>
+<kw type="kw" name="${firstsection} = Collections.Get From List">
+<doc>Returns the value specified with an `index` from `list`.</doc>
+<arguments>
+<arg>${sections}</arg>
+<arg>0</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.280" level="INFO">${firstsection} = &lt;Element 'sec' at 0x28a2c30&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.280" starttime="20131028 14:17:11.280"></status>
+</kw>
+<kw type="kw" name="${FirstBold} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/table-wrap[1]/table[1]/tr[1]/td[1]/sec[1]/list[1]/list-item[3]/p</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.283" level="INFO">${FirstBold} = &lt;Element 'p' at 0x28ab660&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.282" starttime="20131028 14:17:11.281"></status>
+</kw>
+<kw type="kw" name="${SecondBold} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/list[14]/list-item[4]/p</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.284" level="INFO">${SecondBold} = &lt;Element 'p' at 0x28ab4b0&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.284" starttime="20131028 14:17:11.283"></status>
+</kw>
+<kw type="kw" name="${ThirdBold} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/list[15]/list-item[1]/p</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.286" level="INFO">${ThirdBold} = &lt;Element 'p' at 0x28ab150&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.286" starttime="20131028 14:17:11.285"></status>
+</kw>
+<kw type="kw" name="${FourBold} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/list[16]/list-item[1]/p</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.288" level="INFO">${FourBold} = &lt;Element 'p' at 0x28a8030&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.288" starttime="20131028 14:17:11.287"></status>
+</kw>
+<kw type="kw" name="${FifthBold} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[25]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.289" level="INFO">${FifthBold} = &lt;Element 'p' at 0x28a8390&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.289" starttime="20131028 14:17:11.288"></status>
+</kw>
+<kw type="kw" name="${SixBold} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[26]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.291" level="INFO">${SixBold} = &lt;Element 'p' at 0x28a8480&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.291" starttime="20131028 14:17:11.290"></status>
+</kw>
+<kw type="kw" name="${SevenBold} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[27]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.292" level="INFO">${SevenBold} = &lt;Element 'p' at 0x28a8510&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.292" starttime="20131028 14:17:11.291"></status>
+</kw>
+<kw type="kw" name="${EigthBold} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[28]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.294" level="INFO">${EigthBold} = &lt;Element 'p' at 0x28a85d0&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.294" starttime="20131028 14:17:11.293"></status>
+</kw>
+<kw type="kw" name="${NineBold} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[29]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.295" level="INFO">${NineBold} = &lt;Element 'p' at 0x28a8690&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.295" starttime="20131028 14:17:11.294"></status>
+</kw>
+<kw type="kw" name="${TenBold} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[30]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.297" level="INFO">${TenBold} = &lt;Element 'p' at 0x28a8780&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.297" starttime="20131028 14:17:11.295"></status>
+</kw>
+<kw type="kw" name="${ElevenBold} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[32]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.298" level="INFO">${ElevenBold} = &lt;Element 'p' at 0x28a8810&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.298" starttime="20131028 14:17:11.297"></status>
+</kw>
+<kw type="kw" name="${TwelveBold} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[33]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.299" level="INFO">${TwelveBold} = &lt;Element 'p' at 0x28a88a0&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.299" starttime="20131028 14:17:11.298"></status>
+</kw>
+<kw type="kw" name="${ThirdtenBold} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[34]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.301" level="INFO">${ThirdtenBold} = &lt;Element 'p' at 0x28a8960&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.301" starttime="20131028 14:17:11.300"></status>
+</kw>
+<kw type="kw" name="${FourtenBold} = XML.Get Element">
+<doc>Returns an element in the `source` matching the `xpath`.</doc>
+<arguments>
+<arg>${firstsection}</arg>
+<arg>sec[1]/sec[1]/sec[1]/p[35]</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.303" level="INFO">${FourtenBold} = &lt;Element 'p' at 0x28a8a20&gt;</msg>
+<status status="PASS" endtime="20131028 14:17:11.303" starttime="20131028 14:17:11.301"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${FirstBold}</arg>
+<arg>&lt;p&gt;Now Click ‘&lt;bold&gt;B&lt;/bold&gt;’ on the Ribbon. All highlighted text becomes bold.&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:11.305" starttime="20131028 14:17:11.303"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${SecondBold}</arg>
+<arg>&lt;p&gt;Click ‘&lt;bold&gt;B&lt;/bold&gt;’ in the Mini Toolbar.&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:11.306" starttime="20131028 14:17:11.305"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${ThirdBold}</arg>
+<arg>&lt;p&gt;For underlining, select the text, right click on highlighted text and click ‘&lt;bold&gt;U&lt;/bold&gt;’ in the Mini Toolbar.&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:11.308" starttime="20131028 14:17:11.306"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${FourBold}</arg>
+<arg>&lt;p&gt;For italicizing, select the text, right click on highlighted text and click ‘&lt;bold&gt;I&lt;/bold&gt;’ in the Mini Toolbar.&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:11.309" starttime="20131028 14:17:11.308"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${FifthBold}</arg>
+<arg>&lt;p&gt;&lt;bold&gt;&lt;italic&gt;&lt;underline&gt;Examination Schedule&lt;/underline&gt;&lt;/italic&gt;&lt;/bold&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:11.311" starttime="20131028 14:17:11.310"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${SixBold}</arg>
+<arg>&lt;p&gt;&lt;bold&gt;Date&lt;/bold&gt;: Wednesday, 8th January 2013&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:11.312" starttime="20131028 14:17:11.311"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${SevenBold}</arg>
+<arg>&lt;p&gt;&lt;bold&gt;Venue&lt;/bold&gt;: &lt;italic&gt;Patna Science College&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:11.313" starttime="20131028 14:17:11.312"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${EigthBold}</arg>
+<arg>&lt;p&gt;&lt;bold&gt;0900-1200 hrs&lt;/bold&gt;: Pre University (&lt;underline&gt;Hall-11&lt;/underline&gt;)&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:11.315" starttime="20131028 14:17:11.313"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${NineBold}</arg>
+<arg>&lt;p&gt;&lt;bold&gt;1400-1700 hrs&lt;/bold&gt;: B.SC.-I (&lt;underline&gt;Hall-12&lt;/underline&gt;)&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:11.316" starttime="20131028 14:17:11.315"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${TenBold}</arg>
+<arg>&lt;p&gt;You will be using this document for other exercises where the bold, italic and underline formatting is not required in the first line. &lt;bold&gt;To clear formatting, &lt;/bold&gt;select this line and click the ‘Clear Formatting’ button of the ‘Paragraph’ group on Ribbon. All formatting will be cleared in the first line and the document will look like this:&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:11.319" starttime="20131028 14:17:11.317"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${ElevenBold}</arg>
+<arg>&lt;p&gt;&lt;bold&gt;Date&lt;/bold&gt;: Wednesday, 8th January 2013&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:11.321" starttime="20131028 14:17:11.320"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${TwelveBold}</arg>
+<arg>&lt;p&gt;&lt;bold&gt;Venue&lt;/bold&gt;: &lt;italic&gt;Patna Science College&lt;/italic&gt;&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:11.322" starttime="20131028 14:17:11.321"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${ThirdtenBold}</arg>
+<arg>&lt;p&gt;&lt;bold&gt;0900-1200 hrs&lt;/bold&gt;: Pre University (&lt;underline&gt;Hall-11&lt;/underline&gt;)&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:11.323" starttime="20131028 14:17:11.322"></status>
+</kw>
+<kw type="kw" name="XML.Elements Should Match">
+<doc>Verifies that the given `source` element matches `expected`.</doc>
+<arguments>
+<arg>${FourtenBold}</arg>
+<arg>&lt;p&gt;&lt;bold&gt;1400-1700 hrs&lt;/bold&gt;: B.SC.-I (&lt;underline&gt;Hall-12&lt;/underline&gt;)&lt;/p&gt;</arg>
+<arg>normalize_whitespace=yes</arg>
+</arguments>
+<status status="PASS" endtime="20131028 14:17:11.325" starttime="20131028 14:17:11.324"></status>
+</kw>
+<kw type="teardown" name="OperatingSystem.Remove Directory">
+<doc>Removes the directory pointed to by the given `path`.</doc>
+<arguments>
+<arg>007</arg>
+<arg>recursive=True</arg>
+</arguments>
+<msg timestamp="20131028 14:17:11.326" html="yes" level="INFO">Removed directory '&lt;a href="file:///home/jos/Documents/git/meTypeset/tests/GenericTest/007"&gt;/home/jos/Documents/git/meTypeset/tests/GenericTest/007&lt;/a&gt;'</msg>
+<status status="PASS" endtime="20131028 14:17:11.326" starttime="20131028 14:17:11.325"></status>
+</kw>
+<doc></doc>
+<tags>
+<tag>bold</tag>
+</tags>
+<status status="PASS" endtime="20131028 14:17:11.326" critical="yes" starttime="20131028 14:17:06.009"></status>
+</test>
+<doc>This series of test cases evaluates the basic environment setup and the ability to parse basic documents.</doc>
+<metadata>
+</metadata>
+<status status="PASS" endtime="20131028 14:17:11.327" starttime="20131028 14:16:55.702"></status>
+</suite>
+<statistics>
+<total>
+<stat fail="0" pass="3">Critical Tests</stat>
+<stat fail="0" pass="3">All Tests</stat>
+</total>
+<tag>
+<stat info="" links="" doc="" combined="" pass="1" fail="0">bold</stat>
+<stat info="" links="" doc="" combined="" pass="1" fail="0">italic</stat>
+</tag>
+<suite>
+<stat fail="0" pass="3" id="s1" name="GenericTestBIU">GenericTestBIU</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
