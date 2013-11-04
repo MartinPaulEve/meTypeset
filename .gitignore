@@ -1,0 +1,8 @@
+# Ignore robot framework result cases
+tests/GenericTest/log.html
+tests/GenericTest/output.xml
+tests/GenericTest/report.html
+
+tests/TestCorpus/log.html
+tests/TestCorpus/output.xml
+tests/TestCorpus/report.html

@@ -103,6 +103,23 @@ of this software, even if advised of the possibility of such damage.
 	  <xsl:value-of select="key('STYLES',$old)/w:name/@w:val"/>
 	</xsl:for-each>
       </xsl:variable>
+      
+      <xsl:variable name="newItalic">
+          <xsl:for-each select="document($styleDoc)">
+              <xsl:if test="key('STYLES',$old)/w:rPr/w:i">
+                  <n> italic</n>
+              </xsl:if>          
+          </xsl:for-each>
+      </xsl:variable>
+      
+      <xsl:variable name="newBold">
+          <xsl:for-each select="document($styleDoc)">
+              <xsl:if test="key('STYLES',$old)/w:rPr/w:b">
+                  <n> bold</n>
+              </xsl:if>          
+          </xsl:for-each>
+      </xsl:variable>
+      
       <xsl:attribute name="w:val">
          <xsl:choose>
 	   <xsl:when test="$new=''">
@@ -117,6 +134,8 @@ of this software, even if advised of the possibility of such damage.
 	       </xsl:message>
 	     </xsl:if>
 	     <xsl:value-of select="$new"/>
+	       <xsl:value-of select="$newItalic"/>
+	       <xsl:value-of select="$newBold"/>
 	   </xsl:when>
 	   <xsl:otherwise>
 	     <xsl:value-of select="$old"/>
