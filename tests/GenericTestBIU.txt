@@ -7,19 +7,16 @@ Library           Collections
 
 *** Test Cases ***
 000 Environment
-    ${result} =    Run Process    ../tools/gennlm.sh 001.docx ./000    shell=True
+    ${result} =    Run Process    ../tools/gennlm.sh GenericTest/006_Bold_Italics_Underline.docx ./000    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     Should Not Contain    ${result.stderr}    cannot find or open
     Should Not Contain    ${result.stdout}    ERROR
     [Teardown]    Remove Directory    000    recursive=True
 
-
-
-
 006 Matching All permutations of Italics
     [Tags]    italic
-    ${result} =    Run Process    ../tools/gennlm.sh 006_Bold_Italics_Underline.docx ./006    shell=True
+    ${result} =    Run Process    ../tools/gennlm.sh GenericTest/006_Bold_Italics_Underline.docx ./006    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./006/006_Bold_Italics_Underline.xml
@@ -29,60 +26,46 @@ Library           Collections
     ${firstsectionSecondItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[11]
     ${firstsectionThirdItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[12]
     ${firstsectionFourItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[13]
-
     ${secondsectionFirstItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[14]
     ${secondsectionSecondItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[15]
     ${secondsectionThirdItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[16]
     ${secondsectionFourItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[17]
-
     ${thirdsectionFirstItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[18]
     ${thirdsectionSecondItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[19]
     ${thirdsectionThirdItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[20]
-
     ${foursectionFirstItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[21]
     ${foursectionSecondItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[22]
     ${foursectionThirdItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[23]
-
     ${foursectionFifthItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[25]
-
     ${foursectionSevenItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[27]
     ${foursectionThirdtenItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[33]
-
     Elements Should Match    ${firstsectionFirstItalic}    <p><italic>The selected text will become bold.</italic> </p>    normalize_whitespace=yes
     Elements Should Match    ${firstsectionSecondItalic}    <p><italic>All selected text will become bold.</italic></p>    normalize_whitespace=yes
     Elements Should Match    ${firstsectionThirdItalic}    <p><italic>Selected text will be italicised.</italic></p>    normalize_whitespace=yes
     Elements Should Match    ${firstsectionFourItalic}    <p><italic>Selected text will be underlined.</italic></p>    normalize_whitespace=yes
-
     Elements Should Match    ${secondsectionFirstItalic}    <p><italic>This will bring up the Font Dialog.</italic></p>    normalize_whitespace=yes
     Elements Should Match    ${secondsectionSecondItalic}    <p><italic>You can see the result of this selection in the preview window of the dialog.</italic></p>    normalize_whitespace=yes
     Elements Should Match    ${secondsectionThirdItalic}    <p><italic>The selected text will become bold.</italic></p>    normalize_whitespace=yes
     Elements Should Match    ${secondsectionFourItalic}    <p><italic>The selected text will be underlined.</italic></p>    normalize_whitespace=yes
-
     Elements Should Match    ${thirdsectionFirstItalic}    <p><italic>Selected text will become bold.</italic></p>    normalize_whitespace=yes
     Elements Should Match    ${thirdsectionSecondItalic}    <p><italic>The selected text will be underlined</italic></p>    normalize_whitespace=yes
     Elements Should Match    ${thirdsectionThirdItalic}    <p><italic>The selected text will become italicized.</italic></p>    normalize_whitespace=yes
-
     Elements Should Match    ${foursectionFirstItalic}    <p><italic>Selected text will become bold.</italic></p>    normalize_whitespace=yes
     Elements Should Match    ${foursectionSecondItalic}    <p><italic>The selected text will be underlined.</italic></p>    normalize_whitespace=yes
     Elements Should Match    ${foursectionThirdItalic}    <p><italic>The selected text will be italicised.</italic></p>    normalize_whitespace=yes
-
     Elements Should Match    ${foursectionFifthItalic}    <p><bold><italic><underline>Examination Schedule</underline></italic></bold></p>    normalize_whitespace=yes
-
     Elements Should Match    ${foursectionSevenItalic}    <p><bold>Venue</bold>: <italic>Patna Science College</italic></p>    normalize_whitespace=yes
     Elements Should Match    ${foursectionThirdtenItalic}    <p><bold>Venue</bold>: <italic>Patna Science College</italic></p>    normalize_whitespace=yes
     [Teardown]    Remove Directory    006    recursive=True
 
-
-
 007 Matching All permutations of Bold (In body not headers)
     [Tags]    bold
-    ${result} =    Run Process    ../tools/gennlm.sh 006_Bold_Italics_Underline.docx ./007    shell=True
+    ${result} =    Run Process    ../tools/gennlm.sh GenericTest/006_Bold_Italics_Underline.docx ./007    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./007/006_Bold_Italics_Underline.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
-
     ${FirstBold}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/table-wrap[1]/table[1]/tr[1]/td[1]/sec[1]/list[1]/list-item[3]/p
     ${SecondBold}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/list[14]/list-item[4]/p
     ${ThirdBold}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/list[15]/list-item[1]/p
@@ -97,39 +80,40 @@ Library           Collections
     ${TwelveBold}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[33]
     ${ThirdtenBold}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[34]
     ${FourtenBold}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[35]
-
-
+    ${FirstSup}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[4]/sup[1]
     Elements Should Match    ${FirstBold}    <p>Now Click ‘<bold>B</bold>’ on the Ribbon. All highlighted text becomes bold.</p>    normalize_whitespace=yes
     Elements Should Match    ${SecondBold}    <p>Click ‘<bold>B</bold>’ in the Mini Toolbar.</p>    normalize_whitespace=yes
     Elements Should Match    ${ThirdBold}    <p>For underlining, select the text, right click on highlighted text and click ‘<bold>U</bold>’ in the Mini Toolbar.</p>    normalize_whitespace=yes
     Elements Should Match    ${FourBold}    <p>For italicizing, select the text, right click on highlighted text and click ‘<bold>I</bold>’ in the Mini Toolbar.</p>    normalize_whitespace=yes
     Elements Should Match    ${FifthBold}    <p><bold><italic><underline>Examination Schedule</underline></italic></bold></p>    normalize_whitespace=yes
-    Elements Should Match    ${SixBold}    <p><bold>Date</bold>: Wednesday, 8th January 2013</p>    normalize_whitespace=yes
+    Elements Should Match    ${SixBold}    <p><bold>Date</bold>: Wednesday, 8<sup>th</sup> January 2013</p>    normalize_whitespace=yes
     Elements Should Match    ${SevenBold}    <p><bold>Venue</bold>: <italic>Patna Science College</italic></p>    normalize_whitespace=yes
     Elements Should Match    ${EigthBold}    <p><bold>0900-1200 hrs</bold>: Pre University (<underline>Hall-11</underline>)</p>    normalize_whitespace=yes
     Elements Should Match    ${NineBold}    <p><bold>1400-1700 hrs</bold>: B.SC.-I (<underline>Hall-12</underline>)</p>    normalize_whitespace=yes
     Elements Should Match    ${TenBold}    <p>You will be using this document for other exercises where the bold, italic and underline formatting is not required in the first line. <bold>To clear formatting, </bold>select this line and click the ‘Clear Formatting’ button of the ‘Paragraph’ group on Ribbon. All formatting will be cleared in the first line and the document will look like this:</p>    normalize_whitespace=yes
-    Elements Should Match    ${ElevenBold}    <p><bold>Date</bold>: Wednesday, 8th January 2013</p>    normalize_whitespace=yes
-
+    Elements Should Match    ${ElevenBold}    <p><bold>Date</bold>: Wednesday, 8<sup>th</sup> January 2013</p>    normalize_whitespace=yes
     Elements Should Match    ${TwelveBold}    <p><bold>Venue</bold>: <italic>Patna Science College</italic></p>    normalize_whitespace=yes
-
     Elements Should Match    ${ThirdtenBold}    <p><bold>0900-1200 hrs</bold>: Pre University (<underline>Hall-11</underline>)</p>    normalize_whitespace=yes
     Elements Should Match    ${FourtenBold}    <p><bold>1400-1700 hrs</bold>: B.SC.-I (<underline>Hall-12</underline>)</p>    normalize_whitespace=yes
+    Elements Should Match    ${FirstSup}    <sup>th</sup>    normalize_whitespace=yes
     [Teardown]    Remove Directory    007    recursive=True
 
-
-
-008 Matching All permutations of Italics in Paper
-    [Tags]    italics
-    ${result} =    Run Process    ../tools/gennlm.sh antiseptics-complex.docx ./008    shell=True
+008 Matching All permutations of sup and sub
+    [Tags]    sup sub
+    ${result} =    Run Process    ../tools/gennlm.sh GenericTest/007_Sup_Sub.docx ./008    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./008/antiseptics-complex.xml
+    ${xml}=    Parse XML    ./008/007_Sup_Sub.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
-
-    ${FirstItalics}=    Get Element    ${firstsection}    p[14]
-
-
-    Elements Should Match    ${FirstItalics}    <p>A main concern for clinicians prior to applying a topical agent on an open wound is safety. Agents that are cytotoxic or cause delay in wound healing are used with reservation. The strongest argument against the use of antiseptics on wounds is that antiseptics have been found, primarily using <italic>in-vitro</italic> models, to be cytotoxic to cells essential to the wound healing process, such as fibroblasts, keratinocytes, and leukocytes.[29-31] However, this cytotoxicity appears to be concentration dependent, as several antiseptics in low concentrations are not cytotoxic, although they retain their antibacterial activity <italic>in vitro.</italic> [27] Since the <italic>in-vitro</italic> results are not always predictive of what may happen <italic>in vivo,</italic> numerous studies have been conducted on animal and human models. The results of these studies are conflicting and will be presented later in the article.</p>    normalize_whitespace=yes
+    ${firstParagFirstSup}=    Get Element    ${firstsection}    p[1]/sup[1]
+    ${firstParagSecondSup}=    Get Element    ${firstsection}    p[1]/sup[2]
+    ${firstParagThirdSup}=    Get Element    ${firstsection}    p[1]/sup[3]
+    ${firstParagFirstSub}=    Get Element    ${firstsection}    p[1]/sub[1]
+    ${firstParagComposeBoldItalicSup}=    Get Element    ${firstsection}    p[2]
+    Elements Should Match    ${firstParagFirstSup}    <sup>wound</sup>    normalize_whitespace=yes
+    Elements Should Match    ${firstParagSecondSup}    <sup>[29-31]</sup>    normalize_whitespace=yes
+    Elements Should Match    ${firstParagThirdSup}    <sup>[27]</sup>    normalize_whitespace=yes
+    Elements Should Match    ${firstParagFirstSub}    <sub>process</sub>    normalize_whitespace=yes
+    Elements Should Match    ${firstParagComposeBoldItalicSup}    <p><bold><sup>Results</sup></bold><sup> </sup><italic><sup>of</sup></italic><sup> </sup><bold><italic><sup>these</sup></italic></bold></p>    normalize_whitespace=yes
     [Teardown]    Remove Directory    008    recursive=True
