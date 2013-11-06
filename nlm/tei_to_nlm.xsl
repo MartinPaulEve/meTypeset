@@ -258,12 +258,12 @@
 
       </xsl:element>
 
-      <!--      This will contain the appendices, reference list, etc. -->
+      <!--      This will contain the appendices, reference list, endnotes etc. -->
 
       <xsl:element name="back">
-        <!-- footnotes -->
+        <!-- footnotes (endnotes) -->
         <xsl:element name="fn-group">
-          <xsl:for-each select="TEI/text/body/div/p/hi/note">
+          <xsl:for-each select="//note">
             <xsl:element name="fn">
             <xsl:choose>
               <xsl:when test="not(child::p)">
@@ -571,21 +571,8 @@ be given the recommended @ref-type. -->
     </xsl:element>
   </xsl:template>
 
+
   
-  <xsl:template match="tei:p[@tei:rend='EndnoteText']" mode="footnote">
-    <fn>
-      <xsl:choose>
-        <xsl:when test="not(child::p)">
-          <xsl:element name="p">
-            <xsl:apply-templates />
-          </xsl:element>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:apply-templates />
-        </xsl:otherwise>
-      </xsl:choose>
-    </fn>
-  </xsl:template>
   
 <!-- Figures and graphics. -->
   <xsl:template match="figure">
