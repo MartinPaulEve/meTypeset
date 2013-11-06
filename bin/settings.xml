@@ -1,0 +1,14 @@
+
+<mt:meTypeset xmlns:mt="https://github.com/MartinPaulEve/meTypeset">
+    <mt:parser-configuration >
+        <mt:default-output-folder >
+            output
+            <mt:docx-folder >docx</mt:docx-folder>
+            <mt:tei-folder >TEI</mt:tei-folder>
+            <mt:nlm-folder>NLM</mt:nlm-folder>
+            <mt:multimedia-folder>multimedia</mt:multimedia-folder>
+            
+        </mt:default-output-folder>
+        
+    </mt:parser-configuration>
+</mt:meTypeset>
