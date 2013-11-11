@@ -4,12 +4,18 @@
     xmlns:xlink="http://www.w3.org/1999/xlink" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <journal-meta>
-        <journal-id>The Journal Name</journal-id>
-        <issn>The ISSN</issn>
+        <journal-id journal-id-type="publisher-id">The Journal Name</journal-id>
+        <journal-title>The Journal Title</journal-title>
+        <issn pub-type="epub">0000-000X</issn>
         <publisher><publisher-name>The Publisher Name</publisher-name></publisher>
     </journal-meta>
     <article-meta>
-        <article-id pub-id-type="doi">xx.XXXX/articleDoi</article-id>
+        <article-id pub-id-type="doi">10.1000/123456</article-id>
+        <article-categories>
+            <subj-group>
+                <subject>Sample Articles</subject>
+            </subj-group>
+        </article-categories>
         <title-group>
             <article-title>A Sample Article Title</article-title>
         </title-group>
@@ -20,19 +26,21 @@
                 <name><surname>Eve</surname>
                     <given-names>Martin Paul</given-names>
                 </name>     
-                <xref ref-type="aff">
+                <xref ref-type="aff" rid="Samp1">
                     
                 </xref>
             </contrib>
         </contrib-group>
         
         <aff>University of Lincoln</aff>
-        
-        <pub-date pub-type="pub">
+        <!-- Note: epub added as default, as required by NLM stylecheck -->
+        <pub-date pub-type="epub">
             <year>2013</year>
         </pub-date>
         <volume>1</volume>
         <issue>1</issue>
+        <fpage>1</fpage>
+        <lpage>2</lpage>
         <permissions>
             <copyright-statement>Copyright &#x00A9; 2013, Martin Paul Eve</copyright-statement>
             <license license-type="open-access" xlink:href="http://creativecommons.org/licenses/by/2.0/">
