@@ -30,6 +30,7 @@
         </xsl:if>
         
         <xsl:element name="article">
+            <xsl:attribute name="article-type">other</xsl:attribute>
             <xsl:call-template name="header"/>
             
             <xsl:if test="$verbose='true'">

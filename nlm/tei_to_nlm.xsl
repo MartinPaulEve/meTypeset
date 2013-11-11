@@ -265,6 +265,16 @@
         <xsl:element name="fn-group">
           <xsl:for-each select="//note">
             <xsl:element name="fn">
+              <xsl:attribute name="id">
+                <xsl:choose>
+                  <xsl:when test="./following-sibling::text()='*'">
+                    <xsl:text>bibast</xsl:text>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:text>bib</xsl:text><xsl:value-of select="tokenize(./following-sibling::text(), '[\s.?!,;:\-]+')[.][1]"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:attribute>
             <xsl:choose>
               <xsl:when test="not(child::p)">
                 <xsl:element name="p">
@@ -276,6 +286,31 @@
               </xsl:otherwise>
             </xsl:choose>
           </xsl:element>
+          </xsl:for-each>
+          
+          <xsl:for-each select="TEI/text/body/div/p/note">
+            <xsl:element name="fn">
+              <xsl:attribute name="id">
+                <xsl:choose>
+                  <xsl:when test="./following-sibling::text()='*'">
+                    <xsl:text>bibast</xsl:text>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:text>bib</xsl:text><xsl:value-of select="tokenize(./following-sibling::text(), '[\s.?!,;:\-]+')[.][1]"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:attribute>
+              <xsl:choose>
+                <xsl:when test="not(child::p)">
+                  <xsl:element name="p">
+                    <xsl:apply-templates />
+                  </xsl:element>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:apply-templates />
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:element>
           </xsl:for-each>
         </xsl:element>
         
@@ -375,21 +410,45 @@
     </xsl:element>    
   </xsl:template>
   
+  <!-- New list types added, according to nlm 
+  order           Ordered list. Prefix character is a number or a letter, depending on style.
+  bullet          Unordered or bulleted list. Prefix character is a bullet, dash, or other symbol.
+  alpha-lower     Ordered list. Prefix character is a lowercase alphabetical character.
+  alpha-upper     Ordered list. Prefix character is an uppercase alphabetical character.
+  roman-lower     Ordered list. Prefix character is a lowercase roman numeral.
+  roman-upper     Ordered list. Prefix character is an uppercase roman numeral.
+  simple          Simple or plain list (No prefix character before each item) 
+  -->
   <xsl:template match="list">
     <xsl:element name="list">
       <xsl:if test="@type">
-        <xsl:attribute name="list-type" select="@type" />
+        <xsl:choose>
+          <xsl:when test="@type = 'ordered'">
+            <xsl:attribute name="list-type">order</xsl:attribute>
+          </xsl:when>
+          <xsl:when test="@type = 'unordered'">
+            <!-- No particular stile for unordered, simple was added also we can skip the attribute -->
+            <xsl:attribute name="list-type">simple</xsl:attribute>
+          </xsl:when>
+          <xsl:otherwise>            
+            <xsl:attribute name="list-type" select="@type" />
+          </xsl:otherwise>
+        </xsl:choose>        
       </xsl:if>
       <xsl:apply-templates />
     </xsl:element>
   </xsl:template>
   
+  
   <xsl:template match="list/item">
-    <xsl:element name="list-item">
-      <p>
-        <xsl:apply-templates />
-      </p>
-    </xsl:element>
+    <!-- Posible to have list items empty, validation added to not create empty tags -->
+    <xsl:if test="count(./child::node())>0">
+      <xsl:element name="list-item">
+        <p>
+          <xsl:apply-templates />
+        </p>
+      </xsl:element>
+    </xsl:if>
   </xsl:template>
   
     <!-- Tables are simple for the moment, but they'll get complicated. -->
@@ -448,29 +507,37 @@
 to simplify a bit. -->
   <xsl:template match="cit">
     <xsl:if test="quote">
-      <xsl:element name="disp-quote">
-        <xsl:if test="@rend">
-          <xsl:attribute name="specific-use" select="@rend" />
-        </xsl:if>
-<!-- If the quote is already divided into paragraphs, we can simply process
+      
+      <!-- if quote or the paragraph inside quote is empty, do not add -->
+      <xsl:if test="not(empty(quote/p/text())) or not(empty(quote/text()))">
+        
+        <xsl:element name="disp-quote">
+          <xsl:if test="@rend">
+            <xsl:attribute name="specific-use" select="@rend" />
+          </xsl:if>
+          <!-- If the quote is already divided into paragraphs, we can simply process
      it; if not, we must supply a p tag, because NLM requires a block tag 
      inside disp-quote. -->
-        <xsl:choose>
-          <xsl:when test="quote/p">
-            <xsl:apply-templates select="quote" />
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:element name="p">
-              <xsl:apply-templates select="quote" />
+          <xsl:choose>
+            <xsl:when test="quote/p">              
+                <xsl:apply-templates select="quote" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:element name="p">
+                  <xsl:apply-templates select="quote" />
+                </xsl:element>
+            </xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="@rend='block' and ref">
+            <xsl:element name="attrib">
+              <xsl:apply-templates select="ref" />
             </xsl:element>
-          </xsl:otherwise>
-        </xsl:choose>
-        <xsl:if test="@rend='block' and ref">
-          <xsl:element name="attrib">
-            <xsl:apply-templates select="ref" />
-          </xsl:element>
-        </xsl:if>
-      </xsl:element>
+          </xsl:if>
+        </xsl:element>
+        
+      </xsl:if>
+      
+      
     </xsl:if>
     <xsl:if test="not(@rend='block') and ref">
        <xsl:apply-templates select="ref" />
@@ -501,6 +568,34 @@ be given the recommended @ref-type. -->
           <xsl:attribute name="xlink:href" select="@target" />
 <!-- We have to be careful of embedded tags, because ext-link has a very 
      impoverished content model. -->
+          
+<!-- ToDo parse with RegEx the attribute href, depending of type of attribute href, add corresponding ext-link-type
+            
+            Samples:
+      -aoi  Astronomical Object Identifier
+      -doi  Digital Object Identifier
+      -ec   Enzyme nomenclature; see http://www.chem.qmw.ac.uk/iubmb/enzyme/
+      -ftp  File Transfer Protocol
+      -gen  GenBank identifier
+      -genpept  Translated protein-encoding sequence database
+      -highwire  HighWire Press intrajournal
+      -nlm-ta  NLM title abbreviation
+      -pdb  Protein Data Bank; see http://www.rcsb.org/pdb/
+      -pgr  Plant Gene Register; see http://www.tarweed.com/pgr/b
+      -pir  Protein Information Resource; see http://pir.georgetown.edu
+      -pirdb  Protein information resource; see http://pir.georgetown.edu
+      -pmcid  PubMed Central identifier
+      -pmid  PubMed identifier
+      -sprot  Swiss-Prot; see http://www.ebi.ac.uk/swissprot/
+      -uri  Website or web service 
+      
+      Doi Regex, extracted from:
+      http://stackoverflow.com/questions/27910/finding-a-doi-in-a-document-or-page
+      
+      $pattern = '\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?!["&\'<>])\S)+)\b'; // or
+$pattern = '\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?!["&\'<>])[[:graph:]])+)\b';
+          -->
+          <xsl:attribute name="ext-link-type" >uri</xsl:attribute>
           <xsl:apply-templates />
         </xsl:element>
       </xsl:otherwise>
@@ -566,8 +661,25 @@ be given the recommended @ref-type. -->
   
 <!-- Notes (footnotes/endnotes). -->
   <xsl:template match="note">
+    
+    <!-- necesary to add an identifier for xref, 
+    a general choose was setup to add 'bibast' as id in case teh reference 
+    is used with asterisc, in other cases the reference indetifier
+    will be concatened to the rid-->
+    <xsl:variable name="bib">
+      <xsl:choose>
+        <xsl:when test="./following-sibling::text() = '*'">
+          <xsl:text>bibast</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>bib</xsl:text><xsl:value-of select="tokenize(./following-sibling::text(), '[\s.?!,;:\-]+')[.][1]"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
     <xsl:element name="xref">
       <xsl:attribute name="ref-type">fn</xsl:attribute>
+      <xsl:attribute name="rid" select="$bib"/>
     </xsl:element>
   </xsl:template>
 
@@ -808,9 +920,16 @@ have a shot at styling it. -->
   
 <!--  Text style markup. -->  
   <xsl:template match="hi">
-    <xsl:call-template name="doTags">
-      <xsl:with-param name="tags" select="./@rend"/>
-    </xsl:call-template>
+    <!--xsl:choose>
+      <xsl:when test="normalize-space(./text()) = ''">
+        <xsl:apply-templates/>
+      </xsl:when>
+      <xsl:otherwise-->        
+        <xsl:call-template name="doTags">
+          <xsl:with-param name="tags" select="./@rend"/>
+        </xsl:call-template>
+      <!--/xsl:otherwise>
+    </xsl:choose-->
   </xsl:template>
   
   <xsl:template name="doTags">
@@ -845,18 +964,18 @@ have a shot at styling it. -->
         </xsl:element>
       </xsl:when>      
       <xsl:when test="contains($tags,'underline')">
-        <xsl:element name="underline">
-          <xsl:variable name="newTags">            
-            <xsl:call-template name="replace-string">
-              <xsl:with-param name="text" select="$tags"/>
-              <xsl:with-param name="replace" select="'underline'" />
-              <xsl:with-param name="with" select="''"/>
-            </xsl:call-template>
-          </xsl:variable>
-          <xsl:call-template name="doTags">
-            <xsl:with-param name="tags" select="$newTags"/>
-          </xsl:call-template>
-        </xsl:element>
+            <xsl:element name="underline">
+              <xsl:variable name="newTags">            
+                <xsl:call-template name="replace-string">
+                  <xsl:with-param name="text" select="$tags"/>
+                  <xsl:with-param name="replace" select="'underline'" />
+                  <xsl:with-param name="with" select="''"/>
+                </xsl:call-template>
+              </xsl:variable>
+              <xsl:call-template name="doTags">
+                <xsl:with-param name="tags" select="$newTags"/>
+              </xsl:call-template>
+            </xsl:element>
       </xsl:when>
       <xsl:when test="contains($tags,'overline')">
         <xsl:element name="overline">
@@ -901,10 +1020,27 @@ have a shot at styling it. -->
         </xsl:element>
       </xsl:when>
       <xsl:when test="empty($tags)">
-        <xsl:apply-templates/>
+            <xsl:apply-templates/>
       </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates/>
+      <xsl:otherwise>        
+        <xsl:choose>
+          <xsl:when test="count(./text()) =1">
+            <xsl:choose>
+              <!-- Necesary to add a proper blank space here, exist teh case where blank spaces are required with styles, particulalry underlined -->
+              <xsl:when test="normalize-space(./text()) = ''">
+                <!-- here goes a blank space -->
+                <xsl:value-of select="'&amp;nbsp;'" disable-output-escaping="yes"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates/>
+          </xsl:otherwise>
+        </xsl:choose>
+            
       </xsl:otherwise>
     </xsl:choose>
     
