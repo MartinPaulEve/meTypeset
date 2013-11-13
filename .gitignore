@@ -7,3 +7,26 @@ tests/TestCorpus/log.html
 tests/TestCorpus/output.xml
 tests/TestCorpus/report.html
 
+tests/GenericTest/008N/
+tests/TestCorpus/TestCorpusBIU (copy).txt
+tests/TestCorpus/TestCorpus_valuechain (copy).txt
+tests/TestCorpus/TestCorpus_valuechain.txt~
+tests/TestCorpusSolved/
+tests/TestRealCorpus.txt
+tests/TestRealCorpus.txt~
+tests/TestRealCorpus/
+tests/realeight/
+tests/realeleven/
+tests/realfive/
+tests/realfour/
+tests/realfourten/
+tests/realnine/
+tests/realone/
+tests/realseven/
+tests/realsix/
+tests/realten/
+tests/realthirdten/
+tests/realthree/
+tests/realtwelve/
+tests/realtwo/
+tools/Jostest.sh
