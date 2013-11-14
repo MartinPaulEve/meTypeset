@@ -4,6 +4,7 @@
 import distutils, os, errno
 import shutil, zipfile, subprocess
 import generate as g
+import os
 
 class Docx2TEI :
     def __init__(self, settings,args):
@@ -65,7 +66,7 @@ class Docx2TEI :
         runtime_catalog       = self.generate_input_path(self.settings,'runtime-catalog')
 
         #output folders
-        output_folder           = g.concat_path(binary_dir, self.args.output_folder[0])
+        output_folder           = os.path.expanduser(self.args.output_folder[0])
         docx_out                = self.generate_output_path(self.settings, docx, output_folder)
         common2_out             = self.generate_output_path(self.settings,common2, output_folder)
         word_document_xml       = g.clean_path(docx_out+'/'+g.value_for_tag(self.settings,'word-document-xml'))
