@@ -6,7 +6,8 @@
 from StringIO import StringIO
 import argparse, os, subprocess, sys
 from docx2tei import *
-
+import docx2tei
+import os
 
     
 # check whether lxml is installed
@@ -84,7 +85,12 @@ def get_settings_file():
     try:
         script_dir = os.environ['METYPESET']
     except:
-        print_message_and_exit("$METYPESET path not variable is not set")
+	try:
+		path = os.path.dirname(docx2tei.__file__)
+		script_dir = os.path.dirname(path + "/../")
+		os.environ['METYPESET'] = script_dir
+	except:
+	        print_message_and_exit("$METYPESET path not variable is not set and/or was unable to determine runtime path.")
         
     set_file = script_dir+"/bin/settings.xml"
     try:
