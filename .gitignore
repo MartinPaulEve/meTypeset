@@ -30,3 +30,8 @@ tests/realthree/
 tests/realtwelve/
 tests/realtwo/
 tools/Jostest.sh
+
+docx/tmp/
+tests/article-html.xsl
+tests/article-randomshapes.xsl
+tests/test.html
