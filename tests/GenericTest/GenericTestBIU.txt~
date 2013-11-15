@@ -7,7 +7,7 @@ Library           Collections
 
 *** Test Cases ***
 000 Environment
-    ${result} =    Run Process    ../tools/gennlm.sh 001.docx ./000    shell=True
+    ${result} =    Run Process    ../../tools/gennlm.sh 006_Bold_Italics_Underline.docx ./000    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     Should Not Contain    ${result.stderr}    cannot find or open
@@ -19,7 +19,7 @@ Library           Collections
 
 006 Matching All permutations of Italics
     [Tags]    italic
-    ${result} =    Run Process    ../tools/gennlm.sh 006_Bold_Italics_Underline.docx ./006    shell=True
+    ${result} =    Run Process    ../../tools/gennlm.sh 006_Bold_Italics_Underline.docx ./006    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./006/006_Bold_Italics_Underline.xml
@@ -76,7 +76,7 @@ Library           Collections
 
 007 Matching All permutations of Bold (In body not headers)
     [Tags]    bold
-    ${result} =    Run Process    ../tools/gennlm.sh 006_Bold_Italics_Underline.docx ./007    shell=True
+    ${result} =    Run Process    ../../tools/gennlm.sh 006_Bold_Italics_Underline.docx ./007    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./007/006_Bold_Italics_Underline.xml
@@ -98,23 +98,54 @@ Library           Collections
     ${ThirdtenBold}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[34]
     ${FourtenBold}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[35]
 
+    ${FirstSup}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[4]/sup[1]
+
 
     Elements Should Match    ${FirstBold}    <p>Now Click ‘<bold>B</bold>’ on the Ribbon. All highlighted text becomes bold.</p>    normalize_whitespace=yes
     Elements Should Match    ${SecondBold}    <p>Click ‘<bold>B</bold>’ in the Mini Toolbar.</p>    normalize_whitespace=yes
     Elements Should Match    ${ThirdBold}    <p>For underlining, select the text, right click on highlighted text and click ‘<bold>U</bold>’ in the Mini Toolbar.</p>    normalize_whitespace=yes
     Elements Should Match    ${FourBold}    <p>For italicizing, select the text, right click on highlighted text and click ‘<bold>I</bold>’ in the Mini Toolbar.</p>    normalize_whitespace=yes
     Elements Should Match    ${FifthBold}    <p><bold><italic><underline>Examination Schedule</underline></italic></bold></p>    normalize_whitespace=yes
-    Elements Should Match    ${SixBold}    <p><bold>Date</bold>: Wednesday, 8th January 2013</p>    normalize_whitespace=yes
+    Elements Should Match    ${SixBold}    <p><bold>Date</bold>: Wednesday, 8<sup>th</sup> January 2013</p>    normalize_whitespace=yes
     Elements Should Match    ${SevenBold}    <p><bold>Venue</bold>: <italic>Patna Science College</italic></p>    normalize_whitespace=yes
     Elements Should Match    ${EigthBold}    <p><bold>0900-1200 hrs</bold>: Pre University (<underline>Hall-11</underline>)</p>    normalize_whitespace=yes
     Elements Should Match    ${NineBold}    <p><bold>1400-1700 hrs</bold>: B.SC.-I (<underline>Hall-12</underline>)</p>    normalize_whitespace=yes
     Elements Should Match    ${TenBold}    <p>You will be using this document for other exercises where the bold, italic and underline formatting is not required in the first line. <bold>To clear formatting, </bold>select this line and click the ‘Clear Formatting’ button of the ‘Paragraph’ group on Ribbon. All formatting will be cleared in the first line and the document will look like this:</p>    normalize_whitespace=yes
-    Elements Should Match    ${ElevenBold}    <p><bold>Date</bold>: Wednesday, 8th January 2013</p>    normalize_whitespace=yes
+    Elements Should Match    ${ElevenBold}    <p><bold>Date</bold>: Wednesday, 8<sup>th</sup> January 2013</p>    normalize_whitespace=yes
 
     Elements Should Match    ${TwelveBold}    <p><bold>Venue</bold>: <italic>Patna Science College</italic></p>    normalize_whitespace=yes
 
     Elements Should Match    ${ThirdtenBold}    <p><bold>0900-1200 hrs</bold>: Pre University (<underline>Hall-11</underline>)</p>    normalize_whitespace=yes
     Elements Should Match    ${FourtenBold}    <p><bold>1400-1700 hrs</bold>: B.SC.-I (<underline>Hall-12</underline>)</p>    normalize_whitespace=yes
+
+    Elements Should Match    ${FirstSup}    <sup>th</sup>    normalize_whitespace=yes
     [Teardown]    Remove Directory    007    recursive=True
+
+
+
+008 Matching All permutations of sup and sub
+    [Tags]    sup sub
+    ${result} =    Run Process    ../../tools/gennlm.sh 007_Sup_Sub.docx ./008    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./008/007_Sup_Sub.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+
+    ${firstParagFirstSup}=    Get Element    ${firstsection}    p[1]/sup[1]
+    ${firstParagSecondSup}=    Get Element    ${firstsection}    p[1]/sup[2]
+    ${firstParagThirdSup}=    Get Element    ${firstsection}    p[1]/sup[3]
+
+    ${firstParagFirstSub}=    Get Element    ${firstsection}    p[1]/sub[1]
+
+    ${firstParagComposeBoldItalicSup}=    Get Element    ${firstsection}    p[2]
+
+       Elements Should Match    ${firstParagFirstSup}    <sup>wound</sup>    normalize_whitespace=yes
+       Elements Should Match    ${firstParagSecondSup}    <sup>[29-31]</sup>    normalize_whitespace=yes
+       Elements Should Match    ${firstParagThirdSup}    <sup>[27]</sup>    normalize_whitespace=yes
+       Elements Should Match    ${firstParagFirstSub}    <sub>process</sub>    normalize_whitespace=yes
+
+       Elements Should Match    ${firstParagComposeBoldItalicSup}    <p>Something <bold><sup>Results</sup></bold><sup> </sup><italic><sup>of</sup></italic><sup> </sup><bold><italic><sup>these</sup></italic></bold></p>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    008    recursive=True
 
 

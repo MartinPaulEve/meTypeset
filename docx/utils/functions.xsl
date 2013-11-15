@@ -186,7 +186,17 @@ of this software, even if advised of the possibility of such damage.
             <xsl:when test="matches($s,'[Hh]eading.+')">true</xsl:when>
             <xsl:when test="matches($s,'[Cc]aption')">true</xsl:when>
             <xsl:when test="matches($s,'Figure[ ]?title')">true</xsl:when>
-            <xsl:otherwise>false</xsl:otherwise>
+            <xsl:otherwise>
+              <!-- 
+                TO BE DONE:
+                validate against styles.xml and check if the selected style has an attribute name with Heading -->
+              <!--xsl:for-each select="document($styleDoc)">                 
+                  <xsl:if test="contains(w:styles/w:style[@w:styleId=$s][@w:val],'Heading') ">
+                    <xsl:value-of select="w:style/w:name/@w:val"/>
+                  </xsl:if>
+              </xsl:for-each-->
+              false
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:function>
 
@@ -194,11 +204,12 @@ of this software, even if advised of the possibility of such damage.
       <desc>Defines whether or not a word paragraph is a list element.</desc></doc>
     <xsl:function name="tei:is-list" as="xs:boolean">
         <xsl:param name="p"/>        
+      <!-- ToDo: Validate if inside a list must exist a header, this will validate the last 'when' condition. -->
         <xsl:choose>
             <xsl:when test="$p[contains(w:pPr/w:pStyle/@w:val,'List')]">true</xsl:when>
-            <xsl:when
-		test="$p[w:pPr/w:pStyle/@w:val='dl']">true</xsl:when>
-	    <xsl:when test="$p/w:pPr/w:numPr[not(w:ins)]">true</xsl:when>
+            <xsl:when test="$p[w:pPr/w:pStyle/@w:val='dl']">true</xsl:when>
+            <xsl:when test="$p/w:pPr/w:numPr[not(w:ins)] and 
+               $p[not(contains(w:pPr/w:pStyle/@w:val,'Heading'))]">true</xsl:when>
             <xsl:otherwise>false</xsl:otherwise>
         </xsl:choose>
     </xsl:function>
