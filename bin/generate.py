@@ -8,6 +8,7 @@ import argparse, os, subprocess, sys
 from docx2tei import *
 import docx2tei
 import os
+import globals as g
 
     
 # check whether lxml is installed
@@ -23,39 +24,8 @@ class SettingsConfiguration:
         tree                    = etree.parse(set_file)
         self.tree               = tree
         self.script_dir         = os.environ['METYPESET']
-       
-
-
-def clean_path(path):
-     return path.replace('\n ','').replace(" ", "").replace("//","/")
- 
-
-
-def value_for_tag(settings,tag_name):
-    expr = "//*[local-name() = $name]"
-    tag = settings.tree.xpath(expr, name=tag_name, namespaces={'mt':'https://github.com/MartinPaulEve/meTypeset'})
-    return  tag[0].text if tag   else print_message_and_exit("ERROR: "+tag_name + "  is  not define in settings")
-    
-
-
-def concat_path(parent, child):
-    #print parent, child
-    return parent + '/' +child
-
-
-def check_file_exists(file_path):
-    if file_path is None:
-        print_message_and_exit("file path "" is invalid")
-    try:
-        os.path.isfile(file_path)
-    except:
-        print_message_and_exit("ERROR: Unable to locate " + file_path)
-            
- 
-def print_message_and_exit(mess):
-    print(mess)
-    sys.exit(0)
-    
+        self.args               = args
+        self.settings_file      = set_file
     
     
 
@@ -70,12 +40,12 @@ def read_commad_line():
 
 
 
-def set_metadata_file(args, script_dir, settings ):
-    metadata_file_arg = args.metadata_file
+def set_metadata_file(settings ):
+    metadata_file_arg = settings.args.metadata_file
     if  metadata_file_arg:
-        metadata_file=concat_path(script_dir,+metadata_file_arg[0])
+        metadata_file = g.clean_path(g.concat_path(settings.script_dir,+metadata_file_arg[0]))
     else:
-        metadata_file =  concat_path(script_dir,value_for_tag(settings,'default-metadata-file-path'))
+        metadata_file = g.clean_path(g.concat_path(settings.script_dir, g.value_for_tag(settings,'default-metadata-file-path')))
         print("WARNING: metadata file wasn't specified. Falling back to "+metadata_file+".")
     return metadata_file
 
@@ -99,41 +69,30 @@ def get_settings_file():
         print_message_and_exit(set_file + " does not exist")
         
     return set_file
-def set_java_classpath(settings, script_dir):
-    java_class_path = ''
-    runtime_dir = concat_path(script_dir,value_for_tag(settings,'runtime'))
-    for  lib in value_for_tag(settings,'saxon-libs').strip().split(";"):
-        check_file_exists(concat_path(runtime_dir,lib))
-        java_class_path     += concat_path(runtime_dir, lib)
-        java_class_path     += ":"
-    return  '"'+java_class_path.rstrip(':')+'"'
 
-        
 
 def main():
     #Read  command line arguments
     args = read_commad_line()
+    #read settings file #make settings object
+    settings = SettingsConfiguration(get_settings_file(), args)
     
-    #read settings file
-    script_dir= get_settings_file()
-    
-    #make settings object
-    settings = SettingsConfiguration (script_dir, args)
-        
-    #check for stylesheets
-    docx_style_sheet_dir = concat_path(script_dir, value_for_tag(settings,'docs-style-sheet-path'))
-    check_file_exists(docx_style_sheet_dir)
+    # set global variables
+    gv = g.GV(settings)
      
+    #check for stylesheets
+    
+    g.check_file_exists(gv.DOCX_STYLE_SHEET_DIR)
     
     # metadata file
-    metadata_file = set_metadata_file(args, script_dir, settings )
+    metadata_file = set_metadata_file(settings)
     
     #get saxon lib class path
-    java_class_path =set_java_classpath(settings, script_dir)
+    java_class_path = g.set_java_classpath(gv)
     
-        
     # rund docx to tei conversion
-    docx2tei = Docx2TEI(settings,args).run()
+    docx2tei = Docx2TEI(gv)
+    docx2tei.run()
     
 
     # rund tei to nlm conversion
