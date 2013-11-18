@@ -1,8 +1,0 @@
-MHRA
-Book
-^(?P<Authors>(.+?),(.+?)),\s?(?P<BookTitle>.+?)\s\((?P<Place>.+?):\s?((?P<PublisherName>.+?),?),\s(?P<Year>\d{4})\)\.?
-Authors,Authors
-BookTitle,BookTitle
-Place,Place
-PublisherName,PublisherName
-Year,Year
