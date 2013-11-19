@@ -1,11 +1,5 @@
 
 <mt:meTypeset xmlns:mt="https://github.com/MartinPaulEve/meTypeset">
-     <mt:parser-configuration>
-        <mt:docx-folder>docx</mt:docx-folder>
-        <mt:tei-folder>TEI</mt:tei-folder>
-        <mt:nlm-folder>NLM</mt:nlm-folder>
-        <mt:multimedia-folder>multimedia</mt:multimedia-folder>
-    </mt:parser-configuration>
     
     <mt:saxon-libs>
         xml-resolver-1.1.jar;saxon9.jar
@@ -17,6 +11,8 @@
         <mt:runtime>runtime</mt:runtime>
         <mt:binaries>bin</mt:binaries>
         <mt:tei>tei</mt:tei>
+	<mt:nlm>nlm</mt:nlm>
+	<mt:media>media</mt:media>
     </mt:folders>
     
     <mt:style-sheets>
@@ -26,6 +22,9 @@
         <mt:doc-to-tei-stylesheet>
             from/docxtotei.xsl
         </mt:doc-to-tei-stylesheet>
+        <mt:tei-to-nlm-stylesheet>
+	   nlm/tei_to_nlm.xsl
+ 	</mt:tei-to-nlm-stylesheet>
     </mt:style-sheets>
     
     <mt:xml-files>

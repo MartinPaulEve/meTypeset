@@ -6,7 +6,7 @@
 from StringIO import StringIO
 import argparse, os, subprocess, sys
 from docx2tei import *
-import docx2tei
+from tei2nlm import *
 import os
 import globals as g
 
@@ -76,12 +76,10 @@ def main():
     args = read_commad_line()
     #read settings file #make settings object
     settings = SettingsConfiguration(get_settings_file(), args)
-    
     # set global variables
     gv = g.GV(settings)
-     
-    #check for stylesheets
     
+    #check for stylesheets
     g.check_file_exists(gv.DOCX_STYLE_SHEET_DIR)
     
     # metadata file
@@ -94,9 +92,9 @@ def main():
     docx2tei = Docx2TEI(gv)
     docx2tei.run()
     
-
-    # rund tei to nlm conversion
-    #tei2nlm = TEI2NLM(settings,args).run()
+    # run tei to nlm conversion
+    tei2nlm = TEI2NLM(gv)
+    tei2nlm.run()
 
 if __name__ == '__main__':
     main()
