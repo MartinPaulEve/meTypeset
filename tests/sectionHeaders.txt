@@ -1,0 +1,503 @@
+*** Settings ***
+Documentation     This series of test cases evaluates the basic environment setup and the ability to parse basic documents.
+Library           Process
+Library           OperatingSystem
+Library           XML
+Library           Collections
+
+*** Test Cases ***
+501 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/antiseptics-complex.docx ./501    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./501/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    501    recursive=True
+
+502 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/china-asleep.docx ./502    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./502/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    502    recursive=True
+
+503 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/eeg_comicsans.docx ./503    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./503/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    503    recursive=True
+
+504 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/entrepreneurship-normal.docx ./504    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./504/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    504    recursive=True
+
+505 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/equations+tables.docx ./505    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./505/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    505    recursive=True
+
+506 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/laddering.docx ./506    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./506/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    506    recursive=True
+
+507 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/leadership.docx ./507    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./507/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    507    recursive=True
+
+508 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/neoliberalism.docx ./508    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./508/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    508    recursive=True
+
+509 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/perception-monospace.docx ./509    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./509/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    509    recursive=True
+
+510 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/racialprofiling-norefs.docx ./510    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./510/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    510    recursive=True
+
+511 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/rating.docx ./511    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./511/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    511    recursive=True
+
+512 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/science.docx ./512    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./512/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    512    recursive=True
+
+513 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/snowball.docx ./513    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./513/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    513    recursive=True
+
+514 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/sodium.docx ./514    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./514/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    514    recursive=True
+
+515 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/systemsthinker.docx ./515    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./515/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    515    recursive=True
+
+516 Title, non-title, title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/valuechain.docx ./516    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./516/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    [Teardown]    Remove Directory    516    recursive=True
+
+601 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/antiseptics-complex.docx ./601    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./601/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    601    recursive=True
+
+602 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/china-asleep.docx ./602    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./602/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    602    recursive=True
+
+603 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/eeg_comicsans.docx ./603    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./603/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    603    recursive=True
+
+604 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/entrepreneurship-normal.docx ./604    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./604/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    604    recursive=True
+
+605 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/equations+tables.docx ./605    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./605/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    605    recursive=True
+
+606 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/laddering.docx ./606    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./606/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    606    recursive=True
+
+607 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/leadership.docx ./607    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./607/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    607    recursive=True
+
+608 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/neoliberalism.docx ./608    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./608/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    608    recursive=True
+
+609 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/perception-monospace.docx ./609    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./609/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    609    recursive=True
+
+610 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/racialprofiling-norefs.docx ./610    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./610/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    610    recursive=True
+
+611 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/rating.docx ./611    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./611/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    611    recursive=True
+
+612 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/science.docx ./612    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./612/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    612    recursive=True
+
+613 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/snowball.docx ./613    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./613/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    613    recursive=True
+
+614 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/sodium.docx ./614    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./614/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    614    recursive=True
+
+615 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/systemsthinker.docx ./615    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./615/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    615    recursive=True
+
+616 Nested section title
+    [Tags]    sectionheaders
+    ${result} =    Run Process    ../tools/gennlm.sh ../../corpus/valuechain.docx ./616    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./616/001.xml
+    ${sections}=    Get Elements    ${xml}    body/sec/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
+    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
+    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
+    [Teardown]    Remove Directory    616    recursive=True
