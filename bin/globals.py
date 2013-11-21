@@ -2,7 +2,6 @@
 # @Author Dulip Withanage
 
 
-import generate as g
 import os, sys, shutil 
 
 # class Global Variables
@@ -54,26 +53,6 @@ class GV:
             #java classes for saxon
             self.JAVA_CLASS_PATH                = set_java_classpath(self)
 
-def get_settings_file():
-    # read  the home folder, either from the path or from the settings file
-    try:
-        script_dir = os.environ['METYPESET']
-    except:
-        try:
-            path = os.path.dirname(docx2tei.__file__)
-            script_dir = os.path.dirname(path + "/../")
-            os.environ['METYPESET'] = script_dir
-        except:
-                print_message_and_exit("$METYPESET path not variable is not set and/or was unable to determine runtime path.")
-            
-    set_file = script_dir+"/bin/settings.xml"
-    try:
-        os.path.isfile(set_file)
-    except:
-        print_message_and_exit(set_file + " does not exist")
-        
-    return set_file
-
 def check_file_exists(file_path):
     if file_path is None:
         print_message_and_exit("file path "" is invalid")
@@ -87,9 +66,7 @@ def generate_path( settings, tag, path):
     return clean_path(concat_path(path, value_for_tag(settings,tag)))
 
 
-
-        # global functions for setting variables
-        
+# global functions for setting variables        
 def value_for_tag(settings,tag_name):
     expr = "//*[local-name() = $name]"
     tag = settings.tree.xpath(expr, name=tag_name, namespaces={'mt':'https://github.com/MartinPaulEve/meTypeset'})
@@ -137,4 +114,3 @@ def set_java_classpath(self):
         java_class_path     += ":"
     return  '"'+java_class_path.rstrip(':')+'"'
 
-        
