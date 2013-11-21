@@ -17,9 +17,9 @@ class GV:
             
             self.SCRIPT_DIR                     = os.environ['METYPESET']
             
-            self.INPUT_FILE_PATH                = settings.args.input_file[0].strip() 
+            self.INPUT_FILE_PATH                = settings.args['<input_file>'].strip() 
             filename_sep                        = self.INPUT_FILE_PATH.rsplit('/')
-            self.OUTPUT_FOLDER_PATH             = os.path.expanduser(settings.args.output_folder[0])
+            self.OUTPUT_FOLDER_PATH             = os.path.expanduser(settings.args['<output_folder>'])
             
             
             #general directory paths

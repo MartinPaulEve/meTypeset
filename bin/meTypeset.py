@@ -2,12 +2,30 @@
 # @Author Dulip Withanage
 # main file which triggers document parsing
 
-#---------------------------------------------------------------------------------------------------------
+"""meTypset: text parsing library to convert word documents to xml formats NLM, TEI
+
+Usage:
+    meTypeset.py [(-d | --debug)]   <input_file>  (-o | --output) <output_folder> [(-m | --metadata) (<metadata_file>)] [(-t | --test)]
+    meTypeset.py (-h | --help)
+    meTypeset.py (-t | --test)
+    meTypeset.py --version
+
+Options:
+
+    -h --help  Show this screen.
+    -t --test  Run the test suite.
+    --version  Show version.
+    -m --metadata  Metadata file
+    -o --output   Output Folder
+
+"""
+
 from StringIO import StringIO
 import argparse, os, subprocess, sys
 from docx2tei import *
 from tei2nlm import *
 import os
+from docopt import docopt
 import globals as g
 
     
@@ -27,21 +45,10 @@ class SettingsConfiguration:
         self.args               = args
         self.settings_file      = set_file
     
-    
-
-def read_commad_line():
-    p = argparse.ArgumentParser(description='This program takes an input  word document and converts that into xml formats (NLM, TEI)')
-    p.add_argument('input_file', nargs=1, help='Name of the docx file')
-    p.add_argument("--output_folder","-o", nargs=1, help="outpout folder name",  required=True)
-    p.add_argument("--type","-t", nargs=1, help="type of the result file, default is nlm")
-    p.add_argument("--metadata_file","-m", nargs=1, help="optional metadata file")
-    p.add_argument("--xslt_processor","-p", nargs=1, help="processing engine, default is saxon")
-    return  p.parse_args()
-
 
 
 def set_metadata_file(settings ):
-    metadata_file_arg = settings.args.metadata_file
+    metadata_file_arg = settings.args['<metadata_file>']
     if  metadata_file_arg:
         metadata_file = g.clean_path(g.concat_path(settings.script_dir,+metadata_file_arg[0]))
     else:
@@ -55,7 +62,7 @@ def get_settings_file():
     try:
         script_dir = os.environ['METYPESET']
     except:
-	try:
+        try:
 		path = os.path.dirname(docx2tei.__file__)
 		script_dir = os.path.dirname(path + "/../")
 		os.environ['METYPESET'] = script_dir
@@ -72,8 +79,13 @@ def get_settings_file():
 
 
 def main():
+    global debug
+    global test
     #Read  command line arguments
-    args = read_commad_line()
+    args = docopt(__doc__, version='meTypset 0.1')
+    
+    debug = args['--debug']
+    test = args['--test']
     #read settings file #make settings object
     settings = SettingsConfiguration(get_settings_file(), args)
     # set global variables
