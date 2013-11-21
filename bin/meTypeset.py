@@ -45,17 +45,6 @@ class SettingsConfiguration:
         self.args               = args
         self.settings_file      = set_file
     
-    
-
-def read_commad_line():
-    p = argparse.ArgumentParser(description='This program takes an input  word document and converts that into xml formats (NLM, TEI)')
-    p.add_argument('input_file', nargs=1, help='Name of the docx file')
-    p.add_argument("--output_folder","-o", nargs=1, help="outpout folder name",  required=True)
-    p.add_argument("--type","-t", nargs=1, help="type of the result file, default is nlm")
-    p.add_argument("--metadata_file","-m", nargs=1, help="optional metadata file")
-    p.add_argument("--xslt_processor","-p", nargs=1, help="processing engine, default is saxon")
-    return  p.parse_args()
-
 
 
 def set_metadata_file(settings ):
