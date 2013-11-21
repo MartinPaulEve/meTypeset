@@ -21,7 +21,8 @@ Options:
 """
 
 from StringIO import StringIO
-import argparse, os, subprocess, sys
+import os, subprocess, sys
+import docx2tei
 from docx2tei import *
 from tei2nlm import *
 import os
@@ -56,6 +57,11 @@ def set_metadata_file(settings ):
         print("WARNING: metadata file wasn't specified. Falling back to "+metadata_file+".")
     return metadata_file
 
+# Function to print info message and exit
+def print_message_and_exit(message):
+    print (message)
+    sys.exit(1)
+
 
 def get_settings_file():
     # read  the home folder, either from the path or from the settings file
@@ -63,8 +69,8 @@ def get_settings_file():
         script_dir = os.environ['METYPESET']
     except:
         try:
-		path = os.path.dirname(docx2tei.__file__)
-		script_dir = os.path.dirname(path + "/../")
+		module_path = os.path.dirname(docx2tei.__file__)
+		script_dir = os.path.dirname(module_path + "/../")
 		os.environ['METYPESET'] = script_dir
 	except:
 	        print_message_and_exit("$METYPESET path not variable is not set and/or was unable to determine runtime path.")
