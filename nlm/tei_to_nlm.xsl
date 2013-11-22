@@ -267,11 +267,11 @@
             <xsl:element name="fn">
               <xsl:attribute name="id">
                 <xsl:choose>
-                  <xsl:when test="./following-sibling::text()='*'">
+                  <xsl:when test="normalize-space(following-sibling::text()[1])='*'">
                     <xsl:text>bibast</xsl:text>
                   </xsl:when>
                   <xsl:otherwise>
-                    <xsl:text>bib</xsl:text><xsl:value-of select="tokenize(./following-sibling::text(), '[\s.?!,;:\-]+')[.][1]"/>
+                    <xsl:text>bib</xsl:text><xsl:value-of select="tokenize(normalize-space(following-sibling::text()[1]), '[\s.?!,;:\-]+')[.][1]"/>
                   </xsl:otherwise>
                 </xsl:choose>
               </xsl:attribute>
@@ -292,11 +292,11 @@
             <xsl:element name="fn">
               <xsl:attribute name="id">
                 <xsl:choose>
-                  <xsl:when test="./following-sibling::text()='*'">
+                  <xsl:when test="normalize-space(following-sibling::text()[1])='*'">
                     <xsl:text>bibast</xsl:text>
                   </xsl:when>
                   <xsl:otherwise>
-                    <xsl:text>bib</xsl:text><xsl:value-of select="tokenize(./following-sibling::text(), '[\s.?!,;:\-]+')[.][1]"/>
+                    <xsl:text>bib</xsl:text><xsl:value-of select="tokenize(normalize-space(following-sibling::text()[1]), '[\s.?!,;:\-]+')[.][1]"/>
                   </xsl:otherwise>
                 </xsl:choose>
               </xsl:attribute>
@@ -663,16 +663,22 @@ $pattern = '\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?!["&\'<>])[[:graph:]])+)\b';
   <xsl:template match="note">
     
     <!-- necesary to add an identifier for xref, 
-    a general choose was setup to add 'bibast' as id in case teh reference 
-    is used with asterisc, in other cases the reference indetifier
-    will be concatened to the rid-->
+    a general choose was setup to add 'bibast' as id in the case of the reference 
+    is used with asterisk, in other cases the reference indetifier (First word after the note)
+    will be concatened to the rid.
+    
+    ToDo, it is necesary to find if the first word used as indentifier is a valid indentifier (Ex. Digit, Roman Number, Single character, etc), 
+    with the purpouse of exclude common words that are not necesary a identifier, in this case a autonumeric must be placed.
+    -->
     <xsl:variable name="bib">
       <xsl:choose>
-        <xsl:when test="./following-sibling::text() = '*'">
+        <xsl:when test="normalize-space(following-sibling::text()[1]) = '*'">
           <xsl:text>bibast</xsl:text>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>bib</xsl:text><xsl:value-of select="tokenize(./following-sibling::text(), '[\s.?!,;:\-]+')[.][1]"/>
+          <xsl:text>bib</xsl:text>
+          <xsl:value-of select="tokenize(normalize-space(following-sibling::text()[1]), '[\s.?!,;:\-]+')[.][1]"/>
+          <!--xsl:value-of select="tokenize(normalize-space(following-sibling::text()[1]), '\d|(\w*)\s|\*')"/-->
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
