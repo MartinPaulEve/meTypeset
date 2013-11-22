@@ -10,7 +10,6 @@ tests/TestCorpus/report.html
 # Rodrigo
 TestNotDeploy/
 
-<<<<<<< HEAD
 # Ignore compiled python classses
 *.pyc
 
