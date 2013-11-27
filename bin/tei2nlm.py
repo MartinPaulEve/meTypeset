@@ -28,5 +28,4 @@ class TEI2NLM:
         gv.mk_dir(self.gv.NLM_FOLDER_PATH)
         java_command = self.saxon_tei2nlm()
         print "INFO: Running saxon transform (TEI->NLM)"
-        print java_command
         subprocess.call(java_command, stdin=None, shell=True)

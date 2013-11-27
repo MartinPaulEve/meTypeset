@@ -21,11 +21,10 @@ class Metadata():
 					 "-o", self.gv.NLM_FILE_PATH,
 					 self.gv.NLM_TEMP_FILE_PATH,
 					 self.gv.METADATA_STYLE_SHEET_PATH,
-					 'matadataFile='+ self.gv.INPUT_METADATA_FILE_PATH
+					 'metadataFile='+ self.gv.INPUT_METADATA_FILE_PATH
 					 ]
 		return ' '.join(cmd)
 
 	def run(self):
 		java_command = self.attach_metadata()
-		print java_command
 		subprocess.call(java_command, stdin=None, shell=True)
