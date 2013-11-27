@@ -23,14 +23,19 @@
             from/docxtotei.xsl
         </mt:doc-to-tei-stylesheet>
         <mt:tei-to-nlm-stylesheet>
-	   nlm/tei_to_nlm.xsl
- 	</mt:tei-to-nlm-stylesheet>
+           nlm/tei_to_nlm.xsl
+        </mt:tei-to-nlm-stylesheet>
+        <mt:metadata-stylesheet>
+        metadata/metadata.xsl
+        </mt:metadata-stylesheet>
+
     </mt:style-sheets>
     
     <mt:xml-files>
         <mt:default-metadata-file-path> metadata/metadataSample.xml </mt:default-metadata-file-path>
         <mt:word-document-xml> word/document.xml </mt:word-document-xml>
         <mt:runtime-catalog>runtime/catalog.xml</mt:runtime-catalog>
+
     </mt:xml-files>
     
     

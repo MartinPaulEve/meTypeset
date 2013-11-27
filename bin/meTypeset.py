@@ -25,6 +25,7 @@ import os, subprocess, sys
 import docx2tei
 from docx2tei import *
 from tei2nlm import *
+from metadata import *
 import os
 from docopt import docopt
 import globals as g
@@ -48,7 +49,7 @@ class SettingsConfiguration:
     
 
 
-def set_metadata_file(settings ):
+def set_metadata_file(settings):
     metadata_file_arg = settings.args['<metadata_file>']
     if  metadata_file_arg:
         metadata_file = g.clean_path(g.concat_path(settings.script_dir,+metadata_file_arg[0]))
@@ -85,34 +86,39 @@ def get_settings_file():
 
 
 def main():
-    global debug
-    global test
-    #Read  command line arguments
-    args = docopt(__doc__, version='meTypset 0.1')
-    
-    debug = args['--debug']
-    test = args['--test']
-    #read settings file #make settings object
-    settings = SettingsConfiguration(get_settings_file(), args)
-    # set global variables
-    gv = g.GV(settings)
-    
-    #check for stylesheets
-    g.check_file_exists(gv.DOCX_STYLE_SHEET_DIR)
-    
-    # metadata file
-    metadata_file = set_metadata_file(settings)
-    
-    #get saxon lib class path
-    java_class_path = g.set_java_classpath(gv)
-    
-    # rund docx to tei conversion
-    docx2tei = Docx2TEI(gv)
-    docx2tei.run()
-    
-    # run tei to nlm conversion
-    tei2nlm = TEI2NLM(gv)
-    tei2nlm.run()
+	global debug
+	global test
+	#Read  command line arguments
+	args = docopt(__doc__, version='meTypset 0.1')
+
+	debug = args['--debug']
+	test = args['--test']
+	#read settings file #make settings object
+	settings = SettingsConfiguration(get_settings_file(), args)
+	# set global variables
+	gv = g.GV(settings)
+
+	#check for stylesheets
+	g.check_file_exists(gv.DOCX_STYLE_SHEET_DIR)
+
+	# metadata file
+	metadata_file = set_metadata_file(settings)
+
+	#get saxon lib class path
+	java_class_path = g.set_java_classpath(gv)
+
+	# rund docx to tei conversion
+	docx2tei = Docx2TEI(gv)
+	docx2tei.run()
+
+	# run tei to nlm conversion
+	tei2nlm = TEI2NLM(gv)
+	tei2nlm.run()
+
+	#metadata merge
+	md=Metadata(gv)
+	md.run()
+
 
 if __name__ == '__main__':
     main()
