@@ -16,9 +16,12 @@ class GV:
             
             self.SCRIPT_DIR                     = os.environ['METYPESET']
             
-            self.INPUT_FILE_PATH                = settings.args['<input_file>'].strip() 
+            self.INPUT_FILE_PATH                = settings.args['<input_file>'].strip()
+            self.INPUT_METADATA_FILE_PATH       = settings.args['<metadata_file>'] if settings.args['<metadata_file>'] else settings.script_dir+value_for_tag(settings,'default-metadata-file-path')
+
             filename_sep                        = self.INPUT_FILE_PATH.rsplit('/')
             self.OUTPUT_FOLDER_PATH             = os.path.expanduser(settings.args['<output_folder>'])
+
             
             
             #general directory paths
@@ -47,11 +50,16 @@ class GV:
             #NLM paths
             self.NLM_FOLDER_PATH                = generate_path(settings,nlm ,self.OUTPUT_FOLDER_PATH)
             self.NLM_FILE_PATH                  = clean_path(concat_path(self.NLM_FOLDER_PATH , self.FILE_NAME))
-            self.NLM_TEMP_FOLDER_PATH           = generate_path(settings, nlm, self.OUTPUT_FOLDER_PATH)
-            self.NLM_STYLE_SHEET_DIR            = clean_path(concat_path(settings.script_dir , value_for_tag(settings,'tei-to-nlm-stylesheet'))) 
-            
+            self.NLM_TEMP_FILE_PATH             = clean_path(concat_path(self.NLM_FOLDER_PATH , "out.xml"))
+            self.NLM_STYLE_SHEET_DIR            = clean_path(concat_path(settings.script_dir , value_for_tag(settings,'tei-to-nlm-stylesheet')))
+
+            #Metadata paths
+            self.METADATA_STYLE_SHEET_PATH       = clean_path(concat_path(settings.script_dir , value_for_tag(settings,'metadata-stylesheet')))
+
             #java classes for saxon
             self.JAVA_CLASS_PATH                = set_java_classpath(self)
+
+
 
 def check_file_exists(file_path):
     if file_path is None:
@@ -113,4 +121,3 @@ def set_java_classpath(self):
         java_class_path     += concat_path(self.RUNTIME_FOLDER_PATH, lib)
         java_class_path     += ":"
     return  '"'+java_class_path.rstrip(':')+'"'
-
