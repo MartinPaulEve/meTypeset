@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import globals  as gv
+import os
 import subprocess, shutil
 
 __author__ = "Dulip Withanage"
@@ -28,3 +29,4 @@ class Metadata():
 	def run(self):
 		java_command = self.attach_metadata()
 		subprocess.call(java_command, stdin=None, shell=True)
+		os.remove(self.gv.NLM_TEMP_FILE_PATH)
