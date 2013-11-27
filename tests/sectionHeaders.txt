@@ -11,7 +11,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/antiseptics-complex.docx -o ./501    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./501/001.xml
+    ${xml}=    Parse XML    ./501/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -28,7 +28,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/china-asleep.docx -o ./502    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./502/001.xml
+    ${xml}=    Parse XML    ./502/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -45,7 +45,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/eeg_comicsans.docx -o ./503    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./503/001.xml
+    ${xml}=    Parse XML    ./503/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -62,7 +62,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/entrepreneurship-normal.docx -o ./504    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./504/001.xml
+    ${xml}=    Parse XML    ./504/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -79,7 +79,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/equations+tables.docx -o ./505    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./505/001.xml
+    ${xml}=    Parse XML    ./505/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -96,7 +96,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/laddering.docx -o ./506    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./506/001.xml
+    ${xml}=    Parse XML    ./506/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -113,7 +113,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/leadership.docx -o ./507    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./507/001.xml
+    ${xml}=    Parse XML    ./507/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -130,7 +130,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/neoliberalism.docx -o ./508    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./508/001.xml
+    ${xml}=    Parse XML    ./508/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -147,7 +147,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/perception-monospace.docx -o ./509    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./509/001.xml
+    ${xml}=    Parse XML    ./509/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -164,7 +164,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/racialprofiling-norefs.docx -o ./510    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./510/001.xml
+    ${xml}=    Parse XML    ./510/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -181,7 +181,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/rating.docx -o ./511    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./511/001.xml
+    ${xml}=    Parse XML    ./511/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -198,7 +198,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/science.docx -o ./512    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./512/001.xml
+    ${xml}=    Parse XML    ./512/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -215,7 +215,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/snowball.docx -o ./513    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./513/001.xml
+    ${xml}=    Parse XML    ./513/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -232,7 +232,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/sodium.docx -o ./514    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./514/001.xml
+    ${xml}=    Parse XML    ./514/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -249,7 +249,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/systemsthinker.docx -o ./515    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./515/001.xml
+    ${xml}=    Parse XML    ./515/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -266,7 +266,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/valuechain.docx -o ./516    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./516/001.xml
+    ${xml}=    Parse XML    ./516/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -283,7 +283,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/antiseptics-complex.docx -o ./601    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./601/001.xml
+    ${xml}=    Parse XML    ./601/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -297,7 +297,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/china-asleep.docx -o ./602    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./602/001.xml
+    ${xml}=    Parse XML    ./602/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -311,7 +311,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/eeg_comicsans.docx -o ./603    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./603/001.xml
+    ${xml}=    Parse XML    ./603/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -325,7 +325,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/entrepreneurship-normal.docx -o ./604    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./604/001.xml
+    ${xml}=    Parse XML    ./604/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -339,7 +339,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/equations+tables.docx -o ./605    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./605/001.xml
+    ${xml}=    Parse XML    ./605/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -353,7 +353,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/laddering.docx -o ./606    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./606/001.xml
+    ${xml}=    Parse XML    ./606/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -367,7 +367,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/leadership.docx -o ./607    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./607/001.xml
+    ${xml}=    Parse XML    ./607/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -381,7 +381,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/neoliberalism.docx -o ./608    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./608/001.xml
+    ${xml}=    Parse XML    ./608/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -395,7 +395,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/perception-monospace.docx -o ./609    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./609/001.xml
+    ${xml}=    Parse XML    ./609/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -409,7 +409,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/racialprofiling-norefs.docx -o ./610    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./610/001.xml
+    ${xml}=    Parse XML    ./610/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -423,7 +423,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/rating.docx -o ./611    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./611/001.xml
+    ${xml}=    Parse XML    ./611/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -437,7 +437,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/science.docx -o ./612    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./612/001.xml
+    ${xml}=    Parse XML    ./612/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -451,7 +451,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/snowball.docx -o ./613    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./613/001.xml
+    ${xml}=    Parse XML    ./613/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -465,7 +465,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/sodium.docx -o ./614    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./614/001.xml
+    ${xml}=    Parse XML    ./614/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -479,7 +479,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/systemsthinker.docx -o ./615    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./615/001.xml
+    ${xml}=    Parse XML    ./615/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -493,7 +493,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py ../../corpus/valuechain.docx -o ./616    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./616/001.xml
+    ${xml}=    Parse XML    ./616/nlm/001.xml
     ${sections}=    Get Elements    ${xml}    body/sec/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
