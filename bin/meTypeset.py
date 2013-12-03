@@ -56,6 +56,7 @@ def set_metadata_file(settings):
     else:
         metadata_file = g.clean_path(g.concat_path(settings.script_dir, g.value_for_tag(settings,'default-metadata-file-path')))
         print("WARNING: metadata file wasn't specified. Falling back to "+metadata_file+".")
+
     return metadata_file
 
 # Function to print info message and exit
@@ -102,7 +103,8 @@ def main():
 	g.check_file_exists(gv.DOCX_STYLE_SHEET_DIR)
 
 	# metadata file
-	metadata_file = set_metadata_file(settings)
+	gv.metadata_file = set_metadata_file(settings)
+	print gv.metadata_file
 
 	#get saxon lib class path
 	java_class_path = g.set_java_classpath(gv)

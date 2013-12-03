@@ -22,7 +22,7 @@ class Metadata():
 					 "-o", self.gv.NLM_FILE_PATH,
 					 self.gv.NLM_TEMP_FILE_PATH,
 					 self.gv.METADATA_STYLE_SHEET_PATH,
-					 'metadataFile='+ self.gv.INPUT_METADATA_FILE_PATH
+					 'metadataFile='+ self.gv.metadata_file
 					 ]
 		return ' '.join(cmd)
 
