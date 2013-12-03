@@ -422,23 +422,8 @@ of this software, even if advised of the possibility of such damage.
      <xsl:variable name="Style" select="w:pPr/w:pStyle/@w:val"/>
      <xsl:variable name="NextHeader" select="tei:get-nextlevel-header($Style)"/>
      <div>
-       <!-- generate the head -->
-       <xsl:call-template name="generate-section-heading">
-	 <xsl:with-param name="Style" select="$Style"/>
-       </xsl:call-template>
 
-       <!-- Process sub-sections -->
-       <xsl:for-each-group select="current-group() except ."
-			   group-starting-with="w:p[w:pPr/w:pStyle/@w:val=$NextHeader]">
-	 <xsl:choose>
-	   <xsl:when test="tei:is-heading(.)">
-	     <xsl:call-template name="group-by-section"/>
-	   </xsl:when>
-	   <xsl:otherwise>
 	     <xsl:apply-templates select="." mode="inSectionGroup"/>
-	   </xsl:otherwise>
-	 </xsl:choose>
-       </xsl:for-each-group>
      </div>
    </xsl:template>
    
