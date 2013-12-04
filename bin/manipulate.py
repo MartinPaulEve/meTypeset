@@ -36,6 +36,7 @@ class Manipulate():
     def run(self):
         #create element tree
         tree = etree.parse(self.gv.NLM_TEMP_FILE_PATH)
+        #example manipulation
         #tree = self.search_and_replace(tree,"sec","p","title")
 
         tree.write(self.gv.NLM_FILE_PATH, xml_declaration=True, encoding='utf-16')
