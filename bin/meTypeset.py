@@ -26,6 +26,7 @@ import docx2tei
 from docx2tei import *
 from tei2nlm import *
 from metadata import *
+from manipulate import *
 import os
 from docopt import docopt
 import globals as g
@@ -117,9 +118,17 @@ def main():
 	tei2nlm = TEI2NLM(gv)
 	tei2nlm.run()
 
+
+
 	#metadata merge
 	md=Metadata(gv)
 	md.run()
+
+	#mainupate tags
+	manipulate = Manipulate(gv)
+	manipulate.run()
+
+
 
 
 if __name__ == '__main__':
