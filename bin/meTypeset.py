@@ -126,7 +126,9 @@ def main():
 
 	#mainupate tags
 	manipulate = Manipulate(gv)
+	#manipulate.run_dom()
 	manipulate.run()
+
 
 
 
