@@ -89,7 +89,7 @@ class FrontMatterParser:
 
 	def run(self):
 		text = self.get_file_text(self.gv.NLM_TEMP_FILE_PATH)
-		self.parse_authors(text)
+		#self.parse_authors(text)
 		self.parse_title(text)
 		self.write_output(text)
 		self.update_tmp_file()
