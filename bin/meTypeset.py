@@ -27,6 +27,7 @@ from docx2tei import *
 from tei2nlm import *
 from metadata import *
 from manipulate import *
+from FrontMatterParser import *
 import os
 from docopt import docopt
 import globals as g
@@ -127,9 +128,13 @@ def main():
 	#mainupate tags
 	manipulate = Manipulate(gv)
 	#manipulate.run_dom()
-	manipulate.run()
+	#manipulate.run()
 
+	#FrontMatter parser
+	frontmatter = FrontMatterParser(gv)
+	frontmatter.run()
 
+	os.remove(gv.NLM_TEMP_FILE_PATH)
 
 
 
