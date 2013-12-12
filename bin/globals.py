@@ -45,7 +45,8 @@ class GV:
                                                     else self.INPUT_FILE_PATH.replace('docx','xml').replace('doc','xml')
             #TEI paths
             self.TEI_FOLDER_PATH                = clean_path(self.OUTPUT_FOLDER_PATH+'/'+value_for_tag(settings,'tei'))
-            self.TEI_FILE_PATH                  = concat_path( self.TEI_FOLDER_PATH, self.FILE_NAME)   
+            self.TEI_FILE_PATH                  = concat_path( self.TEI_FOLDER_PATH, self.FILE_NAME)
+            self.TEI_TEMP_FILE_PATH             = clean_path(concat_path(self.TEI_FOLDER_PATH , "out.xml"))
             
             #NLM paths
             self.NLM_FOLDER_PATH                = generate_path(settings,nlm ,self.OUTPUT_FOLDER_PATH)

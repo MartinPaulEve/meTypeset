@@ -85,7 +85,6 @@ class Manipulate():
     # Returns  the  value  after a  searching a list of regex   or  None if nothing found.
     def try_list_of_regex(self, filestring,  *regex):
         if len(regex)>0:
-
             for i in regex:
                 val = re.findall(filestring, i)
                 if val:
@@ -99,6 +98,7 @@ class Manipulate():
     def run(self):
         self.update_tmp_file(self.gv.TEI_FILE_PATH,self.gv.TEI_TEMP_FILE_PATH)
         text = self.get_file_text(self.gv.TEI_TEMP_FILE_PATH)
+
         '''
         string replace example
         search_tag = 'p'
@@ -108,11 +108,9 @@ class Manipulate():
 
         '''
         Regex finding example
-        '''
         regex_list = ["(<title>.+?</title>\s+)?(?=<disp-quote>)((.|\s)+?)(?=</sec>)',r'\1<ref-list>\2</ref-list>", "<p>\s+?(<bold>|<title>)([A-Za-z\s]+)(</bold>|</title>)\s+?</p>\s+<list.+?>((.|\s)+?)(</list>)"]
         print self.try_list_of_regex(text, *regex_list)
-
-
-
         self.write_output(self.gv.TEI_FILE_PATH, text)
+        '''
+
 
