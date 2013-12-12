@@ -4,7 +4,9 @@ from copy import deepcopy
 import uuid
 import globals  as gv
 import os
-import subprocess, shutil
+import subprocess
+import shutil
+import re
 
 __author__ = "Dulip Withanage"
 __email__ = "dulip.withanage@gmail.com"
@@ -37,11 +39,9 @@ class Manipulate():
         p = etree.XMLParser(remove_blank_text=True, resolve_entities=False)
         return etree.parse(filename, p)
 
-    def write_out_put(self, tree):
-        tree.write(self.gv.NLM_FILE_PATH, xml_declaration=True, encoding='utf-16')
 
-    def update_tmp_file(self):
-        shutil.copy2(self.gv.NLM_FILE_PATH,self.gv.NLM_TEMP_FILE_PATH)
+    def update_tmp_file(self,fr,to):
+        shutil.copy2(fr,to)
 
     def  get_file_text(self, filename):
         f = open(filename)
@@ -71,24 +71,48 @@ class Manipulate():
         return text
 
 
-    def run_dom(self):
-        tree = self.set_dom_tree(self.gv.NLM_TEMP_FILE_PATH)
+    def run_dom(self, f):
+        tree = self.set_dom_tree(f)
         tree = self.search_and_replace_dom(tree,"sec", "p","title")
         self.write_out_put(tree)
         self.update_tmp_file()
 
-    def write_output(self, text):
-        out = open(self.gv.NLM_FILE_PATH,'w')
+    def write_output(self, f, text):
+        out = open(f,'w')
         out.write(text)
         out.close()
 
-    def run(self):
-        text = self.get_file_text(self.gv.NLM_TEMP_FILE_PATH)
+    # Returns  the  value  after a  searching a list of regex   or  None if nothing found.
+    def try_list_of_regex(self, filestring,  *regex):
+        if len(regex)>0:
 
+            for i in regex:
+                val = re.findall(filestring, i)
+                if val:
+                    return val
+            return None
+        else:
+            return None
+
+
+
+    def run(self):
+        self.update_tmp_file(self.gv.TEI_FILE_PATH,self.gv.TEI_TEMP_FILE_PATH)
+        text = self.get_file_text(self.gv.TEI_TEMP_FILE_PATH)
+        '''
+        string replace example
         search_tag = 'p'
         replace_tag = ['div','sec']
         text = self.replace(text,search_tag,*replace_tag)
+        '''
+
+        '''
+        Regex finding example
+        '''
+        regex_list = ["(<title>.+?</title>\s+)?(?=<disp-quote>)((.|\s)+?)(?=</sec>)',r'\1<ref-list>\2</ref-list>", "<p>\s+?(<bold>|<title>)([A-Za-z\s]+)(</bold>|</title>)\s+?</p>\s+<list.+?>((.|\s)+?)(</list>)"]
+        print self.try_list_of_regex(text, *regex_list)
 
 
-        self.write_output(text)
-        self.update_tmp_file()
+
+        self.write_output(self.gv.TEI_FILE_PATH, text)
+
