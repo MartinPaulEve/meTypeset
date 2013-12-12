@@ -118,16 +118,12 @@ def main():
 	# run tei to nlm conversion
 	tei2nlm = TEI2NLM(gv)
 	tei2nlm.run()
-
-
-
+	
 	#metadata merge
-	md=Metadata(gv)
+	md = Metadata(gv)
 	md.run()
 
-	#mainupate tags
 	manipulate = Manipulate(gv)
-	#manipulate.run_dom()
 	manipulate.run()
 
 	#FrontMatter parser

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-
 from lxml import etree
+from lxml import objectify
 from copy import deepcopy
 import uuid
 import globals  as gv
@@ -71,6 +71,10 @@ class Manipulate():
             print 'INFO: no parameters given'
         return text
 
+    def replace_text_(self, xml_start, xml_end ,text):
+        text = text.replace()
+        return text
+    
 
     def run_dom(self, f):
         tree = self.set_dom_tree(f)
@@ -93,12 +97,21 @@ class Manipulate():
             return None
         else:
             return None
-
-
-
+    #replaces the 
+    def replace_value_of_tag(self, text,  new_value):
+         obj = objectify.fromstring(text)
+         obj.teiHeader.fileDesc.titleStmt.title._setText(new_value)
+         return etree.tostring(obj.getroottree())
+         
+        
+       
     def run(self):
         self.update_tmp_file(self.gv.TEI_FILE_PATH,self.gv.TEI_TEMP_FILE_PATH)
         text = self.get_file_text(self.gv.TEI_TEMP_FILE_PATH)
+        text = self.replace_value_of_tag(text,'ssssssssss')
+        self.write_output(self.gv.TEI_FILE_PATH, text)
+        os.remove(self.gv.TEI_TEMP_FILE_PATH)
+
 
         '''
         string replace example
@@ -113,5 +126,6 @@ class Manipulate():
         print self.try_list_of_regex(text, *regex_list)
         self.write_output(self.gv.TEI_FILE_PATH, text)
         '''
-
-
+        
+        
+    
