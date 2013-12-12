@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# @Author Dulip Withanage
 
 import distutils
 import os
@@ -8,6 +7,9 @@ import shutil
 import zipfile
 import subprocess
 import globals as gv
+
+__author__ = "Dulip Withanage"
+__email__ = "dulip.withanage@gmail.com"
 
 
 class Docx2TEI:
