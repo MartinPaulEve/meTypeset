@@ -29,3 +29,4 @@ class TEI2NLM:
         java_command = self.saxon_tei2nlm()
         print "INFO: Running saxon transform (TEI->NLM)"
         subprocess.call(java_command, stdin=None, shell=True)
+        shutil.copy2(self.gv.NLM_TEMP_FILE_PATH,self.gv.NLM_FILE_PATH )
