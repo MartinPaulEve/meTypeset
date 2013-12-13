@@ -114,22 +114,30 @@ def main():
 	# rund docx to tei conversion
 	docx2tei = Docx2TEI(gv)
 	docx2tei.run()
-	# tei
-	manipulate = Manipulate(gv)
-	manipulate.run()
-    # run tei to nlm conversion
+
+	# run tei to nlm conversion
 	tei2nlm = TEI2NLM(gv)
 	tei2nlm.run()
-	
-	#metadata merge
-	#md = Metadata(gv)
-	#md.run()
 
-	
+
+
+	#metadata merge
+	md=Metadata(gv)
+	md.run()
+
+	#mainupate tags
+	manipulate = Manipulate(gv)
+	#manipulate.run_dom()
+	#manipulate.run()
 
 	#FrontMatter parser
+<<<<<<< HEAD
 	#frontmatter = FrontMatterParser(gv)
 	#frontmatter.run()
+=======
+	frontmatter = FrontMatterParser(gv)
+	frontmatter.run()
+>>>>>>> 6090fc5b732ace8d355a5c4a3fe7cffbc9966f48
 
 	os.remove(gv.NLM_TEMP_FILE_PATH)
 
