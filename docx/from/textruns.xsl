@@ -295,7 +295,7 @@ of this software, even if advised of the possibility of such damage.
 	  	<xsl:if test="$meTypesetStyles/*">
 	  		<xsl:for-each select="$meTypesetStyles/*">
 	  			<xsl:variable name="attrname"><xsl:value-of select="@n"/></xsl:variable>
-	  			<xsl:message><xsl:value-of select="@n"/></xsl:message>
+	  			<!--<xsl:message><xsl:value-of select="@n"/></xsl:message>-->
 	  			<xsl:attribute name="{$attrname}">	
 	  				<xsl:value-of select="."/>
 	  			</xsl:attribute>
