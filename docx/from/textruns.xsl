@@ -194,6 +194,14 @@ of this software, even if advised of the possibility of such damage.
 	</xsl:if>
       </xsl:variable>
 
+    	<xsl:variable name="meTypesetStyles">
+    		<xsl:if test="w:rPr/w:sz">
+    			<s n="meTypesetSize">
+    				<xsl:value-of select="number(w:rPr/w:sz/@w:val) div 2"/>
+    			</s>
+    		</xsl:if>
+    	</xsl:variable>
+
       <xsl:variable name="dir">
 	<!-- right-to-left text -->
 	<xsl:if test="w:rPr/w:rtl or parent::w:p/w:pPr/w:rPr/w:rtl">
@@ -277,13 +285,22 @@ of this software, even if advised of the possibility of such damage.
       </xsl:variable>
 
 	<xsl:choose>
-	<xsl:when test="$effects/* or ($styles/* and $preserveEffects='true')">
+		<xsl:when test="$effects/* or $meTypesetStyles/* or ($styles/* and $preserveEffects='true')">
 	  <hi>
 	    <xsl:if test="$dir!='' and $preserveEffects='true'">
 	      <xsl:attribute name="dir"
 			     xmlns="http://www.w3.org/2005/11/its"
 			     select="$dir"/>
 	    </xsl:if>
+	  	<xsl:if test="$meTypesetStyles/*">
+	  		<xsl:for-each select="$meTypesetStyles/*">
+	  			<xsl:variable name="attrname"><xsl:value-of select="@n"/></xsl:variable>
+	  			<xsl:message><xsl:value-of select="@n"/></xsl:message>
+	  			<xsl:attribute name="{$attrname}">	
+	  				<xsl:value-of select="."/>
+	  			</xsl:attribute>
+	  		</xsl:for-each>
+	  	</xsl:if>
 	    <xsl:choose>
 	      <xsl:when test="$effects/*">
 		<xsl:attribute name="rend">
@@ -295,7 +312,7 @@ of this software, even if advised of the possibility of such damage.
 		  </xsl:for-each>
 		</xsl:attribute>
 	      </xsl:when>
-	      <xsl:when test="$preserveEffects='true'">
+	    	<xsl:when test="$preserveEffects='true'">
 		<xsl:attribute name="rend">
 		  <xsl:text>isoStyle</xsl:text>
 		</xsl:attribute>
