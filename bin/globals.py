@@ -22,8 +22,8 @@ class GV:
             filename_sep                        = self.INPUT_FILE_PATH.rsplit('/')
             self.OUTPUT_FOLDER_PATH             = os.path.expanduser(settings.args['<output_folder>'])
 
-            
-            
+	    self.debug				= False            
+
             #general directory paths
             self.RUNTIME_FOLDER_PATH            = generate_path(settings,'runtime', settings.script_dir)
             self.COMMON2_LIB_PATH               = generate_path(settings,common2, settings.script_dir)

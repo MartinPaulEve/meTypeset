@@ -27,6 +27,7 @@ from docx2tei import *
 from tei2nlm import *
 from metadata import *
 from manipulate import *
+from sizeClassifier import *
 from FrontMatterParser import *
 import os
 from docopt import docopt
@@ -94,12 +95,14 @@ def main():
 	#Read  command line arguments
 	args = docopt(__doc__, version='meTypset 0.1')
 
-	debug = args['--debug']
+	debug = args['--debug'] | args['-d']
 	test = args['--test']
 	#read settings file #make settings object
 	settings = SettingsConfiguration(get_settings_file(), args)
 	# set global variables
 	gv = g.GV(settings)
+
+	gv.debug = debug
 
 	#check for stylesheets
 	g.check_file_exists(gv.DOCX_STYLE_SHEET_DIR)
@@ -111,13 +114,19 @@ def main():
 	#get saxon lib class path
 	java_class_path = g.set_java_classpath(gv)
 
-	# rund docx to tei conversion
+	# run docx to tei conversion
 	docx2tei = Docx2TEI(gv)
 	docx2tei.run()
+	
+	# run size classifier
+
+	sizeclassifier = sizeClassifier(gv)
+	sizeclassifier.run()
+
 	# tei
 	manipulate = Manipulate(gv)
 	manipulate.run()
-    # run tei to nlm conversion
+	# run tei to nlm conversion
 	tei2nlm = TEI2NLM(gv)
 	tei2nlm.run()
 	

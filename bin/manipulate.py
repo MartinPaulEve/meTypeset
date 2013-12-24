@@ -102,8 +102,19 @@ class Manipulate():
          obj = objectify.fromstring(text)
          obj.teiHeader.fileDesc.titleStmt.title._setText(new_value)
          return etree.tostring(obj.getroottree())
-         
         
+    # changes the parent element of the outer_xpath expression to the new_value    
+    def change_outer(self, outer_xpath, new_value):
+        # load the DOM
+        self.update_tmp_file(self.gv.TEI_FILE_PATH,self.gv.TEI_TEMP_FILE_PATH)
+        tree = self.set_dom_tree(self.gv.TEI_TEMP_FILE_PATH)
+
+	# search the tree and grab the parent
+	for child in tree.xpath(outer_xpath + "/..", namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+		child.tag = new_value
+
+        tree.write(self.gv.TEI_FILE_PATH)
+        os.remove(self.gv.TEI_TEMP_FILE_PATH)
        
     def run(self):
         self.update_tmp_file(self.gv.TEI_FILE_PATH,self.gv.TEI_TEMP_FILE_PATH)
