@@ -81,7 +81,7 @@ def generate_path( settings, tag, path):
 def value_for_tag(settings,tag_name):
     expr = "//*[local-name() = $name]"
     tag = settings.tree.xpath(expr, name=tag_name, namespaces={'mt':'https://github.com/MartinPaulEve/meTypeset'})
-    return  clean_path(tag[0].text) if tag   else print_message_and_exit("ERROR: "+tag_name + "  is  not define in settings")
+    return  clean_path(tag[0].text) if tag   else print_message_and_exit("ERROR: "+tag_name + "  is  not defined in settings.xml")
 
 
 def print_message_and_exit(mess):
