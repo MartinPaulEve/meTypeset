@@ -109,9 +109,10 @@ def copy_folder(src, dst, symlinks=False, ignore=None):
 
     
 def concat_path(parent, child):
-    return parent + '/' +child
+    return parent + os.sep + '/' +child
 
 def clean_path(path):
+    #TODO: cross-platform fix?
     path = ''.join(path.split())
     return path.replace('\n ','').replace(" ", "").replace("//","/")
 
