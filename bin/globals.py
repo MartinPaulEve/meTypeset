@@ -35,10 +35,12 @@ class GV:
             # docx document paths
             self.DOCX_FOLDER_PATH               = generate_path(settings,docx ,settings.script_dir)
             self.DOCX_TEMP_FOLDER_PATH          = generate_path(settings, docx, self.OUTPUT_FOLDER_PATH)
+            self.DOCX_WORD_TEMP_FOLDER_PATH     = clean_path(concat_path(self.DOCX_TEMP_FOLDER_PATH , value_for_tag(settings,'word')))
             self.WORD_DOCUMENT_XML              = clean_path(self.DOCX_TEMP_FOLDER_PATH+'/'+value_for_tag(settings,'word-document-xml'))
             self.DOCX_STYLE_SHEET_DIR           = concat_path(self.SCRIPT_DIR , value_for_tag(settings,'docs-style-sheet-path'))
             self.DOC_TO_TEI_STYLESHEET          = clean_path(self.DOCX_TEMP_FOLDER_PATH+'/'+value_for_tag(settings,'doc-to-tei-stylesheet'))
-            self.DOCX_MEDIA_PATH                = clean_path(concat_path(self.DOCX_TEMP_FOLDER_PATH , value_for_tag(settings,'media')))
+            self.DOCX_MEDIA_PATH                = clean_path(concat_path(self.DOCX_WORD_TEMP_FOLDER_PATH , value_for_tag(settings,'media')))
+            self.OUTPUT_MEDIA_PATH              = clean_path(concat_path(self.OUTPUT_FOLDER_PATH , value_for_tag(settings,'outputmedia')))
             
             #OUTPUT FILE
             self.FILE_NAME                      = filename_sep[len(filename_sep)-1].replace('docx','xml').replace('doc','xml') if '/' in self.INPUT_FILE_PATH \

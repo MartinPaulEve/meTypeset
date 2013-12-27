@@ -43,16 +43,24 @@ class Docx2TEI:
                        self.gv.DOCX_TEMP_FOLDER_PATH, False, None)
 
         # decompress the docx
+        if self.gv.debug:
+           print "Unzipping " + self.gv.INPUT_FILE_PATH + " to " + self.gv.DOCX_TEMP_FOLDER_PATH
+
         with zipfile.ZipFile(self.gv.INPUT_FILE_PATH, "r") as z:
             z.extractall(self.gv.DOCX_TEMP_FOLDER_PATH)
 
-        if os.path.exists(self.gv.DOCX_MEDIA_PATH):
-            gv.copy_folder(self.gv.DOCX_MEDIA_PATH,
-                           gv.settings.script_dir, False, None)
+        if self.gv.debug:
+           print "Looking for presence of " + self.gv.DOCX_MEDIA_PATH
+
+        if os.path.isdir(self.gv.DOCX_MEDIA_PATH):
+           if self.gv.debug:
+              print "Ripping out media directory"
+
+           gv.mk_dir(self.gv.OUTPUT_MEDIA_PATH)
+           gv.copy_folder(self.gv.DOCX_MEDIA_PATH, self.gv.OUTPUT_MEDIA_PATH, False, None)
 
         # copy  input file into the docx subfolder
-        shutil.copy(self.gv.INPUT_FILE_PATH,
-                    self.gv.DOCX_TEMP_FOLDER_PATH)
+        shutil.copy(self.gv.INPUT_FILE_PATH, self.gv.DOCX_TEMP_FOLDER_PATH)
 
         # saxon converter
         java_command = self.saxon_doc2tei()
