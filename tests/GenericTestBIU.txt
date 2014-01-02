@@ -7,7 +7,7 @@ Library           Collections
 
 *** Test Cases ***
 000 Environment
-    ${result} =    Run Process    ../tools/gennlm.sh GenericTest/006_Bold_Italics_Underline.docx ./000    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py GenericTest/006_Bold_Italics_Underline.docx -o ./000    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     Should Not Contain    ${result.stderr}    cannot find or open
@@ -16,10 +16,10 @@ Library           Collections
 
 006 Matching All permutations of Italics
     [Tags]    italic
-    ${result} =    Run Process    ../tools/gennlm.sh GenericTest/006_Bold_Italics_Underline.docx ./006    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py GenericTest/006_Bold_Italics_Underline.docx -o ./006    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./006/006_Bold_Italics_Underline.xml
+    ${xml}=    Parse XML    ./006/nlm/006_Bold_Italics_Underline.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectionFirstItalic}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/p[10]
@@ -60,10 +60,10 @@ Library           Collections
 
 007 Matching All permutations of Bold (In body not headers)
     [Tags]    bold
-    ${result} =    Run Process    ../tools/gennlm.sh GenericTest/006_Bold_Italics_Underline.docx ./007    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py GenericTest/006_Bold_Italics_Underline.docx -o ./007    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./007/006_Bold_Italics_Underline.xml
+    ${xml}=    Parse XML    ./007/nlm/006_Bold_Italics_Underline.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${FirstBold}=    Get Element    ${firstsection}    sec[1]/sec[1]/sec[1]/table-wrap[1]/table[1]/tr[1]/td[1]/sec[1]/list[1]/list-item[3]/p
@@ -100,10 +100,10 @@ Library           Collections
 
 008 Matching All permutations of sup and sub
     [Tags]    sup sub
-    ${result} =    Run Process    ../tools/gennlm.sh GenericTest/007_Sup_Sub.docx ./008    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py GenericTest/007_Sup_Sub.docx -o ./008    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./008/007_Sup_Sub.xml
+    ${xml}=    Parse XML    ./008/nlm/007_Sup_Sub.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstParagFirstSup}=    Get Element    ${firstsection}    p[1]/sup[1]

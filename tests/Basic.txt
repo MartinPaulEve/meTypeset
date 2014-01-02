@@ -18,7 +18,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py 001.docx -o ./001    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./001/001.xml
+    ${xml}=    Parse XML    ./001/nlm/001.xml
     ${paragraph}=    Get Element    ${xml}    body/sec/p
     Elements Should Match    ${paragraph}    <p>The most basic document possible.</p>
     [Teardown]    Remove Directory    001    recursive=True
@@ -27,7 +27,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py 002.docx -o ./002    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./002/002.xml
+    ${xml}=    Parse XML    ./002/nlm/002.xml
     ${paragraph}=    Get Element    ${xml}    body/sec/p
     Elements Should Match    ${paragraph}    <p>A document <italic>with</italic> an italic word.</p>
     [Teardown]    Remove Directory    002    recursive=True
@@ -36,7 +36,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py 003.docx -o ./003    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./003/003.xml
+    ${xml}=    Parse XML    ./003/nlm/003.xml
     ${paragraph}=    Get Element    ${xml}    body/sec/p
     Elements Should Match    ${paragraph}    <p>A document <bold>with</bold> a bold word.</p>
     [Teardown]    Remove Directory    003    recursive=True
@@ -46,7 +46,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py 002.docx -o ./004    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./004/002.xml
+    ${xml}=    Parse XML    ./004/nlm/002.xml
     ${journalid}=    Get Element    ${xml}    front/journal-meta/journal-id
     Elements Should Match    ${journalid}    <journal-id>The Journal Name</journal-id>
     ${issn}=    Get Element    ${xml}    front/journal-meta/issn
@@ -82,7 +82,7 @@ Library           Collections
     ${result} =    Run Process    python ../bin/meTypeset.py 005.docx -o ./005    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./005/005.xml
+    ${xml}=    Parse XML    ./005/nlm/005.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
