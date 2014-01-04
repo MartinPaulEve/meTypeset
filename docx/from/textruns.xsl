@@ -76,17 +76,6 @@ of this software, even if advised of the possibility of such damage.
       <desc>Processing an inline run of text with its styling</desc>
    </doc>
 
-    <xsl:template match="w:commentReference">
-      <xsl:variable name="commentN" select="@w:id"/>
-      <xsl:for-each
-	  select="document(concat($wordDirectory,'/word/comments.xml'))/w:comments/w:comment[@w:id=$commentN]">
-	<note place="comment" resp="{translate(@w:author,' ','_')}">
-	  <date when="{@w:date}"/>
-	  <xsl:apply-templates/>
-	</note>
-      </xsl:for-each>
-    </xsl:template>
-
     <xsl:template match="w:r">
       <xsl:call-template name="processTextrun"/>
     </xsl:template>
