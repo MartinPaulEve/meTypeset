@@ -7,20 +7,24 @@ meTypeset is a fork of the OxGarage stack and uses TEI as an intemediary format 
 
 The transforms within this software can be invoked in several different ways:
 
-1. Run through a *nix compatible command line with the tools/gennlm.sh bash script.
+1. Run through a *nix compatible command line with the bin/meTypeset.py script.
 
-2. Called through any renderer capable of parsing XSLT 1.0.
+2. A limited set of the transforms can be called through any renderer capable of parsing XSLT 1.0. This will not include the meTypeset classifier stages.
 
-The modfications to the OxGarage stack contained within this project are Copyright Martin Paul Eve 2013 and released under the licenses specified in each respective file.
+The modfications to the OxGarage stack contained within this project are Copyright Martin Paul Eve 2014 and released under the licenses specified in each respective file.
 
-Running the bash script
+
+Running the python script
 =========
 
-First off, ensure you have the correct stack installed for your environment. meTypeset needs a valid Java environment, the command line tools "unzip" and "basename" and a shell interpreter (eg Bash). Saxon, which is required, is pre-bundled. It has been shown to work correctly on *Nix derivatives and Mac OS X.
+First off, ensure you have the correct stack installed for your environment. meTypeset needs a valid python environment, a valid Java environment, the command line tools "unzip" and "basename" and a shell interpreter (eg Bash). Saxon, which is required, is pre-bundled. It has been shown to work correctly on *Nix derivatives and Mac OS X.
 
-To run the typesetter use:
+Usage:
+    meTypeset.py [(-d | --debug)]   <input_file>  (-o | --output) <output_folder> [(-m | --metadata) (<metadata_file>)] [(-t | --test)]
+    meTypeset.py (-h | --help)
+    meTypeset.py (-t | --test)
+    meTypeset.py --version
 
-./tools/gennlm.sh [source.docx] [output folder] [optional: metadata file.xml]
 
 Developer information
 =========
