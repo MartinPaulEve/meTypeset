@@ -140,7 +140,8 @@ def main():
 	#frontmatter = FrontMatterParser(gv)
 	#frontmatter.run()
 
-	os.remove(gv.NLM_TEMP_FILE_PATH)
+	if not(debug):
+		os.remove(gv.NLM_TEMP_FILE_PATH)
 
 
 

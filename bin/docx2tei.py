@@ -66,6 +66,8 @@ class Docx2TEI:
         java_command = self.saxon_doc2tei()
         print "INFO: Running saxon transform (DOCX->TEI)"
         subprocess.call(java_command, stdin=None, shell=True)
+
         #delete temp folders
-        shutil.rmtree(self.gv.DOCX_TEMP_FOLDER_PATH)
-        shutil.rmtree(self.gv.COMMON2_TEMP_FOLDER_PATH)
+        if not(self.gv.debug):
+	        shutil.rmtree(self.gv.DOCX_TEMP_FOLDER_PATH)
+	        shutil.rmtree(self.gv.COMMON2_TEMP_FOLDER_PATH)
