@@ -208,7 +208,7 @@ of this software, even if advised of the possibility of such damage.
 	</xsl:if>
 
 	<xsl:choose>
-	  <xsl:when test="w:rPr/w:b/@w:val='0'">
+		<xsl:when test="w:rPr/w:b/@w:val='0' or w:rPr/w:b/@w:val='false'">
 	    <n>normalweight</n>
 	  </xsl:when>
 	  <xsl:when test="w:rPr/w:b">
