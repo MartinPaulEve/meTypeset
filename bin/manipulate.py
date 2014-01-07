@@ -103,6 +103,21 @@ class Manipulate():
 		 obj.teiHeader.fileDesc.titleStmt.title._setText(new_value)
 		 return etree.tostring(obj.getroottree())
 		
+	def tag_headings(self):
+		# load the DOM
+		self.update_tmp_file(self.gv.TEI_FILE_PATH,self.gv.TEI_TEMP_FILE_PATH)
+		tree = self.set_dom_tree(self.gv.TEI_TEMP_FILE_PATH)
+
+		iterator = 0
+
+		# search the tree and grab the parent
+		for child in tree.xpath("//tei:head", namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+			child.attrib['meTypesetHeadingID'] = str(iterator)
+			iterator = iterator + 1
+
+		tree.write(self.gv.TEI_FILE_PATH)
+	
+
 	# changes the parent element of the outer_xpath expression to the new_value	
 	def change_outer(self, outer_xpath, new_value, size_attribute):
 		# load the DOM
@@ -112,26 +127,37 @@ class Manipulate():
 		# search the tree and grab the parent
 		for child in tree.xpath(outer_xpath + "/..", namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
 			child.tag = new_value
-			child.attrib['meTypesetSize'] = 	size_attribute
+			child.attrib['meTypesetSize'] = size_attribute
 
-			tree.write(self.gv.TEI_FILE_PATH)
-			os.remove(self.gv.TEI_TEMP_FILE_PATH)
+		tree.write(self.gv.TEI_FILE_PATH)
 	 
 	def enclose(self, start_xpath, count, end_xpath):
 		# load the DOM
 		self.update_tmp_file(self.gv.TEI_FILE_PATH,self.gv.TEI_TEMP_FILE_PATH)
 		tree = self.set_dom_tree(self.gv.TEI_TEMP_FILE_PATH)
 
-		node = tree.xpath(outer_xpath)[count]
-		parent = node.parent
+		node = tree.xpath(start_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[count]
+		parent = node.getparent()
 		div = etree.Element('div')
 		parent.insert(0, div)
 
+		"""
+		$ns1[count(.|$ns2) = count($ns2)]
+		"""
+
+		if self.gv.debug:
+			#print "Running intersect: " + start_xpath + "[" + str(count) + "] intersect " + end_xpath
+			print "Running intersect: " + start_xpath + "[" + str(count + 1) + "][count(.|" + end_xpath + ") = count(" + end_xpath + ")]"
+
+
 		# search the tree and grab the elements
-		child = tree.xpath("start_xpath[" + count + "]] intersect " + end_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+		#child = tree.xpath(start_xpath + "[" + str(count) + "] intersect " + end_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+		child = tree.xpath(start_xpath + "[" + str(count + 1) + "][count(.|" + end_xpath + ") = count(" + end_xpath + ")]", namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
 		
 		# move the elements
 		div.insert(child)
+
+		tree.write(self.gv.TEI_FILE_PATH)
 
 	def run(self):
 		self.update_tmp_file(self.gv.TEI_FILE_PATH,self.gv.TEI_TEMP_FILE_PATH)

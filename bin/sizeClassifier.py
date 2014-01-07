@@ -60,6 +60,8 @@ class sizeClassifier():
 
 			# depending on the length of the array we will parse differently
 
+			iteration = 0
+
 			if len(sizes) == 1:
 				for size in sizes:
 					# loop should only execute once but because dictionaries are non-ordered in python, this is the easiest way
@@ -80,13 +82,13 @@ class sizeClassifier():
 
 			elif len(sizes) > 1:
 				# first, we want a sorted representation (of tuples) of the frequency dictionary
-				sectionStack = []
 
 				for size in sizes:
 					# disregard sizes below the cut-off
 					if size >= self.size_cutoff:
 						manipulate = Manipulate(self.gv)
 						manipulate.change_outer("//tei:hi[@meTypesetSize='" + size + "']", "head", size)
+						iteration = iteration + 1
 
 				# todo: wrap section tags
 				# the way we need to do this is to iterate over each tag, looking for the next title
@@ -99,10 +101,36 @@ class sizeClassifier():
 				# 2.) if the stack works, then use that to deal with headings
 				# 3.) if the stack doesn't work (ie the user has created a document that isn't logially structured), then do our best manually
 
-				sectionCount = 0
+				sectionCount = {}
+				iteration = 0
+				firstHeading = 0
+				sectionStack = []
+
+				manipulate.tag_headings()
 
 				for size in sizesOrdered:
-					sectionCount = sectionCount + 1
+					if not size in sectionCount:
+						sectionCount[size] = 0
+
 					if len(sectionStack) == 0:
 						# this section should span the entire document and enclose the first title
-						manipulate.enclose("//tei:head[@meTypesetSize='" + size + "']", sectionCount, "(//element)[last()]")
+						# manipulate.enclose("//tei:head[@meTypesetSize='" + size + "']", sectionCount[size], "(//*)[last()]")
+
+						# done automatically?
+						firstHeading = size
+					else:
+						# this block is triggered when we reach any heading but the first
+
+						# ascertain if there are any other instances of the heading
+						if sizes[size] == 1 and size <> firstHeading:
+							# there are no other instances of this heading, so we want to select down to the last closing div of the previous size
+							previousSize = sizesOrdered[iteration - 1]
+
+							# previousSize 
+							#manipulate.enclose("//tei:head[@meTypesetSize='" + size + "']", sectionCount[size], "((//tei:head[@meTypesetSize='" + previousSize + "'])[" + sectionCount[previousSize] + "]/*)[last()]")
+
+					sectionCount[size] = sectionCount[size] + 1
+
+					sectionStack.append(size)
+
+					iteration = iteration + 1
