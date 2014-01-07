@@ -31,13 +31,16 @@ class sizeClassifier():
 	def get_values(self, tree, search_attribute):
 		# this function searches the DOM tree for TEI "hi" elements with the specified search_attribute
 		sizes = {}
+		sizesOrdered = []
 		for child in tree.xpath("//tei:hi[@" + search_attribute + "=not('')]", namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
 			if child.get(search_attribute) in sizes:
-				sizes[child.get(search_attribute)] = child.get(search_attribute) + 1
+				sizes[child.get(search_attribute)] = sizes[child.get(search_attribute)] + 1
 			else:
 				sizes[child.get(search_attribute)] = 1
 
-		return sizes
+			sizesOrdered.append(child.get(search_attribute))
+
+		return sizes, sizesOrdered
 
 	def set_dom_tree(self, filename):
 			p = etree.XMLParser(remove_blank_text=True, resolve_entities=False)
@@ -49,7 +52,7 @@ class sizeClassifier():
 		  	tree = self.set_dom_tree(self.gv.TEI_FILE_PATH)
 
 			# get a numerical list of explicit size values inside meTypesetSize attributes
-			sizes = self.get_values(tree, "meTypesetSize")
+			sizes, sizesOrdered = self.get_values(tree, "meTypesetSize")
 	
 			if self.gv.debug:
 				print "Explicitly specified size variations and their frequency of occurrence:"
@@ -71,19 +74,19 @@ class sizeClassifier():
 						# will be transformed to
 						# <title><hi meTypesetSize="18">some text</hi></title>
 						manipulate = Manipulate(self.gv)
-						manipulate.change_outer("//tei:hi[@meTypesetSize='" + size + "']", "head")
+						manipulate.change_outer("//tei:hi[@meTypesetSize='" + size + "']", "head", size)
 
 						# todo: wrap section tags (single section with multiple headings)
 
 			elif len(sizes) > 1:
 				# first, we want a sorted representation (of tuples) of the frequency dictionary
-				sorted_sizes = sorted(sizes.iteritems(), key=operator.itemgetter(1))
+				sectionStack = []
 
-				for size in sorted_sizes:
+				for size in sizes:
 					# disregard sizes below the cut-off
 					if size >= self.size_cutoff:
 						manipulate = Manipulate(self.gv)
-						manipulate.change_outer("//tei:hi[@meTypesetSize='" + size + "']", "head")
+						manipulate.change_outer("//tei:hi[@meTypesetSize='" + size + "']", "head", size)
 
 				# todo: wrap section tags
 				# the way we need to do this is to iterate over each tag, looking for the next title
@@ -95,3 +98,11 @@ class sizeClassifier():
 				# 1.) a dry-run trying to parse this as a formal stack with push and pops for each level
 				# 2.) if the stack works, then use that to deal with headings
 				# 3.) if the stack doesn't work (ie the user has created a document that isn't logially structured), then do our best manually
+
+				sectionCount = 0
+
+				for size in sizesOrdered:
+					sectionCount = sectionCount + 1
+					if len(sectionStack) == 0:
+						# this section should span the entire document and enclose the first title
+						manipulate.enclose("//tei:head[@meTypesetSize='" + size + "']", sectionCount, "(//element)[last()]")
