@@ -131,6 +131,18 @@ class Manipulate():
 
 		tree.write(self.gv.TEI_FILE_PATH)
 	 
+	def move_size_div(self, headingID, siblingID):
+		# load the DOM
+		self.update_tmp_file(self.gv.TEI_FILE_PATH,self.gv.TEI_TEMP_FILE_PATH)
+		tree = self.set_dom_tree(self.gv.TEI_TEMP_FILE_PATH)
+
+		nodeToMove = tree.xpath("//tei:head[@meTypesetHeadingID='" + str(headingID) + "']/..", namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+		nodeToMoveTo = tree.xpath("//tei:head[@meTypesetHeadingID='" + str(siblingID) + "']/..", namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+
+		nodeToMoveTo.addnext(nodeToMove)		
+
+		tree.write(self.gv.TEI_FILE_PATH)
+
 	def enclose(self, start_xpath, select_xpath):
 		# load the DOM
 		self.update_tmp_file(self.gv.TEI_FILE_PATH,self.gv.TEI_TEMP_FILE_PATH)

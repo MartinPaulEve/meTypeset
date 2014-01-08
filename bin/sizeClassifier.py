@@ -24,6 +24,7 @@ A class that scans for meTypeset size fields in a TEI file.
 '''
 class sizeClassifier():
 	size_cutoff = 16
+	module_name = "Size Classifier"
 
 	def __init__(self, gv):
 		self.gv = gv
@@ -55,7 +56,7 @@ class sizeClassifier():
 			sizes, sizesOrdered = self.get_values(tree, "meTypesetSize")
 	
 			if self.gv.debug:
-				print "Explicitly specified size variations and their frequency of occurrence:"
+				print "[" + self.module_name + "] Explicitly specified size variations and their frequency of occurrence:"
 				print sizes
 
 			# depending on the length of the array we will parse differently
@@ -68,7 +69,7 @@ class sizeClassifier():
 					if size >= self.size_cutoff:
 						# if the size is greater than or equal to 16, treat it as a heading
 						if self.gv.debug:
-							print "Found single explicitly specified size greater than or equal to " + str(self.size_cutoff) + ". Treating as a heading."
+							print "[" + self.module_name + "] Found single explicitly specified size greater than or equal to " + str(self.size_cutoff) + ". Treating as a heading."
 
 						# instruct the manipulator to change the parent tag of every tag it finds containing 
 						# a "hi" tag with meTypesetSize set to the value found to "title"
@@ -110,6 +111,9 @@ class sizeClassifier():
 				iteration = 0
 				firstHeading = 0
 				sectionStack = []
+				sectionIDs = []
+				processedFlag = False
+				breakOut = -1
 
 				manipulate.tag_headings()
 
@@ -126,28 +130,73 @@ class sizeClassifier():
 					else:
 						# this block is triggered when we reach any heading but the first
 
-						# ascertain the next size
-						if iteration < (len(sizesOrdered) - 1):
-							nextSize = sizesOrdered[iteration + 1]
+						if not processedFlag:
 
-							if size == nextSize:
-								# if same size, select and enclose "//tei:head[@meTypesetHeadingID='ID'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='ID'] and following-sibling::tei:head[@meTypesetHeadingID='ID+1']]"
-								manipulate.enclose("//tei:head[@meTypesetHeadingID='" + str(iteration) + "']", "//tei:head[@meTypesetHeadingID='" + str(iteration) + "'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='" + str(iteration) + "'] and following-sibling::tei:head[@meTypesetHeadingID='" + str(iteration + 1) + "']]")
+							# ascertain the next size
+							if iteration < (len(sizesOrdered) - 1):
+								nextSize = sizesOrdered[iteration + 1]
 
-							# if smaller and others of same size, select and enclose "//tei:head[@meTypesetHeadingID='ID'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='ID'] and following-sibling::tei:head[@meTypesetHeadingID='__THEIDOFSIBLINGWITHSAMESIZE__']]"/>
+								if size == nextSize:
+									# if same size, select and enclose "//tei:head[@meTypesetHeadingID='ID'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='ID'] and following-sibling::tei:head[@meTypesetHeadingID='ID+1']]"
+									if self.gv.debug:
+										print "[" + self.module_name + "] Encountered block of same size as following (size: " + str(size) + ") [size ID: " + str(iteration) + "]"
 
-							# if smaller and no others of same size, select and enclose "//tei:head[@meTypesetHeadingID='ID'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='ID'] and following-sibling::END_OF_PRECEDING_DIV]"/>
-							if size > nextSize:
+									manipulate.enclose("//tei:head[@meTypesetHeadingID='" + str(iteration) + "']", "//tei:head[@meTypesetHeadingID='" + str(iteration) + "'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='" + str(iteration) + "'] and following-sibling::tei:head[@meTypesetHeadingID='" + str(iteration + 1) + "']]")
+
+								# if smaller and others of same size, select and enclose "//tei:head[@meTypesetHeadingID='ID'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='ID'] and following-sibling::tei:head[@meTypesetHeadingID='__THEIDOFSIBLINGWITHSAMESIZE__']]"/>
+
+								# if smaller and no others of same size, select and enclose "//tei:head[@meTypesetHeadingID='ID'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='ID'] and following-sibling::END_OF_PRECEDING_DIV]"/>
+								if size > nextSize:
+									if self.gv.debug:
+										print "[" + self.module_name + "] Encountered smaller block as following (size: " + str(size) + ", next size: " + str(nextSize) + ") [size ID: #" + str(iteration) + "]"
+
+									manipulate.enclose("//tei:head[@meTypesetHeadingID='" + str(iteration) + "']", "//tei:head[@meTypesetHeadingID='" + str(iteration) + "'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='" + str(iteration) + "']]")
+
+								# if bigger then find previous parent depth and append after that
+								if size < nextSize:
+									if self.gv.debug:
+										print "[" + self.module_name + "] Encountered larger block as following (size: " + str(size) + ", next size: " + str(nextSize) + ") [size ID: #" + str(iteration) + "]"
+
+									# find appropriate previous sibling
+									siblingID = sectionIDs[sectionStack.index(nextSize)]
+								
+									# enclose the REST OF THE DOCUMENT underneath this /next heading/
+									manipulate.enclose("//tei:head[@meTypesetHeadingID='" + str(iteration + 1) + "']", "//tei:head[@meTypesetHeadingID='" + str(iteration + 1) + "'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='" + str(iteration + 1) + "']]")
+
+									if self.gv.debug:
+										print "[" + self.module_name + "] Moving block ID #" + str(iteration + 1) + " to be sibling of block ID #" + str(siblingID)
+
+									# move the /next heading/ to directly beneath the previous sibling
+									manipulate.move_size_div(iteration + 1, siblingID)
+
+									# update the sibling stack
+									sectionIDs[sectionStack.index(nextSize)] = iteration + 1
+
+									# now handle the enclosure of the current block						
+									manipulate.enclose("//tei:head[@meTypesetHeadingID='" + str(iteration) + "']", "//tei:head[@meTypesetHeadingID='" + str(iteration) + "'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='" + str(iteration) + "']]")
+
+									# set the processed flag so that the next enclosure isn't handled
+									processedFlag = True
+
+							else:
+								# this is the last heading so there is no future comparator
+								if self.gv.debug:
+									print "[" + self.module_name + "] Encountered final heading (size: " + str(size) + ") [size ID: #" + str(iteration) + "]"
+
 								manipulate.enclose("//tei:head[@meTypesetHeadingID='" + str(iteration) + "']", "//tei:head[@meTypesetHeadingID='" + str(iteration) + "'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='" + str(iteration) + "']]")
 
-							# if bigger then skip iteration and just move to continue searching for next??
-
 						else:
-							# this is the last heading so there is no future comparator
-							manipulate.enclose("//tei:head[@meTypesetHeadingID='" + str(iteration) + "']", "//tei:head[@meTypesetHeadingID='" + str(iteration) + "'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='" + str(iteration) + "']]")
+							processedFlag = False
 
 					sectionCount[size] = sectionCount[size] + 1
 
-					sectionStack.append(size)
+					if not size in sectionStack:
+						sectionStack.append(size)
+						sectionIDs.append(iteration)
+					else:
+						sectionIDs[sectionStack.index(size)] = iteration
 
 					iteration = iteration + 1
+
+					if iteration == breakOut:
+						break
