@@ -121,13 +121,25 @@ class sizeClassifier():
 					else:
 						# this block is triggered when we reach any heading but the first
 
-						# ascertain if there are any other instances of the heading
-						if sizes[size] == 1 and size <> firstHeading:
-							# there are no other instances of this heading, so we want to select down to the last closing div of the previous size
-							previousSize = sizesOrdered[iteration - 1]
+						# ascertain the next size
+						if iteration < (len(sizesOrdered) - 1):
+							nextSize = sizesOrdered[iteration + 1]
 
-							# previousSize 
-							#manipulate.enclose("//tei:head[@meTypesetSize='" + size + "']", sectionCount[size], "((//tei:head[@meTypesetSize='" + previousSize + "'])[" + sectionCount[previousSize] + "]/*)[last()]")
+							if size == nextSize:
+								# if same size, select and enclose "//tei:head[@meTypesetHeadingID='ID'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='ID'] and following-sibling::tei:head[@meTypesetHeadingID='ID+1']]"
+								manipulate.enclose("//tei:head[@meTypesetHeadingID='" + str(iteration) + "']", "//tei:head[@meTypesetHeadingID='" + str(iteration) + "'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='" + str(iteration) + "'] and following-sibling::tei:head[@meTypesetHeadingID='" + str(iteration + 1) + "']]")
+
+							# if smaller and others of same size, select and enclose "//tei:head[@meTypesetHeadingID='ID'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='ID'] and following-sibling::tei:head[@meTypesetHeadingID='__THEIDOFSIBLINGWITHSAMESIZE__']]"/>
+
+							# if smaller and no others of same size, select and enclose "//tei:head[@meTypesetHeadingID='ID'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='ID'] and following-sibling::END_OF_PRECEDING_DIV]"/>
+							if size > nextSize:
+								manipulate.enclose("//tei:head[@meTypesetHeadingID='" + str(iteration) + "']", "//tei:head[@meTypesetHeadingID='" + str(iteration) + "'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='" + str(iteration) + "']]")
+
+							# if bigger then skip iteration and just move to continue searching for next??
+
+						else:
+							# this is the last heading so there is no future comparator
+							manipulate.enclose("//tei:head[@meTypesetHeadingID='" + str(iteration) + "']", "//tei:head[@meTypesetHeadingID='" + str(iteration) + "'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='" + str(iteration) + "']]")
 
 					sectionCount[size] = sectionCount[size] + 1
 

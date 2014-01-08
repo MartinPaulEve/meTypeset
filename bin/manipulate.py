@@ -131,31 +131,25 @@ class Manipulate():
 
 		tree.write(self.gv.TEI_FILE_PATH)
 	 
-	def enclose(self, start_xpath, count, end_xpath):
+	def enclose(self, start_xpath, select_xpath):
 		# load the DOM
 		self.update_tmp_file(self.gv.TEI_FILE_PATH,self.gv.TEI_TEMP_FILE_PATH)
 		tree = self.set_dom_tree(self.gv.TEI_TEMP_FILE_PATH)
 
-		node = tree.xpath(start_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[count]
-		parent = node.getparent()
+		node = tree.xpath(start_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
 		div = etree.Element('div')
-		parent.insert(0, div)
-
-		"""
-		$ns1[count(.|$ns2) = count($ns2)]
-		"""
+		node.addprevious(div)
 
 		if self.gv.debug:
-			#print "Running intersect: " + start_xpath + "[" + str(count) + "] intersect " + end_xpath
-			print "Running intersect: " + start_xpath + "[" + str(count + 1) + "][count(.|" + end_xpath + ") = count(" + end_xpath + ")]"
+			print "Grabbing: " + select_xpath
 
 
 		# search the tree and grab the elements
-		#child = tree.xpath(start_xpath + "[" + str(count) + "] intersect " + end_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
-		child = tree.xpath(start_xpath + "[" + str(count + 1) + "][count(.|" + end_xpath + ") = count(" + end_xpath + ")]", namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+		child = tree.xpath(select_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 		
 		# move the elements
-		div.insert(child)
+		for element in child:
+			div.append(element)
 
 		tree.write(self.gv.TEI_FILE_PATH)
 
