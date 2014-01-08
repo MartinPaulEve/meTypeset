@@ -91,13 +91,6 @@ class sizeClassifier():
 						manipulate.change_outer("//tei:hi[@meTypesetSize='" + size + "']", "head", size)
 						iteration = iteration + 1
 
-				# todo: wrap section tags
-				# the way we need to do this is to iterate over each tag, looking for the next title
-				# if this is the first time we have encountered this size, push an ID reference for the tag onto a list stack
-				# if the next title is within size_cutoff and the same size as the preceding, then close section, open section, and insert the title (no stack change)
-				# if the next title is within size_cutoff and a smaller size than the preceding, then open section and write title (then push)
-				# if the next title is within size_cutoff and a bigger size than the preceding, then close section (then pop)
-
 				"""
 				Test cases needed:
 				H20 -> H19 -> H18 (size nesting)
@@ -114,8 +107,17 @@ class sizeClassifier():
 				sectionIDs = []
 				processedFlag = False
 				breakOut = -1
+				rootSize = sizesOrdered[0]
 
+				# assign IDs to every single heading tag for easy manipulation
 				manipulate.tag_headings()
+
+				# normalize sizes: we cannot have a size bigger than the root node; there's no sensible way to detect this
+				for size in sizesOrdered:
+					if size > rootSize:
+						if self.gv.debug:
+							print "[" + self.module_name + "] Downsizing headings of " + str(size) + " to maximum root size " + str(rootSize) + "."
+						manipulate.downsize_headings(rootSize, size)
 
 				for size in sizesOrdered:
 					if not size in sectionCount:
@@ -129,6 +131,7 @@ class sizeClassifier():
 						firstHeading = size
 					else:
 						# this block is triggered when we reach any heading but the first
+						
 
 						if not processedFlag:
 

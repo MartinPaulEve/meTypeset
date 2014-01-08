@@ -143,6 +143,18 @@ class Manipulate():
 
 		tree.write(self.gv.TEI_FILE_PATH)
 
+	def downsize_headings(self, rootSize, size):
+		# load the DOM
+		self.update_tmp_file(self.gv.TEI_FILE_PATH,self.gv.TEI_TEMP_FILE_PATH)
+		tree = self.set_dom_tree(self.gv.TEI_TEMP_FILE_PATH)
+
+		nodesToDownsize = tree.xpath("//tei:head[@meTypesetSize='" + str(size) + "']", namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+		for nodeToDownsize in nodesToDownsize:
+			nodeToDownsize.attrib['meTypesetSize'] = rootSize
+
+		tree.write(self.gv.TEI_FILE_PATH)
+		
+
 	def enclose(self, start_xpath, select_xpath):
 		# load the DOM
 		self.update_tmp_file(self.gv.TEI_FILE_PATH,self.gv.TEI_TEMP_FILE_PATH)
