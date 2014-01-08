@@ -92,14 +92,19 @@ class sizeClassifier():
 
 				# todo: wrap section tags
 				# the way we need to do this is to iterate over each tag, looking for the next title
+				# if this is the first time we have encountered this size, push an ID reference for the tag onto a list stack
 				# if the next title is within size_cutoff and the same size as the preceding, then close section, open section, and insert the title (no stack change)
 				# if the next title is within size_cutoff and a smaller size than the preceding, then open section and write title (then push)
 				# if the next title is within size_cutoff and a bigger size than the preceding, then close section (then pop)
 
-				# this should be implemented in three stages:
-				# 1.) a dry-run trying to parse this as a formal stack with push and pops for each level
-				# 2.) if the stack works, then use that to deal with headings
-				# 3.) if the stack doesn't work (ie the user has created a document that isn't logially structured), then do our best manually
+				"""
+				Test cases needed:
+				H20 -> H19 -> H18 (size nesting)
+				H20 -> H19 -> H18 -> H19 (size increase in step)
+				H20 -> H19 -> H19 (sibling alignment)
+				H20 -> H22 (a situation in which we have to normalise illogically nested tags)
+				H20 -> H19 -> H18 -> H20 -> H18 (a case that demonstrates the need for the positional stack)
+				"""
 
 				sectionCount = {}
 				iteration = 0
