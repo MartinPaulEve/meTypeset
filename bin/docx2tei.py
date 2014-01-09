@@ -31,15 +31,15 @@ class Docx2TEI:
 
     def run(self):
         # make output folders
-        gv.mk_dir(self.gv.OUTPUT_FOLDER_PATH)
-        gv.mk_dir(self.gv.DOCX_TEMP_FOLDER_PATH)
-        gv.mk_dir(self.gv.COMMON2_TEMP_FOLDER_PATH)
-        gv.mk_dir(self.gv.TEI_FOLDER_PATH)
+        self.gv.mk_dir(self.gv.OUTPUT_FOLDER_PATH)
+        self.gv.mk_dir(self.gv.DOCX_TEMP_FOLDER_PATH)
+        self.gv.mk_dir(self.gv.COMMON2_TEMP_FOLDER_PATH)
+        self.gv.mk_dir(self.gv.TEI_FOLDER_PATH)
 
         #copy folders
-        gv.copy_folder(self.gv.COMMON2_LIB_PATH,
+        self.gv.copy_folder(self.gv.COMMON2_LIB_PATH,
                        self.gv.COMMON2_TEMP_FOLDER_PATH, False, None)
-        gv.copy_folder(self.gv.DOCX_FOLDER_PATH,
+        self.gv.copy_folder(self.gv.DOCX_FOLDER_PATH,
                        self.gv.DOCX_TEMP_FOLDER_PATH, False, None)
 
         # decompress the docx
@@ -56,8 +56,8 @@ class Docx2TEI:
            if self.gv.debug:
               print "Ripping out media directory"
 
-           gv.mk_dir(self.gv.OUTPUT_MEDIA_PATH)
-           gv.copy_folder(self.gv.DOCX_MEDIA_PATH, self.gv.OUTPUT_MEDIA_PATH, False, None)
+           self.gv.mk_dir(self.gv.OUTPUT_MEDIA_PATH)
+           self.gv.copy_folder(self.gv.DOCX_MEDIA_PATH, self.gv.OUTPUT_MEDIA_PATH, False, None)
 
         # copy  input file into the docx subfolder
         shutil.copy(self.gv.INPUT_FILE_PATH, self.gv.DOCX_TEMP_FOLDER_PATH)
@@ -69,5 +69,5 @@ class Docx2TEI:
 
         #delete temp folders
         if not(self.gv.debug):
-	        shutil.rmtree(self.gv.DOCX_TEMP_FOLDER_PATH)
-	        shutil.rmtree(self.gv.COMMON2_TEMP_FOLDER_PATH)
+            shutil.rmtree(self.gv.DOCX_TEMP_FOLDER_PATH)
+            shutil.rmtree(self.gv.COMMON2_TEMP_FOLDER_PATH)

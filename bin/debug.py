@@ -1,6 +1,8 @@
 __author__ = 'Martin Paul Eve'
 __email__ = "martin@martineve.com"
 
+import sys
+
 class Debug():
     def __init__(self, gv):
         """
@@ -20,4 +22,8 @@ class Debug():
         @param message: the debug message to print
         """
         if self.debug:
-            print("[" + module.get_module_name() + "] " + message + ".")
+            print('[{0}] {1}'.format(module.get_module_name(), message))
+
+    def fatal_error(self, module, message):
+        print('[FATAL ERROR] [{0}] {1}'.format(module.get_module_name(), message))
+        sys.exit(1)

@@ -25,7 +25,7 @@ class TEI2NLM:
 
     def run(self):
         #assumes ouput path exists after tei conversion
-        gv.mk_dir(self.gv.NLM_FOLDER_PATH)
+        self.gv.mk_dir(self.gv.NLM_FOLDER_PATH)
         java_command = self.saxon_tei2nlm()
         print "INFO: Running saxon transform (TEI->NLM)"
         subprocess.call(java_command, stdin=None, shell=True)
