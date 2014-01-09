@@ -1,15 +1,5 @@
 #!/usr/bin/env python
-from lxml import etree
-from lxml import objectify
-from copy import deepcopy
-import uuid
-import globals as gv
-import os
 from manipulate import *
-import subprocess
-import shutil
-import re
-import operator
 
 __author__ = "Martin Paul Eve"
 __email__ = "martin@martineve.com"
