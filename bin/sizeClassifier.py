@@ -194,7 +194,17 @@ class sizeClassifier():
 								if self.gv.debug:
 									print "[" + self.module_name + "] Encountered final heading (size: " + str(size) + ") [size ID: #" + str(iteration) + "]"
 
+								# find appropriate previous sibling
+								siblingID = sectionIDs[sectionStack.index(size)]
+
+								# enclose the REST OF THE DOCUMENT underneath this /next heading/
 								manipulate.enclose("//tei:head[@meTypesetHeadingID='" + str(iteration) + "']", "//tei:head[@meTypesetHeadingID='" + str(iteration) + "'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='" + str(iteration) + "']]")
+
+								if self.gv.debug:
+									print "[" + self.module_name + "] Moving block ID #" + str(iteration) + " to be sibling of block ID #" + str(siblingID)
+
+								# move this heading to directly beneath the previous sibling
+								manipulate.move_size_div(iteration , siblingID)
 
 						else:
 							print "[" + self.module_name + "] Size ID: " + str(iteration) + " was already processed."
