@@ -108,8 +108,8 @@ class Manipulate():
 
     def tag_headings(self):
         # load the DOM
-        self.update_tmp_file(self.gv.TEI_FILE_PATH, self.gv.TEI_TEMP_FILE_PATH)
-        tree = self.set_dom_tree(self.gv.TEI_TEMP_FILE_PATH)
+        self.update_tmp_file(self.gv.tei_file_path, self.gv.tei_temp_file_path)
+        tree = self.set_dom_tree(self.gv.tei_temp_file_path)
 
         iterator = 0
 
@@ -118,25 +118,25 @@ class Manipulate():
             child.attrib['meTypesetHeadingID'] = str(iterator)
             iterator += 1
 
-        tree.write(self.gv.TEI_FILE_PATH)
+        tree.write(self.gv.tei_file_path)
 
     # changes the parent element of the outer_xpath expression to the new_value
     def change_outer(self, outer_xpath, new_value, size_attribute):
         # load the DOM
-        self.update_tmp_file(self.gv.TEI_FILE_PATH, self.gv.TEI_TEMP_FILE_PATH)
-        tree = self.set_dom_tree(self.gv.TEI_TEMP_FILE_PATH)
+        self.update_tmp_file(self.gv.tei_file_path, self.gv.tei_temp_file_path)
+        tree = self.set_dom_tree(self.gv.tei_temp_file_path)
 
         # search the tree and grab the parent
         for child in tree.xpath(outer_xpath + "/..", namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             child.tag = new_value
             child.attrib['meTypesetSize'] = size_attribute
 
-        tree.write(self.gv.TEI_FILE_PATH)
+        tree.write(self.gv.tei_file_path)
 
     def move_size_div(self, heading_id, sibling_id):
         # load the DOM
-        self.update_tmp_file(self.gv.TEI_FILE_PATH, self.gv.TEI_TEMP_FILE_PATH)
-        tree = self.set_dom_tree(self.gv.TEI_TEMP_FILE_PATH)
+        self.update_tmp_file(self.gv.tei_file_path, self.gv.tei_temp_file_path)
+        tree = self.set_dom_tree(self.gv.tei_temp_file_path)
 
         source_node = tree.xpath(u'//tei:head[@meTypesetHeadingID=\'{0}\']/..'.format(str(heading_id)),
                                  namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
@@ -145,24 +145,24 @@ class Manipulate():
 
         destination_node.addnext(source_node)
 
-        tree.write(self.gv.TEI_FILE_PATH)
+        tree.write(self.gv.tei_file_path)
 
     def downsize_headings(self, root_size, size):
         # load the DOM
-        self.update_tmp_file(self.gv.TEI_FILE_PATH, self.gv.TEI_TEMP_FILE_PATH)
-        tree = self.set_dom_tree(self.gv.TEI_TEMP_FILE_PATH)
+        self.update_tmp_file(self.gv.tei_file_path, self.gv.tei_temp_file_path)
+        tree = self.set_dom_tree(self.gv.tei_temp_file_path)
 
         nodes_to_downsize = tree.xpath(u'//tei:head[@meTypesetSize=\'{0}\']'.format(str(size)),
                                        namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
         for node_to_downsize in nodes_to_downsize:
             node_to_downsize.attrib['meTypesetSize'] = root_size
 
-        tree.write(self.gv.TEI_FILE_PATH)
+        tree.write(self.gv.tei_file_path)
 
     def enclose(self, start_xpath, select_xpath):
         # load the DOM
-        self.update_tmp_file(self.gv.TEI_FILE_PATH, self.gv.TEI_TEMP_FILE_PATH)
-        tree = self.set_dom_tree(self.gv.TEI_TEMP_FILE_PATH)
+        self.update_tmp_file(self.gv.tei_file_path, self.gv.tei_temp_file_path)
+        tree = self.set_dom_tree(self.gv.tei_temp_file_path)
 
         node = tree.xpath(start_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
         div = etree.Element('div')
@@ -177,14 +177,14 @@ class Manipulate():
         for element in child:
             div.append(element)
 
-        tree.write(self.gv.TEI_FILE_PATH)
+        tree.write(self.gv.tei_file_path)
 
     def run(self):
-        self.update_tmp_file(self.gv.TEI_FILE_PATH, self.gv.TEI_TEMP_FILE_PATH)
-        text = self.get_file_text(self.gv.TEI_TEMP_FILE_PATH)
+        self.update_tmp_file(self.gv.tei_file_path, self.gv.tei_temp_file_path)
+        text = self.get_file_text(self.gv.tei_temp_file_path)
         text = self.replace_value_of_tag(text, 'ssssssssss')
-        self.write_output(self.gv.TEI_FILE_PATH, text)
-        os.remove(self.gv.TEI_TEMP_FILE_PATH)
+        self.write_output(self.gv.tei_file_path, text)
+        os.remove(self.gv.tei_temp_file_path)
 
 
 

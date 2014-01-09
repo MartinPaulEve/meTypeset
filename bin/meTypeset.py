@@ -118,7 +118,7 @@ class MeTypeset:
             self.gv.debug.enable_debug()
 
         # check for stylesheets
-        self.gv.check_file_exists(self.gv.DOCX_STYLE_SHEET_DIR)
+        self.gv.check_file_exists(self.gv.docx_style_sheet_dir)
 
         # metadata file
         gv.metadata_file = self.set_metadata_file()
@@ -148,7 +148,7 @@ class MeTypeset:
         #frontmatter.run()
 
         if not debug:
-            os.remove(self.gv.NLM_TEMP_FILE_PATH)
+            os.remove(self.gv.nlm_temp_file_path)
 
 
 def main():

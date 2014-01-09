@@ -127,7 +127,7 @@ class SizeClassifier():
                 manipulate.change_outer("//tei:hi[@meTypesetSize='" + size + "']", "head", size)
                 iteration += 1
 
-        tree = self.set_dom_tree(self.gv.TEI_FILE_PATH)
+        tree = self.set_dom_tree(self.gv.tei_file_path)
         sizes_ordered = self.get_sizes_ordered(tree)
         section_count = {}
         iteration = 0
@@ -206,7 +206,7 @@ class SizeClassifier():
         H20 -> H22 (a situation in which we have to normalise illogically nested tags)
         H20 -> H19 -> H18 -> H20 -> H18 (a case that demonstrates the need for the positional stack)
         """
-        tree = self.set_dom_tree(self.gv.TEI_FILE_PATH)
+        tree = self.set_dom_tree(self.gv.tei_file_path)
 
         # get a numerical list of explicit size values inside meTypesetSize attributes
         sizes = self.get_values(tree, "meTypesetSize")
