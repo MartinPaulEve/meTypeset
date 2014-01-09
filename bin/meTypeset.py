@@ -28,7 +28,7 @@ from docx2tei import *
 from tei2nlm import *
 from metadata import *
 from manipulate import *
-from sizeClassifier import *
+from SizeClassifier import *
 from FrontMatterParser import *
 import os
 from docopt import docopt
@@ -122,7 +122,7 @@ def main():
 
     # run size classifier
 
-    sizeclassifier = sizeClassifier(gv)
+    sizeclassifier = SizeClassifier(gv)
     sizeclassifier.run()
 
     # tei
