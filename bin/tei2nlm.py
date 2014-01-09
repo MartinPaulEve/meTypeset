@@ -8,6 +8,12 @@ import shutil
 class TEI2NLM:
     def __init__(self, gv):
         self.gv = gv
+        self.module_name = "TEI to NLM"
+        self.debug = gv.debug
+
+    def get_module_name(self):
+        return self.module_name
+
 
     def saxon_tei2nlm(self):
             cmd = ["java", "-classpath", self.gv.java_class_path,
@@ -27,6 +33,6 @@ class TEI2NLM:
         #assumes ouput path exists after tei conversion
         self.gv.mk_dir(self.gv.nlm_folder_path)
         java_command = self.saxon_tei2nlm()
-        print "INFO: Running saxon transform (TEI->NLM)"
+        self.debug.print_debug(self, 'Running saxon transform (TEI->NLM)')
         subprocess.call(java_command, stdin=None, shell=True)
         shutil.copy2(self.gv.nlm_temp_file_path, self.gv.nlm_file_path)
