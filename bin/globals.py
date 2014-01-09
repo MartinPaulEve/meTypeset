@@ -2,7 +2,8 @@
 # @Author Dulip Withanage
 
 
-import os, sys, shutil 
+import os, sys, shutil
+from debug import *
 
 # class Global Variables
 class GV:
@@ -22,7 +23,7 @@ class GV:
             filename_sep                        = self.INPUT_FILE_PATH.rsplit('/')
             self.OUTPUT_FOLDER_PATH             = os.path.expanduser(settings.args['<output_folder>'])
 
-	    self.debug				= False            
+            self.debug                          = Debug(self)
 
             #general directory paths
             self.RUNTIME_FOLDER_PATH            = generate_path(settings,'runtime', settings.script_dir)

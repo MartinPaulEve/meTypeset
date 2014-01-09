@@ -15,11 +15,14 @@ A class that scans for meTypeset size fields in a TEI file.
 
 
 class sizeClassifier():
-    size_cutoff = 16
-    module_name = "Size Classifier"
-
     def __init__(self, gv):
         self.gv = gv
+        self.debug = self.gv.debug
+        self.size_cutoff = 16
+        self.module_name = "Size Classifier"
+
+    def get_module_name(self):
+        return self.module_name
 
     def get_values(self, tree, search_attribute):
         # this function searches the DOM tree for TEI "hi" elements with the specified search_attribute
@@ -50,8 +53,7 @@ class sizeClassifier():
         return etree.parse(filename, p)
 
     def enclose_larger_heading(self, iteration, manipulate, nextSize, sectionIDs, sectionStack, size):
-        if self.gv.debug:
-            print("[" + self.module_name + "] Encountered larger block as following (size: " + str(size) + ", next size: " + str(nextSize) + ") [size ID: #" + str(iteration) + "]")
+        self.debug.print_debug(self, 'Encountered larger block as following (size: ' + str(size) + ', next size: ' + str(nextSize) + ') [size ID: #' + str(iteration) + ']')
 
         # find appropriate previous sibling
         siblingID = sectionIDs[sectionStack.index(nextSize)]
@@ -60,8 +62,7 @@ class sizeClassifier():
                            "//tei:head[@meTypesetHeadingID='" + str(
                                iteration + 1) + "'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='" + str(
                                iteration + 1) + "']]")
-        if self.gv.debug:
-            print("[" + self.module_name + "] Moving block ID #" + str(iteration + 1) + " to be sibling of block ID #" + str(siblingID))
+        self.debug.print_debug(self, 'Moving block ID #' + str(iteration + 1) + ' to be sibling of block ID #' + str(siblingID))
 
         # move the /next heading/ to directly beneath the previous sibling
         manipulate.move_size_div(iteration + 1, siblingID)
@@ -74,8 +75,7 @@ class sizeClassifier():
                                iteration) + "']]")
 
     def enclose_last_heading(self, iteration, manipulate, sectionIDs, sectionStack, size):
-        if self.gv.debug:
-            print("[" + self.module_name + "] Encountered final heading (size: " + str(size) + ") [size ID: #" + str(iteration) + "]")
+        self.debug.print_debug(self, 'Encountered final heading (size: ' + str(size) + ') [size ID: #' + str(iteration) + ']')
 
         # find appropriate previous sibling
         siblingID = sectionIDs[sectionStack.index(size)]
@@ -84,15 +84,13 @@ class sizeClassifier():
                            "//tei:head[@meTypesetHeadingID='" + str(
                                iteration) + "'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='" + str(
                                iteration) + "']]")
-        if self.gv.debug:
-            print ("[" + self.module_name + "] Moving block ID #" + str(iteration) + " to be sibling of block ID #" + str(siblingID))
+        self.debug.print_debug(self, 'Moving block ID #' + str(iteration) + ' to be sibling of block ID #' + str(siblingID))
 
         # move this heading to directly beneath the previous sibling
         manipulate.move_size_div(iteration, siblingID)
 
     def enclose_smaller_heading(self, iteration, manipulate, nextSize, size):
-        if self.gv.debug:
-            print ("[" + self.module_name + "] Encountered smaller block as following (size: " + str(size) + ", next size: " + str(nextSize) + ") [size ID: #" + str(iteration) + "]")
+        self.debug.print_debug(self, 'Encountered smaller block as following (size: ' + str(size) + ', next size: ' + str(nextSize) + ') [size ID: #' + str(iteration) + ']')
 
         manipulate.enclose("//tei:head[@meTypesetHeadingID='" + str(iteration) + "']",
                            "//tei:head[@meTypesetHeadingID='" + str(
@@ -100,9 +98,7 @@ class sizeClassifier():
                                iteration) + "']]")
 
     def enclose_same_size_heading(self, iteration, manipulate, size):
-        if self.gv.debug:
-            print("[" + self.module_name + "] Encountered block of same size as following (size: " + str(
-                size) + ") [size ID: " + str(iteration) + "]")
+        self.debug.print_debug(self, 'Encountered block of same size as following (size: ' + str(size) + ') [size ID: ' + str(iteration) + ']')
         manipulate.enclose("//tei:head[@meTypesetHeadingID='" + str(iteration) + "']",
                            "//tei:head[@meTypesetHeadingID='" + str(
                                iteration) + "'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='" + str(
@@ -116,8 +112,7 @@ class sizeClassifier():
         # get a numerical list of explicit size values inside meTypesetSize attributes
         sizes = self.get_values(tree, "meTypesetSize")
 
-        if self.gv.debug:
-            print("[" + self.module_name + "] Explicitly specified size variations and their frequency of occurrence:" + str(sizes))
+        self.debug.print_debug(self, 'Explicitly specified size variations and their frequency of occurrence:' + str(sizes))
 
         # depending on the length of the array we will parse differently
 
@@ -128,9 +123,7 @@ class sizeClassifier():
                 # loop should only execute once but because dictionaries are non-ordered in python, this is the easiest way
                 if size >= self.size_cutoff:
                     # if the size is greater than or equal to 16, treat it as a heading
-                    if self.gv.debug:
-                        print("[" + self.module_name + "] Found single explicitly specified size greater than or equal to " + str(
-                            self.size_cutoff) + ". Treating as a heading.")
+                    self.debug.print_debug(self, 'Found single explicitly specified size greater than or equal to ' + str(self.size_cutoff) + '. Treating as a heading.')
 
                     # instruct the manipulator to change the parent tag of every tag it finds containing
                     # a "hi" tag with meTypesetSize set to the value found to "title"
@@ -140,7 +133,6 @@ class sizeClassifier():
                     manipulate = Manipulate(self.gv)
                     manipulate.change_outer("//tei:hi[@meTypesetSize='" + size + "']", "head", size)
 
-                    # todo: wrap section tags (single section with multiple headings)
 
         elif len(sizes) > 1:
             # first, we want a sorted representation (of tuples) of the frequency dictionary
@@ -178,9 +170,7 @@ class sizeClassifier():
             # normalize sizes: we cannot have a size bigger than the root node; there's no sensible way to detect this
             for size in sizes:
                 if size > rootSize:
-                    if self.gv.debug:
-                        print("[" + self.module_name + "] Downsizing headings of " + str(
-                            size) + " to maximum root size " + str(rootSize) + ".")
+                    self.debug.print_debug(self, 'Downsizing headings of ' + str(size) + ' to maximum root size ' + str(rootSize))
                     manipulate.downsize_headings(rootSize, size)
                     sizesOrdered = [rootSize if x == size else x for x in sizesOrdered]
 
@@ -224,7 +214,7 @@ class sizeClassifier():
                             self.enclose_last_heading(iteration, manipulate, sectionIDs, sectionStack, size)
 
                     else:
-                        print("[" + self.module_name + "] Size ID: " + str(iteration) + " was already processed.")
+                        self.debug.print_debug(self, 'Size ID: ' + str(iteration) + ' was already processed.')
                         processedFlag = False
 
                 sectionCount[size] = sectionCount[size] + 1
