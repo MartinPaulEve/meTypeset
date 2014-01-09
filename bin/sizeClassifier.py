@@ -32,16 +32,23 @@ class sizeClassifier():
 	def get_values(self, tree, search_attribute):
 		# this function searches the DOM tree for TEI "hi" elements with the specified search_attribute
 		sizes = {}
-		sizesOrdered = []
 		for child in tree.xpath("//tei:hi[@" + search_attribute + "=not('')]", namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
 			if child.get(search_attribute) in sizes:
 				sizes[child.get(search_attribute)] = sizes[child.get(search_attribute)] + 1
 			else:
 				sizes[child.get(search_attribute)] = 1
 
-			sizesOrdered.append(child.get(search_attribute))
+		return sizes
 
-		return sizes, sizesOrdered
+	def get_sizesOrdered(self, tree):
+		# this function searches the DOM tree for TEI "head" elements with the specified search_attribute
+		sizesOrdered = []
+
+		for child in tree.xpath("//tei:head[@meTypesetSize=not('')]", namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+			sizesOrdered.append(child.get("meTypesetSize"))
+
+		return sizesOrdered
+
 
 	def set_dom_tree(self, filename):
 			p = etree.XMLParser(remove_blank_text=True, resolve_entities=False)
@@ -50,10 +57,10 @@ class sizeClassifier():
 	   
 	def run(self):
 			# load the DOM
-		  	tree = self.set_dom_tree(self.gv.TEI_FILE_PATH)
+			tree = self.set_dom_tree(self.gv.TEI_FILE_PATH)
 
 			# get a numerical list of explicit size values inside meTypesetSize attributes
-			sizes, sizesOrdered = self.get_values(tree, "meTypesetSize")
+			sizes = self.get_values(tree, "meTypesetSize")
 	
 			if self.gv.debug:
 				print "[" + self.module_name + "] Explicitly specified size variations and their frequency of occurrence:"
@@ -99,6 +106,8 @@ class sizeClassifier():
 				H20 -> H22 (a situation in which we have to normalise illogically nested tags)
 				H20 -> H19 -> H18 -> H20 -> H18 (a case that demonstrates the need for the positional stack)
 				"""
+				tree = self.set_dom_tree(self.gv.TEI_FILE_PATH)
+				sizesOrdered = self.get_sizesOrdered(tree)
 
 				sectionCount = {}
 				iteration = 0
@@ -132,8 +141,6 @@ class sizeClassifier():
 						firstHeading = size
 					else:
 						# this block is triggered when we reach any heading but the first
-						
-
 						if not processedFlag:
 
 							# ascertain the next size
@@ -190,6 +197,7 @@ class sizeClassifier():
 								manipulate.enclose("//tei:head[@meTypesetHeadingID='" + str(iteration) + "']", "//tei:head[@meTypesetHeadingID='" + str(iteration) + "'] | //*[preceding-sibling::tei:head[@meTypesetHeadingID='" + str(iteration) + "']]")
 
 						else:
+							print "[" + self.module_name + "] Size ID: " + str(iteration) + " was already processed."
 							processedFlag = False
 
 					sectionCount[size] = sectionCount[size] + 1
