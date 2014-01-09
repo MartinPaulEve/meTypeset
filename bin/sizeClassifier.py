@@ -113,11 +113,14 @@ class sizeClassifier():
 				manipulate.tag_headings()
 
 				# normalize sizes: we cannot have a size bigger than the root node; there's no sensible way to detect this
-				for size in sizesOrdered:
+				for size in sizes:
 					if size > rootSize:
 						if self.gv.debug:
 							print "[" + self.module_name + "] Downsizing headings of " + str(size) + " to maximum root size " + str(rootSize) + "."
 						manipulate.downsize_headings(rootSize, size)
+						sizesOrdered = [rootSize if x==size else x for x in sizesOrdered]
+
+				print sizes
 
 				for size in sizesOrdered:
 					if not size in sectionCount:
