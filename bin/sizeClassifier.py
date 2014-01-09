@@ -120,8 +120,6 @@ class sizeClassifier():
 						manipulate.downsize_headings(rootSize, size)
 						sizesOrdered = [rootSize if x==size else x for x in sizesOrdered]
 
-				print sizes
-
 				for size in sizesOrdered:
 					if not size in sectionCount:
 						sectionCount[size] = 0
