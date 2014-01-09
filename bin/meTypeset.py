@@ -105,47 +105,34 @@ class MeTypeset:
 
         return set_file
 
-    def run(self):
-        global debug
-        global test
-
+    def setup_debug(self):
         debug = self.args['--debug'] | self.args['-d']
-        test = self.args['--test']
-
-        # set global variables
-
         if debug:
             self.gv.debug.enable_debug()
 
+        return debug
+
+    def run_modules(self):
         # check for stylesheets
         self.gv.check_file_exists(self.gv.docx_style_sheet_dir)
-
         # metadata file
         gv.metadata_file = self.set_metadata_file()
-
         # run docx to tei conversion
-        docx_to_tei = Docx2TEI(self.gv)
-        docx_to_tei.run()
-
+        Docx2TEI(self.gv).run()
         # run size classifier
-
-        sizeclassifier = SizeClassifier(self.gv)
-        sizeclassifier.run()
-
+        SizeClassifier(self.gv).run()
         # tei
-        manipulate = Manipulate(self.gv)
-        manipulate.run()
+        Manipulate(self.gv).run()
         # run tei to nlm conversion
-        tei2nlm = TEI2NLM(self.gv)
-        tei2nlm.run()
+        TEI2NLM(self.gv).run()
 
-        #metadata merge
-        #md = Metadata(gv)
-        #md.run()
+    def run(self):
+        global test
 
-        #FrontMatter parser
-        #frontmatter = FrontMatterParser(gv)
-        #frontmatter.run()
+        test = self.args['--test']
+        debug = self.setup_debug()
+
+        self.run_modules()
 
         if not debug:
             os.remove(self.gv.nlm_temp_file_path)
