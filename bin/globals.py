@@ -111,7 +111,10 @@ class GV:
         expr = "//*[local-name() = $name]"
         tag = settings.tree.xpath(expr, name=tag_name, namespaces={'mt': 'https://github.com/MartinPaulEve/meTypeset'})
         return self.clean_path(tag[0].text) if tag \
-            else self.debug.fatal_error(self, '{0} is  not defined in settings.xml'.format(tag_name))
+            else self.debug.fatal_error(self, '{0} is not defined in settings.xml'.format(tag_name))
+
+    def setting(self, setting_name):
+        return self.value_for_tag(self.settings, setting_name)
 
     def mk_dir(self, path):
         try:

@@ -122,7 +122,7 @@ class MeTypeset:
         # run size classifier
         SizeClassifier(self.gv).run()
         # tei
-        Manipulate(self.gv).run()
+        TeiManipulate(self.gv).run()
         # run tei to nlm conversion
         TEI2NLM(self.gv).run()
 

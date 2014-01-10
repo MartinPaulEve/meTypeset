@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 #@Author Dulip Withanage
-import globals as gv
 import subprocess
 import shutil
+from nlmmanipulate import NlmManipulate
 
 
 class TEI2NLM:
@@ -13,7 +13,6 @@ class TEI2NLM:
 
     def get_module_name(self):
         return self.module_name
-
 
     def saxon_tei2nlm(self):
             cmd = ["java", "-classpath", self.gv.java_class_path,
@@ -29,10 +28,19 @@ class TEI2NLM:
                    ]
             return ' '.join(cmd)
 
-    def run(self):
-        #assumes ouput path exists after tei conversion
+    def run_quirks(self):
+        if self.gv.setting('linebreaks-as-comments') == 'False':
+            # we need to convert every instance of <!--meTypeset:br--> to a new paragraph
+            manipulate = NlmManipulate(self.gv)
+            manipulate.close_and_open_tag('comment()[. = "meTypeset:br"]')
+
+    def run_transform(self):
         self.gv.mk_dir(self.gv.nlm_folder_path)
         java_command = self.saxon_tei2nlm()
         self.debug.print_debug(self, 'Running saxon transform (TEI->NLM)')
         subprocess.call(java_command, stdin=None, shell=True)
         shutil.copy2(self.gv.nlm_temp_file_path, self.gv.nlm_file_path)
+
+    def run(self):
+        self.run_transform()
+        self.run_quirks()
