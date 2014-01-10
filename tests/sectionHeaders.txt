@@ -1,503 +1,86 @@
 *** Settings ***
-Documentation     This series of test cases evaluates the basic environment setup and the ability to parse basic documents.
+Documentation     This series of test cases evaluates the sizeClassifier and section positioning
 Library           Process
 Library           OperatingSystem
 Library           XML
 Library           Collections
 
 *** Test Cases ***
-501 Title, non-title, title-antiseptics-complex
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/antiseptics-complex.docx -o ./501    shell=True
+617 Positional Stack H20 -> H19 -> H18 -> H20 -> H18 (a case that demonstrates the need for the positional stack)
+    [Tags]    sectionheaders    sizeclassifier
+    #evaluates:
+    #<body>
+    #<sec>
+    #<title>Heading 20</title>
+    #<p>Text under heading 20</p>
+    #<p>Line 2 under heading 20</p>
+    #<sec>
+    #<title>Heading 19</title>
+    #<p>Text under heading 19</p>
+    #<p>Line 2 under heading 19</p>
+    #<sec>
+    #<title>Heading 18</title>
+    #<p>Text under heading 18</p>
+    #<p>Line 2 under heading 18</p>
+    #</sec>
+    #</sec>
+    #</sec>
+    #<sec>
+    #<title>Heading 20</title>
+    #<p>Text under heading 20</p>
+    #<p>Line 2 under heading 20</p>
+    #<sec>
+    #<title>Heading 18</title>
+    #<p>Text under heading 18</p>
+    #<p>Line 2 under heading 18</p>
+    #</sec>
+    #</sec>
+    #</body>
+    ${result} =    Run Process    python ../bin/meTypeset.py -d Sec005.docx -o ./617    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./501/nlm/out.xml
+    ${xml}=    Parse XML    ./617/nlm/out.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    501    recursive=True
-
-502 Title, non-title, title-china-asleep
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/china-asleep.docx -o ./502    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./502/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    502    recursive=True
-
-503 Title, non-title, title-eeg_comicsans
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/eeg_comicsans.docx -o ./503    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./503/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    503    recursive=True
-
-504 Title, non-title, title-entrepreneurship-normal
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/entrepreneurship-normal.docx -o ./504    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./504/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    504    recursive=True
-
-505 Title, non-title, title-equations+tables
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/equations+tables.docx -o ./505    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./505/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    505    recursive=True
-
-506 Title, non-title, title-laddering
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/laddering.docx -o ./506    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./506/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    506    recursive=True
-
-507 Title, non-title, title-leadership
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/leadership.docx -o ./507    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./507/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    507    recursive=True
-
-508 Title, non-title, title-neoliberalism
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/neoliberalism.docx -o ./508    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./508/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    508    recursive=True
-
-509 Title, non-title, title-perception-monospace
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/perception-monospace.docx -o ./509    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./509/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    509    recursive=True
-
-510 Title, non-title, title-racialprofiling-norefs
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/racialprofiling-norefs.docx -o ./510    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./510/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    510    recursive=True
-
-511 Title, non-title, title-rating
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/rating.docx -o ./511    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./511/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    511    recursive=True
-
-512 Title, non-title, title-science
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/science.docx -o ./512    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./512/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    512    recursive=True
-
-513 Title, non-title, title-snowball
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/snowball.docx -o ./513    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./513/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    513    recursive=True
-
-514 Title, non-title, title-sodium
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/sodium.docx -o ./514    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./514/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    514    recursive=True
-
-515 Title, non-title, title-systemsthinker
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/systemsthinker.docx -o ./515    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./515/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    515    recursive=True
-
-516 Title, non-title, title-valuechain
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/valuechain.docx -o ./516    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./516/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
-    [Teardown]    Remove Directory    516    recursive=True
-
-601 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/antiseptics-complex.docx -o ./601    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./601/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    601    recursive=True
-
-602 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/china-asleep.docx -o ./602    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./602/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    602    recursive=True
-
-603 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/eeg_comicsans.docx -o ./603    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./603/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    603    recursive=True
-
-604 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/entrepreneurship-normal.docx -o ./604    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./604/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    604    recursive=True
-
-605 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/equations+tables.docx -o ./605    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./605/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    605    recursive=True
-
-606 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/laddering.docx -o ./606    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./606/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    606    recursive=True
-
-607 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/leadership.docx -o ./607    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./607/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    607    recursive=True
-
-608 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/neoliberalism.docx -o ./608    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./608/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    608    recursive=True
-
-609 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/perception-monospace.docx -o ./609    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./609/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    609    recursive=True
-
-610 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/racialprofiling-norefs.docx -o ./610    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./610/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    610    recursive=True
-
-611 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/rating.docx -o ./611    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./611/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    611    recursive=True
-
-612 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/science.docx -o ./612    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./612/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    612    recursive=True
-
-613 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/snowball.docx -o ./613    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./613/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    613    recursive=True
-
-614 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/sodium.docx -o ./614    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./614/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    614    recursive=True
-
-615 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/systemsthinker.docx -o ./615    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./615/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    615    recursive=True
-
-616 Nested section title
-    [Tags]    sectionheaders
-    ${result} =    Run Process    python ../bin/meTypeset.py -d ../../corpus/valuechain.docx -o ./616    shell=True
-    Log    ${result.stdout}
-    Log    ${result.stderr}
-    ${xml}=    Parse XML    ./616/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    [Teardown]    Remove Directory    616    recursive=True
+    ${firstsectionparagraphs}=    Get Elements    ${firstsection}    p
+    ${paraone}=    Get from list    ${firstsectionparagraphs}    0
+    ${paratwo}=    Get from list    ${firstsectionparagraphs}    1
+    Elements Should Match    ${firstsectiontitle}    <title>Heading 20</title>
+    Elements Should Match    ${paraone}    <p>Text under heading 20</p>
+    Elements Should Match    ${paratwo}    <p>Line 2 under heading 20</p>
+    ${firstsub} =    Get Elements    ${xml}    body/sec/sec
+    ${firstsubsection} =    Get from list    ${firstsub}    0
+    ${secondtitle}=    Get Element    ${firstsubsection}    title
+    ${secondsectionparagraphs}=    Get Elements    ${firstsubsection}    p
+    ${parathree}=    Get from list    ${secondsectionparagraphs}    0
+    ${parafour}=    Get from list    ${secondsectionparagraphs}    1
+    Elements Should Match    ${secondtitle}    <title>Heading 19</title>
+    Elements Should Match    ${parathree}    <p>Text under heading 19</p>
+    Elements Should Match    ${parafour}    <p>Line 2 under heading 19</p>
+    ${secondsub} =    Get Elements    ${xml}    body/sec/sec/sec
+    ${secondsubsection} =    Get from list    ${secondsub}    0
+    ${thirdtitle}=    Get Element    ${secondsubsection}    title
+    ${thirdsectionparagraphs}=    Get Elements    ${secondsubsection}    p
+    ${parafive}=    Get from list    ${thirdsectionparagraphs}    0
+    ${parasix}=    Get from list    ${thirdsectionparagraphs}    1
+    Elements Should Match    ${thirdtitle}    <title>Heading 18</title>
+    Elements Should Match    ${parafive}    <p>Text under heading 18</p>
+    Elements Should Match    ${parasix}    <p>Line 2 under heading 18</p>
+    ${thirdsection}=    Get from list    ${sections}    1
+    ${fourthsectiontitle}=    Get Element    ${thirdsection}    title
+    ${fourthsectionparagraphs}=    Get Elements    ${thirdsection}    p
+    ${paraseven}=    Get from list    ${fourthsectionparagraphs}    0
+    ${paraeight}=    Get from list    ${fourthsectionparagraphs}    1
+    Elements Should Match    ${fourthsectiontitle}    <title>Heading 20</title>
+    Elements Should Match    ${paraseven}    <p>Text under heading 20</p>
+    Elements Should Match    ${paraeight}    <p>Line 2 under heading 20</p>
+    ${thirdsubsection} =    Get from list    ${firstsub}    1
+    ${fifthtitle}=    Get Element    ${thirdsubsection}    title
+    ${fifthsectionparagraphs}=    Get Elements    ${thirdsubsection}    p
+    ${paranine}=    Get from list    ${fifthsectionparagraphs}    0
+    ${paraten}=    Get from list    ${fifthsectionparagraphs}    1
+    Elements Should Match    ${fifthtitle}    <title>Heading 18</title>
+    Elements Should Match    ${paranine}    <p>Text under heading 18</p>
+    Elements Should Match    ${paraten}    <p>Line 2 under heading 18</p>
+    [Teardown]    Remove Directory    617    recursive=True
