@@ -84,19 +84,15 @@ class SizeClassifier():
                                u'Encountered final heading (size: {0}) [size ID: #{1}]'.format(str(size),
                                                                                                str(iteration)))
 
-        # find appropriate previous sibling
-        sibling_id = section_ids[section_stack.index(size)]
         # enclose the REST OF THE DOCUMENT underneath this /next heading/
         manipulate.enclose(u"//tei:head[@meTypesetHeadingID=\'{0}\']".format(str(iteration)),
                            u"//tei:head[@meTypesetHeadingID=\'{0}\'] | //*[preceding-sibling::tei:head["
                            u"@meTypesetHeadingID=\'{1}\']]".format(
                                str(iteration), str(iteration)))
-        self.debug.print_debug(self,
-                               u'Moving block ID #{0} to be sibling of block ID #{1}'.format(str(iteration),
-                                                                                             str(sibling_id)))
+        # self.debug.print_debug(self,u'Moving block ID #{0} to be sibling of block ID #{1}'.format(str(iteration),str(sibling_id)))
 
         # move this heading to directly beneath the previous sibling
-        manipulate.move_size_div(iteration, sibling_id)
+        # manipulate.move_size_div(iteration, sibling_id)
 
     def enclose_smaller_heading(self, iteration, manipulate, next_size, size):
         self.debug.print_debug(self,
@@ -177,7 +173,6 @@ class SizeClassifier():
 
                             # set the processed flag so that the next enclosure isn't handled
                             processed_flag = True
-
                     else:
                     # this is the last heading so there is no future comparator
                         self.enclose_last_heading(iteration, manipulate, section_ids, section_stack, size)
