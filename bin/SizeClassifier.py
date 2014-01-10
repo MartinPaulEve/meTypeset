@@ -59,7 +59,11 @@ class SizeClassifier():
                                u'[size ID: #{2}]'.format(str(size), str(next_size), str(iteration)))
 
         # find appropriate previous sibling
-        sibling_id = section_ids[section_stack.index(next_size)]
+        if next_size in section_stack:
+            sibling_id = section_ids[section_stack.index(next_size)]
+        else:
+            sibling_id = -1
+
         # enclose the REST OF THE DOCUMENT underneath this /next heading/
         manipulate.enclose(u"//tei:head[@meTypesetHeadingID=\'{0}\']".format(str(iteration + 1)),
                            u"//tei:head[@meTypesetHeadingID=\'{0}\'] | //*[preceding-sibling::tei:head["
@@ -69,8 +73,10 @@ class SizeClassifier():
                                u'Moving block ID #{0} to be sibling of block ID #{1}'.format(str(iteration + 1),
                                                                                              str(sibling_id)))
 
-        # move the /next heading/ to directly beneath the previous sibling
-        manipulate.move_size_div(iteration + 1, sibling_id)
+        if sibling_id != -1:
+            # move the /next heading/ to directly beneath the previous sibling
+            manipulate.move_size_div(iteration + 1, sibling_id)
+
         # update the sibling stack
         section_ids[section_stack.index(next_size)] = iteration + 1
         # now handle the enclosure of the current block
@@ -83,16 +89,24 @@ class SizeClassifier():
         self.debug.print_debug(self,
                                u'Encountered final heading (size: {0}) [size ID: #{1}]'.format(str(size),
                                                                                                str(iteration)))
-
+        # find appropriate previous sibling
+        if size in section_stack:
+            sibling_id = section_ids[section_stack.index(size)]
+        else:
+            sibling_id = -1
+        
         # enclose the REST OF THE DOCUMENT underneath this /next heading/
         manipulate.enclose(u"//tei:head[@meTypesetHeadingID=\'{0}\']".format(str(iteration)),
                            u"//tei:head[@meTypesetHeadingID=\'{0}\'] | //*[preceding-sibling::tei:head["
                            u"@meTypesetHeadingID=\'{1}\']]".format(
                                str(iteration), str(iteration)))
-        # self.debug.print_debug(self,u'Moving block ID #{0} to be sibling of block ID #{1}'.format(str(iteration),str(sibling_id)))
 
+        self.debug.print_debug(self,u'Moving block ID #{0} to be sibling of block ID #{1}'.format(
+            str(iteration),str(sibling_id)))
+
+        if sibling_id != -1:
         # move this heading to directly beneath the previous sibling
-        # manipulate.move_size_div(iteration, sibling_id)
+            manipulate.move_size_div(iteration, sibling_id)
 
     def enclose_smaller_heading(self, iteration, manipulate, next_size, size):
         self.debug.print_debug(self,
@@ -171,6 +185,16 @@ class SizeClassifier():
                             self.enclose_larger_heading(iteration, manipulate, next_size, section_ids, section_stack,
                                                         size)
 
+                            # create a slice of the stack so that we can modify the original while iterating
+                            temp_stack = section_stack[:]
+                            pointer = len(section_stack)
+
+                            # pop the stack until the current level
+                            while temp_stack[pointer - 1] > size and (pointer - 1) != 0:
+                                section_stack.pop()
+                                section_ids.pop()
+                                pointer -= 1
+
                             # set the processed flag so that the next enclosure isn't handled
                             processed_flag = True
                     else:
@@ -183,11 +207,12 @@ class SizeClassifier():
 
             section_count[size] += 1
 
-            if not size in section_stack:
-                section_stack.append(size)
-                section_ids.append(iteration)
-            else:
-                section_ids[section_stack.index(size)] = iteration
+            if not processed_flag:
+                if not size in section_stack:
+                    section_stack.append(size)
+                    section_ids.append(iteration)
+                else:
+                    section_ids[section_stack.index(size)] = iteration
 
             iteration += 1
 
