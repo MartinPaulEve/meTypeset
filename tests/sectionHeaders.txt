@@ -174,3 +174,69 @@ Library           Collections
     Elements Should Match    ${parafive}    <p>Text under heading 19</p>
     Elements Should Match    ${parasix}    <p>Line 2 under heading 19</p>
     [Teardown]    Remove Directory    503    recursive=True
+
+504 Test for increased size within subsection H20 -> H19 -> H18 -> H19 (sibling alignment)
+    [Tags]    sectionheaders    sizeclassifier
+    # evaluates:
+    #<body>
+    #    <sec>
+    #    <title>Heading 20</title>
+    #    <p>Text under heading 20</p>
+    #    <p>Line 2 under heading 20</p>
+    #    <sec>
+    #    <title>Heading 19</title>
+    #    <p>Text under heading 19</p>
+    #    <p>Line 2 under heading 19</p>
+    #    <sec>
+    #    <title>Heading 18</title>
+    #    <p>Text under heading 18</p>
+    #    <p>Line 2 under heading 18</p>
+    #    </sec>
+    #    </sec>
+    #    <sec>
+    #    <title>Heading 19 #2</title>
+    #    <p>Text under heading 19 #2</p>
+    #    <p>Line 2 under heading 19 #2</p>
+    #    </sec>
+    #    </sec>
+    #</body>
+    ${result} =    Run Process    python ../bin/meTypeset.py -d Sec002.docx -o ./504    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./504/nlm/out.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraphs}=    Get Elements    ${firstsection}    p
+    ${paraone}=    Get from list    ${firstsectionparagraphs}    0
+    ${paratwo}=    Get from list    ${firstsectionparagraphs}    1
+    Elements Should Match    ${firstsectiontitle}    <title>Heading 20</title>
+    Elements Should Match    ${paraone}    <p>Text under heading 20</p>
+    Elements Should Match    ${paratwo}    <p>Line 2 under heading 20</p>
+    ${firstsub} =    Get Elements    ${xml}    body/sec/sec
+    ${firstsubsection} =    Get from list    ${firstsub}    0
+    ${secondtitle}=    Get Element    ${firstsubsection}    title
+    ${secondsectionparagraphs}=    Get Elements    ${firstsubsection}    p
+    ${parathree}=    Get from list    ${secondsectionparagraphs}    0
+    ${parafour}=    Get from list    ${secondsectionparagraphs}    1
+    Elements Should Match    ${secondtitle}    <title>Heading 19</title>
+    Elements Should Match    ${parathree}    <p>Text under heading 19</p>
+    Elements Should Match    ${parafour}    <p>Line 2 under heading 19</p>
+    ${secondsub} =    Get Elements    ${xml}    body/sec/sec/sec
+    ${secondsubsection} =    Get from list    ${secondsub}    0
+    ${thirdtitle}=    Get Element    ${secondsubsection}    title
+    ${thirdsectionparagraphs}=    Get Elements    ${secondsubsection}    p
+    ${parafive}=    Get from list    ${thirdsectionparagraphs}    0
+    ${parasix}=    Get from list    ${thirdsectionparagraphs}    1
+    Elements Should Match    ${thirdtitle}    <title>Heading 18</title>
+    Elements Should Match    ${parafive}    <p>Text under heading 18</p>
+    Elements Should Match    ${parasix}    <p>Line 2 under heading 18</p>
+    ${secondsubsection} =    Get from list    ${firstsub}    0
+    ${thirdtitle}=    Get Element    ${secondsubsection}    title
+    ${thirdsectionparagraphs}=    Get Elements    ${secondsubsection}    p
+    ${parafive}=    Get from list    ${thirdsectionparagraphs}    0
+    ${parasix}=    Get from list    ${thirdsectionparagraphs}    1
+    Elements Should Match    ${thirdtitle}    <title>Heading 19</title>
+    Elements Should Match    ${parafive}    <p>Text under heading 19</p>
+    Elements Should Match    ${parasix}    <p>Line 2 under heading 19</p>
+    [Teardown]    Remove Directory    504    recursive=True
