@@ -7,7 +7,7 @@ Library           Collections
 
 *** Test Cases ***
 501 Positional Stack H20 -> H19 -> H18 -> H20 -> H18 (a case that demonstrates the need for the positional stack)
-    [Tags]    sectionheaders    sizeclassifier
+    [Tags]    sectionheaders    sizeclassifier    501
     # evaluates:
     #<body>
     #<sec>
@@ -86,7 +86,7 @@ Library           Collections
     [Teardown]    Remove Directory    501    recursive=True
 
 502 Test for normalization when encountering a nested size that is greater than the root H20 -> H22
-    [Tags]    sectionheaders    sizeclassifier
+    [Tags]    sectionheaders    sizeclassifier    502
     # evaluates:
     #<body>
     #    <sec>
@@ -129,7 +129,7 @@ Library           Collections
     [Teardown]    Remove Directory    502    recursive=True
 
 503 Test for paragraphs of the same size H20 -> H19 -> H19 (sibling alignment)
-    [Tags]    sectionheaders    sizeclassifier
+    [Tags]    sectionheaders    sizeclassifier    503
     # evaluates:
     #<body>
     #    <sec>
@@ -176,7 +176,7 @@ Library           Collections
     [Teardown]    Remove Directory    503    recursive=True
 
 504 Test for increased size within subsection H20 -> H19 -> H18 -> H19 (sibling alignment)
-    [Tags]    sectionheaders    sizeclassifier
+    [Tags]    sectionheaders    sizeclassifier    504
     # evaluates:
     #<body>
     #    <sec>
@@ -191,6 +191,11 @@ Library           Collections
     #    <title>Heading 18</title>
     #    <p>Text under heading 18</p>
     #    <p>Line 2 under heading 18</p>
+    #    </sec>
+    #    <sec>
+    #    <title>Heading 19 #2</title>
+    #    <p>Text under heading 19 #2</p>
+    #    <p>Line 2 under heading 19 #2</p>
     #    </sec>
     #    </sec>
     #    </sec>
@@ -226,18 +231,18 @@ Library           Collections
     Elements Should Match    ${thirdtitle}    <title>Heading 18</title>
     Elements Should Match    ${parafive}    <p>Text under heading 18</p>
     Elements Should Match    ${parasix}    <p>Line 2 under heading 18</p>
-    ${secondsubsection} =    Get from list    ${firstsub}    0
+    ${secondsubsection} =    Get from list    ${firstsub}    1
     ${thirdtitle}=    Get Element    ${secondsubsection}    title
     ${thirdsectionparagraphs}=    Get Elements    ${secondsubsection}    p
     ${parafive}=    Get from list    ${thirdsectionparagraphs}    0
     ${parasix}=    Get from list    ${thirdsectionparagraphs}    1
-    Elements Should Match    ${thirdtitle}    <title>Heading 19</title>
-    Elements Should Match    ${parafive}    <p>Text under heading 19</p>
-    Elements Should Match    ${parasix}    <p>Line 2 under heading 19</p>
+    Elements Should Match    ${thirdtitle}    <title>Heading 19 #2</title>
+    Elements Should Match    ${parafive}    <p>Text under heading 19 #2</p>
+    Elements Should Match    ${parasix}    <p>Line 2 under heading 19 #2</p>
     [Teardown]    Remove Directory    504    recursive=True
 
 505 Basic descension test H20 -> H19 -> H18
-    [Tags]    sectionheaders    sizeclassifier
+    [Tags]    sectionheaders    sizeclassifier    505
     # evaluates:
     #<body>
     #    <sec>
@@ -253,11 +258,6 @@ Library           Collections
     #    <p>Text under heading 18</p>
     #    <p>Line 2 under heading 18</p>
     #    </sec>
-    #    </sec>
-    #    <sec>
-    #    <title>Heading 19 #2</title>
-    #    <p>Text under heading 19 #2</p>
-    #    <p>Line 2 under heading 19 #2</p>
     #    </sec>
     #    </sec>
     #</body>
