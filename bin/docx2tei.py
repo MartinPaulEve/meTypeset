@@ -66,11 +66,10 @@ class Docx2TEI:
         # convert .wmf images to .png
             image_filenames = os.listdir(self.gv.output_media_path)
             for image in image_filenames:
-              if re.match('.+\.wmf',image) is not None:
-                image_name = re.sub('\.wmf','',image)
+              if re.match(r'.+?\.wmf',image) is not None:
+                image_name = re.sub(r'\.wmf','',image)
                 imagemagick_command = 'unoconv -d graphics -f png -o ' + self.gv.output_media_path + '/' + image_name + '.png ' + image
                 subprocess.call(imagemagick_command)
-
 
         # copy input file into the docx subfolder
         shutil.copy(self.gv.input_file_path, self.gv.docx_temp_folder_path)
@@ -79,6 +78,13 @@ class Docx2TEI:
         java_command = self.saxon_doc2tei()
         self.debug.print_debug(self, 'Running saxon transform (DOCX->TEI)')
         subprocess.call(java_command, stdin=None, shell=True)
+
+        # replace .wmf links in document with .png
+        working_tei_file = open(self.gv.tei_file_path, 'rb')
+        fixed_tei_file_string = re.sub(r'url\="media\/(.+?)\.wmf"',r'url\="media\/\1\.png"',working_tei_file)
+        temporary_tei_file = open(self.gv.tei_temp_file_path, 'wb')
+        temporary_tei_file.write(fixed_tei_file_string)
+        shutil.move(self.gv.tei_temp_file_path, self.gv.tei_file_path)
 
         # delete temp folders
         if not self.gv.debug.debug:
