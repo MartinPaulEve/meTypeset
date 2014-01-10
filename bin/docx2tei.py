@@ -62,8 +62,8 @@ class Docx2TEI:
             self.gv.mk_dir(self.gv.output_media_path)
             self.gv.copy_folder(self.gv.docx_media_path, self.gv.output_media_path, False, None)
 
-        # copy  input file into the docx subfolder
-        shutil.copy(self.gv.input_file_path, self.gv.docx_folder_path)
+        # copy input file into the docx subfolder
+        shutil.copy(self.gv.input_file_path, self.gv.docx_temp_folder_path)
 
         # saxon converter
         java_command = self.saxon_doc2tei()
