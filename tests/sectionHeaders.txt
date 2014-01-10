@@ -6,40 +6,40 @@ Library           XML
 Library           Collections
 
 *** Test Cases ***
-617 Positional Stack H20 -> H19 -> H18 -> H20 -> H18 (a case that demonstrates the need for the positional stack)
+501 Positional Stack H20 -> H19 -> H18 -> H20 -> H18 (a case that demonstrates the need for the positional stack)
     [Tags]    sectionheaders    sizeclassifier
-    #evaluates:
+    # evaluates:
     #<body>
     #<sec>
-    #<title>Heading 20</title>
-    #<p>Text under heading 20</p>
-    #<p>Line 2 under heading 20</p>
-    #<sec>
-    #<title>Heading 19</title>
-    #<p>Text under heading 19</p>
-    #<p>Line 2 under heading 19</p>
-    #<sec>
-    #<title>Heading 18</title>
-    #<p>Text under heading 18</p>
-    #<p>Line 2 under heading 18</p>
+    #    <title>Heading 20</title>
+    #    <p>Text under heading 20</p>
+    #    <p>Line 2 under heading 20</p>
+    #    <sec>
+    #    <title>Heading 19</title>
+    #    <p>Text under heading 19</p>
+    #    <p>Line 2 under heading 19</p>
+    #    <sec>
+    #    <title>Heading 18</title>
+    #    <p>Text under heading 18</p>
+    #    <p>Line 2 under heading 18</p>
+    #    </sec>
+    #    </sec>
     #</sec>
-    #</sec>
-    #</sec>
     #<sec>
-    #<title>Heading 20</title>
-    #<p>Text under heading 20</p>
-    #<p>Line 2 under heading 20</p>
-    #<sec>
-    #<title>Heading 18</title>
-    #<p>Text under heading 18</p>
-    #<p>Line 2 under heading 18</p>
-    #</sec>
+    #    <title>Heading 20</title>
+    #    <p>Text under heading 20</p>
+    #    <p>Line 2 under heading 20</p>
+    #    <sec>
+    #    <title>Heading 18</title>
+    #    <p>Text under heading 18</p>
+    #    <p>Line 2 under heading 18</p>
+    #    </sec>
     #</sec>
     #</body>
-    ${result} =    Run Process    python ../bin/meTypeset.py -d Sec005.docx -o ./617    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py -d Sec005.docx -o ./501    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./617/nlm/out.xml
+    ${xml}=    Parse XML    ./501/nlm/out.xml
     ${sections}=    Get Elements    ${xml}    body/sec
     ${firstsection}=    Get from list    ${sections}    0
     ${firstsectiontitle}=    Get Element    ${firstsection}    title
@@ -83,4 +83,42 @@ Library           Collections
     Elements Should Match    ${fifthtitle}    <title>Heading 18</title>
     Elements Should Match    ${paranine}    <p>Text under heading 18</p>
     Elements Should Match    ${paraten}    <p>Line 2 under heading 18</p>
-    [Teardown]    Remove Directory    617    recursive=True
+    [Teardown]    Remove Directory    501    recursive=True
+
+502 Test for normalization when encountering a nested size that is greater than the root
+    [Tags]    sectionheaders    sizeclassifier
+    # evaluates:
+    #<body>
+    #    <sec>
+    #    <title>Heading 20</title>
+    #    <p>Text under heading 20</p>
+    #    <p>Line 2 under heading 20</p>
+    #    </sec>
+    #    <sec>
+    #    <title>Heading 22</title>
+    #    <p>Text under heading 22</p>
+    #    <p>Line 2 under heading 22</p>
+    #    </sec>
+    #</body>
+    ${result} =    Run Process    python ../bin/meTypeset.py -d Sec004.docx -o ./502    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./502/nlm/out.xml
+    ${sections}=    Get Elements    ${xml}    body/sec
+    ${firstsection}=    Get from list    ${sections}    0
+    ${firstsectiontitle}=    Get Element    ${firstsection}    title
+    ${firstsectionparagraphs}=    Get Elements    ${firstsection}    p
+    ${paraone}=    Get from list    ${firstsectionparagraphs}    0
+    ${paratwo}=    Get from list    ${firstsectionparagraphs}    1
+    Elements Should Match    ${firstsectiontitle}    <title>Heading 20</title>
+    Elements Should Match    ${paraone}    <p>Text under heading 20</p>
+    Elements Should Match    ${paratwo}    <p>Line 2 under heading 20</p>
+    ${secondsection}=    Get from list    ${sections}    1
+    ${secondsectiontitle}=    Get Element    ${secondsection}    title
+    ${secondsectionparagraphs}=    Get Elements    ${secondsection}    p
+    ${parathree}=    Get from list    ${secondsectionparagraphs}    0
+    ${parafour}=    Get from list    ${secondsectionparagraphs}    1
+    Elements Should Match    ${secondsectiontitle}    <title>Heading 22</title>
+    Elements Should Match    ${parathree}    <p>Text under heading 22</p>
+    Elements Should Match    ${parafour}    <p>Line 2 under heading 22</p>
+    [Teardown]    Remove Directory    502    recursive=True
