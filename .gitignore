@@ -13,3 +13,4 @@ TestNotDeploy/
 # Ignore compiled python classses
 *.pyc
 
+bin/.idea
