@@ -905,7 +905,7 @@ at the same time explain them. -->
   
 <!-- Line breaks are equivalent to <break/>, but cannot appear in paragraphs 
      What nonsense. -->
-  <xsl:template match="lb"><xsl:comment>There should be a line-break here.</xsl:comment></xsl:template>
+  <xsl:template match="lb"><xsl:comment>meTypeset:br</xsl:comment></xsl:template>
   
 <!-- Inline elements. -->
 <!-- There's no standard way to do document titles in the body text in NLM. -->
