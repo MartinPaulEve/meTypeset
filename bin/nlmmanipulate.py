@@ -31,9 +31,13 @@ class NlmManipulate(Manipulate):
             nodes_to_copy = node.xpath('following-sibling::node()')
             print(nodes_to_copy)
 
+            new_element.text = node.tail
+            node.tail = ''
+
             for element in nodes_to_copy:
                 if not type(element) is etree._Element:
-                    new_element.text += element
+                    #new_element.text += element
+                    pass
                 else:
                     new_element.append(element)
 
@@ -41,9 +45,7 @@ class NlmManipulate(Manipulate):
 
             node.getparent().addnext(new_element)
 
-            # todo: remove the old nodes from the tree
-            # see: http://hustoknow.blogspot.co.uk/2011/09/lxml-bug.html
-
+            node.getparent().remove(node)
 
         tree.write(self.dom_temp_file)
         tree.write(self.dom_to_load)
