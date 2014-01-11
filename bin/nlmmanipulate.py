@@ -1,10 +1,9 @@
-__author__ = 'martin'
-
 __author__ = "Martin Paul Eve"
 __email__ = "martin@martineve.com"
 
 from manipulate import Manipulate
 from lxml import etree
+
 
 class NlmManipulate(Manipulate):
     def __init__(self, gv):
@@ -16,26 +15,34 @@ class NlmManipulate(Manipulate):
         super(NlmManipulate, self).__init__(gv)
 
     def close_and_open_tag(self, search_xpath, tag_name):
+        """
+        Opens and closes an XML tag within a document. This is primarily useful when we have a marker such as
+        meTypeset:br in comments which corresponds to no JATS/NLM equivalent. We use this function in certain
+        behavioural modes to close the preceding paragraph and open the next.
+
+        @param search_xpath: the node that serves as a marker
+        @param tag_name: the tag name that will be open and closed
+        """
         tree = self.load_dom_tree()
 
         initial_nodes = tree.xpath('//{0}'.format(search_xpath))
         self.debug.print_debug(self, 'Found {0} nodes on which to close and open tag: {1}'.format(
-                len(initial_nodes), initial_nodes))
+            len(initial_nodes), initial_nodes))
 
         nested_sibling = None
 
         for node in initial_nodes:
             last_node = node
 
-            new_element = etree.Element('p')
+            new_element = etree.Element(tag_name)
             new_element.text = ''
 
             nodes_to_copy = node.xpath('following-sibling::node()')
             self.debug.print_debug(self, 'Found {0} nodes on which to copy: {1}'.format(len(initial_nodes),
                                                                                         nodes_to_copy))
 
-
             for element in nodes_to_copy:
+                # noinspection PyProtectedMember
                 if not type(element) is etree._Element:
                     if node.tail == element:
                         # this should handle cases where a tag spans the break
