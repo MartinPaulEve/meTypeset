@@ -79,13 +79,6 @@ class Docx2TEI:
         self.debug.print_debug(self, 'Running saxon transform (DOCX->TEI)')
         subprocess.call(java_command, stdin=None, shell=True)
 
-        # replace .wmf links in document with .png
-        working_tei_file = open(self.gv.tei_file_path, 'rb')
-        fixed_tei_file_string = re.sub(r'url\="media\/(.+?)\.wmf"',r'url\="media\/\1\.png"',working_tei_file)
-        temporary_tei_file = open(self.gv.tei_temp_file_path, 'wb')
-        temporary_tei_file.write(fixed_tei_file_string)
-        shutil.move(self.gv.tei_temp_file_path, self.gv.tei_file_path)
-
         # delete temp folders
         if not self.gv.debug.debug:
             shutil.rmtree(self.gv.docx_temp_folder_path)
