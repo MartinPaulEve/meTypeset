@@ -207,14 +207,10 @@ of this software, even if advised of the possibility of such damage.
 	  <n>italic</n>
 	</xsl:if>
 
-	<xsl:choose>
-		<xsl:when test="w:rPr/w:b/@w:val='0' or w:rPr/w:b/@w:val='false'">
-	    <n>normalweight</n>
-	  </xsl:when>
-	  <xsl:when test="w:rPr/w:b">
+	
+		<xsl:if test="(w:rPr/w:b and not(w:rPr/w:b[@w:val])) or (w:rPr/w:b/@w:val!='0' and w:rPr/w:b/@w:val!='false')">
 	    <n>bold</n>
-	  </xsl:when>
-	</xsl:choose>
+		</xsl:if>
 
 	<xsl:if test="w:rPr/w:position[number(@w:val)&gt;2]">
 	  <n>superscript</n>

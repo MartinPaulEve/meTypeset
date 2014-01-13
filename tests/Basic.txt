@@ -24,6 +24,7 @@ Library           Collections
     [Teardown]    Remove Directory    001    recursive=True
 
 002 Basic paragraph with italics
+    [Tags]    italic    002    formatting
     ${result} =    Run Process    python ../bin/meTypeset.py 002.docx -o ./002    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
@@ -33,6 +34,7 @@ Library           Collections
     [Teardown]    Remove Directory    002    recursive=True
 
 003 Basic paragraph with bold
+    [Tags]    bold    002    formatting
     ${result} =    Run Process    python ../bin/meTypeset.py 003.docx -o ./003    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
