@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from manipulate import *
+from teimanipulate import *
 
 __author__ = "Martin Paul Eve"
 __email__ = "martin@martineve.com"
@@ -94,7 +94,7 @@ class SizeClassifier():
             sibling_id = section_ids[section_stack.index(size)]
         else:
             sibling_id = -1
-        
+
         # enclose the REST OF THE DOCUMENT underneath this /next heading/
         manipulate.enclose(u"//tei:head[@meTypesetHeadingID=\'{0}\']".format(str(iteration)),
                            u"//tei:head[@meTypesetHeadingID=\'{0}\'] | //*[preceding-sibling::tei:head["
@@ -236,7 +236,7 @@ class SizeClassifier():
                                    str(sizes)))
 
         # depending on the length of the array we will parse differently
-        manipulate = Manipulate(self.gv)
+        manipulate = TeiManipulate(self.gv)
 
         if len(sizes) == 1:
             for size in sizes:
