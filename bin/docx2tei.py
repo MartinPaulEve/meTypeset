@@ -6,6 +6,7 @@ import errno
 import shutil
 import zipfile
 import subprocess
+import re
 import globals as gv
 
 __author__ = "Dulip Withanage"
@@ -61,6 +62,14 @@ class Docx2TEI:
 
             self.gv.mk_dir(self.gv.output_media_path)
             self.gv.copy_folder(self.gv.docx_media_path, self.gv.output_media_path, False, None)
+
+        # convert .wmf images to .png
+            image_filenames = os.listdir(self.gv.output_media_path)
+            for image in image_filenames:
+              if re.match(r'.+?\.wmf',image) is not None:
+                image_name = re.sub(r'\.wmf','',image)
+                imagemagick_command = 'unoconv -d graphics -f png -o ' + self.gv.output_media_path + '/' + image_name + '.png ' + image
+                subprocess.call(imagemagick_command)
 
         # copy input file into the docx subfolder
         shutil.copy(self.gv.input_file_path, self.gv.docx_temp_folder_path)

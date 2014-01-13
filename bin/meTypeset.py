@@ -26,6 +26,7 @@ from tei2nlm import *
 from SizeClassifier import *
 from FrontMatterParser import *
 from docopt import docopt
+from teimanipulate import change_wmf_image_links
 from globals import *
 
 
@@ -135,6 +136,8 @@ class MeTypeset:
         gv.metadata_file = self.set_metadata_file()
         # run docx to tei conversion
         Docx2TEI(self.gv).run()
+        # convert .wmf image links to png
+        teimanipulate.change_wmf_image_links(self.gv).run()
         # run size classifier
         SizeClassifier(self.gv).run()
         # tei
