@@ -203,7 +203,7 @@ of this software, even if advised of the possibility of such damage.
 	  <n>subscript</n>
 	</xsl:if>
 	
-	<xsl:if test="w:rPr/w:i">
+      	<xsl:if test="(w:rPr/w:i and not(w:rPr/w:i[@w:val])) or (w:rPr/w:i/@w:val!='0' and w:rPr/w:i/@w:val!='false')">
 	  <n>italic</n>
 	</xsl:if>
 
