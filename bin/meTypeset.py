@@ -5,7 +5,7 @@
 """meTypeset: text parsing library to convert word documents to xml formats NLM, TEI
 
 Usage:
-    meTypeset.py [(-d | --debug)]   <input_file>  (-o | --output) <output_folder> [(-m | --metadata) (<metadata_file>)] [(-t | --test)]
+    meTypeset.py [(-d | --debug)] <input_file>  (-o | --output) <output_folder> [(-s | --settings) (<settings_file>)] [(-m | --metadata) (<metadata_file>)] [(-t | --test)]
     meTypeset.py (-h | --help)
     meTypeset.py (-t | --test)
     meTypeset.py --version
@@ -51,6 +51,8 @@ class MeTypeset:
         # read  command line arguments
         self.args = docopt(__doc__, version='meTypeset 0.1')
         # read settings file
+        self.settings_file_path = 'default'
+        self.setup_settings_file()
         self.settings = SettingsConfiguration(self.get_settings_file(), self.args)
         self.gv = GV(self.settings)
         self.debug = self.gv.debug
@@ -73,7 +75,15 @@ class MeTypeset:
 
         return metadata_file
 
+    def check_settings_file_exists(self, set_file):
+        # noinspection PyBroadException
+        try:
+            os.path.isfile(set_file)
+        except:
+            self.debug.fatal_error(self, 'Settings file {0} does not exist'.format(set_file))
+
     def get_settings_file(self):
+
         # read  the home folder, either from the path or from the settings file
         # noinspection PyBroadException
         try:
@@ -92,16 +102,16 @@ class MeTypeset:
 
                 script_dir = "NONPATH"
 
-        if script_dir != '':
-            set_file = '{0}/bin/settings.xml'.format(script_dir)
-            # noinspection PyBroadException
-            try:
-                os.path.isfile(set_file)
-            except:
-                self.debug.fatal_error(self, 'Settings file {0} does not exist'.format(set_file))
+        if self.settings_file_path == 'default':
+            if script_dir != '':
+                set_file = '{0}/bin/settings.xml'.format(script_dir)
+                self.check_settings_file_exists(set_file)
+            else:
+                    set_file = 'NOFILE'
+                    pass
         else:
-                set_file = 'NOFILE'
-                pass
+            set_file = self.settings_file_path
+            self.check_settings_file_exists(set_file)
 
         return set_file
 
@@ -111,6 +121,12 @@ class MeTypeset:
             self.gv.debug.enable_debug()
 
         return debug
+
+    def setup_settings_file(self):
+        if '--settings' in self.args or '--s' in self.args:
+            settings = self.args['--settings'] | self.args['-s']
+            if settings:
+                self.settings_file_path = self.args['<settings_file>']
 
     def run_modules(self):
         # check for stylesheets
