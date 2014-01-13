@@ -293,3 +293,35 @@ Library           Collections
     Elements Should Match    ${parafive}    <p>Text under heading 18</p>
     Elements Should Match    ${parasix}    <p>Line 2 under heading 18</p>
     [Teardown]    Remove Directory    505    recursive=True
+
+506 Test line breaks
+    [Tags]    linebreaks    506    formatting
+    ${result} =    Run Process    python ../bin/meTypeset.py -d LineBreak.docx -o ./506 -s ./linebreakson.xml    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./506/nlm/out.xml
+    ${paragraph}=    Get Elements    ${xml}    body/sec/p
+    ${paraone}=    Get from list    ${paragraph}    0
+    ${paratwo}=    Get from list    ${paragraph}    1
+    ${parathree}=    Get from list    ${paragraph}    2
+    ${parafour}=    Get from list    ${paragraph}    3
+    ${parafive}=    Get from list    ${paragraph}    4
+    Elements Should Match    ${paraone}    <p>A <bold>bold text</bold> paragraph</p>    normalize_whitespace=yes
+    Elements Should Match    ${paratwo}    <p>A line break <bold>with more</bold><italic>italic</italic> test</p>    normalize_whitespace=yes
+    Elements Should Match    ${parathree}    <p>A second <italic>break</italic></p>    normalize_whitespace=yes
+    Elements Should Match    ${parafour}    <p><italic>A third break</italic> where italic breaks across the line</p>    normalize_whitespace=yes
+    Elements Should Match    ${parafive}    <p>A second paragraph</p>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    506    recursive=True
+
+507 Test line breaks off
+    [Tags]    linebreaks    507    formatting
+    ${result} =    Run Process    python ../bin/meTypeset.py -d LineBreak.docx -o ./507 -s ./linebreaksoff.xml    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./507/nlm/out.xml
+    ${paragraph}=    Get Elements    ${xml}    body/sec/p
+    ${paraone}=    Get from list    ${paragraph}    0
+    ${paratwo}=    Get from list    ${paragraph}    1
+    Elements Should Match    ${paraone}    <p>A <bold>bold text</bold> paragraph<!--meTypeset:br-->A line break <bold>with more</bold><italic>italic</italic> test<!--meTypeset:br-->A second <italic>break<!--meTypeset:br-->A third break</italic> where italic breaks across the line</p>    normalize_whitespace=yes
+    Elements Should Match    ${paratwo}    <p>A second paragraph</p>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    507    recursive=True
