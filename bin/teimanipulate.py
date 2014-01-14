@@ -17,6 +17,16 @@ class TeiManipulate(Manipulate):
         self.mod_name = 'TEI'
         Manipulate.__init__(self, gv)
 
+    def drop_addin(self, xpath):
+        # load the DOM
+        tree = self.load_dom_tree()
+
+        # search the tree and grab the parent
+        for child in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            self.debug.print_debug(self, 'Selecting for drop: {0}'.format(child.text))
+
+        tree.write(self.gv.tei_file_path)
+
     def tag_headings(self):
         # load the DOM
         tree = self.load_dom_tree()

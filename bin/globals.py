@@ -12,6 +12,8 @@ class GV (Debuggable):
     def __init__(self, settings, debug):
         self.debug = debug
 
+        # todo: clean this up -- it's a mess
+
         docx = 'docx'
         common2 = 'common2'
         nlm = 'nlm'

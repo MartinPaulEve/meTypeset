@@ -26,6 +26,7 @@ from docopt import docopt
 from teimanipulate import TeiManipulate
 from globals import *
 from debug import Debuggable
+from bibliographyAddins import BibliographyAddins
 
 
 # check whether lxml is installed
@@ -140,6 +141,10 @@ class MeTypeset (Debuggable):
 
         # run size classifier
         SizeClassifier(self.gv).run()
+
+        # run bibliographic addins handler
+        BibliographyAddins(self.gv).run()
+
         # tei
         TeiManipulate(self.gv).run()
         # run tei to nlm conversion
