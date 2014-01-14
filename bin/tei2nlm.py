@@ -40,15 +40,7 @@ class TEI2NLM (Debuggable):
         subprocess.call(java_command, stdin=None, shell=True)
 
         if self.gv.nlm_temp_file_path != self.gv.nlm_file_path:
-            self.debug.print_debug(self, "nlm_file_path ({0}) and "
-                                         "nlm_temp_file_path ({1}) are the same".format(self.gv.nlm_file_path,
-                                                                                        self.gv.nlm_temp_file_path))
             shutil.copy2(self.gv.nlm_temp_file_path, self.gv.nlm_file_path)
-
-        else:
-            self.debug.print_debug(self, "nlm_file_path ({0}) and "
-                                         "nlm_temp_file_path ({1}) are the same".format(self.gv.nlm_file_path,
-                                                                                        self.gv.nlm_temp_file_path))
 
     def run(self):
         self.run_transform()
