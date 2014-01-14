@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from lxml import etree
-from re import sub
+import re
 import os
 from manipulate import Manipulate
 
@@ -82,18 +82,22 @@ class TeiManipulate(Manipulate):
         tree.write(self.gv.tei_file_path)
 
     def change_wmf_image_links(self):
-        tree = self.set_dom_tree(self.gv.tei_file_path)
-        for imagelink in tree.xpath('//tei:graphic',namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            converted_imagelink = re.sub(r'\.wmf','.png',imagelink.xpath('@url')[0])
-            imagelink.attrib['url'] = converted_imagelink
-        tree.write(self.gv_tei_file_path)
+        tree = self.load_dom_tree()
+        for image_link in tree.xpath('//tei:graphic', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            converted_image_link = re.sub(r'\.wmf', '.png', image_link.xpath('@url')[0])
+            image_link.attrib['url'] = converted_image_link
+        tree.write(self.gv.tei_file_path)
 
     def run(self):
-        self.update_tmp_file(self.gv.tei_file_path, self.gv.tei_temp_file_path)
-        text = self.get_file_text(self.gv.tei_temp_file_path)
+        self.update_tmp_file(self.dom_to_load, self.dom_temp_file)
+        text = self.get_file_text(self.dom_temp_file)
+
+        # convert .wmf image links to png
+        self.change_wmf_image_links()
+
         text = self.replace_value_of_tag(text, 'ssssssssss')
-        self.write_output(self.gv.tei_file_path, text)
-        os.remove(self.gv.tei_temp_file_path)
+        self.write_output(self.dom_to_load, text)
+        os.remove(self.dom_temp_file)
 
 
 
