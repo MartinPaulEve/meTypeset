@@ -49,12 +49,19 @@ class MeTypeset (Debuggable):
     def __init__(self):
         # read  command line arguments
         self.args = docopt(__doc__, version='meTypeset 0.1')
+
+        # absolute first priority is to initialize debugger so that anything triggered here can be logged
+        self.debug = Debug()
+
+        if self.args['--debug']:
+            self.debug.enable_debug()
+
         # read settings file
         self.settings_file_path = 'default'
         self.tei_file_path = None
         self.setup_settings_file()
         self.settings = SettingsConfiguration(self.get_settings_file(), self.args)
-        self.gv = GV(self.settings)
+        self.gv = GV(self.settings, self.debug)
         self.debug = self.gv.debug
         Debuggable.__init__(self, 'Main')
 
@@ -112,13 +119,6 @@ class MeTypeset (Debuggable):
 
         return set_file
 
-    def setup_debug(self):
-        debug = self.args['--debug']
-        if debug:
-            self.gv.debug.enable_debug()
-
-        return debug
-
     def setup_settings_file(self):
         if '--settings' in self.args:
             settings = self.args['--settings']
@@ -146,11 +146,9 @@ class MeTypeset (Debuggable):
         TEI2NLM(self.gv).run()
 
     def run(self):
-        debug = self.setup_debug()
-
         self.run_modules()
 
-        if not debug:
+        if not self.debug:
             os.remove(self.gv.nlm_temp_file_path)
 
 

@@ -9,7 +9,9 @@ import ntpath
 
 # class Global Variables
 class GV (Debuggable):
-    def __init__(self, settings):
+    def __init__(self, settings, debug):
+        self.debug = debug
+
         docx = 'docx'
         common2 = 'common2'
         nlm = 'nlm'
@@ -23,12 +25,8 @@ class GV (Debuggable):
         self.input_metadata_file_path = settings.args['--metadata'] if settings.args[
             '--metadata'] else settings.script_dir + self.value_for_tag(settings, 'default-metadata-file-path')
 
-        print(self.input_file_path)
-
         filename_sep = ntpath.basename(self.input_file_path)
         self.output_folder_path = os.path.expanduser(settings.args['<output_folder>'])
-
-        self.debug = Debug(self)
 
         #general directory paths
         self.runtime_folder_path = self.generate_path(settings, 'runtime', settings.script_dir)

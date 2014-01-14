@@ -4,12 +4,11 @@ __email__ = "martin@martineve.com"
 import sys
 
 class Debug(object):
-    def __init__(self, gv):
+    def __init__(self):
         """
         Initialise this debug instance
         @param gv: a reference to an instance of the meTypeset global configuration class
         """
-        self.gv = gv
         self.debug = False
 
     def enable_debug(self):
