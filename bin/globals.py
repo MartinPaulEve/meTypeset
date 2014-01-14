@@ -5,10 +5,10 @@
 import os
 import shutil
 from debug import *
-
+import ntpath
 
 # class Global Variables
-class GV:
+class GV (Debuggable):
     def __init__(self, settings):
         docx = 'docx'
         common2 = 'common2'
@@ -18,13 +18,14 @@ class GV:
 
         self.script_dir = os.environ['METYPESET']
 
-        self.input_file_path = settings.args['<input>']
+        self.input_file_path = settings.args['<input>'].strip()
 
-        self.input_file_path = settings.args['<input>'] = self.input_file_path.strip()
         self.input_metadata_file_path = settings.args['--metadata'] if settings.args[
             '--metadata'] else settings.script_dir + self.value_for_tag(settings, 'default-metadata-file-path')
 
-        filename_sep = self.input_file_path.rsplit('/')
+        print(self.input_file_path)
+
+        filename_sep = ntpath.basename(self.input_file_path)
         self.output_folder_path = os.path.expanduser(settings.args['<output_folder>'])
 
         self.debug = Debug(self)
@@ -59,10 +60,11 @@ class GV:
             self.concat_path(self.output_folder_path, self.value_for_tag(settings, 'outputmedia')))
 
         #OUTPUT FILE
-        self.file_name = filename_sep[len(filename_sep) - 1].replace('docx', 'xml').replace('doc',
-                                                                                            'xml') \
-            if '/' in self.input_file_path \
-            else self.input_file_path.replace('docx', 'xml').replace('doc', 'xml')
+        if os.path.isdir(self.input_file_path):
+            self.file_name = 'tei.xml'
+        else:
+            fileName, fileExtension = os.path.splitext(filename_sep)
+            self.file_name = fileName + os.path.extsep + 'xml'
 
         #TEI paths
         self.tei_folder_path = self.clean_path(self.output_folder_path + '/' + self.value_for_tag(settings, 'tei'))
@@ -82,10 +84,8 @@ class GV:
 
         #java classes for saxon
         self.java_class_path = self.set_java_classpath()
-        self.module_name = "Globals"
 
-    def get_module_name(self):
-        return self.module_name
+        Debuggable.__init__(self, 'Globals')
 
     def check_file_exists(self, file_path):
         if file_path is None:

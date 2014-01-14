@@ -12,16 +12,14 @@ A class that scans for meTypeset size fields in a TEI file.
 3.) Returns a manipulator ready to implement all the changes to the TEI file
 """
 
+from debug import Debuggable
 
-class SizeClassifier():
+class SizeClassifier(Debuggable):
     def __init__(self, global_variables):
         self.gv = global_variables
         self.debug = self.gv.debug
         self.size_cutoff = 16
-        self.module_name = "Size Classifier"
-
-    def get_module_name(self):
-        return self.module_name
+        Debuggable.__init__(self, 'Size Classifier')
 
     @staticmethod
     def get_values(tree, search_attribute):

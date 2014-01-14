@@ -12,15 +12,13 @@ import globals as gv
 __author__ = "Dulip Withanage"
 __email__ = "dulip.withanage@gmail.com"
 
+from debug import Debuggable
 
-class Docx2TEI:
+class Docx2TEI(Debuggable):
     def __init__(self, gv):
         self.gv = gv
         self.debug = gv.debug
-        self.module_name = "DOCX to TEI"
-
-    def get_module_name(self):
-        return self.module_name
+        Debuggable.__init__(self, 'DOCX to TEI')
 
     def saxon_doc2tei(self):
             cmd = ["java", "-classpath", self.gv.java_class_path,
@@ -81,7 +79,8 @@ class Docx2TEI:
         if extract:
             shutil.copy(self.gv.input_file_path, self.gv.docx_temp_folder_path)
         else:
-            self.gv.tei_file_path = self.gv.tei_file_path + 'tei.xml'
+            pass
+            #self.gv.tei_file_path = self.gv.tei_file_path + 'tei.xml'
 
         # saxon converter
         java_command = self.saxon_doc2tei()

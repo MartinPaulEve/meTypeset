@@ -3,7 +3,7 @@ __email__ = "martin@martineve.com"
 
 import sys
 
-class Debug():
+class Debug(object):
     def __init__(self, gv):
         """
         Initialise this debug instance
@@ -27,3 +27,11 @@ class Debug():
     def fatal_error(self, module, message):
         print('[FATAL ERROR] [{0}] {1}'.format(module.get_module_name(), message))
         sys.exit(1)
+
+
+class Debuggable(object):
+    def __init__(self, module_name):
+        self.module_name = module_name
+
+    def get_module_name(self):
+        return self.module_name

@@ -9,15 +9,13 @@ from copy import deepcopy
 import shutil
 from lxml import objectify
 import re
+from debug import Debuggable
 
-class Manipulate(object):
+class Manipulate(Debuggable):
     def __init__(self, gv):
         self.gv = gv
-        self.mod_name = '{0} Manipulator'.format(self.module_name)
         self.debug = self.gv.debug
-
-    def get_module_name(self):
-        return self.mod_name
+        Debuggable.__init__(self, '{0} Manipulator'.format(self.mod_name))
 
     @staticmethod
     def set_dom_tree(filename):

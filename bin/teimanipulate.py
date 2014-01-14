@@ -11,11 +11,11 @@ __email__ = "martin@martineve.com"
 class TeiManipulate(Manipulate):
     def __init__(self, gv):
         self.gv = gv
-        self.module_name = "TEI"
         self.debug = self.gv.debug
         self.dom_to_load = self.gv.tei_file_path
         self.dom_temp_file = self.gv.tei_temp_file_path
-        super(TeiManipulate, self).__init__(gv)
+        self.mod_name = 'TEI'
+        Manipulate.__init__(self, gv)
 
     def tag_headings(self):
         # load the DOM

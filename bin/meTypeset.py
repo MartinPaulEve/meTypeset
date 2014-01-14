@@ -1,7 +1,4 @@
 #!/usr/bin/env python
-# @Author Martin Eve, Dulip Withanage
-# main file which triggers document parsing
-
 """meTypeset: text parsing library to convert word documents to the JATS XML format
 
 Usage:
@@ -17,6 +14,9 @@ Options:
 
 """
 
+__author__ = "Martin Paul Eve, Dulip Withnage"
+__email__ = "martin@martineve.com"
+
 import docx2tei
 from docx2tei import *
 from tei2nlm import *
@@ -25,6 +25,7 @@ from FrontMatterParser import *
 from docopt import docopt
 from teimanipulate import TeiManipulate
 from globals import *
+from debug import Debuggable
 
 
 # check whether lxml is installed
@@ -44,7 +45,7 @@ class SettingsConfiguration:
         self.settings_file = set_file
 
 
-class MeTypeset:
+class MeTypeset (Debuggable):
     def __init__(self):
         # read  command line arguments
         self.args = docopt(__doc__, version='meTypeset 0.1')
@@ -55,10 +56,7 @@ class MeTypeset:
         self.settings = SettingsConfiguration(self.get_settings_file(), self.args)
         self.gv = GV(self.settings)
         self.debug = self.gv.debug
-        self.module_name = "Main"
-
-    def get_module_name(self):
-        return self.module_name
+        Debuggable.__init__(self, 'Main')
 
     def set_metadata_file(self):
         metadata_file_arg = self.settings.args['--metadata']

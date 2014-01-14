@@ -3,16 +3,15 @@
 import subprocess
 import shutil
 from nlmmanipulate import NlmManipulate
+from debug import Debuggable
 
 
-class TEI2NLM:
+class TEI2NLM (Debuggable):
     def __init__(self, gv):
         self.gv = gv
         self.module_name = "TEI to NLM"
         self.debug = gv.debug
-
-    def get_module_name(self):
-        return self.module_name
+        super(Debuggable, self).__init__()
 
     def saxon_tei2nlm(self):
             cmd = ["java", "-classpath", self.gv.java_class_path,
@@ -40,8 +39,16 @@ class TEI2NLM:
         self.debug.print_debug(self, 'Running saxon transform (TEI->NLM)')
         subprocess.call(java_command, stdin=None, shell=True)
 
-        if self.gv.nlm_temp_file_path is self.gv.nlm_file_path:
+        if self.gv.nlm_temp_file_path != self.gv.nlm_file_path:
+            self.debug.print_debug(self, "nlm_file_path ({0}) and "
+                                         "nlm_temp_file_path ({1}) are the same".format(self.gv.nlm_file_path,
+                                                                                        self.gv.nlm_temp_file_path))
             shutil.copy2(self.gv.nlm_temp_file_path, self.gv.nlm_file_path)
+
+        else:
+            self.debug.print_debug(self, "nlm_file_path ({0}) and "
+                                         "nlm_temp_file_path ({1}) are the same".format(self.gv.nlm_file_path,
+                                                                                        self.gv.nlm_temp_file_path))
 
     def run(self):
         self.run_transform()

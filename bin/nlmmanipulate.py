@@ -8,11 +8,12 @@ from lxml import etree
 class NlmManipulate(Manipulate):
     def __init__(self, gv):
         self.gv = gv
-        self.module_name = "NLM"
         self.debug = self.gv.debug
         self.dom_to_load = self.gv.nlm_file_path
         self.dom_temp_file = self.gv.nlm_temp_file_path
-        super(NlmManipulate, self).__init__(gv)
+        self.mod_name = 'NLM'
+        Manipulate.__init__(self, gv)
+
 
     @staticmethod
     def handle_nested_elements(iter_node, move_node, node, node_parent, outer_node, tag_name, tail_stack,
