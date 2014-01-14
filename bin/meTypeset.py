@@ -1,22 +1,19 @@
 #!/usr/bin/env python
-# @Author Dulip Withanage
+# @Author Martin Eve, Dulip Withanage
 # main file which triggers document parsing
 
-"""meTypeset: text parsing library to convert word documents to xml formats NLM, TEI
+"""meTypeset: text parsing library to convert word documents to the JATS XML format
 
 Usage:
-    meTypeset.py [(-d | --debug)] <input_file>  (-o | --output) <output_folder> [(-s | --settings) (<settings_file>)] [(-m | --metadata) (<metadata_file>)] [(-t | --test)]
-    meTypeset.py (-h | --help)
-    meTypeset.py (-t | --test)
-    meTypeset.py --version
+    meTypeset.py docx               <input>     <output_folder> [options]
+    meTypeset.py docxextracted      <input>     <output_folder> [options]
 
 Options:
-
-    -h --help  Show this screen.
-    -t --test  Run the test suite.
-    --version  Show version.
-    -m --metadata  Metadata file
-    -o --output   Output Folder
+    -d, --debug                     Enable debug output
+    -h, --help                      Show this screen.
+    -m, --metadata <metadata_file>  Metadata file
+    -s, --settings <settings_file>  Settings file
+    --version                       Show version.
 
 """
 
@@ -53,6 +50,7 @@ class MeTypeset:
         self.args = docopt(__doc__, version='meTypeset 0.1')
         # read settings file
         self.settings_file_path = 'default'
+        self.tei_file_path = None
         self.setup_settings_file()
         self.settings = SettingsConfiguration(self.get_settings_file(), self.args)
         self.gv = GV(self.settings)
@@ -63,7 +61,7 @@ class MeTypeset:
         return self.module_name
 
     def set_metadata_file(self):
-        metadata_file_arg = self.settings.args['<metadata_file>']
+        metadata_file_arg = self.settings.args['--metadata']
         if metadata_file_arg:
             metadata_file = self.gv.clean_path(self.gv.concat_path(self.settings.script_dir, metadata_file_arg[0]))
         else:
@@ -117,25 +115,31 @@ class MeTypeset:
         return set_file
 
     def setup_debug(self):
-        debug = self.args['--debug'] | self.args['-d']
+        debug = self.args['--debug']
         if debug:
             self.gv.debug.enable_debug()
 
         return debug
 
     def setup_settings_file(self):
-        if '--settings' in self.args or '--s' in self.args:
-            settings = self.args['--settings'] | self.args['-s']
+        if '--settings' in self.args:
+            settings = self.args['--settings']
             if settings:
-                self.settings_file_path = self.args['<settings_file>']
+                self.settings_file_path = self.args['--settings']
 
     def run_modules(self):
         # check for stylesheets
         self.gv.check_file_exists(self.gv.docx_style_sheet_dir)
         # metadata file
         gv.metadata_file = self.set_metadata_file()
-        # run docx to tei conversion
-        Docx2TEI(self.gv).run()
+
+        if self.args['docx']:
+            # run docx to tei conversion
+            Docx2TEI(self.gv).run(True)
+        else:
+            self.debug.print_debug(self, 'Skipping docx extraction')
+            Docx2TEI(self.gv).run(False)
+
         # run size classifier
         SizeClassifier(self.gv).run()
         # tei
@@ -144,9 +148,6 @@ class MeTypeset:
         TEI2NLM(self.gv).run()
 
     def run(self):
-        global test
-
-        test = self.args['--test']
         debug = self.setup_debug()
 
         self.run_modules()

@@ -18,9 +18,11 @@ class GV:
 
         self.script_dir = os.environ['METYPESET']
 
-        self.input_file_path = settings.args['<input_file>'].strip()
-        self.input_metadata_file_path = settings.args['<metadata_file>'] if settings.args[
-            '<metadata_file>'] else settings.script_dir + self.value_for_tag(settings, 'default-metadata-file-path')
+        self.input_file_path = settings.args['<input>']
+
+        self.input_file_path = settings.args['<input>'] = self.input_file_path.strip()
+        self.input_metadata_file_path = settings.args['--metadata'] if settings.args[
+            '--metadata'] else settings.script_dir + self.value_for_tag(settings, 'default-metadata-file-path')
 
         filename_sep = self.input_file_path.rsplit('/')
         self.output_folder_path = os.path.expanduser(settings.args['<output_folder>'])

@@ -7,7 +7,7 @@ Library           Collections
 
 *** Test Cases ***
 000 Environment
-    ${result} =    Run Process    python ../bin/meTypeset.py 001.docx -o ./000    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx 001.docx ./000 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     Should Not Contain    ${result.stderr}    cannot find or open
@@ -15,7 +15,7 @@ Library           Collections
     [Teardown]    Remove Directory    000    recursive=True
 
 001 Basic paragraph
-    ${result} =    Run Process    python ../bin/meTypeset.py 001.docx -o ./001    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx 001.docx ./001 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./001/nlm/001.xml
@@ -25,7 +25,7 @@ Library           Collections
 
 002 Basic paragraph with italics
     [Tags]    italic    002    formatting
-    ${result} =    Run Process    python ../bin/meTypeset.py 002.docx -o ./002    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx 002.docx ./002 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./002/nlm/002.xml
@@ -35,7 +35,7 @@ Library           Collections
 
 003 Basic paragraph with bold
     [Tags]    bold    002    formatting
-    ${result} =    Run Process    python ../bin/meTypeset.py 003.docx -o ./003    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx 003.docx ./003 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./003/nlm/003.xml
@@ -45,7 +45,7 @@ Library           Collections
 
 004 Metadata merge
     [Tags]    metadata
-    ${result} =    Run Process    python ../bin/meTypeset.py 002.docx -o ./004    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx 002.docx ./004 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./004/nlm/002.xml
@@ -81,7 +81,7 @@ Library           Collections
 
 005 Title, non-title, title (from bolded text)
     [Tags]    formatting    bold    title
-    ${result} =    Run Process    python ../bin/meTypeset.py 005.docx -o ./005    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx 005.docx ./005 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./005/nlm/005.xml

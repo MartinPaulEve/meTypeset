@@ -39,7 +39,9 @@ class TEI2NLM:
         java_command = self.saxon_tei2nlm()
         self.debug.print_debug(self, 'Running saxon transform (TEI->NLM)')
         subprocess.call(java_command, stdin=None, shell=True)
-        shutil.copy2(self.gv.nlm_temp_file_path, self.gv.nlm_file_path)
+
+        if self.gv.nlm_temp_file_path is self.gv.nlm_file_path:
+            shutil.copy2(self.gv.nlm_temp_file_path, self.gv.nlm_file_path)
 
     def run(self):
         self.run_transform()

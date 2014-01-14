@@ -8,7 +8,7 @@ Library           Collections
 *** Test Cases ***
 601 WMF conversion
     [Tags]    images    601
-    ${result} =    Run Process    python ../bin/meTypeset.py -d WMF.docx -o ./601    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx WMF.docx ./601 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./601/nlm/out.xml    keep_clark_notation=no

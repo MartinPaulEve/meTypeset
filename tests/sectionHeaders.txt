@@ -36,7 +36,7 @@ Library           Collections
     #    </sec>
     #</sec>
     #</body>
-    ${result} =    Run Process    python ../bin/meTypeset.py -d Sec005.docx -o ./501    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx Sec005.docx ./501 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./501/nlm/out.xml
@@ -105,7 +105,7 @@ Library           Collections
     #    </sec>
     #    </sec>
     #</body>
-    ${result} =    Run Process    python ../bin/meTypeset.py -d Sec004.docx -o ./502    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx Sec004.docx ./502 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./502/nlm/out.xml
@@ -143,7 +143,7 @@ Library           Collections
     #    <p>Line 2 under heading 22</p>
     #    </sec>
     #</body>
-    ${result} =    Run Process    python ../bin/meTypeset.py -d Sec003.docx -o ./503    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx Sec003.docx ./503 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./503/nlm/out.xml
@@ -200,7 +200,7 @@ Library           Collections
     #    </sec>
     #    </sec>
     #</body>
-    ${result} =    Run Process    python ../bin/meTypeset.py -d Sec002.docx -o ./504    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx Sec002.docx ./504 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./504/nlm/out.xml
@@ -261,7 +261,7 @@ Library           Collections
     #    </sec>
     #    </sec>
     #</body>
-    ${result} =    Run Process    python ../bin/meTypeset.py -d Sec001.docx -o ./505    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx Sec001.docx ./505 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./505/nlm/out.xml
@@ -296,7 +296,7 @@ Library           Collections
 
 506 Test line breaks
     [Tags]    linebreaks    506    formatting
-    ${result} =    Run Process    python ../bin/meTypeset.py -d LineBreak.docx -o ./506 -s ./linebreakson.xml    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx LineBreak.docx ./506 -s ./linebreakson.xml -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./506/nlm/out.xml
@@ -315,7 +315,7 @@ Library           Collections
 
 507 Test line breaks off
     [Tags]    linebreaks    507    formatting
-    ${result} =    Run Process    python ../bin/meTypeset.py -d LineBreak.docx -o ./507 -s ./linebreaksoff.xml    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx LineBreak.docx ./507 -s ./linebreaksoff.xml -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./507/nlm/out.xml

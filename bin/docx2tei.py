@@ -35,7 +35,7 @@ class Docx2TEI:
                    ]
             return ' '.join(cmd)
 
-    def run(self):
+    def run(self, extract):
         # make output folders
         self.gv.mk_dir(self.gv.output_folder_path)
         self.gv.mk_dir(self.gv.docx_temp_folder_path)
@@ -48,12 +48,15 @@ class Docx2TEI:
         self.gv.copy_folder(self.gv.docx_folder_path,
                        self.gv.docx_temp_folder_path, False, None)
 
-        # decompress the docx
-        self.debug.print_debug(self, 'Unzipping {0} to {1}'.format(self.gv.input_file_path,
-                                                                      self.gv.docx_temp_folder_path))
+        if extract:
+            # decompress the docx
+            self.debug.print_debug(self, 'Unzipping {0} to {1}'.format(self.gv.input_file_path,
+                                                                          self.gv.docx_temp_folder_path))
 
-        with zipfile.ZipFile(self.gv.input_file_path, "r") as z:
-            z.extractall(self.gv.docx_temp_folder_path)
+            with zipfile.ZipFile(self.gv.input_file_path, "r") as z:
+                z.extractall(self.gv.docx_temp_folder_path)
+        else:
+            self.gv.copy_folder(self.gv.input_file_path, self.gv.docx_temp_folder_path)
 
         self.debug.print_debug(self, 'Looking for presence of media directory {0}'.format(self.gv.docx_media_path))
 
@@ -75,7 +78,10 @@ class Docx2TEI:
                 subprocess.call(imagemagick_command.split(' '))
 
         # copy input file into the docx subfolder
-        shutil.copy(self.gv.input_file_path, self.gv.docx_temp_folder_path)
+        if extract:
+            shutil.copy(self.gv.input_file_path, self.gv.docx_temp_folder_path)
+        else:
+            self.gv.tei_file_path = self.gv.tei_file_path + 'tei.xml'
 
         # saxon converter
         java_command = self.saxon_doc2tei()
