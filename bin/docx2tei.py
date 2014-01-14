@@ -68,8 +68,11 @@ class Docx2TEI:
             for image in image_filenames:
               if re.match(r'.+?\.wmf',image) is not None:
                 image_name = re.sub(r'\.wmf','',image)
-                imagemagick_command = 'unoconv -d graphics -f png -o ' + self.gv.output_media_path + '/' + image_name + '.png ' + image
-                subprocess.call(imagemagick_command)
+                imagemagick_command = 'unoconv -d graphics -f png -o {0}/{1}.png ' \
+                                      '{0}/{2}'.format(self.gv.output_media_path, image_name, image)
+                self.debug.print_debug(self, 'Calling: {0}'.format(imagemagick_command))
+
+                subprocess.call(imagemagick_command.split(' '))
 
         # copy input file into the docx subfolder
         shutil.copy(self.gv.input_file_path, self.gv.docx_temp_folder_path)

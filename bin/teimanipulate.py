@@ -89,14 +89,8 @@ class TeiManipulate(Manipulate):
         tree.write(self.gv.tei_file_path)
 
     def run(self):
-        self.update_tmp_file(self.dom_to_load, self.dom_temp_file)
-        text = self.get_file_text(self.dom_temp_file)
-
         # convert .wmf image links to png
         self.change_wmf_image_links()
-
-        text = self.replace_value_of_tag(text, 'ssssssssss')
-        self.write_output(self.dom_to_load, text)
         os.remove(self.dom_temp_file)
 
 
