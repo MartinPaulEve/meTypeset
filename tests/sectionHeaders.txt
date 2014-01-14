@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     This series of test cases evaluates the sizeClassifier and section positioning
+Documentation     This series of test cases evaluates the sizeClassifier, section positioning and line breaks
 Library           Process
 Library           OperatingSystem
 Library           XML

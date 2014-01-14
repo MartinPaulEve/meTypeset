@@ -1,0 +1,18 @@
+*** Settings ***
+Documentation     This series of test cases evaluates image processing and manipulation
+Library           Process
+Library           OperatingSystem
+Library           XML
+Library           Collections
+
+*** Test Cases ***
+601 WMF conversion
+    [Tags]    images    601
+    ${result} =    Run Process    python ../bin/meTypeset.py -d WMF.docx -o ./601    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./601/nlm/out.xml    keep_clark_notation=no
+    ${image}=    Get Element    ${xml}    body/sec/fig/graphic
+    ${attr}=    Get Element Attribute    ${image}    {http://www.w3.org/1999/xlink}href
+    Should Be Equal    ${attr}    media/image1.png
+    [Teardown]    Remove Directory    601    recursive=True
