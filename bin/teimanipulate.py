@@ -31,6 +31,30 @@ class TeiManipulate(Manipulate):
 
         return object_list
 
+    def drop_addin_json(self, xpath, start_text, replace_tag, attribute, caller):
+        # load the DOM
+        tree = self.load_dom_tree()
+
+        # search the tree and grab the parent
+        for child in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+
+            # check that this is a known addin
+            if child.text.startswith(start_text):
+                tag_to_parse = re.sub(r'.+}\s', '', child.text)
+
+                new_element = etree.Element(replace_tag, rel = attribute)
+                new_element.text = tag_to_parse
+
+                child.addnext(new_element)
+
+                for subchild in child:
+                    if type(subchild) is etree._Element:
+                        new_element.append(subchild)
+
+                child.getparent().remove(child)
+
+        tree.write(self.gv.tei_file_path)
+
     def drop_addin(self, xpath, start_text, sub_tag, replace_tag, attribute, caller):
         # load the DOM
         tree = self.load_dom_tree()
