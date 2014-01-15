@@ -22,8 +22,8 @@ class ZoteroHandler(Debuggable):
                                         'hi', 'reference_to_link', self)
 
         if len(object_list) > 0:
-            self.debug.print_debug(self, 'Zotero Handler stashed {0} references for '
-                                         'bibliography parsing'.format(len(object_list)))
+            self.debug.print_debug(self, u'Zotero Handler stashed {0} references for '
+                                         u'bibliography parsing'.format(len(object_list)))
 
         return object_list
 
@@ -33,7 +33,8 @@ class BibliographyAddins(Debuggable):
         self.gv = gv
         self.debug = self.gv.debug
         self.zotero_items = []
+        self.zotero_handler = ZoteroHandler(self.gv)
         Debuggable.__init__(self, 'Bibliography Handler')
 
     def run(self):
-        self.zotero_items = ZoteroHandler(self.gv).run()
+        self.zotero_items = self.zotero_handler.run()

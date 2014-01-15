@@ -33,4 +33,4 @@ class Debuggable(object):
         self.module_name = module_name
 
     def get_module_name(self):
-        return self.module_name
+        return self.module_name.encode('utf-8')

@@ -12,8 +12,8 @@ from debug import Debuggable
 
 class BibliographyClassifier(Debuggable):
 
-    def __init__(self, global_variables):
+    def __init__(self, global_variables, bibliography_addins):
         self.gv = global_variables
         self.debug = self.gv.debug
-        self.size_cutoff = 16
         Debuggable.__init__(self, 'Bibliography Classifier')
+
