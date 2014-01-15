@@ -21,10 +21,10 @@ class Debug(object):
         @param message: the debug message to print
         """
         if self.debug:
-            print('[{0}] {1}'.format(module.get_module_name(), message))
+            print(u'[{0}] {1}'.format(module.get_module_name(), message))
 
     def fatal_error(self, module, message):
-        print('[FATAL ERROR] [{0}] {1}'.format(module.get_module_name(), message))
+        print(u'[FATAL ERROR] [{0}] {1}'.format(module.get_module_name(), message))
         sys.exit(1)
 
 

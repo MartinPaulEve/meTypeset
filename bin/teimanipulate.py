@@ -26,8 +26,8 @@ class TeiManipulate(Manipulate):
 
         # search the tree and grab the parent
         for child in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            object_list.append(objectify.fromstring('<zoterobiblio><entry>{0}'
-                                                    '</entry></zoterobiblio>'.format(etree.tostring(child))))
+            object_list.append(objectify.fromstring(u'<zoterobiblio><entry>{0}'
+                                                    u'</entry></zoterobiblio>'.format(etree.tostring(child))))
 
         return object_list
 
@@ -45,8 +45,8 @@ class TeiManipulate(Manipulate):
                 new_element = etree.Element(replace_tag, rel = attribute)
                 new_element.text = tag_to_parse
 
-                self.debug.print_debug(self, 'Dropping {0} text: {1}'.format(caller.get_module_name(),
-                                                                             tag_to_parse))
+                self.debug.print_debug(self, u'Dropping {0} text: {1}'.format(caller.get_module_name(),
+                                                                              tag_to_parse))
 
                 child.addnext(new_element)
 
@@ -67,11 +67,11 @@ class TeiManipulate(Manipulate):
             # check that this is a known addin
             if child.text.startswith(start_text):
                 tag_to_parse = re.sub(r'&', '&amp;', child.text)
-                sub_tree = etree.fromstring('<zoterobiblio><entry>{0}</entry></zoterobiblio>'.format(tag_to_parse))
+                sub_tree = etree.fromstring(u'<zoterobiblio><entry>{0}</entry></zoterobiblio>'.format(tag_to_parse))
                 sub_element = sub_tree.xpath('//entry/{0}'.format(sub_tag),
                                              namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
-                self.debug.print_debug(self, 'Preserving tail of '
-                                             'dropped {0} element: {1}'.format(caller.get_module_name(),
+                self.debug.print_debug(self, u'Preserving tail of '
+                                             u'dropped {0} element: {1}'.format(caller.get_module_name(),
                                                                                sub_element.tail))
 
                 new_element = etree.Element(replace_tag, rel = attribute)
