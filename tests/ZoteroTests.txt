@@ -6,7 +6,7 @@ Library           XML
 Library           Collections
 
 *** Test Cases ***
-Z01 Fields
+Z01 Zotero XML Fields
     [Tags]    metadata    zotero    bibliographymanagers    Z01
     ${result} =    Run Process    ../bin/meTypeset.py docxextracted ./Zotero ./Z01 -d    shell=True
     Log    ${result.stdout}
@@ -15,3 +15,13 @@ Z01 Fields
     ${paragraph}=    Get Element    ${xml}    body/sec/p
     Elements Should Match    ${paragraph}    <p>See (Hardt &amp; Negri, 2001; Monbiot, 2001)</p>
     [Teardown]    Remove Directory    Z01    recursive=True
+
+Z02 Zotero JSON Footnote Fields
+    [Tags]    metadata    zotero    bibliographymanagers    Z02
+    ${result} =    Run Process    ../bin/meTypeset.py docxextracted ./Zotero2 ./Z02 -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./Z02/nlm/out.xml
+    ${paragraph}=    Get Element    ${xml}    back/fn-group
+    Elements Should Match    ${paragraph}    <fn-group><fn id="bib"> <p> Kathryn Hume, ‘Attenuated Realities: Pynchon’s Trajectory from V. to Inherent Vice’, <italic>Orbit: Writing Around Pynchon</italic>, 2 (2013) &lt;doi:10.7766/orbit.v2.1.50&gt;.</p> </fn> <fn id="bib"> <p> Jacques Rancière, <italic>Althusser’s Lesson</italic> (London ; New York: Continuum, 2011).</p> </fn> <fn id="bib"> <p> Luc Herman, <italic>Gravity’s Rainbow, Domination, and Freedom</italic> (Athens: The University of Georgia Press, 2013); Stephen Burn, <italic>Jonathan Franzen at the End of Postmodernism</italic>, Continuum Literary Studies Series (London ; New York: Continuum, 2008).</p> </fn></fn-group>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    Z02    recursive=True
