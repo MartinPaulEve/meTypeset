@@ -12,15 +12,18 @@ class ZoteroHandler(Debuggable):
         Debuggable.__init__(self, 'Zotero Handler')
 
     def run(self):
-        self.debug.print_debug(self, "Running Zotero handler")
         tei_manipulator = TeiManipulate(self.gv)
         object_list = tei_manipulator.get_object_list('//tei:ref[@rend="ref"]')
-        object_list += tei_manipulator.get_object_list('//tei:ref[@rend="instr_r"]')
+        object_list += tei_manipulator.get_object_list('//tei:ref')
         tei_manipulator.drop_addin('//tei:ref[@rend="ref"]', ' ADDIN EN.CITE', 'EndNote',
                                    'hi', 'reference_to_link', self)
 
-        tei_manipulator.drop_addin_json('//tei:ref[@rend="instr_r"]', ' ADDIN ZOTERO_ITEM CSL_CITATION',
+        tei_manipulator.drop_addin_json('//tei:ref', ' ADDIN ZOTERO_ITEM CSL_CITATION',
                                         'hi', 'reference_to_link', self)
+
+        if len(object_list) > 0:
+            self.debug.print_debug(self, 'Zotero Handler stashed {0} references for '
+                                         'bibliography parsing'.format(len(object_list)))
 
         return object_list
 
