@@ -45,9 +45,6 @@ class TeiManipulate(Manipulate):
                 new_element = etree.Element(replace_tag, rel = attribute)
                 new_element.text = tag_to_parse
 
-                self.debug.print_debug(self, u'Dropping {0} text: {1}'.format(caller.get_module_name(),
-                                                                              tag_to_parse))
-
                 child.addnext(new_element)
 
                 for subchild in child:

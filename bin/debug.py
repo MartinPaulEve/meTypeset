@@ -21,7 +21,7 @@ class Debug(object):
         @param message: the debug message to print
         """
         if self.debug:
-            print(u'[{0}] {1}'.format(module.get_module_name(), message))
+            print(u'[{0}] {1}'.format(module.get_module_name(), unicode(message)))
 
     def fatal_error(self, module, message):
         print(u'[FATAL ERROR] [{0}] {1}'.format(module.get_module_name(), message))
@@ -33,4 +33,4 @@ class Debuggable(object):
         self.module_name = module_name
 
     def get_module_name(self):
-        return self.module_name.encode('utf-8')
+        return unicode(self.module_name, 'utf-8')
