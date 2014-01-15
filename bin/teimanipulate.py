@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from lxml import etree
+from lxml import objectify
 import re
 import os
 from manipulate import Manipulate
@@ -16,6 +17,18 @@ class TeiManipulate(Manipulate):
         self.dom_temp_file = self.gv.tei_temp_file_path
         self.mod_name = 'TEI'
         Manipulate.__init__(self, gv)
+
+    def get_object_list(self, xpath):
+        # load the DOM
+        tree = self.load_dom_tree()
+
+        object_list = []
+
+        # search the tree and grab the parent
+        for child in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            object_list.append(objectify.fromstring('<zoterobiblio>{0}</zoterobiblio>'.format(etree.tostring(child))))
+
+        return object_list
 
     def drop_addin(self, xpath):
         # load the DOM

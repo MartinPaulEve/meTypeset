@@ -14,14 +14,18 @@ class ZoteroHandler(Debuggable):
     def run(self):
         self.debug.print_debug(self, "Running Zotero handler")
         tei_manipulator = TeiManipulate(self.gv)
+        object_list = tei_manipulator.get_object_list('//tei:ref[@rend="ref"]')
         tei_manipulator.drop_addin('//tei:ref[@rend="ref"]')
+
+        return object_list
 
 
 class BibliographyAddins(Debuggable):
     def __init__(self, gv):
         self.gv = gv
         self.debug = self.gv.debug
+        self.zotero_items = []
         Debuggable.__init__(self, 'Bibliography Handler')
 
     def run(self):
-        ZoteroHandler(self.gv).run()
+        self.zotero_items = ZoteroHandler(self.gv).run()
