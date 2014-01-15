@@ -40,10 +40,15 @@ class TeiManipulate(Manipulate):
 
             # check that this is a known addin
             if child.text.startswith(start_text):
+                self.debug.print_debug(self, 'Parsing {0} element: {1}'.format(caller.get_module_name(),
+                                                                               child.text))
                 tag_to_parse = re.sub(r'.+}\s', '', child.text)
 
                 new_element = etree.Element(replace_tag, rel = attribute)
                 new_element.text = tag_to_parse
+
+                self.debug.print_debug(self, 'Dropping {0} text: {1}'.format(caller.get_module_name(),
+                                                                             tag_to_parse))
 
                 child.addnext(new_element)
 
