@@ -19,7 +19,7 @@ Running the python script
 
 First off, ensure you have the correct stack installed for your environment. meTypeset needs a valid python environment, a valid Java environment, the command line tools "unzip" and "basename" and a shell interpreter (eg Bash). Saxon, which is required, is pre-bundled. It has been shown to work correctly on *Nix derivatives and Mac OS X.
 
-''''
+```
 Usage:
     meTypeset.py docx               <input>     <output_folder> [options]
     meTypeset.py docxextracted      <input>     <output_folder> [options]
@@ -30,7 +30,7 @@ Options:
     -m, --metadata <metadata_file>  Metadata file
     -s, --settings <settings_file>  Settings file
     --version                       Show version.
-''''
+```
 
 When running with the docx command, input should be a Word DOCX file.
 
