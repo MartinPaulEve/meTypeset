@@ -15,7 +15,8 @@ class ZoteroHandler(Debuggable):
         self.debug.print_debug(self, "Running Zotero handler")
         tei_manipulator = TeiManipulate(self.gv)
         object_list = tei_manipulator.get_object_list('//tei:ref[@rend="ref"]')
-        tei_manipulator.drop_addin('//tei:ref[@rend="ref"]')
+        tei_manipulator.drop_addin('//tei:ref[@rend="ref"]', ' ADDIN EN.CITE', 'EndNote',
+                                   'hi', 'reference_to_link', self)
 
         return object_list
 
