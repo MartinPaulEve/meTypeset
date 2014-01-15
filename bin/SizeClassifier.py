@@ -229,9 +229,10 @@ class SizeClassifier(Debuggable):
         # get a numerical list of explicit size values inside meTypesetSize attributes
         sizes = self.get_values(tree, "meTypesetSize")
 
-        self.debug.print_debug(self,
-                               u'Explicitly specified size variations and their frequency of occurrence: {0}'.format(
-                                   str(sizes)))
+        if len(sizes) > 0:
+            self.debug.print_debug(self,
+                                   u'Explicitly specified size variations and their frequency of '
+                                   u'occurrence: {0}'.format(str(sizes)))
 
         # depending on the length of the array we will parse differently
         manipulate = TeiManipulate(self.gv)
