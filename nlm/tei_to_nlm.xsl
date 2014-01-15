@@ -287,31 +287,6 @@
             </xsl:choose>
           </xsl:element>
           </xsl:for-each>
-          
-          <xsl:for-each select="TEI/text/body/div/p/note">
-            <xsl:element name="fn">
-              <xsl:attribute name="id">
-                <xsl:choose>
-                  <xsl:when test="normalize-space(following-sibling::text()[1])='*'">
-                    <xsl:text>bibast</xsl:text>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:text>bib</xsl:text><xsl:value-of select="tokenize(normalize-space(following-sibling::text()[1]), '[\s.?!,;:\-]+')[.][1]"/>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </xsl:attribute>
-              <xsl:choose>
-                <xsl:when test="not(child::p)">
-                  <xsl:element name="p">
-                    <xsl:apply-templates />
-                  </xsl:element>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:apply-templates />
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:element>
-          </xsl:for-each>
         </xsl:element>
         
         
