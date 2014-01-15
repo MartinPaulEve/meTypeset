@@ -6,12 +6,12 @@ Library           XML
 Library           Collections
 
 *** Test Cases ***
-001 Fields
-    [Tags]    metadata
-    ${result} =    Run Process    ../tools/xmlonlygennlm.sh ./Zotero ./ZoteroOutput1    shell=True
+Z01 Fields
+    [Tags]    metadata    zotero    bibliographymanagers    Z01
+    ${result} =    Run Process    ../bin/meTypeset.py docxextracted ./Zotero ./Z01 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
-    ${xml}=    Parse XML    ./ZoteroOutput1/Zotero.xml
+    ${xml}=    Parse XML    ./Z01/nlm/out.xml
     ${paragraph}=    Get Element    ${xml}    body/sec/p
     Elements Should Match    ${paragraph}    <p>See (Hardt &amp; Negri, 2001; Monbiot, 2001)</p>
-    [Teardown]    Remove Directory    ZoteroOutput1    recursive=True
+    [Teardown]    Remove Directory    Z01    recursive=True
