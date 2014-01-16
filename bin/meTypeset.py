@@ -4,7 +4,7 @@
 Usage:
     meTypeset.py docx               <input>     <output_folder> [options]
     meTypeset.py docxextracted      <input>     <output_folder> [options]
-    meTypeset.py bibscan            <input>     [options]
+    meTypeset.py bibscan            <input>     [--debug] [--settings <settings_file>]
 
 Options:
     -d, --debug                     Enable debug output
