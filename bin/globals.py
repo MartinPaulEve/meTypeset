@@ -22,68 +22,74 @@ class GV (Debuggable):
 
         self.script_dir = os.environ['METYPESET']
 
-        self.input_file_path = settings.args['<input>'].strip()
+        if not settings.args['bibscan']:
 
-        self.input_metadata_file_path = settings.args['--metadata'] if settings.args[
-            '--metadata'] else settings.script_dir + self.value_for_tag(settings, 'default-metadata-file-path')
+            self.input_file_path = settings.args['<input>'].strip()
 
-        filename_sep = ntpath.basename(self.input_file_path)
-        self.output_folder_path = os.path.expanduser(settings.args['<output_folder>'])
+            self.input_metadata_file_path = settings.args['--metadata'] if settings.args[
+                '--metadata'] else settings.script_dir + self.value_for_tag(settings, 'default-metadata-file-path')
 
-        #general directory paths
-        self.runtime_folder_path = self.generate_path(settings, 'runtime', settings.script_dir)
-        self.common2_lib_path = self.generate_path(settings, common2, settings.script_dir)
-        self.binary_folder_path = self.generate_path(settings, 'binaries', settings.script_dir)
-        self.runtime_catalog_path = self.generate_path(settings, 'runtime-catalog', settings.script_dir)
-        self.common2_temp_folder_path = self.generate_path(settings, common2, self.output_folder_path)
+            filename_sep = ntpath.basename(self.input_file_path)
+            self.output_folder_path = os.path.expanduser(settings.args['<output_folder>'])
 
-        # docx document paths
-        self.docx_folder_path = self.generate_path(settings, docx, settings.script_dir)
+            #general directory paths
+            self.runtime_folder_path = self.generate_path(settings, 'runtime', settings.script_dir)
+            self.common2_lib_path = self.generate_path(settings, common2, settings.script_dir)
+            self.binary_folder_path = self.generate_path(settings, 'binaries', settings.script_dir)
+            self.runtime_catalog_path = self.generate_path(settings, 'runtime-catalog', settings.script_dir)
+            self.common2_temp_folder_path = self.generate_path(settings, common2, self.output_folder_path)
 
-        self.docx_temp_folder_path = self.generate_path(settings, docx, self.output_folder_path)
+            # docx document paths
+            self.docx_folder_path = self.generate_path(settings, docx, settings.script_dir)
 
-        self.docx_word_temp_folder_path = self.clean_path(
-            self.concat_path(self.docx_temp_folder_path, self.value_for_tag(settings, 'word')))
+            self.docx_temp_folder_path = self.generate_path(settings, docx, self.output_folder_path)
 
-        self.word_document_xml = self.clean_path(
-            self.docx_temp_folder_path + '/' + self.value_for_tag(settings, 'word-document-xml'))
+            self.docx_word_temp_folder_path = self.clean_path(
+                self.concat_path(self.docx_temp_folder_path, self.value_for_tag(settings, 'word')))
 
-        self.docx_style_sheet_dir = self.concat_path(self.script_dir,
-                                                     self.value_for_tag(settings, 'docs-style-sheet-path'))
-        self.docx_to_tei_stylesheet = self.clean_path(
-            self.docx_temp_folder_path + '/' + self.value_for_tag(settings, 'doc-to-tei-stylesheet'))
+            self.word_document_xml = self.clean_path(
+                self.docx_temp_folder_path + '/' + self.value_for_tag(settings, 'word-document-xml'))
 
-        self.docx_media_path = self.clean_path(
-            self.concat_path(self.docx_word_temp_folder_path, self.value_for_tag(settings, 'media')))
+            self.docx_style_sheet_dir = self.concat_path(self.script_dir,
+                                                         self.value_for_tag(settings, 'docs-style-sheet-path'))
+            self.docx_to_tei_stylesheet = self.clean_path(
+                self.docx_temp_folder_path + '/' + self.value_for_tag(settings, 'doc-to-tei-stylesheet'))
 
-        self.output_media_path = self.clean_path(
-            self.concat_path(self.output_folder_path, self.value_for_tag(settings, 'outputmedia')))
+            self.docx_media_path = self.clean_path(
+                self.concat_path(self.docx_word_temp_folder_path, self.value_for_tag(settings, 'media')))
 
-        #OUTPUT FILE
-        if os.path.isdir(self.input_file_path):
-            self.file_name = 'tei.xml'
+            self.output_media_path = self.clean_path(
+                self.concat_path(self.output_folder_path, self.value_for_tag(settings, 'outputmedia')))
+
+            #OUTPUT FILE
+            if os.path.isdir(self.input_file_path):
+                self.file_name = 'tei.xml'
+            else:
+                fileName, fileExtension = os.path.splitext(filename_sep)
+                self.file_name = fileName + os.path.extsep + 'xml'
+
+            #TEI paths
+            self.tei_folder_path = self.clean_path(self.output_folder_path + '/' + self.value_for_tag(settings, 'tei'))
+            self.tei_file_path = self.concat_path(self.tei_folder_path, self.file_name)
+            self.tei_temp_file_path = self.clean_path(self.concat_path(self.tei_folder_path, "out.xml"))
+
+            #NLM paths
+            self.nlm_folder_path = self.generate_path(settings, nlm, self.output_folder_path)
+            self.nlm_file_path = self.clean_path(self.concat_path(self.nlm_folder_path, self.file_name))
+            self.nlm_temp_file_path = self.clean_path(self.concat_path(self.nlm_folder_path, "out.xml"))
+            self.nlm_style_sheet_dir = self.clean_path(
+                self.concat_path(settings.script_dir, self.value_for_tag(settings, 'tei-to-nlm-stylesheet')))
+
+            #Metadata paths
+            self.metadata_style_sheet_path = self.clean_path(
+                self.concat_path(settings.script_dir, self.value_for_tag(settings, 'metadata-stylesheet')))
+
+            #java classes for saxon
+            self.java_class_path = self.set_java_classpath()
+
         else:
-            fileName, fileExtension = os.path.splitext(filename_sep)
-            self.file_name = fileName + os.path.extsep + 'xml'
-
-        #TEI paths
-        self.tei_folder_path = self.clean_path(self.output_folder_path + '/' + self.value_for_tag(settings, 'tei'))
-        self.tei_file_path = self.concat_path(self.tei_folder_path, self.file_name)
-        self.tei_temp_file_path = self.clean_path(self.concat_path(self.tei_folder_path, "out.xml"))
-
-        #NLM paths
-        self.nlm_folder_path = self.generate_path(settings, nlm, self.output_folder_path)
-        self.nlm_file_path = self.clean_path(self.concat_path(self.nlm_folder_path, self.file_name))
-        self.nlm_temp_file_path = self.clean_path(self.concat_path(self.nlm_folder_path, "out.xml"))
-        self.nlm_style_sheet_dir = self.clean_path(
-            self.concat_path(settings.script_dir, self.value_for_tag(settings, 'tei-to-nlm-stylesheet')))
-
-        #Metadata paths
-        self.metadata_style_sheet_path = self.clean_path(
-            self.concat_path(settings.script_dir, self.value_for_tag(settings, 'metadata-stylesheet')))
-
-        #java classes for saxon
-        self.java_class_path = self.set_java_classpath()
+            self.nlm_file_path = ''
+            self.nlm_temp_file_path = ''
 
         Debuggable.__init__(self, 'Globals')
 

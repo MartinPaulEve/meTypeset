@@ -11,6 +11,8 @@ class NlmManipulate(Manipulate):
         self.debug = self.gv.debug
         self.dom_to_load = self.gv.nlm_file_path
         self.dom_temp_file = self.gv.nlm_temp_file_path
+        self.namespaces = {'jats':'http://dtd.nlm.nih.gov/publishing/3.0/journalpublishing3.dtd',
+                          'xmlns:xlink':'http://www.w3.org/1999/xlink'}
         self.mod_name = 'NLM'
         Manipulate.__init__(self, gv)
 

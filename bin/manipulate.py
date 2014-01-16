@@ -42,6 +42,10 @@ class Manipulate(Debuggable):
     def xml_end(tag):
         return '</' + tag + '>'
 
+    def return_elements(self, xpath):
+        tree = self.load_dom_read()
+        return tree.xpath(xpath, namespaces=self.namespaces)
+
     @staticmethod
     def search_and_replace_dom(tree, search_section, search_element, surround_with):
         for p in tree.xpath(".//" + search_section):
@@ -87,6 +91,11 @@ class Manipulate(Debuggable):
         # noinspection PyProtectedMember
         obj.teiHeader.fileDesc.titleStmt.title._setText(new_value)
         return etree.tostring(obj.getroottree())
+
+    def load_dom_read(self):
+        # load the DOM for read only access
+        tree = self.set_dom_tree(self.dom_to_load)
+        return tree
 
     def load_dom_tree(self):
         # load the DOM

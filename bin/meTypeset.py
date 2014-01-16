@@ -4,6 +4,7 @@
 Usage:
     meTypeset.py docx               <input>     <output_folder> [options]
     meTypeset.py docxextracted      <input>     <output_folder> [options]
+    meTypeset.py bibscan            <input>     [options]
 
 Options:
     -d, --debug                     Enable debug output
@@ -27,6 +28,7 @@ from teimanipulate import TeiManipulate
 from globals import *
 from debug import Debuggable
 from bibliographyAddins import BibliographyAddins
+from bibliographydatabase import BibliographyDatabase
 
 
 # check whether lxml is installed
@@ -127,28 +129,32 @@ class MeTypeset (Debuggable):
                 self.settings_file_path = self.args['--settings']
 
     def run_modules(self):
-        # check for stylesheets
-        self.gv.check_file_exists(self.gv.docx_style_sheet_dir)
-        # metadata file
-        gv.metadata_file = self.set_metadata_file()
+        if self.args['bibscan']:
 
-        if self.args['docx']:
-            # run docx to tei conversion
-            Docx2TEI(self.gv).run(True)
+            BibliographyDatabase(self.gv).scan()
         else:
-            self.debug.print_debug(self, 'Skipping docx extraction')
-            Docx2TEI(self.gv).run(False)
+            # check for stylesheets
+            self.gv.check_file_exists(self.gv.docx_style_sheet_dir)
+            # metadata file
+            gv.metadata_file = self.set_metadata_file()
 
-        # run size classifier
-        SizeClassifier(self.gv).run()
+            if self.args['docx']:
+                # run docx to tei conversion
+                Docx2TEI(self.gv).run(True)
+            else:
+                self.debug.print_debug(self, 'Skipping docx extraction')
+                Docx2TEI(self.gv).run(False)
 
-        # run bibliographic addins handler
-        BibliographyAddins(self.gv).run()
+            # run size classifier
+            SizeClassifier(self.gv).run()
 
-        # tei
-        TeiManipulate(self.gv).run()
-        # run tei to nlm conversion
-        TEI2NLM(self.gv).run()
+            # run bibliographic addins handler
+            BibliographyAddins(self.gv).run()
+
+            # tei
+            TeiManipulate(self.gv).run()
+            # run tei to nlm conversion
+            TEI2NLM(self.gv).run()
 
     def run(self):
         self.run_modules()
