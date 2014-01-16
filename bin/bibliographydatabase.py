@@ -14,13 +14,13 @@ import tempfile
 from nlmmanipulate import NlmManipulate
 import os
 
+
 class BibliographyDatabase(Debuggable):
     def __init__(self, global_variables):
         self.gv = global_variables
         self.debug = self.gv.debug
         self.size_cutoff = 16
         Debuggable.__init__(self, 'Bibliography Database')
-
 
     def scan(self):
         self.gv.nlm_file_path = self.gv.settings.args['<input>']
@@ -32,5 +32,8 @@ class BibliographyDatabase(Debuggable):
         tree = manipulate.return_elements('//element-citation')
 
         for item in tree:
-            # todo: if we have an author and a title, store this in the database
+            # todo: if we have an author, a title and a year, store this in the database
             print item
+
+    def retrieve(self, author, title, year):
+        raise NotImplementedError()
