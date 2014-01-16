@@ -24,6 +24,10 @@ class Manipulate(Debuggable):
         return etree.parse(filename, p)
 
     @staticmethod
+    def set_dom_tree_with_parser(filename, p):
+        return etree.parse(filename, p)
+
+    @staticmethod
     def update_tmp_file(fr, to):
         shutil.copy2(fr, to)
 
@@ -94,7 +98,8 @@ class Manipulate(Debuggable):
 
     def load_dom_read(self):
         # load the DOM for read only access
-        tree = self.set_dom_tree(self.dom_to_load)
+        parser = etree.XMLParser(recover=True)
+        tree = self.set_dom_tree_with_parser(self.dom_to_load, parser)
         return tree
 
     def load_dom_tree(self):
