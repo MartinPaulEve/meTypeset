@@ -97,7 +97,7 @@ Library           Collections
     [Teardown]    Remove Directory    005    recursive=True
 
 006 Basic footnote test
-    [Tags]    formatting    title    footnotes
+    [Tags]    formatting    title    footnotes    006
     ${result} =    Run Process    python ../bin/meTypeset.py docx Footnote.docx ./006 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}

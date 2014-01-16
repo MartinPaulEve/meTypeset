@@ -356,51 +356,6 @@ of this software, even if advised of the possibility of such damage.
     </xsl:for-each>
   </xsl:function>
 
-
-
-  <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
-      <desc>[common] handle character data.
-      Following http://wiki.tei-c.org/index.php/XML_Whitespace#XSLT_Normalization_Code,
-      the algorithm to normalize space in mixed content is:
-      Collapse all white space, then
-      trim leading space on the first text node in an element and
-      trim trailing space on the last text node in an element,
-      trim both if a text node is both first and last, i.e., is the only text node in the element.
-      </desc>
-  </doc>
-    <xsl:template match="text()">
-      <xsl:choose>
-	<xsl:when
-	    test="ancestor::*[@xml:space][1]/@xml:space='preserve'">
-	  <xsl:value-of select="tei:escapeChars(.,parent::*)"/>
-	</xsl:when>
-	<xsl:otherwise>
-        <!-- Retain one leading space if node isn't first, has
-	     non-space content, and has leading space.-->
-	<xsl:if test="position()!=1 and 
-		      matches(.,'^\s') and 
-		      normalize-space()!=''">
-	  <xsl:text> </xsl:text>
-	</xsl:if>
-	<xsl:value-of select="tei:escapeChars(normalize-space(.),parent::*)"/>
-	<xsl:choose>
-	  <!-- node is an only child, and has content but it's all space -->
-	  <xsl:when test="last()=1 and string-length()!=0 and normalize-space()=''">
-	    <xsl:text> </xsl:text>
-	  </xsl:when>
-	  <!-- node isn't last, isn't first, and has trailing space -->
-	  <xsl:when test="position()!=1 and position()!=last() and matches(.,'\s$')">
-	    <xsl:text> </xsl:text>
-	  </xsl:when>
-	  <!-- node isn't last, is first, has trailing space, and has non-space content   -->
-	  <xsl:when test="position()=1 and matches(.,'\s$') and normalize-space()!=''">
-            <xsl:text> </xsl:text>
-	  </xsl:when>
-	</xsl:choose>
-	</xsl:otherwise>
-      </xsl:choose>
-    </xsl:template>
-
   <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
       <desc>[common] allow for further handling of text. By default,
       just normalize, but some formats may escape some characters.</desc></doc>
