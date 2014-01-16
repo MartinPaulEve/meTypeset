@@ -240,12 +240,13 @@ class SizeClassifier(Debuggable):
         if len(sizes) == 1:
             for size in sizes:
                 # loop will only execute once
-                if size >= self.size_cutoff:
+                if int(size) >= int(self.size_cutoff):
                     # if the size is greater than or equal to 16, treat it as a heading
                     self.debug.print_debug(self,
-                                           u'Found single explicitly specified size greater than or equal to {0}. '
-                                           u'Treating as a heading.'.format(
-                                               str(self.size_cutoff)))
+                                           u'Found single explicitly specified size ({0}) greater '
+                                           u'than or equal to {1}. '
+                                           u'Treating as a heading.'.format(str(size),
+                                                                            str(self.size_cutoff)))
 
                     # instruct the manipulator to change the parent tag of every tag it finds containing
                     # a "hi" tag with meTypesetSize set to the value found to "title"
