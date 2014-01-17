@@ -34,6 +34,7 @@ class TEI2NLM (Debuggable):
             manipulate.close_and_open_tag('comment()[. = "meTypeset:br"]', 'p')
             manipulate.tag_inline_refs()
             manipulate.find_reference_list()
+            mainpulate.tag_bibliography_refs()
 
     def run_transform(self):
         self.gv.mk_dir(self.gv.nlm_folder_path)
