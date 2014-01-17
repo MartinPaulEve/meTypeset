@@ -32,6 +32,8 @@ class TEI2NLM (Debuggable):
             # we need to convert every instance of <!--meTypeset:br--> to a new paragraph
             manipulate = NlmManipulate(self.gv)
             manipulate.close_and_open_tag('comment()[. = "meTypeset:br"]', 'p')
+            manipulate.tag_inline_refs()
+            manipulate.find_reference_list()
 
     def run_transform(self):
         self.gv.mk_dir(self.gv.nlm_folder_path)

@@ -3,6 +3,7 @@ __email__ = "martin@martineve.com"
 
 from manipulate import Manipulate
 from lxml import etree
+import re
 
 
 class NlmManipulate(Manipulate):
@@ -159,5 +160,22 @@ class NlmManipulate(Manipulate):
         tree.write(self.dom_temp_file)
         tree.write(self.dom_to_load)
 
+    def tag_inline_refs(self):
+        tree = self.load_dom_tree()
+        for paragraph in tree.xpath('//p//node()'):
+            # tag numbered refs
+            xref_pargraph_numbered = re.sub(r'(,|\[)([0-9]{1,3})(,|\])',r'\[<xref id="\2" ref-type="bibr">\2</xref>\]',paragraph)
+            # tag authorname refs
+            # first_author_list does not currently exist!
+            for authorname in first_author_list:
+                namestring = r'(\(.*?'+authorname+r'.*?[^amp](;|\)))'
+                xref_paragraph = re.sub(namestring,r'<xref id="'+(r+1)+r'" ref-type="bibr">\1</xref>',xref_paragraph_numbered)
+            paragraph = xref_paragraph
+        tree.write(self.gv.nlm_file_path)
 
-
+    def find_reference_list(self):
+        tree = self.load_dom_tree()
+        indentmethod = tree.xpath('//sec[title][disp-quote] | //sec[title][list-item]')
+        if indentmethod:
+            indentmethod.attrib['reflist'] = 'yes'
+        tree.write(self.gv.nlm_file_path)
