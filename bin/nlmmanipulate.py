@@ -178,4 +178,15 @@ class NlmManipulate(Manipulate):
         indentmethod = tree.xpath('//sec[title][disp-quote] | //sec[title][list-item]')
         if indentmethod:
             indentmethod.attrib['reflist'] = 'yes'
+        # add other methods here and use classifier code to evaluate which of several //sec[@reflist="yes"] elements should be changed to <ref-list>
+        tree.write(self.gv.nlm_file_path)
+
+    def tag_refs(self):
+        tree = self.load_dom_tree()
+        rid = 1
+        # change this to find <ref-list> elements after we're more certain of how to identify them
+        for refs in tree.xpath('//sec[@reflist="yes"]/p | //sec[@reflist="yes"]/list-item | //sec[@reflist="yes"]/disp-quote'):
+            refs.tag = 'ref'
+            refs.attrib['rid'] = rid
+            rid += 1
         tree.write(self.gv.nlm_file_path)
