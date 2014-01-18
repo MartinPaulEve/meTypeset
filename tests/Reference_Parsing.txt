@@ -1,0 +1,17 @@
+*** Settings ***
+Documentation     This series of test cases evaluates meTypeset's ability to handle various aspects of scholarly referencing
+Library           Process
+Library           OperatingSystem
+Library           XML
+Library           Collections
+
+*** Test Cases ***
+R01 Environment
+    [Tags]    references    inline    R01
+    ${result} =    Run Process    python ../bin/meTypeset.py docx SimpleInline.docx ./Inline -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./Inline/nlm/out.xml
+    ${paragraph}=    Get Element    ${xml}    body/sec/p
+    Elements Should Match    ${paragraph}    <p>Before <xref id="INSERT ID HERE" ref-type="bibr">(Eve 2012)</xref> after</p>
+    [Teardown]    Remove Directory    Inline    recursive=True
