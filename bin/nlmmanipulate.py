@@ -178,7 +178,6 @@ class NlmManipulate(Manipulate):
                                  xref_paragraph_numbered)
 
                 if match:
-                    print match
                     xref = etree.Element('xref', {'id':'INSERT ID HERE', 'ref-type':'bibr'})
                     xref.text = u'({0})'.format(match.group('author'))
                     xref.tail = match.group('after')
