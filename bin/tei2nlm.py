@@ -28,13 +28,14 @@ class TEI2NLM (Debuggable):
             return ' '.join(cmd)
 
     def run_quirks(self):
+        manipulate = NlmManipulate(self.gv)
         if self.gv.setting('linebreaks-as-comments') == 'False':
             # we need to convert every instance of <!--meTypeset:br--> to a new paragraph
-            manipulate = NlmManipulate(self.gv)
             manipulate.close_and_open_tag('comment()[. = "meTypeset:br"]', 'p')
-            manipulate.tag_inline_refs()
-            manipulate.find_reference_list()
-            mainpulate.tag_bibliography_refs()
+
+        manipulate.tag_inline_refs()
+        manipulate.find_reference_list()
+        manipulate.tag_bibliography_refs()
 
     def run_transform(self):
         self.gv.mk_dir(self.gv.nlm_folder_path)

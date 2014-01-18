@@ -162,15 +162,34 @@ class NlmManipulate(Manipulate):
 
     def tag_inline_refs(self):
         tree = self.load_dom_tree()
-        for paragraph in tree.xpath('//p//node()'):
+
+        for paragraph in tree.xpath('//*//text()'):
             # tag numbered refs
-            xref_pargraph_numbered = re.sub(r'(,|\[)([0-9]{1,3})(,|\])',r'\[<xref id="\2" ref-type="bibr">\2</xref>\]',paragraph)
+            xref_paragraph_numbered = re.sub(r'(,|\[)([0-9]{1,3})(,|\])',
+                                             r'\[<xref id="\2" ref-type="bibr">\2</xref>\]', paragraph)
             # tag authorname refs
             # first_author_list does not currently exist!
+
+            # populate a dummy first_author_list for testing
+            first_author_list = ['Eve']
+
             for authorname in first_author_list:
-                namestring = r'(\(.*?'+authorname+r'.*?[^amp](;|\)))'
-                xref_paragraph = re.sub(namestring,r'<xref id="'+(r+1)+r'" ref-type="bibr">\1</xref>',xref_paragraph_numbered)
-            paragraph = xref_paragraph
+                match = re.match(r'(?P<before>.+?)\((?P<author>.*?' + authorname + r'.*?[^amp])(;|\))(?P<after>.+)',
+                                 xref_paragraph_numbered)
+
+                if match:
+                    print match
+                    xref = etree.Element('xref', {'id':'INSERT ID HERE', 'ref-type':'bibr'})
+                    xref.text = u'({0})'.format(match.group('author'))
+                    xref.tail = match.group('after')
+
+                    paragraph.getparent().text = match.group('before')
+                    paragraph.getparent().insert(0, xref)
+
+
+                    self.debug.print_debug(self, u'Inline reference handler detected and replaced '
+                                                 u'{0}'.format(u'({0})'.format(match.group('author'))))
+
         tree.write(self.gv.nlm_file_path)
 
     def find_reference_list(self):
@@ -178,14 +197,16 @@ class NlmManipulate(Manipulate):
         indentmethod = tree.xpath('//sec[title][disp-quote] | //sec[title][list]')
         if indentmethod:
             indentmethod.attrib['reflist'] = 'yes'
-        # add other methods here and use classifier code to evaluate which of several //sec[@reflist="yes"] elements should be changed to <ref-list>
+        # add other methods here and use classifier code to evaluate which of several
+        # //sec[@reflist="yes"] elements should be changed to <ref-list>
         tree.write(self.gv.nlm_file_path)
 
     def tag_bibliography_refs(self):
         tree = self.load_dom_tree()
         rid = 1
         # change this to find <ref-list> elements after we're more certain of how to identify them
-        for refs in tree.xpath('//sec[@reflist="yes"]/p | //sec[@reflist="yes"]/*/list-item | //sec[@reflist="yes"]/disp-quote'):
+        for refs in tree.xpath('//sec[@reflist="yes"]/p | //sec[@reflist="yes"]/*/list-item | '
+                               '//sec[@reflist="yes"]/disp-quote'):
             refs.tag = 'ref'
             refs.attrib['rid'] = rid
             rid += 1
