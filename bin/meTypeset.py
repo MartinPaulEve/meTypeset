@@ -2,16 +2,16 @@
 """meTypeset: text parsing library to convert word documents to the JATS XML format
 
 Usage:
-    meTypeset.py docx               <input>     <output_folder> [options]
-    meTypeset.py docxextracted      <input>     <output_folder> [options]
-    meTypeset.py bibscan            <input>     [options]
+    meTypeset.py docx <input> <output_folder> [options]
+    meTypeset.py docxextracted <input> <output_folder> [options]
+    meTypeset.py bibscan <input> [options]
 
 Options:
-    -d, --debug                     Enable debug output
-    -h, --help                      Show this screen.
-    -m, --metadata <metadata_file>  Metadata file
-    -s, --settings <settings_file>  Settings file
-    --version                       Show version.
+    -d, --debug                                     Enable debug output
+    -h, --help                                      Show this screen.
+    -m <metadata_file>, --metadata <metadata_file>  Metadata file
+    -s <settings_file>, --settings <settings_file>  Settings file
+    -v, --version                                   Show version.
 
 """
 
