@@ -6,7 +6,7 @@ Library           XML
 Library           Collections
 
 *** Test Cases ***
-R01 Environment
+R01 Simple Inline Reference
     [Tags]    references    inline    R01
     ${result} =    Run Process    python ../bin/meTypeset.py docx SimpleInline.docx ./Inline -d    shell=True
     Log    ${result.stdout}
