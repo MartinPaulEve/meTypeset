@@ -51,6 +51,18 @@ class SizeClassifier(Debuggable):
 
         return etree.parse(filename, p)
 
+    @staticmethod
+    def handle_bold_only_paragraph(manipulate, root_size):
+        """
+        This method looks for paragraphs that contain only bold text. It then transforms them to titles.
+        @param manipulate: a TeiManipulator object
+        @param root_size: the size styling to apply to these elements
+        """
+        expression = u'////tei:p[* and not(text()) and not(*[not(self::tei:hi[@rend="bold"])])]/tei:hi'
+
+        manipulate.change_self_size(expression, str(root_size))
+
+
     def enclose_larger_heading(self, iteration, manipulate, next_size, section_ids, section_stack, size):
         self.debug.print_debug(self,
                                u'Encountered larger block as following (size: {0}, next size: {1}) '
@@ -222,14 +234,15 @@ class SizeClassifier(Debuggable):
 
     def run(self):
         # load the DOM
-        """
-        Test cases needed:
-        H20 -> H19 -> H18 (size nesting)
-        H20 -> H19 -> H18 -> H19 (size increase in step)
-        H20 -> H19 -> H19 (sibling alignment)
-        H20 -> H22 (a situation in which we have to normalise illogically nested tags)
-        H20 -> H19 -> H18 -> H20 -> H18 (a case that demonstrates the need for the positional stack)
-        """
+        tree = self.set_dom_tree(self.gv.tei_file_path)
+
+        manipulate = TeiManipulate(self.gv)
+
+        # transform bolded paragraphs into size-attributes with an extremely high threshold (so will be thought of as
+        # root nodes)
+        self.handle_bold_only_paragraph(manipulate, 100)
+
+        # reload the DOM
         tree = self.set_dom_tree(self.gv.tei_file_path)
 
         # get a numerical list of explicit size values inside meTypesetSize attributes
@@ -239,9 +252,6 @@ class SizeClassifier(Debuggable):
             self.debug.print_debug(self,
                                    u'Explicitly specified size variations and their frequency of '
                                    u'occurrence: {0}'.format(str(sizes)))
-
-        # depending on the length of the array we will parse differently
-        manipulate = TeiManipulate(self.gv)
 
         if len(sizes) == 1:
             for size in sizes:

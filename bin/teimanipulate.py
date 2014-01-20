@@ -115,6 +115,16 @@ class TeiManipulate(Manipulate):
 
         tree.write(self.gv.tei_file_path)
 
+    # changes the parent element of the outer_xpath expression to the new_value
+    def change_self_size(self, outer_xpath, size_attribute):
+        tree = self.load_dom_tree()
+
+        # search the tree and grab the parent
+        for child in tree.xpath(outer_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            child.attrib['meTypesetSize'] = size_attribute
+
+        tree.write(self.gv.tei_file_path)
+
     def move_size_div(self, heading_id, sibling_id):
         tree = self.load_dom_tree()
 
