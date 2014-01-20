@@ -29,6 +29,7 @@ from globals import *
 from debug import Debuggable
 from bibliographyAddins import BibliographyAddins
 from bibliographydatabase import BibliographyDatabase
+from metadata import Metadata
 
 
 # check whether lxml is installed
@@ -153,8 +154,12 @@ class MeTypeset (Debuggable):
 
             # tei
             TeiManipulate(self.gv).run()
+
             # run tei to nlm conversion
             TEI2NLM(self.gv).run()
+
+            # run metadata merge
+            Metadata(self.gv).run()
 
     def run(self):
         self.run_modules()

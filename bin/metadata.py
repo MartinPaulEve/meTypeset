@@ -11,15 +11,15 @@ class Metadata():
         self.gv = gv
 
     def attach_metadata(self):
-        cmd = ["java", "-classpath", self.gv.JAVA_CLASS_PATH,
-               "-Dxml.catalog.files=" + self.gv.RUNTIME_CATALOG_PATH,
+        cmd = ["java", "-classpath", self.gv.java_class_path,
+               "-Dxml.catalog.files=" + self.gv.runtime_catalog_path,
                "net.sf.saxon.Transform",
                "-x", "org.apache.xml.resolver.tools.ResolvingXMLReader",
                "-y", "org.apache.xml.resolver.tools.ResolvingXMLReader",
                "-r", "org.apache.xml.resolver.tools.CatalogResolver",
-               "-o", self.gv.NLM_FILE_PATH,
-               self.gv.NLM_TEMP_FILE_PATH,
-               self.gv.METADATA_STYLE_SHEET_PATH,
+               "-o", self.gv.nlm_file_path,
+               self.gv.nlm_temp_file_path,
+               self.gv.metadata_style_sheet_path,
                'metadataFile=' + self.gv.metadata_file
         ]
         return ' '.join(cmd)
