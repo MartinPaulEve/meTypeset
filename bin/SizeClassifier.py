@@ -276,3 +276,6 @@ class SizeClassifier(Debuggable):
 
         elif len(sizes) > 1:
             self.create_sections(manipulate, sizes)
+
+            # enclose all bolded tags within section tags
+            manipulate.enclose_all('//tei:hi[@meTypesetSize=\'{0}\']/..'.format(100), 'div', 1)

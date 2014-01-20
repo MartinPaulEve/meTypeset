@@ -85,15 +85,8 @@ Library           Collections
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./005/nlm/out.xml
-    ${sections}=    Get Elements    ${xml}    body/sec
-    ${firstsection}=    Get from list    ${sections}    0
-    ${firstsectiontitle}=    Get Element    ${firstsection}    title
-    ${firstsectionparagraph}=    Get Element    ${firstsection}    paragraph
-    ${secondsection}=    Get from list    ${sections}    1
-    ${secondsectiontitle}=    Get Element    ${secondsection}    title
-    Elements Should Match    ${firstsectiontitle}    <title>This should be treated as a title.</title>
-    Elements Should Match    ${firstsectionparagraph}    <p>This shouldn't.</p>
-    Elements Should Match    ${secondsectiontitle}    <title>This should.</title>
+    ${body}=    Get Element    ${xml}    body
+    Elements Should Match    ${body}    <body><sec><title><bold>This should be treated as a title.</bold></title><p>This shouldn't.</p></sec><sec><title><bold>This should.</bold></title></sec></body>    normalize_whitespace=yes
     [Teardown]    Remove Directory    005    recursive=True
 
 006 Basic footnote test
