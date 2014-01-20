@@ -76,6 +76,7 @@ class TeiManipulate(Manipulate):
                                                  namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
                     if len(sub_element) > 0:
+                        sub_element = sub_element[0]
                         self.debug.print_debug(self, u'Preserving tail of '
                                                      u'dropped {0} element: {1}'.format(caller.get_module_name(),
                                                                                         sub_element.tail))
