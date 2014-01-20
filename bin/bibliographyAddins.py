@@ -35,11 +35,15 @@ class OtherHandler(Debuggable):
     def run(self):
         tei_manipulator = TeiManipulate(self.gv)
         object_list = tei_manipulator.get_object_list('//*', ' ADDIN', u'addin')
+
+        drop = self.gv.setting('drop-unknown-addins')
+
         tei_manipulator.drop_addin('//*', ' ADDIN', 'EndNote',
-                                   'hi', 'unknown_addin_text', self, u'addin', True)
+                                   'hi', 'unknown_addin_text', self, u'addin',
+                                   drop == 'True')
 
         if len(object_list) > 0:
-            self.debug.print_debug(self, u'Dropped {0} unknown addin tags'.format(len(object_list)))
+            self.debug.print_debug(self, u'Handled {0} unknown addin tags'.format(len(object_list)))
 
         return object_list
 
@@ -49,6 +53,7 @@ class BibliographyAddins(Debuggable):
         self.gv = gv
         self.debug = self.gv.debug
         self.zotero_items = []
+        self.other_items = []
         self.zotero_handler = ZoteroHandler(self.gv)
         self.other_handler = OtherHandler(self.gv)
         Debuggable.__init__(self, 'Bibliography Handler')

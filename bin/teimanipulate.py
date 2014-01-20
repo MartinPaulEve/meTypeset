@@ -83,7 +83,6 @@ class TeiManipulate(Manipulate):
                         # add the preserved tail text within the specified replacement tag type
                         new_element = etree.Element(replace_tag, rel = attribute)
                         new_element.text = sub_element.tail
-
                         child.addnext(new_element)
 
                     if delete_original:
