@@ -307,6 +307,11 @@
             <xsl:for-each select="$bibl/listBibl/biblStruct">
               <xsl:apply-templates select="." />
             </xsl:for-each>
+            
+            <!-- meTypeset addition to handle Zotero bibliographic items -->
+            <xsl:for-each select="$bibl/p[@rend='Bibliography']">
+              <xsl:apply-templates select="." />
+            </xsl:for-each>
           </xsl:element>
         </xsl:if>
       </xsl:element>
