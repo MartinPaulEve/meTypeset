@@ -121,7 +121,10 @@ class TeiManipulate(Manipulate):
 
         # search the tree and grab the parent
         for child in tree.xpath(outer_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            child.attrib['meTypesetSize'] = size_attribute
+            child.attrib[u'meTypesetSize'] = size_attribute
+            if not (child.attrib['rend'] is None):
+                if u'bold' in child.attrib[u'rend']:
+                    child.attrib[u'rend'] = child.attrib[u'rend'].replace(u'bold', u'')
 
         tree.write(self.gv.tei_file_path)
 
