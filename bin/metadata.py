@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import subprocess
+from manipulate import Manipulate
 
 __author__ = "Dulip Withanage"
 __email__ = "dulip.withanage@gmail.com"
@@ -20,10 +21,13 @@ class Metadata():
                "-o", self.gv.nlm_file_path,
                self.gv.nlm_temp_file_path,
                self.gv.metadata_style_sheet_path,
-               'metadataFile=' + self.gv.metadata_file
+               'metadataFile=' + self.gv.input_metadata_file_path
         ]
         return ' '.join(cmd)
 
     def run(self):
         java_command = self.attach_metadata()
         subprocess.call(java_command, stdin=None, shell=True)
+
+        # copy back to the temp file for debug purposes
+        Manipulate.update_tmp_file(self.gv.nlm_file_path, self.gv.nlm_temp_file_path)

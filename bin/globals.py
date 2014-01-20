@@ -27,7 +27,8 @@ class GV (Debuggable):
             self.input_file_path = settings.args['<input>'].strip()
 
             self.input_metadata_file_path = settings.args['--metadata'] if settings.args[
-                '--metadata'] else settings.script_dir + self.value_for_tag(settings, 'default-metadata-file-path')
+                '--metadata'] else os.path.join(settings.script_dir,
+                                                self.value_for_tag(settings, 'default-metadata-file-path'))
 
             filename_sep = ntpath.basename(self.input_file_path)
             self.output_folder_path = os.path.expanduser(settings.args['<output_folder>'])
