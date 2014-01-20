@@ -195,11 +195,12 @@ class SizeClassifier(Debuggable):
         processed_flag = False
 
         root_size = sizes_ordered[0]
+
         # assign IDs to every single heading tag for easy manipulation
         manipulate.tag_headings()
         # normalize sizes: we cannot have a size bigger than the root node; there's no sensible way to detect this
         for size in sizes:
-            if size > root_size:
+            if int(size) > int(root_size):
                 self.debug.print_debug(self,
                                        u'Downsizing headings of {0} to maximum root size {1}'.format(str(size),
                                                                                                      str(root_size)))
@@ -278,4 +279,4 @@ class SizeClassifier(Debuggable):
             self.create_sections(manipulate, sizes)
 
             # enclose all bolded tags within section tags
-            manipulate.enclose_all('//tei:hi[@meTypesetSize=\'{0}\']/..'.format(100), 'div', 1)
+            #manipulate.enclose_all('//tei:hi[@meTypesetSize=\'{0}\']/..'.format(100), 'div', 1)
