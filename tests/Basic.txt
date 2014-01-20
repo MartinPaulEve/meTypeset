@@ -80,7 +80,7 @@ Library           Collections
     [Teardown]    Remove Directory    004    recursive=True
 
 005 Title, non-title, title (from bolded text)
-    [Tags]    formatting    bold    title
+    [Tags]    formatting    bold    title    005
     ${result} =    Run Process    python ../bin/meTypeset.py docx 005.docx ./005 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}

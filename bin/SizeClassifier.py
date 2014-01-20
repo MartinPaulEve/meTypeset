@@ -271,5 +271,8 @@ class SizeClassifier(Debuggable):
                     # <title><hi meTypesetSize="18">some text</hi></title>
                     manipulate.change_outer('//tei:hi[@meTypesetSize=\'{0}\']'.format(size), 'head', size)
 
+                    # enclose all of these entries within section tags
+                    manipulate.enclose_all('//tei:hi[@meTypesetSize=\'{0}\']/..'.format(size), 'div', 1)
+
         elif len(sizes) > 1:
             self.create_sections(manipulate, sizes)

@@ -165,6 +165,27 @@ class TeiManipulate(Manipulate):
 
         tree.write(self.gv.tei_file_path)
 
+    def enclose_all(self, start_xpath, new_enclose, start_index):
+        tree = self.load_dom_tree()
+
+        self.debug.print_debug(self, 'Selecting for enclosure: {0}'.format(start_xpath))
+
+        # search the tree and grab the elements
+        child = tree.xpath(start_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+
+        index = 0
+
+        # move the elements
+        for element in child:
+            if index >= start_index:
+                div = etree.Element(new_enclose)
+                element.getparent().addnext(div)
+                div.append(element)
+
+            index += 1
+
+        tree.write(self.gv.tei_file_path)
+
     def change_wmf_image_links(self):
         tree = self.load_dom_tree()
         for image_link in tree.xpath('//tei:graphic', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
