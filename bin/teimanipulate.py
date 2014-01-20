@@ -18,7 +18,7 @@ class TeiManipulate(Manipulate):
         self.mod_name = 'TEI'
         Manipulate.__init__(self, gv)
 
-    def get_object_list(self, xpath, start_text):
+    def get_object_list(self, xpath, start_text, wrap_tag):
         # load the DOM
         tree = self.load_dom_tree()
 
@@ -26,9 +26,11 @@ class TeiManipulate(Manipulate):
 
         # search the tree and grab the parent
         for child in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            if child.text.startswith(start_text):
-                object_list.append(objectify.fromstring(u'<zoterobiblio><entry>{0}'
-                                                        u'</entry></zoterobiblio>'.format(etree.tostring(child))))
+            if not (child.text is None):
+                if child.text.startswith(start_text):
+                    object_list.append(objectify.fromstring(u'<{1}><entry>{0}'
+                                                            u'</entry></{1}>'.format(etree.tostring(child),
+                                                                                     wrap_tag)))
 
         return object_list
 
@@ -43,7 +45,7 @@ class TeiManipulate(Manipulate):
             if child.text.startswith(start_text):
                 tag_to_parse = re.sub(r'.+}\s', '', child.text)
 
-                new_element = etree.Element(replace_tag, rel = attribute)
+                new_element = etree.Element(replace_tag, rel=attribute)
                 new_element.text = tag_to_parse
 
                 child.addnext(new_element)
@@ -56,31 +58,36 @@ class TeiManipulate(Manipulate):
 
         tree.write(self.gv.tei_file_path)
 
-    def drop_addin(self, xpath, start_text, sub_tag, replace_tag, attribute, caller, wrap_tag):
+    def drop_addin(self, xpath, start_text, sub_tag, replace_tag, attribute, caller, wrap_tag, delete_original):
         # load the DOM
         tree = self.load_dom_tree()
 
         # search the tree and grab the parent
         for child in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            # check that this is a known addin
-            if child.text.startswith(start_text):
-                # parse the (encoded) text of this element into a new tree
-                tag_to_parse = re.sub(r'&', '&amp;', child.text)
-                sub_tree = etree.fromstring(u'<{1}><entry>{0}</entry></{1}>'.format(tag_to_parse, wrap_tag))
+            if not (child.text is None):
+                # check that this is a known addin
+                if child.text.startswith(start_text):
+                    # parse the (encoded) text of this element into a new tree
+                    tag_to_parse = re.sub(r'&', '&amp;', child.text)
+                    sub_tree = etree.fromstring(u'<{1}><entry>{0}</entry></{1}>'.format(tag_to_parse, wrap_tag))
 
-                # extract the sub element from this new tree and preserve the tail text
-                sub_element = sub_tree.xpath('//entry/{0}'.format(sub_tag),
-                                             namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
-                self.debug.print_debug(self, u'Preserving tail of '
-                                             u'dropped {0} element: {1}'.format(caller.get_module_name(),
-                                                                                sub_element.tail))
+                    # extract the sub element from this new tree and preserve the tail text
+                    sub_element = sub_tree.xpath('//entry/{0}'.format(sub_tag),
+                                                 namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
-                # add the preserved tail text within the specified replacement tag type
-                new_element = etree.Element(replace_tag, rel = attribute)
-                new_element.text = sub_element.tail
+                    if len(sub_element) > 0:
+                        self.debug.print_debug(self, u'Preserving tail of '
+                                                     u'dropped {0} element: {1}'.format(caller.get_module_name(),
+                                                                                        sub_element.tail))
 
-                child.addnext(new_element)
-                child.getparent().remove(child)
+                        # add the preserved tail text within the specified replacement tag type
+                        new_element = etree.Element(replace_tag, rel = attribute)
+                        new_element.text = sub_element.tail
+
+                        child.addnext(new_element)
+
+                    if delete_original:
+                        child.getparent().remove(child)
 
         tree.write(self.gv.tei_file_path)
 
