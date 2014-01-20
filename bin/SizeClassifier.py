@@ -126,6 +126,45 @@ class SizeClassifier(Debuggable):
                            u"@meTypesetHeadingID=\'{2}\']]".format(
                                str(iteration), str(iteration), str(iteration + 1)))
 
+    def process_subsequent_headings(self, iteration, manipulate, processed_flag, section_ids, section_stack, size,
+                                    sizes_ordered):
+        if not processed_flag:
+
+            # ascertain the next size
+            if iteration < (len(sizes_ordered) - 1):
+                next_size = sizes_ordered[iteration + 1]
+
+                if size == next_size:
+                    self.enclose_same_size_heading(iteration, manipulate, size)
+
+                if size > next_size:
+                    self.enclose_smaller_heading(iteration, manipulate, next_size, size)
+
+                elif size < next_size:
+                    self.enclose_larger_heading(iteration, manipulate, next_size, section_ids, section_stack,
+                                                size)
+
+                    # create a slice of the stack so that we can modify the original while iterating
+                    temp_stack = section_stack[:]
+                    pointer = len(section_stack)
+
+                    # pop the stack until the current level
+                    while temp_stack[pointer - 1] > size and (pointer - 1) != 0:
+                        section_stack.pop()
+                        section_ids.pop()
+                        pointer -= 1
+
+                    # set the processed flag so that the next enclosure isn't handled
+                    processed_flag = True
+            else:
+            # this is the last heading so there is no future comparator
+                self.enclose_last_heading(iteration, manipulate, section_ids, section_stack, size)
+
+        else:
+            self.debug.print_debug(self, u'Size ID: {0} was already processed'.format(str(iteration)))
+            processed_flag = False
+        return processed_flag
+
     def create_sections(self, manipulate, sizes):
         # first, we want a sorted representation (of tuples) of the frequency dictionary
         iteration = 0
@@ -167,41 +206,8 @@ class SizeClassifier(Debuggable):
                 pass
             else:
                 # this block is triggered when we reach any heading but the first
-                if not processed_flag:
-
-                    # ascertain the next size
-                    if iteration < (len(sizes_ordered) - 1):
-                        next_size = sizes_ordered[iteration + 1]
-
-                        if size == next_size:
-                            self.enclose_same_size_heading(iteration, manipulate, size)
-
-                        if size > next_size:
-                            self.enclose_smaller_heading(iteration, manipulate, next_size, size)
-
-                        elif size < next_size:
-                            self.enclose_larger_heading(iteration, manipulate, next_size, section_ids, section_stack,
-                                                        size)
-
-                            # create a slice of the stack so that we can modify the original while iterating
-                            temp_stack = section_stack[:]
-                            pointer = len(section_stack)
-
-                            # pop the stack until the current level
-                            while temp_stack[pointer - 1] > size and (pointer - 1) != 0:
-                                section_stack.pop()
-                                section_ids.pop()
-                                pointer -= 1
-
-                            # set the processed flag so that the next enclosure isn't handled
-                            processed_flag = True
-                    else:
-                    # this is the last heading so there is no future comparator
-                        self.enclose_last_heading(iteration, manipulate, section_ids, section_stack, size)
-
-                else:
-                    self.debug.print_debug(self, u'Size ID: {0} was already processed'.format(str(iteration)))
-                    processed_flag = False
+                processed_flag = self.process_subsequent_headings(iteration, manipulate, processed_flag, section_ids,
+                                                                  section_stack, size, sizes_ordered)
 
             section_count[size] += 1
 
