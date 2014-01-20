@@ -11,6 +11,16 @@ class ZoteroHandler(Debuggable):
         self.debug = self.gv.debug
         Debuggable.__init__(self, 'Zotero Handler')
 
+    def handle_bibliography(self, tei_manipulator):
+        # remove the Zotero crap marker
+        tei_manipulator.tag_bibliography('//tei:p[@rend="Bibliography"]/tei:ref',
+                                         ' ADDIN ZOTERO_BIBL {"custom":[]} CSL_BIBLIOGRAPHY',
+                                         self)
+
+        # create a back/div[@type='bibliogr'] section
+        tei_manipulator.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]', 'back', 'div', 'type', 'bibliogr')
+
+
     def run(self):
         tei_manipulator = TeiManipulate(self.gv)
         object_list = tei_manipulator.get_object_list('//tei:ref[@rend="ref"]', ' ADDIN EN.CITE', u'zoterobiblio')
@@ -21,10 +31,14 @@ class ZoteroHandler(Debuggable):
         tei_manipulator.drop_addin_json('//tei:ref', ' ADDIN ZOTERO_ITEM CSL_CITATION',
                                         'hi', 'reference_to_link', self)
 
+        # handle bibliography
+        self.handle_bibliography(tei_manipulator)
+
         if len(object_list) > 0:
             self.debug.print_debug(self, u'Stashed {0} references for bibliography parsing'.format(len(object_list)))
 
         return object_list
+
 
 class OtherHandler(Debuggable):
     def __init__(self, gv):

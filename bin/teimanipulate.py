@@ -58,6 +58,45 @@ class TeiManipulate(Manipulate):
 
         tree.write(self.gv.tei_file_path)
 
+    def enclose_bibliography_tags(self, xpath, top_tag, sub_tag, attrib, attribvalue):
+        #tei_manipulator.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]', 'back', 'div', 'type', 'bibliogr')
+        # load the DOM
+        tree = self.load_dom_tree()
+
+        parent = None
+        self_element = None
+
+        # find the parent
+        try:
+            parent = tree.xpath('//tei:body', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+            self_element = tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+        except:
+            return
+
+        new_element = etree.Element(top_tag)
+        sub_element = etree.Element(sub_tag)
+
+        sub_element.attrib[attrib] = attribvalue
+
+        new_element.insert(0, sub_element)
+
+        parent.addnext(new_element)
+
+        for element in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            sub_element.append(element)
+
+        tree.write(self.gv.tei_file_path)
+
+    def tag_bibliography(self, xpath, start_text, caller):
+        # load the DOM
+        tree = self.load_dom_tree()
+
+        for child in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            if child.text.startswith(start_text):
+                child.text = child.text.replace(start_text, '')
+
+        tree.write(self.gv.tei_file_path)
+
     def drop_addin(self, xpath, start_text, sub_tag, replace_tag, attribute, caller, wrap_tag, delete_original):
         # load the DOM
         tree = self.load_dom_tree()
