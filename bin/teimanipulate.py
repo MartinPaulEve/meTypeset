@@ -64,12 +64,10 @@ class TeiManipulate(Manipulate):
         tree = self.load_dom_tree()
 
         parent = None
-        self_element = None
 
         # find the parent
         try:
             parent = tree.xpath('//tei:body', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
-            self_element = tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
         except:
             return
 
@@ -84,6 +82,19 @@ class TeiManipulate(Manipulate):
 
         for element in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             sub_element.append(element)
+
+        # remove all refs within
+        for ref in tree.xpath('//tei:p[@rend="Bibliography"]/tei:ref',
+                              namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            ref.tag = 'p'
+            ref.attrib['rend'] = 'Bibliography'
+            del ref.attrib['target']
+
+            ref_parent = ref.getparent()
+
+            ref_parent.addnext(ref)
+
+            ref_parent.getparent().remove(ref_parent)
 
         tree.write(self.gv.tei_file_path)
 

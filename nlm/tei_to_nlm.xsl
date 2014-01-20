@@ -301,8 +301,7 @@
         <xsl:if test="TEI/text/back/div[@type='bibliogr']">
           <xsl:variable name="bibl" select="TEI/text/back/div[@type='bibliogr']"></xsl:variable>
           <xsl:element name="ref-list">
-<!-- If there's no title tag, we have to add an empty one. -->
-            <title><xsl:value-of select="$bibl/head" /></title>
+
 <!-- Now process each of the reference items. -->
             <xsl:for-each select="$bibl/listBibl/biblStruct">
               <xsl:apply-templates select="." />
@@ -317,6 +316,15 @@
       </xsl:element>
     </article>
 
+  </xsl:template>
+  
+  <!-- change Zotero tags to <ref> so that the reference handler can grab them -->
+  <xsl:template match="p[@rend='Bibliography']">
+    <xsl:element name="ref">
+      <xsl:for-each select="./node()">
+        <xsl:apply-templates select="." />
+      </xsl:for-each>
+    </xsl:element>
   </xsl:template>
   
 <!-- Handling of items in profileDesc. -->
