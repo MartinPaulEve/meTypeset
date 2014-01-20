@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-import globals  as gv
-import os
-import subprocess, shutil
+import subprocess
 
 __author__ = "Dulip Withanage"
 __email__ = "dulip.withanage@gmail.com"
@@ -11,7 +9,6 @@ __email__ = "dulip.withanage@gmail.com"
 class Metadata():
     def __init__(self, gv):
         self.gv = gv
-
 
     def attach_metadata(self):
         cmd = ["java", "-classpath", self.gv.JAVA_CLASS_PATH,
@@ -30,4 +27,3 @@ class Metadata():
     def run(self):
         java_command = self.attach_metadata()
         subprocess.call(java_command, stdin=None, shell=True)
-
