@@ -56,7 +56,7 @@ class TeiManipulate(Manipulate):
 
         tree.write(self.gv.tei_file_path)
 
-    def drop_addin(self, xpath, start_text, sub_tag, replace_tag, attribute, caller):
+    def drop_addin(self, xpath, start_text, sub_tag, replace_tag, attribute, caller, wrap_tag):
         # load the DOM
         tree = self.load_dom_tree()
 
@@ -64,14 +64,18 @@ class TeiManipulate(Manipulate):
         for child in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             # check that this is a known addin
             if child.text.startswith(start_text):
+                # parse the (encoded) text of this element into a new tree
                 tag_to_parse = re.sub(r'&', '&amp;', child.text)
-                sub_tree = etree.fromstring(u'<zoterobiblio><entry>{0}</entry></zoterobiblio>'.format(tag_to_parse))
+                sub_tree = etree.fromstring(u'<{1}><entry>{0}</entry></{1}>'.format(tag_to_parse, wrap_tag))
+
+                # extract the sub element from this new tree and preserve the tail text
                 sub_element = sub_tree.xpath('//entry/{0}'.format(sub_tag),
                                              namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
                 self.debug.print_debug(self, u'Preserving tail of '
                                              u'dropped {0} element: {1}'.format(caller.get_module_name(),
-                                                                               sub_element.tail))
+                                                                                sub_element.tail))
 
+                # add the preserved tail text within the specified replacement tag type
                 new_element = etree.Element(replace_tag, rel = attribute)
                 new_element.text = sub_element.tail
 
