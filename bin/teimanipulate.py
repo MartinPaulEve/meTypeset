@@ -137,9 +137,6 @@ class TeiManipulate(Manipulate):
         destination_node = tree.xpath(u'//tei:head[@meTypesetHeadingID=\'{0}\']/..'.format(str(sibling_id)),
                                       namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
 
-        print(heading_id)
-        print(etree.tostring(tree))
-
         destination_node.addnext(source_node)
 
         tree.write(self.gv.tei_file_path)

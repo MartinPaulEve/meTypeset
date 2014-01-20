@@ -62,7 +62,6 @@ class SizeClassifier(Debuggable):
 
         manipulate.change_self_size(expression, str(root_size))
 
-
     def enclose_larger_heading(self, iteration, manipulate, next_size, section_ids, section_stack, size):
         self.debug.print_debug(self,
                                u'Encountered larger block as following (size: {0}, next size: {1}) '
