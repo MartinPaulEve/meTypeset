@@ -79,21 +79,34 @@ class SizeClassifier(Debuggable):
                            u"//tei:head[@meTypesetHeadingID=\'{0}\'] | //*[preceding-sibling::tei:head["
                            u"@meTypesetHeadingID=\'{1}\']]".format(
                                str(iteration + 1), str(iteration + 1)))
-        self.debug.print_debug(self,
-                               u'Moving block ID #{0} to be sibling of block ID #{1}'.format(str(iteration + 1),
-                                                                                             str(sibling_id)))
 
         if sibling_id != -1:
             # move the /next heading/ to directly beneath the previous sibling
+            self.debug.print_debug(self,
+                       u'Moving block ID #{0} to be sibling of block ID #{1}'.format(str(iteration + 1),
+                                                                                     str(sibling_id)))
+
             manipulate.move_size_div(iteration + 1, sibling_id)
 
         # update the sibling stack
-        section_ids[section_stack.index(next_size)] = iteration + 1
+        if next_size in section_stack:
+            if section_stack.index(next_size) in section_ids:
+                section_ids[section_stack.index(next_size)] = iteration + 1
+
         # now handle the enclosure of the current block
         manipulate.enclose('//tei:head[@meTypesetHeadingID="' + str(iteration) + '"]',
                            u'//tei:head[@meTypesetHeadingID=\'{0}\'] | //*[preceding-sibling::tei:head['
                            u'@meTypesetHeadingID=\'{1}\']]'.format(
                                str(iteration), str(iteration)))
+
+        # if we have an erroneous size (-1) then handle here
+        if sibling_id == -1:
+            self.debug.print_debug(self,
+                       u'Moving block ID #{0} to be sibling of block ID #{1}'.format(str(iteration + 1),
+                                                                                     str(iteration)))
+
+            manipulate.move_size_div(iteration + 1, iteration)
+
 
     def enclose_last_heading(self, iteration, manipulate, section_ids, section_stack, size):
         self.debug.print_debug(self,
