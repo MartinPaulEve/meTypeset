@@ -44,17 +44,17 @@ Library           Collections
     [Teardown]    Remove Directory    003    recursive=True
 
 004 Metadata merge
-    [Tags]    metadata
+    [Tags]    metadata    004
     ${result} =    Run Process    python ../bin/meTypeset.py docx 002.docx ./004 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./004/nlm/out.xml
     ${journalid}=    Get Element    ${xml}    front/journal-meta/journal-id
-    Elements Should Match    ${journalid}    <journal-id>The Journal Name</journal-id>
+    Elements Should Match    ${journalid}    <journal-id journal-id-type="publisher-id">The Journal Name</journal-id>
     ${issn}=    Get Element    ${xml}    front/journal-meta/issn
-    Elements Should Match    ${issn}    <issn>The ISSN</issn>
+    Elements Should Match    ${issn}    <issn pub-type="epub">0000-000X</issn>
     ${doi}=    Get Element    ${xml}    front/article-meta/article-id[@pub-id-type="doi"]
-    Elements Should Match    ${doi}    <article-id pub-id-type="doi">xx.XXXX/articleDoi</article-id>
+    Elements Should Match    ${doi}    <article-id pub-id-type="doi">10.1000/123456</article-id>
     ${title}=    Get Element    ${xml}    front/article-meta/title-group/article-title
     Elements Should Match    ${title}    <article-title>A Sample Article Title</article-title>
     ${firstname}=    Get Element    ${xml}    front/article-meta/contrib-group/contrib/name/given-names
