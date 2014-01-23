@@ -212,7 +212,7 @@ class SizeClassifier(Debuggable):
         manipulate.tag_headings()
         # normalize sizes: we cannot have a size bigger than the root node; there's no sensible way to detect this
         for size in sizes:
-            if int(size) > int(root_size):
+            if float(size) > float(root_size):
                 self.debug.print_debug(self,
                                        u'Downsizing headings of {0} to maximum root size {1}'.format(str(size),
                                                                                                      str(root_size)))
@@ -269,7 +269,7 @@ class SizeClassifier(Debuggable):
         if len(sizes) == 1:
             for size in sizes:
                 # loop will only execute once
-                if int(size) >= int(self.size_cutoff):
+                if float(size) >= float(self.size_cutoff):
                     # if the size is greater than or equal to 16, treat it as a heading
                     self.debug.print_debug(self,
                                            u'Found single explicitly specified size ({0}) greater '
