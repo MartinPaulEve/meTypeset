@@ -112,3 +112,16 @@ Library           Collections
     Should Be Equal    ${attr1}    http://www.medscape.com/content/2003/00/45/63/456300/456300_tab.html
     Should Be Equal As Strings    ${p.text}    "Table 1."
     [Teardown]    Remove Directory    007    recursive=True
+
+008 Non-Latin text
+    [Tags]    formatting    arabic    008
+    ${result} =    Run Process    python ../bin/meTypeset.py docx Arabic.docx ./008 -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./008/nlm/out.xml
+    ${ps}=    Get Elements    ${xml}    body/sec/p
+    ${p}=    Get From List    ${ps}    0
+    Elements Should Match    ${p}    <p>عل بين بدفع وترك الحربية, سمّي أعلنت والمعدات فصل تم. هو العام، بالهجوم نفس, بل أطراف ايطاليا، المتاخمة لكل. اعتداء جزيرتي أي يتم, وقرى الأوروبية، و وصل. غير ثم لعملة الستار الأوربيين, للحرب السوفييتي، ربع هو, ما سحقت بتطويق تلك.</p>    normalize_whitespace=yes
+    ${title}=    Get Element    ${xml}    body/sec/title
+    Elements Should Match    ${title}    <title>استمرار هذا.</title>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    008    recursive=True
