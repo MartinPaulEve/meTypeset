@@ -41,6 +41,25 @@ class ZoteroHandler(Debuggable):
         return object_list
 
 
+class MendeleyHandler(Debuggable):
+    def __init__(self, gv):
+        self.gv = gv
+        self.debug = self.gv.debug
+        Debuggable.__init__(self, 'Mendeley Handler')
+
+    def run(self):
+        tei_manipulator = TeiManipulate(self.gv)
+        object_list = tei_manipulator.get_object_list('//tei:ref[@rend="ref"]', 'ADDIN CSL_CITATION', u'zoterobiblio')
+
+        tei_manipulator.drop_addin_json('//tei:ref', 'ADDIN CSL_CITATION',
+                                        'hi', 'reference_to_link', self)
+
+        if len(object_list) > 0:
+            self.debug.print_debug(self, u'Stashed {0} references for bibliography parsing'.format(len(object_list)))
+
+        return object_list
+
+
 class OtherHandler(Debuggable):
     def __init__(self, gv):
         self.gv = gv
@@ -68,11 +87,14 @@ class BibliographyAddins(Debuggable):
         self.gv = gv
         self.debug = self.gv.debug
         self.zotero_items = []
+        self.mendeley_items = []
         self.other_items = []
         self.zotero_handler = ZoteroHandler(self.gv)
+        self.mendeley_handler = MendeleyHandler(self.gv)
         self.other_handler = OtherHandler(self.gv)
         Debuggable.__init__(self, 'Bibliography Handler')
 
     def run(self):
         self.zotero_items = self.zotero_handler.run()
+        self.mendeley_items = self.mendeley_handler.run()
         self.other_items = self.other_handler.run()
