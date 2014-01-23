@@ -76,7 +76,9 @@ class Docx2TEI(Debuggable):
             self.gv.mk_dir(self.gv.output_media_path)
             self.gv.copy_folder(self.gv.docx_media_path, self.gv.output_media_path, False, None)
 
-            self.handle_wmf()# copy input file into the docx subfolder
+            self.handle_wmf()
+
+        # copy input file into the docx subfolder
         if extract:
             shutil.copy(self.gv.input_file_path, self.gv.docx_temp_folder_path)
         else:

@@ -29,6 +29,7 @@ from globals import *
 from debug import Debuggable
 from bibliographyAddins import BibliographyAddins
 from bibliographydatabase import BibliographyDatabase
+from listclassifier import ListClassifier
 from metadata import Metadata
 
 
@@ -148,6 +149,9 @@ class MeTypeset (Debuggable):
 
             # run size classifier
             SizeClassifier(self.gv).run()
+
+            # run list classifier
+            ListClassifier(self.gv).run()
 
             # run bibliographic addins handler
             BibliographyAddins(self.gv).run()

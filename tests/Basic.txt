@@ -125,3 +125,14 @@ Library           Collections
     ${title}=    Get Element    ${xml}    body/sec/title
     Elements Should Match    ${title}    <title>استمرار هذا.</title>    normalize_whitespace=yes
     [Teardown]    Remove Directory    008    recursive=True
+
+009 Dash list classifier
+    [Tags]    formatting    listclassifier    009
+    ${result} =    Run Process    python ../bin/meTypeset.py docx 009.docx ./009 -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./009/nlm/out.xml
+    ${p}=    Get Element    ${xml}    body/sec/list
+    Elements Should Match    ${p}    <list><list-item><p>Item 1</p></list-item><list-item><p>Item 2</p></list-item><list-item><p>Item 3</p></list-item></list>    normalize_whitespace=yes
+    ${title}=    Get Element    ${xml}    body/sec/title
+    [Teardown]    Remove Directory    009    recursive=True
