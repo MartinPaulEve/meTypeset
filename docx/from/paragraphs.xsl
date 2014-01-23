@@ -287,6 +287,14 @@ of this software, even if advised of the possibility of such damage.
 			  <xsl:when  test="self::w:bookmarkStart">
 			    <xsl:apply-templates select="."/>
 			  </xsl:when>
+				<xsl:when test="$rends/tei:r='instr_n'">
+					<!-- This contains escaped characters, including \l and \n, that must be removed -->
+					<xsl:variable name="selected">
+						<xsl:value-of select="substring-after(substring-before(.,'\n'), '\l')"/>
+					</xsl:variable>
+					
+					<xsl:apply-templates select="$selected"/>
+				</xsl:when>
 			  <xsl:otherwise>
 			    <xsl:apply-templates select="."/>
 			  </xsl:otherwise>
