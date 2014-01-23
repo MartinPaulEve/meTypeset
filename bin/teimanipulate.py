@@ -40,21 +40,21 @@ class TeiManipulate(Manipulate):
 
         # search the tree and grab the parent
         for child in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            if not (child.text is None):
+                # check that this is a known addin
+                if child.text.startswith(start_text):
+                    tag_to_parse = re.sub(r'.+}', '', child.text)
 
-            # check that this is a known addin
-            if child.text.startswith(start_text):
-                tag_to_parse = re.sub(r'.+}', '', child.text)
+                    new_element = etree.Element(replace_tag, rel=attribute)
+                    new_element.text = tag_to_parse
 
-                new_element = etree.Element(replace_tag, rel=attribute)
-                new_element.text = tag_to_parse
+                    child.addnext(new_element)
 
-                child.addnext(new_element)
+                    for subchild in child:
+                        if type(subchild) is etree._Element:
+                            new_element.append(subchild)
 
-                for subchild in child:
-                    if type(subchild) is etree._Element:
-                        new_element.append(subchild)
-
-                child.getparent().remove(child)
+                    child.getparent().remove(child)
 
         tree.write(self.gv.tei_file_path)
 
