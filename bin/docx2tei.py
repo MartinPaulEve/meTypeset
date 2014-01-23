@@ -33,6 +33,18 @@ class Docx2TEI(Debuggable):
                    ]
             return ' '.join(cmd)
 
+    def handle_wmf(self):
+        # convert .wmf images to .png
+        image_filenames = os.listdir(self.gv.output_media_path)
+        for image in image_filenames:
+            if re.match(r'.+?\.wmf', image) is not None:
+                image_name = re.sub(r'\.wmf', '', image)
+                imagemagick_command = 'unoconv -d graphics -f png -o {0}/{1}.png ' \
+                                      '{0}/{2}'.format(self.gv.output_media_path, image_name, image)
+                self.debug.print_debug(self, 'Calling: {0}'.format(imagemagick_command))
+
+                subprocess.call(imagemagick_command.split(' '))
+
     def run(self, extract):
         # make output folders
         self.gv.mk_dir(self.gv.output_folder_path)
@@ -64,18 +76,7 @@ class Docx2TEI(Debuggable):
             self.gv.mk_dir(self.gv.output_media_path)
             self.gv.copy_folder(self.gv.docx_media_path, self.gv.output_media_path, False, None)
 
-        # convert .wmf images to .png
-            image_filenames = os.listdir(self.gv.output_media_path)
-            for image in image_filenames:
-              if re.match(r'.+?\.wmf',image) is not None:
-                image_name = re.sub(r'\.wmf','',image)
-                imagemagick_command = 'unoconv -d graphics -f png -o {0}/{1}.png ' \
-                                      '{0}/{2}'.format(self.gv.output_media_path, image_name, image)
-                self.debug.print_debug(self, 'Calling: {0}'.format(imagemagick_command))
-
-                subprocess.call(imagemagick_command.split(' '))
-
-        # copy input file into the docx subfolder
+            self.handle_wmf()# copy input file into the docx subfolder
         if extract:
             shutil.copy(self.gv.input_file_path, self.gv.docx_temp_folder_path)
         else:
