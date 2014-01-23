@@ -195,7 +195,7 @@ class SizeClassifier(Debuggable):
         iteration = 0
         for size in sizes:
             # disregard sizes below the cut-off
-            if size >= self.size_cutoff:
+            if float(size) >= float(self.size_cutoff):
                 manipulate.change_outer("//tei:hi[@meTypesetSize='" + size + "']", "head", size)
                 iteration += 1
 
@@ -213,38 +213,40 @@ class SizeClassifier(Debuggable):
         manipulate.tag_headings()
         # normalize sizes: we cannot have a size bigger than the root node; there's no sensible way to detect this
         for size in sizes:
-            if float(size) > float(root_size):
-                self.debug.print_debug(self,
-                                       u'Downsizing headings of {0} to maximum root size {1}'.format(str(size),
-                                                                                                     str(root_size)))
-                manipulate.downsize_headings(root_size, size)
-                sizes_ordered = [root_size if x == size else x for x in sizes_ordered]
+            if float(size) >= float(self.size_cutoff):
+                if float(size) > float(root_size):
+                    self.debug.print_debug(self,
+                                           u'Downsizing headings of {0} to maximum root size {1}'.format(str(size),
+                                                                                                         str(root_size)))
+                    manipulate.downsize_headings(root_size, size)
+                    sizes_ordered = [root_size if x == size else x for x in sizes_ordered]
 
         for size in sizes_ordered:
-            if not size in section_count:
-                section_count[size] = 0
+            if float(size) >= float(self.size_cutoff):
+                if not size in section_count:
+                    section_count[size] = 0
 
-            if len(section_stack) == 0:
-                # this section should span the entire document and enclose the first title
-                # manipulate.enclose("//tei:head[@meTypesetSize='" + size + "']", section_count[size], "(//*)[last()]")
+                if len(section_stack) == 0:
+                    # this section should span the entire document and enclose the first title
+                    # manipulate.enclose("//tei:head[@meTypesetSize='" + size + "']", section_count[size], "(//*)[last()]")
 
-                # done automatically?
-                pass
-            else:
-                # this block is triggered when we reach any heading but the first
-                processed_flag = self.process_subsequent_headings(iteration, manipulate, processed_flag, section_ids,
-                                                                  section_stack, size, sizes_ordered)
-
-            section_count[size] += 1
-
-            if not processed_flag:
-                if not size in section_stack:
-                    section_stack.append(size)
-                    section_ids.append(iteration)
+                    # done automatically?
+                    pass
                 else:
-                    section_ids[section_stack.index(size)] = iteration
+                    # this block is triggered when we reach any heading but the first
+                    processed_flag = self.process_subsequent_headings(iteration, manipulate, processed_flag, section_ids,
+                                                                      section_stack, size, sizes_ordered)
 
-            iteration += 1
+                section_count[size] += 1
+
+                if not processed_flag:
+                    if not size in section_stack:
+                        section_stack.append(size)
+                        section_ids.append(iteration)
+                    else:
+                        section_ids[section_stack.index(size)] = iteration
+
+                iteration += 1
 
     def run(self):
         # load the DOM
