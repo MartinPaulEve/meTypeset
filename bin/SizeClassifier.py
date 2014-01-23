@@ -19,6 +19,7 @@ class SizeClassifier(Debuggable):
         self.gv = global_variables
         self.debug = self.gv.debug
         self.size_cutoff = 16
+        self.max_headings = 10
         Debuggable.__init__(self, 'Size Classifier')
 
     @staticmethod
@@ -265,6 +266,14 @@ class SizeClassifier(Debuggable):
             self.debug.print_debug(self,
                                    u'Explicitly specified size variations and their frequency of '
                                    u'occurrence: {0}'.format(str(sizes)))
+
+        new_sizes = {}
+
+        for size, frequency in sizes.iteritems():
+            if frequency < self.max_headings:
+                new_sizes[size] = frequency
+
+        sizes = new_sizes
 
         if len(sizes) == 1:
             for size in sizes:
