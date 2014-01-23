@@ -90,7 +90,7 @@ Library           Collections
     [Teardown]    Remove Directory    005    recursive=True
 
 006 Basic footnote test
-    [Tags]    formatting    title    footnotes    006
+    [Tags]    formatting    footnotes    006
     ${result} =    Run Process    python ../bin/meTypeset.py docx Footnote.docx ./006 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
@@ -100,3 +100,15 @@ Library           Collections
     ${fng}=    Get Element    ${xml}    back/fn-group
     Elements Should Match    ${fng}    <fn-group><fn id="bibd2e35"><p>Footnote.</p></fn></fn-group>    normalize_whitespace=yes
     [Teardown]    Remove Directory    006    recursive=True
+
+007 Complex link test
+    [Tags]    formatting    complexlink    007
+    ${result} =    Run Process    python ../bin/meTypeset.py docxextracted ./ComplexLink ./007 -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./007/nlm/out.xml
+    ${p}=    Get Element    ${xml}    body/sec/p/ext-link
+    ${attr1}=    Get Element Attribute    ${p}    {http://www.w3.org/1999/xlink}href
+    Should Be Equal    ${attr1}    http://www.medscape.com/content/2003/00/45/63/456300/456300_tab.html
+    Should Be Equal As Strings    ${p.text}    "Table 1."
+    [Teardown]    Remove Directory    007    recursive=True

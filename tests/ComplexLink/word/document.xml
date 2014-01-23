@@ -1,0 +1,37 @@
+<w:document xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"><w:body><w:p>            <w:r>
+                <w:fldChar w:fldCharType="begin"/>
+            </w:r>
+            <w:r>
+                <w:instrText> HYPERLINK
+                    &quot;http://www.medscape.com/content/2003/00/45/63/456300/456300_tab.html&quot;
+                    \l&quot;Table 1.&quot;\n tables</w:instrText>
+            </w:r>
+            <w:r>
+                <w:fldChar w:fldCharType="separate"/>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rStyle w:val="style16"/>
+                    <w:rStyle w:val="style16"/>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:sz w:val="20"/>
+                    <w:szCs w:val="20"/>
+                    <w:lang w:val="en-GB"/>
+                </w:rPr>
+                <w:t>Table 1</w:t>
+            </w:r>
+            <w:r>
+                <w:fldChar w:fldCharType="end"/>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:ascii="Arial" w:cs="Arial" w:hAnsi="Arial"/>
+                    <w:color w:val="000000"/>
+                    <w:sz w:val="20"/>
+                    <w:szCs w:val="20"/>
+                    <w:lang w:val="en-GB"/>
+                </w:rPr>
+                <w:t>These results have not proven the efficacy of povidone iodine; however, the
+                    results of numerous clinical trials show that it is effective in reducing the
+                    bacterial load of wounds. Rodeheaver, et al.,</w:t>
+            </w:r></w:p></w:body></w:document>
