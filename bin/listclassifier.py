@@ -42,25 +42,35 @@ class ListClassifier(Debuggable):
 
             if not in_list_run:
                 list_element = etree.Element('list')
-                element.addnext(list_element)
                 to_append = None
                 in_list_run = True
+                element.addprevious(list_element)
 
             if not element.getnext().text is None:
                 if element.getnext().text.startswith(u'- ') and not element.getnext() in elements:
                     # this element is the last in this list
                     in_list_run = False
                     to_append = element.getnext()
+                elif not element.getnext().text.startswith(u'- ') and not element.getnext() in elements:
+                    in_list_run = False
+                    to_append = None
+            else:
+                # this element is the last in this list
+                self.debug.print_debug(self, u'Ending list run on {0}'.format(element.getnext()))
+                in_list_run = False
+                to_append = element.getnext()
 
             element.tag = 'item'
             element.text = element.text[2:]
             list_element.append(element)
 
             if not in_list_run:
-                to_append.tag = 'item'
-                to_append.text = to_append.text[2:]
-                list_element.append(to_append)
-
+                if not to_append is None:
+                    if not to_append.text is None:
+                        to_append.tag = 'item'
+                        to_append.text = to_append.text[2:]
+                        self.debug.print_debug(self, u'Appending final list element: {0}'.format(to_append.text))
+                        list_element.append(to_append)
 
         tree.write(self.gv.tei_file_path)
 
