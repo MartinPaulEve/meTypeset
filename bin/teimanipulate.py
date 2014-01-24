@@ -154,6 +154,8 @@ class TeiManipulate(Manipulate):
 
         tree.write(self.gv.tei_file_path)
 
+        return iterator
+
     # changes the parent element of the outer_xpath expression to the new_value
     def change_outer(self, outer_xpath, new_value, size_attribute):
         tree = self.load_dom_tree()
@@ -246,14 +248,16 @@ class TeiManipulate(Manipulate):
         child = tree.xpath(start_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
         index = 0
+        added = False
+        div = etree.Element(new_enclose)
 
         # move the elements
         for element in child:
-            if index >= start_index:
-                div = etree.Element(new_enclose)
+            if not added:
                 element.getparent().addnext(div)
-                div.append(element)
+                added = True
 
+            div.append(element)
             index += 1
 
         tree.write(self.gv.tei_file_path)

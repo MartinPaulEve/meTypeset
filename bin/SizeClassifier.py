@@ -313,8 +313,32 @@ class SizeClassifier(Debuggable):
                     # <title><hi meTypesetSize="18">some text</hi></title>
                     manipulate.change_outer('//tei:hi[@meTypesetSize=\'{0}\']'.format(size), 'head', size)
 
-                    # enclose all of these entries within section tags
-                    manipulate.enclose_all('//tei:hi[@meTypesetSize=\'{0}\']/..'.format(size), 'div', 1)
+                    # assign IDs to every single heading tag for easy manipulation
+                    heading_count = manipulate.tag_headings()
+
+                    if heading_count > 1:
+
+                        for heading_id in range(1, heading_count):
+                            if heading_id < heading_count - 1:
+                                expression = u'//tei:head[@meTypesetHeadingID="{1}"] | ' \
+                                             u'//*[following-sibling::tei:head[@meTypesetHeadingID="{0}"] and ' \
+                                             u'preceding-sibling::tei:head[' \
+                                             u'@meTypesetHeadingID="{1}"]]'.format(heading_id + 1,
+                                                                                   heading_id)
+                                # enclose all of these entries within section tags
+                                manipulate.enclose_all(expression, 'div', 1)
+                            else:
+                                # enclose to the end of the document
+                                expression = u'//tei:head[@meTypesetHeadingID="{0}"] | ' \
+                                             u'//*[preceding-sibling::tei:head[' \
+                                             u'@meTypesetHeadingID="{0}"]]'.format(heading_id)
+                                manipulate.enclose_all(expression, 'div', 1)
+                    else:
+                         # enclose to the end of the document
+                        expression = u'//tei:head[@meTypesetHeadingID="{0}"] | ' \
+                                     u'//*[preceding-sibling::tei:head[' \
+                                     u'@meTypesetHeadingID="{0}"]]'.format(u"1")
+                        manipulate.enclose_all(expression, 'div', 1)
 
         elif len(sizes) > 1:
             self.create_sections(manipulate, sizes)
