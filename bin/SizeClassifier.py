@@ -281,19 +281,44 @@ class SizeClassifier(Debuggable):
         self.handle_bold_only_paragraph(manipulate, 100)
 
         # first of all, ensure that "heading 1" is treated as the top level
-        self.handle_heading(manipulate, 'heading 1', 100)
+        #self.handle_heading(manipulate, 'heading 1', 100)
 
         # reload the DOM
         tree = self.set_dom_tree(self.gv.tei_file_path)
 
         # get a numerical list of explicit size values inside meTypesetSize attributes
         sizes = self.get_sizes(tree)
+        sorted_list = []
+        headings = {}
 
         # correlate tag sizes specified by true word headings ("heading 1", "heading 2" etc.) to our index
-
         for size, frequency in sizes.iteritems():
             if float(frequency) < float(self.max_headings) and float(size) > float(self.size_cutoff):
-                pass
+                sorted_list.append(size)
+
+        sorted_list = sorted(sorted_list)
+        iteration = 0
+
+        if len(sorted_list) > 0:
+            for count in range(0, len(sorted_list) - 1):
+                key = u'heading {0}'.format(count + 1)
+                headings[key] = sorted_list[count]
+
+            for count in range(len(sorted_list) - 1, 8):
+                key = u'heading {0}'.format(count + 1)
+                headings[key] = 100 - 10 * count
+        else:
+            headings = {'heading 1': 100, 'heading 2': 90, 'heading 3': 80, 'heading 4': 70, 'heading 5': 60,
+                        'heading 6': 50, 'heading 7': 40, 'heading 8': 30, 'heading 9': 20}
+
+        for key, value in headings.iteritems():
+            self.handle_heading(manipulate, key, float(value))
+
+        # reload the DOM
+        tree = self.set_dom_tree(self.gv.tei_file_path)
+
+        # refresh the size list
+        sizes = self.get_sizes(tree)
 
         if len(sizes) == 1:
             for size in sizes:

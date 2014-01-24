@@ -322,6 +322,16 @@ Library           Collections
     Elements Should Match    ${body}    <body><sec><title>Heading 1</title><sec><title>Heading 2</title></sec></sec><sec><title>Just bold text that should be heading 1</title><sec><title>Heading 3</title></sec><sec><title>Misplaced Heading 2</title></sec></sec></body>    normalize_whitespace=yes
     [Teardown]    Remove Directory    506    recursive=True
 
+507 Properly styled word headings
+    [Tags]    sectionheaders    sizeclassifier    507
+    ${result} =    Run Process    python ../bin/meTypeset.py docx StyledHeadings1.docx ./507 -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./507/nlm/out.xml
+    ${body}=    Get Element    ${xml}    body
+    Elements Should Match    ${body}    <body><sec><title>Heading 1</title><p>A paragraph</p><sec><title>Heading 2</title><p>A second paragraph</p></sec></sec><sec><title>Heading 1 Again</title><p>Third paragraph</p></sec></body>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    507    recursive=True
+
 556 Test line breaks
     [Tags]    linebreaks    556    formatting
     ${result} =    Run Process    python ../bin/meTypeset.py docx LineBreak.docx ./556 -s ./linebreakson.xml -d    shell=True
