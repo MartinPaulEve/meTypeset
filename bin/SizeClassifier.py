@@ -63,6 +63,19 @@ class SizeClassifier(Debuggable):
 
         manipulate.change_self_size(expression, str(root_size))
 
+    @staticmethod
+    def handle_heading(manipulate, attribute, root_size):
+        """
+        This method looks for paragraphs that contain the specified attribute in their rend tag.
+        It then transforms them to titles.
+        @param manipulate: a TeiManipulator object
+        @param attribute: a string to search for in the rend attribute
+        @param root_size: the size styling to apply to these elements
+        """
+        expression = u'//tei:p[contains(@rend, "{0}")]'.format(attribute)
+
+        manipulate.enclose_and_change_self_size(expression, str(root_size), 'p', 'hi')
+
     def enclose_larger_heading(self, iteration, manipulate, next_size, section_ids, section_stack, size):
         self.debug.print_debug(self,
                                u'Encountered larger block as following (size: {0}, next size: {1}) '
@@ -246,34 +259,41 @@ class SizeClassifier(Debuggable):
 
                 iteration += 1
 
-    def run(self):
-        # load the DOM
-        tree = self.set_dom_tree(self.gv.tei_file_path)
-
-        manipulate = TeiManipulate(self.gv)
-
-        # transform bolded paragraphs into size-attributes with an extremely high threshold (so will be thought of as
-        # root nodes)
-        self.handle_bold_only_paragraph(manipulate, 100)
-
-        # reload the DOM
-        tree = self.set_dom_tree(self.gv.tei_file_path)
-
-        # get a numerical list of explicit size values inside meTypesetSize attributes
+    def get_sizes(self, tree):
         sizes = self.get_values(tree, "meTypesetSize")
 
         if len(sizes) > 0:
             self.debug.print_debug(self,
                                    u'Explicitly specified size variations and their frequency of '
                                    u'occurrence: {0}'.format(str(sizes)))
-
         new_sizes = {}
-
         for size, frequency in sizes.iteritems():
             if float(frequency) < float(self.max_headings):
                 new_sizes[size] = frequency
-
         sizes = new_sizes
+        return sizes
+
+    def run(self):
+        manipulate = TeiManipulate(self.gv)
+
+        # transform bolded paragraphs into size-attributes with an extremely high threshold (so will be thought of as
+        # root nodes)
+        self.handle_bold_only_paragraph(manipulate, 100)
+
+        # first of all, ensure that "heading 1" is treated as the top level
+        self.handle_heading(manipulate, 'heading 1', 100)
+
+        # reload the DOM
+        tree = self.set_dom_tree(self.gv.tei_file_path)
+
+        # get a numerical list of explicit size values inside meTypesetSize attributes
+        sizes = self.get_sizes(tree)
+
+        # correlate tag sizes specified by true word headings ("heading 1", "heading 2" etc.) to our index
+
+        for size, frequency in sizes.iteritems():
+            if float(frequency) < float(self.max_headings) and float(size) > float(self.size_cutoff):
+                pass
 
         if len(sizes) == 1:
             for size in sizes:

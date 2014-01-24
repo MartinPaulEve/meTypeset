@@ -178,6 +178,24 @@ class TeiManipulate(Manipulate):
 
         tree.write(self.gv.tei_file_path)
 
+    # changes the parent element of the outer_xpath expression to the new_value
+    def enclose_and_change_self_size(self, outer_xpath, size_attribute, tag, change_tag):
+        tree = self.load_dom_tree()
+
+        # search the tree and grab the parent
+        for child in tree.xpath(outer_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            new_element = etree.Element(tag)
+            child.attrib[u'meTypesetSize'] = size_attribute
+            child.tag = change_tag
+            child.addnext(new_element)
+            new_element.append(child)
+
+            if not (child.attrib['rend'] is None):
+                if u'bold' in child.attrib[u'rend']:
+                    child.attrib[u'rend'] = child.attrib[u'rend'].replace(u'bold', u'')
+
+        tree.write(self.gv.tei_file_path)
+
     def move_size_div(self, heading_id, sibling_id):
         tree = self.load_dom_tree()
 
