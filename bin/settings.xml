@@ -39,7 +39,7 @@
     </mt:xml-files>
     
     <mt:nlm>
-        <mt:linebreaks-as-comments>True</mt:linebreaks-as-comments>
+        <mt:linebreaks-as-comments>False</mt:linebreaks-as-comments>
         <mt:drop-unknown-addins>False</mt:drop-unknown-addins>
     </mt:nlm>
     

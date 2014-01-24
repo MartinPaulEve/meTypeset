@@ -353,3 +353,13 @@ Library           Collections
     Elements Should Match    ${paraone}    <p>A <bold>bold text</bold> paragraph<!--meTypeset:br-->A line break <bold>with more</bold><italic>italic</italic> test<!--meTypeset:br-->A second <italic>break<!--meTypeset:br-->A third break</italic> where italic breaks across the line</p>    normalize_whitespace=yes
     Elements Should Match    ${paratwo}    <p>A second paragraph</p>    normalize_whitespace=yes
     [Teardown]    Remove Directory    557    recursive=True
+
+558 Test line breaks in table: this does a genuine break replacement even when turned off
+    [Tags]    linebreaks    558    formatting
+    ${result} =    Run Process    python ../bin/meTypeset.py docx LineBreaksInTable.docx ./558 -s ./linebreaksoff.xml -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./558/nlm/out.xml
+    ${p}=    Get Element    ${xml}    body/sec/table-wrap/table/tr/td
+    Elements Should Match    ${p}    <td rowspan="1" colspan="1">Line 1<break/>Line 2</td>
+    [Teardown]    Remove Directory    558    recursive=True

@@ -33,6 +33,10 @@ class TEI2NLM (Debuggable):
             # we need to convert every instance of <!--meTypeset:br--> to a new paragraph
             manipulate.close_and_open_tag('comment()[. = "meTypeset:br"]', 'p')
 
+        # we will replace inside table cells and titles regardless because these are real JATS break tags
+        manipulate.insert_break('comment()[. = "meTypeset:br"]', 'td')
+        manipulate.insert_break('comment()[. = "meTypeset:br"]', 'title')
+
         manipulate.tag_inline_refs()
         manipulate.find_reference_list()
         manipulate.tag_bibliography_refs()
