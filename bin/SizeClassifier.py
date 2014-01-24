@@ -225,14 +225,15 @@ class SizeClassifier(Debuggable):
 
                 if len(section_stack) == 0:
                     # this section should span the entire document and enclose the first title
-                    # manipulate.enclose("//tei:head[@meTypesetSize='" + size + "']", section_count[size], "(//*)[last()]")
+                    # manipulate.enclose("//tei:head[@meTypesetSize='" + size + "']",
+                    # section_count[size], "(//*)[last()]")
 
                     # done automatically?
                     pass
                 else:
                     # this block is triggered when we reach any heading but the first
-                    processed_flag = self.process_subsequent_headings(iteration, manipulate, processed_flag, section_ids,
-                                                                      section_stack, size, sizes_ordered)
+                    processed_flag = self.process_subsequent_headings(iteration, manipulate, processed_flag,
+                                                                      section_ids, section_stack, size, sizes_ordered)
 
                 section_count[size] += 1
 
