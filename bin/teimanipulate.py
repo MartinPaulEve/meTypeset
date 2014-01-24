@@ -58,6 +58,36 @@ class TeiManipulate(Manipulate):
 
         tree.write(self.gv.tei_file_path)
 
+    def find_reference_list_in_word_list(self):
+        # load the DOM
+        tree = self.load_dom_tree()
+
+        # determine if the last element in the document is a list
+        select = u'//tei:div[last()]/*[last()]'
+
+        for last_list in tree.xpath(select, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            if last_list.tag == '{http://www.tei-c.org/ns/1.0}list':
+                # it is a list, so change to reference list
+                self.debug.print_debug(self, u'Found a list as last element. Treating as bibliography.')
+                last_list.tag = '{http://www.tei-c.org/ns/1.0}div'
+                last_list.attrib['rend'] = u'Bibliography'
+
+                parent_element = None
+
+                # now convert each line
+                for list_item in last_list:
+                    new_element = etree.Element('p')
+                    new_element.attrib['rend'] = u'Bibliography'
+
+                    list_item.addnext(new_element)
+                    new_element.append(list_item)
+                    list_item.tag = '{http://www.tei-c.org/ns/1.0}ref'
+                    list_item.attrib['target'] = 'None'
+
+
+
+        tree.write(self.gv.tei_file_path)
+
     def enclose_bibliography_tags(self, xpath, top_tag, sub_tag, attrib, attribvalue):
         #tei_manipulator.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]', 'back', 'div', 'type', 'bibliogr')
         # load the DOM
@@ -67,18 +97,33 @@ class TeiManipulate(Manipulate):
 
         # find the parent
         try:
-            parent = tree.xpath('//tei:body', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+            try:
+                parent = tree.xpath('//tei:back', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+            except:
+                pass
+
+            if parent is None:
+                parent = tree.xpath('//tei:body', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
         except:
             return
 
-        new_element = etree.Element(top_tag)
-        sub_element = etree.Element(sub_tag)
+        if not parent.tag == top_tag:
+            new_element = etree.Element(top_tag)
+        else:
+            new_element = parent
 
-        sub_element.attrib[attrib] = attribvalue
+        try:
+            sub_element = tree.xpath('//tei:back/tei:div[@type="bibliogr"]',
+                                     namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+            self.debug.print_debug(self, u'Found existing back block. Using it.')
+        except:
+            self.debug.print_debug(self, u'Creating back block.')
+            sub_element = etree.Element(sub_tag)
+            sub_element.attrib[attrib] = attribvalue
+            new_element.insert(0, sub_element)
 
-        new_element.insert(0, sub_element)
-
-        parent.addnext(new_element)
+        if not parent.tag == top_tag:
+            parent.addnext(new_element)
 
         for element in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             sub_element.append(element)

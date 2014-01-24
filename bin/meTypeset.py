@@ -29,6 +29,7 @@ from globals import *
 from debug import Debuggable
 from bibliographyAddins import BibliographyAddins
 from bibliographydatabase import BibliographyDatabase
+from bibliographyclassifier import BibliographyClassifier
 from listclassifier import ListClassifier
 from metadata import Metadata
 
@@ -155,6 +156,9 @@ class MeTypeset (Debuggable):
 
             # run bibliographic addins handler
             BibliographyAddins(self.gv).run()
+
+            # run bibliographic classifier
+            BibliographyClassifier(self.gv).run()
 
             # tei
             TeiManipulate(self.gv).run()
