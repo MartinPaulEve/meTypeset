@@ -192,12 +192,8 @@ class SizeClassifier(Debuggable):
 
     def create_sections(self, manipulate, sizes):
         # first, we want a sorted representation (of tuples) of the frequency dictionary
-        iteration = 0
         for size in sizes:
-            # disregard sizes below the cut-off
-            if float(size) >= float(self.size_cutoff):
-                manipulate.change_outer("//tei:hi[@meTypesetSize='" + size + "']", "head", size)
-                iteration += 1
+            manipulate.change_outer("//tei:hi[@meTypesetSize='" + size + "']", "head", size)
 
         tree = self.set_dom_tree(self.gv.tei_file_path)
         sizes_ordered = self.get_sizes_ordered(tree)
