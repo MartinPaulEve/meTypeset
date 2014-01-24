@@ -179,6 +179,7 @@ class NlmManipulate(Manipulate):
         if indentmethod:
             indentmethod.attrib['reflist'] = 'yes'
         # add other methods here and use classifier code to evaluate which of several //sec[@reflist="yes"] elements should be changed to <ref-list>
+        # also, <ref-list> should eventually be moved to <back>
         tree.write(self.gv.nlm_file_path)
 
     def tag_bibliography_refs(self):
