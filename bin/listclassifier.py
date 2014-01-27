@@ -153,6 +153,64 @@ class ListClassifier(Debuggable):
 
         tree.write(self.gv.tei_file_path)
 
+    def process_curly_list(self, tree, manipulate):
+        # select all p elements followed by another p element
+        expression = u'//tei:p[starts-with(.,"(")][following-sibling::tei:p[starts-with(.,"(")]]'
+
+        elements = tree.xpath(expression, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+
+        in_list_run = False
+        list_element = None
+        to_append = None
+        iteration = 0
+
+        for element in elements:
+            self.debug.print_debug(self, u'Handling list element {0}'.format(element.text))
+
+            if iteration == 0:
+                if not elements[0].text.startswith(u'(1) '):
+                    self.debug.print_debug(self, u'Reference list PANIC: {0}'.format(element.text))
+                    break
+                else:
+                    offset = 4
+
+            iteration += 1
+
+            if not in_list_run:
+                list_element = etree.Element('list')
+                list_element.attrib[u'type'] = u'ordered'
+                to_append = None
+                in_list_run = True
+                element.addprevious(list_element)
+
+            if not element.getnext().text is None:
+                if element.getnext().text.startswith(u'(') and not element.getnext() in elements:
+                    # this element is the last in this list
+                    in_list_run = False
+                    to_append = element.getnext()
+                elif not element.getnext().text.startswith(u'(') and not element.getnext() in elements:
+                    in_list_run = False
+                    to_append = None
+            else:
+                # this element is the last in this list
+                self.debug.print_debug(self, u'Ending list run on {0}'.format(element.getnext()))
+                in_list_run = False
+                to_append = element.getnext()
+
+            element.tag = 'item'
+            element.text = element.text[(int(offset) + int(math.floor(int(iteration/10)))):]
+            list_element.append(element)
+
+            if not in_list_run:
+                if not to_append is None:
+                    if not to_append.text is None:
+                        to_append.tag = 'item'
+                        to_append.text = to_append.text[(int(offset) + int(math.floor(int(iteration/10)))):]
+                        self.debug.print_debug(self, u'Appending final list element: {0}'.format(to_append.text))
+                        list_element.append(to_append)
+
+        tree.write(self.gv.tei_file_path)
+
     def run(self):
         # load the DOM
         tree = self.set_dom_tree(self.gv.tei_file_path)
@@ -163,6 +221,11 @@ class ListClassifier(Debuggable):
         # - Item 1
         # - Item 2
         self.process_dash_list(tree, manipulate)
+
+        # look for curly bracket separated list
+        # (1) Item 1
+        # (2) Item 2
+        self.process_curly_list(tree, manipulate)
 
         # look for reference list [1], [2] etc.
         self.process_enclosed_ref_list(tree, manipulate)
