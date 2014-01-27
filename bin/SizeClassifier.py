@@ -228,9 +228,9 @@ class SizeClassifier(Debuggable):
 
             root_size = str(self.size_cutoff)
 
-
         # assign IDs to every single heading tag for easy manipulation
         manipulate.tag_headings()
+
         # normalize sizes: we cannot have a size bigger than the root node; there's no sensible way to detect this
         for size in sizes:
             if float(size) >= float(self.size_cutoff):
@@ -263,6 +263,8 @@ class SizeClassifier(Debuggable):
 
                 if not processed_flag:
                     if not size in section_stack:
+                        if not type(size) is str:
+                            size = str(size)
                         section_stack.append(size)
                         section_ids.append(iteration)
                     else:
