@@ -19,7 +19,7 @@ class SizeClassifier(Debuggable):
         self.gv = global_variables
         self.debug = self.gv.debug
         self.size_cutoff = 16
-        self.max_headings = 20
+        self.max_headings = 40
         Debuggable.__init__(self, 'Size Classifier')
 
     @staticmethod
@@ -59,7 +59,8 @@ class SizeClassifier(Debuggable):
         @param manipulate: a TeiManipulator object
         @param root_size: the size styling to apply to these elements
         """
-        expression = u'////tei:p[* and not(text()) and not(*[not(self::tei:hi[@rend="bold"])])]/tei:hi'
+        expression = u'//tei:p[count(tei:hi) = count(tei:hi[contains(@rend, "bold")]) ' \
+                     u'and not(text()[normalize-space()!=""])]/tei:hi'
 
         manipulate.change_self_size(expression, str(root_size))
 

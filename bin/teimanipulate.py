@@ -231,6 +231,7 @@ class TeiManipulate(Manipulate):
 
         # search the tree and grab the parent
         for child in tree.xpath(outer_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            self.debug.print_debug(self, 'Enclosing and changing size: {0}'.format(child.tag))
             new_element = etree.Element(tag)
             child.attrib[u'meTypesetSize'] = size_attribute
             child.tag = change_tag
