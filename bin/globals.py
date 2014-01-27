@@ -17,6 +17,7 @@ class GV (Debuggable):
         docx = 'docx'
         common2 = 'common2'
         nlm = 'nlm'
+        chain = 'xsl'
 
         self.settings = settings
 
@@ -78,8 +79,14 @@ class GV (Debuggable):
             self.nlm_folder_path = self.generate_path(settings, nlm, self.output_folder_path)
             self.nlm_file_path = self.clean_path(self.concat_path(self.nlm_folder_path, self.file_name))
             self.nlm_temp_file_path = self.clean_path(self.concat_path(self.nlm_folder_path, "out.xml"))
-            self.nlm_style_sheet_dir = self.clean_path(
-                self.concat_path(settings.script_dir, self.value_for_tag(settings, 'tei-to-nlm-stylesheet')))
+            self.nlm_style_sheet_dir = self.clean_path(self.concat_path(settings.script_dir,
+                                                                        self.value_for_tag(settings,
+                                                                                           'tei-to-nlm-stylesheet')))
+
+            # XSL chain paths
+            self.xsl_folder_path = self.generate_path(settings, chain, self.output_folder_path)
+            self.xsl_file_path = self.clean_path(self.concat_path(self.xsl_folder_path, "out.html"))
+
 
             #Metadata paths
             self.metadata_style_sheet_path = self.clean_path(

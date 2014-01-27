@@ -8,6 +8,7 @@ Usage:
 
 Options:
     -a, --aggression <aggression_level>             Parser aggression level 0-10 [default: 10]
+    -c, --chain <xslt>                              Specify a subsequent XSL transform to pass the NLM to
     -d, --debug                                     Enable debug output
     -h, --help                                      Show this screen.
     -m, --metadata <metadata_file>                  Metadata file
@@ -33,6 +34,7 @@ from bibliographydatabase import BibliographyDatabase
 from bibliographyclassifier import BibliographyClassifier
 from listclassifier import ListClassifier
 from metadata import Metadata
+from xslchainer import XslChain
 
 
 # check whether lxml is installed
@@ -174,6 +176,10 @@ class MeTypeset (Debuggable):
 
             # run metadata merge
             Metadata(self.gv).run()
+
+            if self.args['--chain']:
+                # construct and run an XSLT chainer
+                XslChain(self.gv).run()
 
     def run(self):
         self.run_modules()
