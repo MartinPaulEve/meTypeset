@@ -7,6 +7,7 @@ Usage:
     meTypeset.py bibscan <input> [options]
 
 Options:
+    -a, --aggression <aggression_level>             Parser aggression level 0-10 [default: 10]
     -d, --debug                                     Enable debug output
     -h, --help                                      Show this screen.
     -m <metadata_file>, --metadata <metadata_file>  Metadata file
@@ -132,6 +133,11 @@ class MeTypeset (Debuggable):
                 self.settings_file_path = self.args['--settings']
 
     def run_modules(self):
+        ag = int(self.gv.settings.args['--aggression'])
+        self.debug.print_debug(self,
+                               u'Running at aggression level {0} {1}'.format(ag,
+                                                                             "[grrr!]" if ag >= 10 else ""))
+
         if self.args['bibscan']:
 
             BibliographyDatabase(self.gv).scan()

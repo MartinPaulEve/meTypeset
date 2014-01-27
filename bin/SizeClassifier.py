@@ -20,6 +20,7 @@ class SizeClassifier(Debuggable):
         self.debug = self.gv.debug
         self.size_cutoff = 16
         self.max_headings = 40
+        self.aggression_threshold = 8
         Debuggable.__init__(self, 'Size Classifier')
 
     @staticmethod

@@ -227,6 +227,7 @@ class ListClassifier(Debuggable):
         # (2) Item 2
         self.process_curly_list(tree, manipulate)
 
-        # look for reference list [1], [2] etc.
-        self.process_enclosed_ref_list(tree, manipulate)
+        if int(self.gv.settings.args['--aggression']) >= 10:
+            # look for reference list [1], [2] etc.
+            self.process_enclosed_ref_list(tree, manipulate)
 
