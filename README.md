@@ -28,11 +28,12 @@ Usage:
     meTypeset.py bibscan <input> [options]
 
 Options:
-    -a, --aggression <aggression_level>             Parser aggression level 0-10 [default: 10]
-    -d, --debug                                     Enable debug output
+    -a, --aggression <aggression_level>             Parser aggression level 0-10 [default: 10].
+    -c, --chain <xslt>                              Specify a subsequent XSL transform to pass the NLM to.
+    -d, --debug                                     Enable debug output.
     -h, --help                                      Show this screen.
-    -m, --metadata <metadata_file>                  Metadata file
-    -s, --settings <settings_file>                  Settings file
+    -m, --metadata <metadata_file>                  Metadata file.
+    -s, --settings <settings_file>                  Settings file.
     -v, --version                                   Show version.
 ```
 
