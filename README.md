@@ -20,21 +20,27 @@ Running the python script
 First off, ensure you have the correct stack installed for your environment. meTypeset needs a valid python environment, a valid Java environment, the command line tools "unzip" and "basename" and a shell interpreter (eg Bash). Saxon, which is required, is pre-bundled. It has been shown to work correctly on *Nix derivatives and Mac OS X.
 
 ```
+meTypeset: text parsing library to convert word documents to the JATS XML format
+
 Usage:
-    meTypeset.py docx               <input>     <output_folder> [options]
-    meTypeset.py docxextracted      <input>     <output_folder> [options]
+    meTypeset.py docx <input> <output_folder> [options]
+    meTypeset.py docxextracted <input> <output_folder> [options]
+    meTypeset.py bibscan <input> [options]
 
 Options:
-    -d, --debug                     Enable debug output
-    -h, --help                      Show this screen.
-    -m, --metadata <metadata_file>  Metadata file
-    -s, --settings <settings_file>  Settings file
-    --version                       Show version.
+    -a, --aggression <aggression_level>             Parser aggression level 0-10 [default: 10]
+    -d, --debug                                     Enable debug output
+    -h, --help                                      Show this screen.
+    -m, --metadata <metadata_file>                  Metadata file
+    -s, --settings <settings_file>                  Settings file
+    -v, --version                                   Show version.
 ```
 
 When running with the docx command, input should be a Word DOCX file.
 
 When running with the docxextracted command, input should be a folder containing the usually compressed contents of a Word DOCX file (unzip x.docx).
+
+When running with the bibscan command, input should be an NLM XML file, from which bibliographic reference information will be extracted.
 
 Developer information
 =========
