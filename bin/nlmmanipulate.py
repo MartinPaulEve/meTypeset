@@ -216,7 +216,8 @@ class NlmManipulate(Manipulate):
 
     def find_reference_list(self):
         tree = self.load_dom_tree()
-        indentmethod = tree.xpath('//sec[title][disp-quote] | //sec[title][list]')
+        # tag the last item as a reference list
+        indentmethod = tree.xpath('(//sec[title][disp-quote] | //sec[title][list])[last()]')
         if indentmethod:
             for item in indentmethod:
                 item.attrib['reflist'] = 'yes'
