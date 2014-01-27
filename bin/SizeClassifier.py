@@ -219,6 +219,16 @@ class SizeClassifier(Debuggable):
 
         root_size = sizes_ordered[0]
 
+        # handle occasions when root_size is lower than size_cutoff
+        if float(root_size) < float(self.size_cutoff):
+            manipulate.resize_headings(root_size, str(self.size_cutoff))
+
+            sizes = [self.size_cutoff if x == root_size else x for x in sizes]
+            sizes_ordered = [self.size_cutoff if x == root_size else x for x in sizes_ordered]
+
+            root_size = str(self.size_cutoff)
+
+
         # assign IDs to every single heading tag for easy manipulation
         manipulate.tag_headings()
         # normalize sizes: we cannot have a size bigger than the root node; there's no sensible way to detect this
@@ -229,7 +239,7 @@ class SizeClassifier(Debuggable):
                                            u'Downsizing headings of {0} '
                                            u'to maximum root size {1}'.format(str(size),
                                                                               str(root_size)))
-                    manipulate.downsize_headings(root_size, size)
+                    manipulate.resize_headings(size, root_size)
                     sizes_ordered = [root_size if x == size else x for x in sizes_ordered]
 
         for size in sizes_ordered:
