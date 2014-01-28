@@ -13,6 +13,7 @@ A class that looks for common list encodings and handles them properly.
 
 from debug import Debuggable
 import math
+from copy import copy
 
 
 class ListClassifier(Debuggable):
@@ -68,6 +69,48 @@ class ListClassifier(Debuggable):
                     list_element.append(to_append)
         return iteration
 
+    def handle_footnote_item(self, element, elements, in_list_run, iteration, list_element, offset, to_append):
+        iteration += 1
+        # treat as fn-list list
+        self.debug.print_debug(self, u'Handling footnote element {0}'.format(element.text))
+        if not in_list_run:
+            list_element = etree.Element('fn-group')
+            to_append = None
+            in_list_run = True
+            element.addprevious(list_element)
+        if not element.getnext().text is None:
+            if element.getnext().text.startswith(u'[') and not element.getnext() in elements:
+                # this element is the last in this list
+                in_list_run = False
+                to_append = element.getnext()
+            elif not element.getnext().text.startswith(u'['):
+                # anomalous ref
+                self.debug.print_debug(self, u'Footnote missing marker {0}'.format(element.getnext().text))
+                element.text = element.text + element.getnext().text
+                element.getnext().text = ''
+        else:
+            # this can happen with italics
+            self.debug.print_debug(self, u'Footnote run/anomaly on {0}'.format(element.getnext()))
+            for sub_element in element.getnext():
+                element.append(sub_element)
+            in_list_run = False
+            to_append = element.getnext()
+        element.tag = 'note'
+        element.attrib['id'] = 'fn_from_list{0}'.format(iteration)
+        element.text = element.text[(int(offset) + int(math.floor(int(iteration / 10)))):]
+        list_element.append(element)
+
+        if not in_list_run:
+            if not to_append is None:
+                if not to_append.text is None:
+                    to_append.tag = 'note'
+                    to_append.attrib['id'] = 'fn_from_list{0}'.format(iteration + 1)
+                    to_append.text = to_append.text[(int(offset) + int(math.floor(int(iteration / 10)))):]
+                    self.debug.print_debug(self, u'Appending ref element: {0}'.format(to_append.text))
+                    list_element.append(to_append)
+
+        return iteration, list_element
+
     def process_enclosed_ref_list(self, tree, manipulate):
         # find it we have a list of enclosed references
         # todo work with hi tags
@@ -83,30 +126,52 @@ class ListClassifier(Debuggable):
         last_element = None
         acted = False
 
+        # ascertain if there are other document references. If so, this is probably a footnote
+        footnote_test = '//text()[contains(self::text(), "[1]")]'
+        footnotes = tree.xpath(footnote_test, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+        is_footnote = len(footnotes) > 1
+
         for element in elements:
-            # ascertain if there are other document references. If so, this is probably a footnote
-            footnote_test = '//text()[contains(self::text(), "[1]")]'
-            footnotes = tree.xpath(footnote_test, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
-            is_footnote = len(footnotes) > 1
+            if iteration == 0:
+                if not elements[0].text.startswith(u'[1] '):
+                    self.debug.print_debug(self, u'Reference list PANIC: {0}'.format(element.text))
+                    break
+                else:
+                    offset = 4
 
             if is_footnote:
                 # todo handle footnotes
                 self.debug.print_debug(self, u'Found in-text footnotes: processing')
-                pass
+                iteration, list_element = self.handle_footnote_item(element, elements,
+                                                                    in_list_run, iteration, list_element, offset,
+                                                                    to_append)
             else:
                 acted = True
-
-                if iteration == 0:
-                    if not elements[0].text.startswith(u'[1] '):
-                        self.debug.print_debug(self, u'Reference list PANIC: {0}'.format(element.text))
-                        break
-                    else:
-                        offset = 4
 
                 iteration = self.handle_reference_item(element, elements, in_list_run, iteration, list_element, offset,
                                                        to_append)
         if acted:
             manipulate.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]', 'back', 'div', 'type', 'bibliogr')
+
+        if is_footnote:
+            back = manipulate.find_or_create_element(tree, 'back', '//tei:body', True)
+
+            back.append(list_element)
+
+            new_element_list = list_element
+
+            for count in range(1, iteration + 2):
+
+                footnote_test = '//tei:p//text()[contains(self::text(), "[{0}]")]'.format(count)
+                footnote = tree.xpath(footnote_test, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+
+                note = copy(new_element_list[count - 1])
+
+                # needs to split before and after, append element and put after as tail
+                footnote.getparent().text = footnote.replace("[{0}]".format(count),'')
+                footnote.getparent().append(note)
+
+            back.remove(list_element)
 
         tree.write(self.gv.tei_file_path)
 
