@@ -86,16 +86,17 @@ class TeiManipulate(Manipulate):
 
         tree.write(self.gv.tei_file_path)
 
-    @staticmethod
-    def find_or_create_element(tree, element_tag, add_xpath, is_sibling):
+    def find_or_create_element(self, tree, element_tag, add_xpath, is_sibling):
         # find_or_create_elements(tree, 'back', '//body', true)
         ret = None
         try:
             ret = tree.xpath(u'//tei:' + element_tag, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+            self.debug.print_debug(self, u'Found existing {0}. Using it.'.format(element_tag))
         except:
-            pass
+            self.debug.print_debug(self, u'Unable to find an existing {0} element.'.format(element_tag))
 
         if ret is None:
+            self.debug.print_debug(self, u'Creating new {0} element.'.format(element_tag))
             ret = tree.xpath(add_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
             new_element = etree.Element(element_tag)
 
@@ -118,8 +119,9 @@ class TeiManipulate(Manipulate):
         # find the parent
         parent = self.find_or_create_element(tree, 'back', '//tei:body', True)
 
-        if not parent.tag == top_tag:
+        if not (parent.tag == top_tag) and not (parent.tag == '{http://www.tei-c.org/ns/1.0}' + top_tag):
             new_element = etree.Element(top_tag)
+            self.debug.print_debug(self, u'Mismatch {0} {1}.'.format(parent.tag, top_tag))
         else:
             new_element = parent
 
