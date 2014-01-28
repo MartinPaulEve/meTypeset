@@ -134,5 +134,14 @@ Library           Collections
     ${xml}=    Parse XML    ./009/nlm/out.xml
     ${p}=    Get Element    ${xml}    body/sec/list
     Elements Should Match    ${p}    <list><list-item><p>Item 1</p></list-item><list-item><p>Item 2</p></list-item><list-item><p>Item 3</p></list-item></list>    normalize_whitespace=yes
-    ${title}=    Get Element    ${xml}    body/sec/title
     [Teardown]    Remove Directory    009    recursive=True
+
+010 Reference list classifier
+    [Tags]    formatting    listclassifier    010
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ListReferences01.docx ./010 -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./010/nlm/out.xml
+    ${p}=    Get Element    ${xml}    back/ref-list
+    Elements Should Match    ${p}    <ref-list><ref>Reference 1</ref><ref>Reference 2</ref></ref-list>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    010    recursive=True
