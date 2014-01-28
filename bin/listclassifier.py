@@ -111,7 +111,11 @@ class ListClassifier(Debuggable):
 
         return iteration, list_element
 
-    def process_enclosed_ref_list(self, tree, manipulate):
+    def process_enclosed_ref_list(self, tree, manipulate, treestring):
+
+        if not u'>[' in treestring:
+            return
+
         # find it we have a list of enclosed references
         # todo work with hi tags
         expression = u'//tei:div[last()]//tei:p[starts-with(.,"[")][following-sibling::tei:p[starts-with(.,"[")]]'
@@ -175,7 +179,11 @@ class ListClassifier(Debuggable):
 
         tree.write(self.gv.tei_file_path)
 
-    def process_dash_list(self, tree, manipulate):
+    def process_dash_list(self, tree, manipulate, treestring):
+
+        if not u'>-' in treestring:
+            return
+
         # select all p elements followed by another p element
         expression = u'//tei:p[starts-with(.,"- ")][following-sibling::tei:p[starts-with(.,"- ")]]'
 
@@ -222,7 +230,11 @@ class ListClassifier(Debuggable):
 
         tree.write(self.gv.tei_file_path)
 
-    def process_curly_list(self, tree, manipulate):
+    def process_curly_list(self, tree, manipulate, treestring):
+
+        if not u'>(' in treestring:
+            return
+
         # select all p elements followed by another p element
         expression = u'//tei:p[starts-with(.,"(")][following-sibling::tei:p[starts-with(.,"(")]]'
 
@@ -286,17 +298,19 @@ class ListClassifier(Debuggable):
 
         manipulate = TeiManipulate(self.gv)
 
+        string_version = etree.tostring(tree)
+
         # look for dash separated list
         # - Item 1
         # - Item 2
-        self.process_dash_list(tree, manipulate)
+        self.process_dash_list(tree, manipulate, string_version)
 
         # look for curly bracket separated list
         # (1) Item 1
         # (2) Item 2
-        self.process_curly_list(tree, manipulate)
+        self.process_curly_list(tree, manipulate, string_version)
 
         if int(self.gv.settings.args['--aggression']) >= 10:
             # look for reference list [1], [2] etc.
-            self.process_enclosed_ref_list(tree, manipulate)
+            self.process_enclosed_ref_list(tree, manipulate, string_version)
 
