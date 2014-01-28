@@ -17,6 +17,8 @@ class ZoteroHandler(Debuggable):
                                          ' ADDIN ZOTERO_BIBL {"custom":[]} CSL_BIBLIOGRAPHY ',
                                          self)
 
+        tei_manipulator.tag_bibliography_non_csl('//tei:p/tei:ref[@rend="ref"]', ' ADDIN EN.REFLIST ', self)
+
         # create a back/div[@type='bibliogr'] section
         tei_manipulator.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]',
                                                   'back', 'div', 'type', 'bibliogr')

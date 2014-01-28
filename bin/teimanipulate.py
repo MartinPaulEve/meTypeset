@@ -153,6 +153,47 @@ class TeiManipulate(Manipulate):
 
         tree.write(self.gv.tei_file_path)
 
+    def tag_bibliography_non_csl(self, xpath, start_text, caller):
+        # load the DOM
+        tree = self.load_dom_tree()
+        change_element = None
+
+        for child in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            if child.text.startswith(start_text):
+                child.text = child.text.replace(start_text, '')
+                try:
+                    change_element = child.getparent().getparent()
+                except:
+                    pass
+
+        if not change_element is None:
+            # change the "sec" above to "p"
+            change_element.tag = 'div'
+
+            new_element = etree.Element('div')
+            change_element.addnext(new_element)
+            new_element.append(change_element)
+
+            # change all sub-elements to ref
+            for element in change_element:
+                if element.tag == '{http://www.tei-c.org/ns/1.0}head':
+                    self.debug.print_debug(self, u'Dropping head element: {0}'.format(etree.tostring(element)))
+                    change_element.remove(element)
+                elif element.tag == '{http://www.tei-c.org/ns/1.0}p':
+                    outer = etree.Element('p')
+                    outer.attrib['rend'] = 'Bibliography'
+                    element.tag = 'ref'
+                    element.attrib['target'] = 'None'
+
+                    outer.append(element)
+                    new_element.append(outer)
+
+            new_element.remove(change_element)
+
+
+
+        tree.write(self.gv.tei_file_path)
+
     def drop_addin(self, xpath, start_text, sub_tag, replace_tag, attribute, caller, wrap_tag, delete_original):
         # load the DOM
         tree = self.load_dom_tree()
