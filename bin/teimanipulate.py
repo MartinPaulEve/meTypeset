@@ -369,9 +369,25 @@ class TeiManipulate(Manipulate):
             image_link.attrib['url'] = converted_image_link
         tree.write(self.gv.tei_file_path)
 
+    def cleanup(self):
+        tree = self.load_dom_tree()
+
+        count = 0
+
+        for element in tree.xpath('//tei:ref[@target="None"] | //tei:p[not(node())]',
+                                  namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            element.getparent().remove(element)
+            count += 1
+
+        self.debug.print_debug(self, 'Removed {0} nodes during cleanup'.format(count))
+        tree.write(self.gv.tei_file_path)
+
     def run(self):
         # convert .wmf image links to png
         self.change_wmf_image_links()
+
+        self.cleanup()
+
         os.remove(self.dom_temp_file)
 
 
