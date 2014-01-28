@@ -140,7 +140,6 @@ class ListClassifier(Debuggable):
                     offset = 4
 
             if is_footnote:
-                # todo handle footnotes
                 self.debug.print_debug(self, u'Found in-text footnotes: processing')
                 iteration, list_element = self.handle_footnote_item(element, elements,
                                                                     in_list_run, iteration, list_element, offset,
@@ -167,9 +166,10 @@ class ListClassifier(Debuggable):
 
                 note = copy(new_element_list[count - 1])
 
-                # needs to split before and after, append element and put after as tail
-                footnote.getparent().text = footnote.replace("[{0}]".format(count),'')
+                split = footnote.split("[{0}]".format(count))
+                footnote.getparent().text = split[0]
                 footnote.getparent().append(note)
+                note.tail = split[1]
 
             back.remove(list_element)
 
