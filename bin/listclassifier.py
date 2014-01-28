@@ -99,7 +99,7 @@ class ListClassifier(Debuggable):
                             to_append.tag = 'p'
                             to_append.attrib['rend'] = u'Bibliography'
                             to_append.text = to_append.text[(int(offset) + int(math.floor(int(iteration/10)))):]
-                            self.debug.print_debug(self, u'Appending anomalous ref element: {0}'.format(to_append.text))
+                            self.debug.print_debug(self, u'Appending ref element: {0}'.format(to_append.text))
                             list_element.append(to_append)
 
         manipulate.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]', 'back', 'div', 'type', 'bibliogr')
