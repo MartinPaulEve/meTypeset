@@ -84,9 +84,29 @@ class TeiManipulate(Manipulate):
                     list_item.tag = '{http://www.tei-c.org/ns/1.0}ref'
                     list_item.attrib['target'] = 'None'
 
-
-
         tree.write(self.gv.tei_file_path)
+
+    @staticmethod
+    def find_or_create_element(tree, element_tag, add_xpath, is_sibling):
+        # find_or_create_elements(tree, 'back', '//body', true)
+        ret = None
+        try:
+            ret = tree.xpath(u'//tei:' + element_tag, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+        except:
+            pass
+
+        if ret is None:
+            ret = tree.xpath(add_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+            new_element = etree.Element(element_tag)
+
+            if is_sibling:
+                ret.addnext(new_element)
+            else:
+                ret.append(new_element)
+
+            ret = new_element
+
+        return ret
 
     def enclose_bibliography_tags(self, xpath, top_tag, sub_tag, attrib, attribvalue):
         #tei_manipulator.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]', 'back', 'div', 'type', 'bibliogr')
@@ -96,16 +116,7 @@ class TeiManipulate(Manipulate):
         parent = None
 
         # find the parent
-        try:
-            try:
-                parent = tree.xpath('//tei:back', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
-            except:
-                pass
-
-            if parent is None:
-                parent = tree.xpath('//tei:body', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
-        except:
-            return
+        parent = self.find_or_create_element(tree, 'back', '//tei:body', True)
 
         if not parent.tag == top_tag:
             new_element = etree.Element(top_tag)
