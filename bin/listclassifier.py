@@ -27,6 +27,47 @@ class ListClassifier(Debuggable):
 
         return etree.parse(filename, p)
 
+    def handle_reference_item(self, element, elements, in_list_run, iteration, list_element, offset, to_append):
+        iteration += 1
+        # treat as ref list
+        self.debug.print_debug(self, u'Handling reference element {0}'.format(element.text))
+        if not in_list_run:
+            list_element = etree.Element('ref')
+            list_element.attrib['target'] = 'None'
+            to_append = None
+            in_list_run = True
+            element.addprevious(list_element)
+        if not element.getnext().text is None:
+            if element.getnext().text.startswith(u'[') and not element.getnext() in elements:
+                # this element is the last in this list
+                in_list_run = False
+                to_append = element.getnext()
+            elif not element.getnext().text.startswith(u'['):
+                # anomalous ref
+                self.debug.print_debug(self, u'Ref missing marker {0}'.format(element.getnext().text))
+                element.text = element.text + element.getnext().text
+                element.getnext().text = ''
+        else:
+            # this can happen with italics
+            self.debug.print_debug(self, u'Ref run/anomaly on {0}'.format(element.getnext()))
+            for sub_element in element.getnext():
+                element.append(sub_element)
+            in_list_run = False
+            to_append = element.getnext()
+        element.tag = 'p'
+        element.attrib['rend'] = u'Bibliography'
+        element.text = element.text[(int(offset) + int(math.floor(int(iteration / 10)))):]
+        list_element.append(element)
+        if not in_list_run:
+            if not to_append is None:
+                if not to_append.text is None:
+                    to_append.tag = 'p'
+                    to_append.attrib['rend'] = u'Bibliography'
+                    to_append.text = to_append.text[(int(offset) + int(math.floor(int(iteration / 10)))):]
+                    self.debug.print_debug(self, u'Appending ref element: {0}'.format(to_append.text))
+                    list_element.append(to_append)
+        return iteration
+
     def process_enclosed_ref_list(self, tree, manipulate):
         # find it we have a list of enclosed references
         # todo work with hi tags
@@ -40,6 +81,7 @@ class ListClassifier(Debuggable):
         offset = 0
         process = True
         last_element = None
+        acted = False
 
         for element in elements:
             # ascertain if there are other document references. If so, this is probably a footnote
@@ -49,8 +91,11 @@ class ListClassifier(Debuggable):
 
             if is_footnote:
                 # todo handle footnotes
+                self.debug.print_debug(self, u'Found in-text footnotes: processing')
                 pass
             else:
+                acted = True
+
                 if iteration == 0:
                     if not elements[0].text.startswith(u'[1] '):
                         self.debug.print_debug(self, u'Reference list PANIC: {0}'.format(element.text))
@@ -58,51 +103,10 @@ class ListClassifier(Debuggable):
                     else:
                         offset = 4
 
-                iteration += 1
-
-                # treat as ref list
-                self.debug.print_debug(self, u'Handling reference element {0}'.format(element.text))
-
-                if not in_list_run:
-                    list_element = etree.Element('ref')
-                    list_element.attrib['target'] = 'None'
-                    to_append = None
-                    in_list_run = True
-                    element.addprevious(list_element)
-
-                if not element.getnext().text is None:
-                    if element.getnext().text.startswith(u'[') and not element.getnext() in elements:
-                        # this element is the last in this list
-                        in_list_run = False
-                        to_append = element.getnext()
-                    elif not element.getnext().text.startswith(u'['):
-                        # anomalous ref
-                        self.debug.print_debug(self, u'Ref missing marker {0}'.format(element.getnext().text))
-                        element.text = element.text + element.getnext().text
-                        element.getnext().text = ''
-                else:
-                    # this can happen with italics
-                    self.debug.print_debug(self, u'Ref run/anomaly on {0}'.format(element.getnext()))
-                    for sub_element in element.getnext():
-                        element.append(sub_element)
-                    in_list_run = False
-                    to_append = element.getnext()
-
-                element.tag = 'p'
-                element.attrib['rend'] = u'Bibliography'
-                element.text = element.text[(int(offset) + int(math.floor(int(iteration/10)))):]
-                list_element.append(element)
-
-                if not in_list_run:
-                    if not to_append is None:
-                        if not to_append.text is None:
-                            to_append.tag = 'p'
-                            to_append.attrib['rend'] = u'Bibliography'
-                            to_append.text = to_append.text[(int(offset) + int(math.floor(int(iteration/10)))):]
-                            self.debug.print_debug(self, u'Appending ref element: {0}'.format(to_append.text))
-                            list_element.append(to_append)
-
-        manipulate.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]', 'back', 'div', 'type', 'bibliogr')
+                iteration = self.handle_reference_item(element, elements, in_list_run, iteration, list_element, offset,
+                                                       to_append)
+        if acted:
+            manipulate.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]', 'back', 'div', 'type', 'bibliogr')
 
         tree.write(self.gv.tei_file_path)
 
