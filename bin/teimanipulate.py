@@ -379,6 +379,12 @@ class TeiManipulate(Manipulate):
             element.getparent().remove(element)
             count += 1
 
+        # find and remove sections where there is a single title and it is the /only/ element therein
+        for element in tree.xpath('//tei:div[count(tei:head)=1 and count(*)=1]',
+                                  namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            element.getparent().remove(element)
+            count += 1
+
         self.debug.print_debug(self, 'Removed {0} nodes during cleanup'.format(count))
         tree.write(self.gv.tei_file_path)
 
