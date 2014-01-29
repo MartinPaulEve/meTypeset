@@ -82,7 +82,7 @@ The [TEI Manipulator](bin/teimanipulate.py) then changes WMF files into PNG imag
 The [TEI to NLM transform](bin/teitonlm.py) procedure is then called, which as with the DOCX to TEI portion calls Saxon on a stylesheet.
 
 ###Metadata Merge
-The (metadata merge)[bin/metadata.py] merges in a metadata heading with the NLM. Ideally, this is produced by a plugin in your journal/content management system.
+The [metadata merge](bin/metadata.py) merges in a metadata heading with the NLM. Ideally, this is produced by a plugin in your journal/content management system.
 
 ###Chain
 Finally, an [optional additional XSL](bin/xslchainer.py) file can be specified to be transformed by passing the --chain option.
