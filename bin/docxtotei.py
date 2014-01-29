@@ -14,7 +14,7 @@ __email__ = "dulip.withanage@gmail.com"
 
 from debug import Debuggable
 
-class Docx2TEI(Debuggable):
+class DocxToTei(Debuggable):
     def __init__(self, gv):
         self.gv = gv
         self.debug = gv.debug

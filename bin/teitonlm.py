@@ -6,7 +6,7 @@ from nlmmanipulate import NlmManipulate
 from debug import Debuggable
 
 
-class TEI2NLM (Debuggable):
+class TeiToNlm (Debuggable):
     def __init__(self, gv):
         self.gv = gv
         self.module_name = "TEI to NLM"

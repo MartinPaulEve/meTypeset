@@ -22,12 +22,12 @@ Options:
 
 from StringIO import StringIO
 import os, subprocess, sys
-import docx2tei
-from docx2tei import *
-from tei2nlm import *
+import docxtotei
+from docxtotei import *
+from teitonlm import *
 from metadata import *
 from manipulate import *
-from FrontMatterParser import *
+from frontmatterparser import *
 import os
 from docopt import docopt
 import globals as g
@@ -73,7 +73,7 @@ def get_settings_file():
         script_dir = os.environ['METYPESET']
     except:
         try:
-		module_path = os.path.dirname(docx2tei.__file__)
+		module_path = os.path.dirname(docxtotei.__file__)
 		script_dir = os.path.dirname(module_path + "/../")
 		os.environ['METYPESET'] = script_dir
 	except:
@@ -112,11 +112,11 @@ def main():
 	java_class_path = g.set_java_classpath(gv)
 
 	# rund docx to tei conversion
-	docx2tei = Docx2TEI(gv)
+	docx2tei = DocxToTei(gv)
 	docx2tei.run()
 
 	# run tei to nlm conversion
-	tei2nlm = TEI2NLM(gv)
+	tei2nlm = TeiToNlm(gv)
 	tei2nlm.run()
 
 

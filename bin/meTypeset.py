@@ -20,16 +20,16 @@ Options:
 __author__ = "Martin Paul Eve, Dulip Withnage"
 __email__ = "martin@martineve.com"
 
-import docx2tei
-from docx2tei import *
-from tei2nlm import *
-from SizeClassifier import *
-from FrontMatterParser import *
+import docxtotei
+from docxtotei import *
+from teitonlm import *
+from sizeclassifier import *
+from frontmatterparser import *
 from docopt import docopt
 from teimanipulate import TeiManipulate
 from globals import *
 from debug import Debuggable
-from bibliographyAddins import BibliographyAddins
+from bibliographyaddins import BibliographyAddins
 from bibliographydatabase import BibliographyDatabase
 from bibliographyclassifier import BibliographyClassifier
 from listclassifier import ListClassifier
@@ -105,7 +105,7 @@ class MeTypeset (Debuggable):
         except:
             # noinspection PyBroadException
             try:
-                mod_path = os.path.dirname(docx2tei.__file__)
+                mod_path = os.path.dirname(docxtotei.__file__)
                 script_dir = os.path.dirname(mod_path + '/../')
                 os.environ['METYPESET'] = script_dir
 
@@ -151,10 +151,10 @@ class MeTypeset (Debuggable):
 
             if self.args['docx']:
                 # run docx to tei conversion
-                Docx2TEI(self.gv).run(True)
+                DocxToTei(self.gv).run(True)
             else:
                 self.debug.print_debug(self, 'Skipping docx extraction')
-                Docx2TEI(self.gv).run(False)
+                DocxToTei(self.gv).run(False)
 
             # run size classifier
             SizeClassifier(self.gv).run()
@@ -172,7 +172,7 @@ class MeTypeset (Debuggable):
             TeiManipulate(self.gv).run()
 
             # run tei to nlm conversion
-            TEI2NLM(self.gv).run()
+            TeiToNlm(self.gv).run()
 
             # run metadata merge
             Metadata(self.gv).run()
