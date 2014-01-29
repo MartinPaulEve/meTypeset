@@ -1,5 +1,4 @@
-meTypeset
-=========
+#meTypeset
 
 meTypeset is a tool to covert from Microsoft Word .docx format to NLM/JATS-XML for scholarly/scientific article typesetting.
 
@@ -14,8 +13,7 @@ The transforms within this software can be invoked in several different ways:
 The modfications to the OxGarage stack contained within this project are Copyright Martin Paul Eve 2014 and released under the licenses specified in each respective file.
 
 
-Running the python script
-=========
+#Running meTypeset
 
 First off, ensure you have the correct stack installed for your environment. meTypeset needs a valid python environment, a valid Java environment, the command line tools "unzip" and "basename" and a shell interpreter (eg Bash). Saxon, which is required, is pre-bundled. It has been shown to work correctly on *Nix derivatives and Mac OS X.
 
@@ -43,21 +41,48 @@ When running with the docxextracted command, input should be a folder containing
 
 When running with the bibscan command, input should be an NLM XML file, from which bibliographic reference information will be extracted.
 
-Developer information
-=========
-Most of the heavy lifting for the transforms is done in the files within the docx/from and nlm directories.
+#Developer information
 
-The process is as follows:
+##Main Function and Initialization
+meTypeset works on a modular basis. The initial call to [meTypeset](bin/meTypeset.py) creates a new instance of the meTypeset class. This, in turn, initializes the debugger and the global settings variable class. It also parses the command line options using [docopt](http://docopt.org/).
 
-1. Unzip the docx
+The main module then sequentially calls the submodules and classifiers that handle different processes in the parsing of the document. Whether or not these modules are called is defined by the --aggression switch. Aggression levels correlate to the risk involved in running each of the procedures as some are more statistically likely to fail and also to falsely classify other parts of the document.
 
-2. Transform the docx document.xml to intermediary TEI format
+##docx and docxextracted Procedure
 
-3. Rip out the media directory from the docx (if it exists)
+###Extraction and setup
+If the command argument given is docx or docxextracted, the first call is to the [DOCX to TEI parser](bin/docxtotei.py). This module extracts the docx file (if argument was "docx") to a temporary folder, copies across all necessary [transform stylesheets](docx/from), extracts any media files embedded in the word document to the "media" folder and then calls [Saxon](runtime/saxon9.jar) to perform an initial transform to TEI format.
 
-4. Transform the TEI to NLM
+###Size Classifier
+If the appropriate aggression level is set, the next step is to proceed to the [Size Classifier](bin/sizeclassifier.py). This module handles classification of sizes and headings within the document. Taking a given minimum size cutoff (16) as a basis, it classifies text above this level as a heading, so long as no more than 40 headings of this size exist in a document. It then proceeds to organize these headings into different nested sub-levels using a [TEI-Manipulator](bin/teimanipulator.py) object to do the heavy lifting. The procedure for all this is as follows:
 
-5. Merge the contents of the metadataFile into the NLM (see metadata/metadataSample.xml)
+1. Classify all bold headings as root-level titles
+2. Process well-formed Word headings and correlate them to other sizes in the document (i.e. Word's "heading 2" correlates to the second largest size heading specified elsewhere by font size, for example)
+3. Organize these headings into sections, including downsizing of heading elements that try to be larger than the root node
 
+###List Classifier
+While properly formatted Word lists are handled in the XML transforms, we often encounter documents where the user has employed a variety of homegrown stylings, such as successive paragraphs beginning with (1) etc. This module has three steps:
 
+1. Classify lists beginning with -
+2. Classify lists beginning with (1)
+3. Classify reference lists and footnotes parsed as \[1\]
 
+The final step is the most difficult. If we find a list at the end of the document in the \[1\] format that is /not referenced elsewhere/, then we treat it as a bibliography. If, however, we find a list in this format, but then additional mentions of \[1\] and \[2\] earlier in the document, then we assume that this is ad-hoc footnote syntax and convert to that, instead.
+
+###Bibliographic Addins Classifier
+The [bibliographic addins classifier](bin/bibliographyaddins.py) processes Zotero and Mendeley references, enclosing them within the format that the [bibliography classifier](bin/bibliographyclassifier.py) can then subsequently handle. It then [optionally](bin/settings.py) drops any other addins that we don't know about to avoid courrupted text and JSON strings in the document.
+
+###Bibliography Classifier
+The [bibliography classifier](bin/bibliographyclassifier.py) converts marked-up paragraphs into proper bibliography format ready for post-processing and reference parsing.
+
+###Miscellaneous TEI Transformations
+The [TEI Manipulator](bin/teimanipulate.py) then changes WMF files into PNG images for maximum compatibility and removes any empty tags and sections that consist /only/ of title elements.
+
+###NLM Transformation
+The [TEI to NLM transform](bin/teitonlm.py) procedure is then called, which as with the DOCX to TEI portion calls Saxon on a stylesheet.
+
+###Metadata Merge
+The (metadata merge)[bin/metadata.py] merges in a metadata heading with the NLM. Ideally, this is produced by a plugin in your journal/content management system.
+
+###Chain
+Finally, an [optional additional XSL](bin/xslchainer.py) file can be specified to be transformed by passing the --chain option.
