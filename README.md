@@ -61,7 +61,7 @@ If the appropriate aggression level is set, the next step is to proceed to the [
 3. Organize these headings into sections, including downsizing of heading elements that try to be larger than the root node
 
 ###List Classifier
-While properly formatted Word lists are handled in the XML transforms, we often encounter documents where the user has employed a variety of homegrown stylings, such as successive paragraphs beginning with (1) etc. This module has three steps:
+While properly formatted Word lists are handled in the XML transforms, we often encounter documents where the user has employed a variety of homegrown stylings, such as successive paragraphs beginning with (1) etc. [This module](bin/listclassifier.py) has three steps:
 
 1. Classify lists beginning with -
 2. Classify lists beginning with (1)
