@@ -145,3 +145,15 @@ Library           Collections
     ${p}=    Get Element    ${xml}    back/ref-list
     Elements Should Match    ${p}    <ref-list><ref>Reference 1</ref><ref>Reference 2</ref></ref-list>    normalize_whitespace=yes
     [Teardown]    Remove Directory    010    recursive=True
+
+011 Footnote list classifier
+    [Tags]    formatting    listclassifier    011
+    ${result} =    Run Process    python ../bin/meTypeset.py docx FootnotesFromText.docx ./011 -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./011/nlm/out.xml
+    ${p}=    Get Element    ${xml}    body/sec
+    Elements Should Match    ${p}    <sec><p>A section with a footnote.<xref ref-type="fn" rid="bibd2e35"/> More text.</p><p>A third.<xref ref-type="fn" rid="bibd2e40"/></p><title>Footnotes</title></sec>    normalize_whitespace=yes
+    ${ptwo}=    Get Element    ${xml}    back/fn-group
+    Elements Should Match    ${ptwo}    <fn-group><fn id="bibd2e35"><p>The footnote should link here</p></fn><fn id="bibd2e40"><p>A second footnote</p></fn></fn-group>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    011    recursive=True
