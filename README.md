@@ -86,3 +86,15 @@ The [metadata merge](bin/metadata.py) merges in a metadata heading with the NLM.
 
 ###Chain
 Finally, an [optional additional XSL](bin/xslchainer.py) file can be specified to be transformed by passing the --chain option.
+
+#Credits
+
+meTypeset is a fork of the [TEI Consortium's OxGarage stylesheets](https://github.com/TEIC/Stylesheets).
+
+The lead developer is Dr. [Martin Paul Eve](https://www.martineve.com).
+
+Additional contributions were made, in alphabetical order) by:
+
+* [Rodrigo DLG](https://github.com/josille) (josille@gmail.com)
+* [Alex Garnett](https://github.com/axfelix) (axfelix@gmail.com)
+* [Dulip Withnage](https://github.com/withanage) (dulip.withanage@gmail.com)
