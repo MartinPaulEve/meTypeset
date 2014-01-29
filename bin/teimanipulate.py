@@ -161,8 +161,9 @@ class TeiManipulate(Manipulate):
         tree = self.load_dom_tree()
 
         for child in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            if child.text.startswith(start_text):
-                child.text = child.text.replace(start_text, '')
+            if not child.text is None:
+                if child.text.startswith(start_text):
+                    child.text = child.text.replace(start_text, '')
 
         tree.write(self.gv.tei_file_path)
 
