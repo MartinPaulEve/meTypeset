@@ -21,6 +21,7 @@ class SizeClassifier(Debuggable):
         self.size_cutoff = 16
         self.max_headings = 40
         self.aggression_threshold = 8
+        self.root = 0
         Debuggable.__init__(self, 'Size Classifier')
 
     @staticmethod
@@ -191,6 +192,10 @@ class SizeClassifier(Debuggable):
                            u"@meTypesetHeadingID=\'{2}\']]".format(
                                str(iteration), str(iteration), str(iteration + 1)))
 
+        if float(size) == float(self.root):
+            manipulate.move_size_div(iteration, 0)
+
+
     def process_subsequent_headings(self, iteration, manipulate, processed_flag, section_ids, section_stack, size,
                                     sizes_ordered):
         if not processed_flag:
@@ -254,6 +259,7 @@ class SizeClassifier(Debuggable):
         processed_flag = False
 
         root_size = sizes_ordered[0]
+        self.root = root_size
 
         # handle occasions when root_size is lower than size_cutoff
         if float(root_size) < float(self.size_cutoff):
