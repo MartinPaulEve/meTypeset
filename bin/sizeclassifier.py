@@ -88,7 +88,7 @@ class SizeClassifier(Debuggable):
         sibling_id = section_ids[section_stack.index(sibling_size)]
         return sibling_id
 
-    def enclose_larger_heading(self, iteration, manipulate, next_size, section_ids, section_stack, size):
+    def enclose_larger_heading(self, iteration, manipulate, next_size, section_ids, section_stack, size, next_id):
         self.debug.print_debug(self,
                                u'Encountered larger block as following (size: {0}, next size: {1}) '
                                u'[size ID: #{2}]'.format(str(size), str(next_size), str(iteration)))
@@ -104,7 +104,7 @@ class SizeClassifier(Debuggable):
         manipulate.enclose(u"//tei:head[@meTypesetHeadingID=\'{0}\']".format(str(iteration + 1)),
                            u"//tei:head[@meTypesetHeadingID=\'{0}\'] | //*[preceding-sibling::tei:head["
                            u"@meTypesetHeadingID=\'{1}\']]".format(
-                               str(iteration + 1), str(iteration + 1)))
+                               str(next_id), str(next_id)))
 
         if sibling_id != -1:
             # move the /next heading/ to directly beneath the previous sibling
@@ -182,7 +182,7 @@ class SizeClassifier(Debuggable):
                            u"@meTypesetHeadingID=\'{1}\']]".format(
                                str(iteration), str(iteration)))
 
-    def enclose_same_size_heading(self, iteration, manipulate, size):
+    def enclose_same_size_heading(self, iteration, manipulate, size, next_id):
         self.debug.print_debug(self,
                                u'Encountered block of same size as following (size: {0}) [size ID: {1}]'.format(
                                    str(size), str(iteration)))
@@ -190,7 +190,16 @@ class SizeClassifier(Debuggable):
                            u"//tei:head[@meTypesetHeadingID=\'{0}\'] | //*[preceding-sibling::tei:"
                            u"head[@meTypesetHeadingID=\'{1}\'] and following-sibling::tei:head["
                            u"@meTypesetHeadingID=\'{2}\']]".format(
-                               str(iteration), str(iteration), str(iteration + 1)))
+                               str(iteration), str(iteration), str(next_id)))
+
+    def get_next_size(self, iteration, sizes_ordered):
+        next_size = sizes_ordered[iteration + 1]
+        plusint = 1
+        while float(next_size) < float(self.size_cutoff):
+            next_size = sizes_ordered[iteration + plusint + 1]
+            plusint += 1
+
+        return next_size, iteration + plusint
 
     def process_subsequent_headings(self, iteration, manipulate, processed_flag, section_ids, section_stack, size,
                                     sizes_ordered):
@@ -198,23 +207,17 @@ class SizeClassifier(Debuggable):
 
             # ascertain the next size
             if iteration < (len(sizes_ordered) - 1):
-                next_size = sizes_ordered[iteration + 1]
-
-                plusint = 1
-
-                while float(next_size) < float(self.size_cutoff):
-                    next_size = sizes_ordered[iteration + plusint + 1]
-                    plusint += 1
+                next_size, next_id = self.get_next_size(iteration, sizes_ordered)
 
                 if float(size) == float(next_size):
-                    self.enclose_same_size_heading(iteration, manipulate, size)
+                    self.enclose_same_size_heading(iteration, manipulate, size, next_id)
 
                 if float(size) > float(next_size):
                     self.enclose_smaller_heading(iteration, manipulate, next_size, size)
 
                 elif float(size) < float(next_size):
                     self.enclose_larger_heading(iteration, manipulate, next_size, section_ids, section_stack,
-                                                size)
+                                                size, next_id)
 
                     self.debug.print_debug(self, 'Previous section stack: {0}'.format(section_stack))
 
@@ -279,6 +282,12 @@ class SizeClassifier(Debuggable):
                                                                               str(root_size)))
                     manipulate.resize_headings(size, root_size)
                     sizes_ordered = [root_size if x == size else x for x in sizes_ordered]
+
+        if len(set(sizes_ordered)) == 1:
+            self.debug.print_debug(self, 'After normalization, found a single heading size. Treating as such')
+            self.handle_single_size(manipulate, sizes)
+            self.debug.print_debug(self, 'Shutting down module')
+            return
 
         for size in sizes_ordered:
             if float(size) >= float(self.size_cutoff):
@@ -355,26 +364,13 @@ class SizeClassifier(Debuggable):
         tree = self.set_dom_tree(self.gv.tei_file_path)
         return tree
 
-    def run(self):
+    def handle_single_size(self, manipulate, sizes):
+        handled = False
 
-        if int(self.gv.settings.args['--aggression']) < 5:
-            self.debug.print_debug(self, 'Aggression level less than 5: exiting module.')
-            return
+        for size in sizes:
+            if not handled:
+                handled = True
 
-        manipulate = TeiManipulate(self.gv)
-
-        # transform bolded paragraphs into size-attributes with an extremely high threshold (so will be thought of as
-        # root nodes)
-        self.handle_bold_only_paragraph(manipulate, self.size_cutoff)
-
-        tree = self.correlate_styled_headings(manipulate)
-
-        # refresh the size list
-        sizes = self.get_sizes(tree)
-
-        if len(sizes) == 1:
-            for size in sizes:
-                # loop will only execute once
                 if float(size) >= float(self.size_cutoff):
                     # if the size is greater than or equal to 16, treat it as a heading
                     self.debug.print_debug(self,
@@ -395,6 +391,7 @@ class SizeClassifier(Debuggable):
 
                     if heading_count > 1:
                         for heading_id in range(0, heading_count):
+                            self.debug.print_debug(self, 'Handling heading ID {0}'.format(heading_id))
                             if heading_id < heading_count - 1:
                                 expression = u'//tei:head[@meTypesetHeadingID="{1}"] | ' \
                                              u'//*[following-sibling::tei:head[@meTypesetHeadingID="{0}"] and ' \
@@ -410,11 +407,31 @@ class SizeClassifier(Debuggable):
                                              u'@meTypesetHeadingID="{0}"]]'.format(heading_id)
                                 manipulate.enclose_all(expression, 'div', 1)
                     else:
-                         # enclose to the end of the document
+                    # enclose to the end of the document
                         expression = u'//tei:head[@meTypesetHeadingID="{0}"] | ' \
                                      u'//*[preceding-sibling::tei:head[' \
                                      u'@meTypesetHeadingID="{0}"]]'.format(u"1")
                         manipulate.enclose_all(expression, 'div', 1)
+
+    def run(self):
+
+        if int(self.gv.settings.args['--aggression']) < 5:
+            self.debug.print_debug(self, 'Aggression level less than 5: exiting module.')
+            return
+
+        manipulate = TeiManipulate(self.gv)
+
+        # transform bolded paragraphs into size-attributes with an extremely high threshold (so will be thought of as
+        # root nodes)
+        self.handle_bold_only_paragraph(manipulate, self.size_cutoff)
+
+        tree = self.correlate_styled_headings(manipulate)
+
+        # refresh the size list
+        sizes = self.get_sizes(tree)
+
+        if len(sizes) == 1:
+            self.handle_single_size(manipulate, sizes)
 
         elif len(sizes) > 1:
             self.create_sections(manipulate, sizes)
