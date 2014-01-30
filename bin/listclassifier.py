@@ -315,6 +315,12 @@ class ListClassifier(Debuggable):
         self.process_curly_list(tree, manipulate, string_version)
 
         if int(self.gv.settings.args['--aggression']) >= 10:
-            # look for reference list [1], [2] etc.
-            self.process_enclosed_ref_list(tree, manipulate, string_version)
+            backup_tree = copy(tree)
+            try:
+                # look for reference list [1], [2] etc.
+                self.process_enclosed_ref_list(tree, manipulate, string_version)
+            except:
+                self.debug.print_debug(self, 'Error processing footnote or reference list. Reverting to backup tree')
+                tree = backup_tree
+                tree.write(self.gv.tei_file_path)
 
