@@ -63,7 +63,7 @@ class NlmManipulate(Manipulate):
         new_nodes_to_copy = node.xpath('following-sibling::node()')
         last_append = None
         for new_node in new_nodes_to_copy:
-            if type(new_node) is etree._ElementStringResult:
+            if type(new_node) is etree._ElementStringResult or type(new_node) is etree._ElementUnicodeResult:
                 if last_append is None:
                     last_append = append_location
                     if move_node:
