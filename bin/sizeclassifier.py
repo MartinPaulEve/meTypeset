@@ -78,6 +78,15 @@ class SizeClassifier(Debuggable):
 
         manipulate.enclose_and_change_self_size(expression, str(root_size), 'p', 'hi')
 
+    def handle_misstacked(self, next_size, section_ids, section_stack):
+        sibling_size = 0
+        for x in section_stack:
+            if x > next_size:
+                sibling_size = x
+        self.debug.print_debug(self, u'Mis-stacked element ordering, using {0} as sibling size'.format(sibling_size))
+        sibling_id = section_ids[section_stack.index(sibling_size)]
+        return sibling_id
+
     def enclose_larger_heading(self, iteration, manipulate, next_size, section_ids, section_stack, size):
         self.debug.print_debug(self,
                                u'Encountered larger block as following (size: {0}, next size: {1}) '
@@ -87,7 +96,8 @@ class SizeClassifier(Debuggable):
         if next_size in section_stack:
             sibling_id = section_ids[section_stack.index(next_size)]
         else:
-            sibling_id = -1
+            sibling_id = self.handle_misstacked(next_size, section_ids, section_stack)
+
 
         # enclose the REST OF THE DOCUMENT underneath this /next heading/
         manipulate.enclose(u"//tei:head[@meTypesetHeadingID=\'{0}\']".format(str(iteration + 1)),
@@ -98,8 +108,8 @@ class SizeClassifier(Debuggable):
         if sibling_id != -1:
             # move the /next heading/ to directly beneath the previous sibling
             self.debug.print_debug(self,
-                       u'Moving block ID #{0} to be sibling of block ID #{1}'.format(str(iteration + 1),
-                                                                                     str(sibling_id)))
+                                   u'Moving block ID #{0} to be sibling of block ID #{1}'.format(str(iteration + 1),
+                                                                                                 str(sibling_id)))
 
             manipulate.move_size_div(iteration + 1, sibling_id)
 
@@ -114,15 +124,6 @@ class SizeClassifier(Debuggable):
                            u'@meTypesetHeadingID=\'{1}\']]'.format(
                                str(iteration), str(iteration)))
 
-        # if we have an erroneous size (-1) then handle here
-        if sibling_id == -1:
-            self.debug.print_debug(self,
-                       u'Moving block ID #{0} to be sibling of block ID #{1}'.format(str(iteration + 1),
-                                                                                     str(iteration)))
-
-            manipulate.move_size_div(iteration + 1, iteration)
-
-
     def enclose_last_heading(self, iteration, manipulate, section_ids, section_stack, size):
         self.debug.print_debug(self,
                                u'Encountered final heading (size: {0}) [size ID: #{1}]'.format(str(size),
@@ -131,7 +132,35 @@ class SizeClassifier(Debuggable):
         if size in section_stack:
             sibling_id = section_ids[section_stack.index(size)]
         else:
-            sibling_id = -1
+            # here, we need to figure out if the current size is bigger than anything else
+            #sibling_id = -1
+            sibling_size = -1
+            print section_stack
+            for x in section_stack:
+                if float(x) < float(size):
+                    sibling_size = x
+
+            if sibling_size != -1:
+                # this element should be treated as root
+                sibling_id = section_ids[0]
+                self.debug.print_debug(self, u'Treating final element as on par with root')
+            else:
+                # figure out if the current size is smaller than anything else
+                for x in section_stack:
+                    if float(x) > float(size):
+                        sibling_size = x
+
+                if float(sibling_size) == float(section_stack[len(section_stack) - 1]):
+                    # this element is smaller than all others
+                    sibling_id = -1
+                    self.debug.print_debug(self, u'Treating final element as smaller than all others')
+                else:
+                    # use the sibling at the nearest depth
+                    sibling_id = section_ids[section_stack.index(sibling_size)]
+                    self.debug.print_debug(self, u'Treating final element as on par with sibling')
+
+            #sibling_id = section_ids[section_stack.index(sibling_size)]
+            #sibling_id = self.handle_misstacked(size, section_ids, section_stack)
 
         # enclose the REST OF THE DOCUMENT underneath this /next heading/
         manipulate.enclose(u"//tei:head[@meTypesetHeadingID=\'{0}\']".format(str(iteration)),
@@ -139,8 +168,8 @@ class SizeClassifier(Debuggable):
                            u"@meTypesetHeadingID=\'{1}\']]".format(
                                str(iteration), str(iteration)))
 
-        self.debug.print_debug(self,u'Moving block ID #{0} to be sibling of block ID #{1}'.format(
-            str(iteration),str(sibling_id)))
+        self.debug.print_debug(self,u'Moving block ID #{0} to be sibling of block ID #{1}'.format(str(iteration),
+                                                                                                  str(sibling_id)))
 
         if sibling_id != -1:
         # move this heading to directly beneath the previous sibling
@@ -174,13 +203,19 @@ class SizeClassifier(Debuggable):
             if iteration < (len(sizes_ordered) - 1):
                 next_size = sizes_ordered[iteration + 1]
 
-                if size == next_size:
+                plusint = 1
+
+                while float(next_size) < float(self.size_cutoff):
+                    next_size = sizes_ordered[iteration + plusint + 1]
+                    plusint += 1
+
+                if float(size) == float(next_size):
                     self.enclose_same_size_heading(iteration, manipulate, size)
 
-                if size > next_size:
+                if float(size) > float(next_size):
                     self.enclose_smaller_heading(iteration, manipulate, next_size, size)
 
-                elif size < next_size:
+                elif float(size) < float(next_size):
                     self.enclose_larger_heading(iteration, manipulate, next_size, section_ids, section_stack,
                                                 size)
 
@@ -323,10 +358,7 @@ class SizeClassifier(Debuggable):
 
         # transform bolded paragraphs into size-attributes with an extremely high threshold (so will be thought of as
         # root nodes)
-        self.handle_bold_only_paragraph(manipulate, 100)
-
-        # first of all, ensure that "heading 1" is treated as the top level
-        #self.handle_heading(manipulate, 'heading 1', 100)
+        self.handle_bold_only_paragraph(manipulate, self.size_cutoff)
 
         tree = self.correlate_styled_headings(manipulate)
 

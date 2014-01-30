@@ -292,7 +292,7 @@ class TeiManipulate(Manipulate):
 
         # search the tree and grab the parent
         for child in tree.xpath(outer_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            self.debug.print_debug(self, 'Enclosing and changing size: {0}'.format(child.tag))
+            self.debug.print_debug(self, 'Enclosing and changing size: {0} to {1}'.format(child.tag, change_tag))
             new_element = etree.Element(tag)
             child.attrib[u'meTypesetSize'] = size_attribute
             child.tag = change_tag
@@ -325,6 +325,7 @@ class TeiManipulate(Manipulate):
                                        namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
         for node_to_downsize in nodes_to_downsize:
             node_to_downsize.attrib['meTypesetSize'] = new_size
+            self.debug.print_debug(self, 'Resizing node from: {0} to {1}'.format(old_size, new_size))
 
         tree.write(self.gv.tei_file_path)
 
