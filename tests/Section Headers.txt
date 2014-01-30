@@ -342,6 +342,16 @@ Library           Collections
     Elements Should Match    ${body}    <body><sec><title>A heading below the size cutoff</title></sec><sec><title>A heading that is larger than the root</title></sec></body>    normalize_whitespace=yes
     [Teardown]    Remove Directory    508    recursive=True
 
+509 Size normalization
+    [Tags]    sectionheaders    sizeclassifier    509
+    ${result} =    Run Process    python ../bin/meTypeset.py docx SizeNormalization.docx ./509 -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./509/nlm/out.xml
+    ${body}=    Get Element    ${xml}    body
+    Elements Should Match    ${body}    <body xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> <sec> <title>A small heading</title> </sec> <sec> <title>A small heading</title> </sec> <sec> <title>A small heading</title> </sec> <sec> <title>A small heading</title> </sec> <sec> <title>A big heading</title> </sec> </body>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    509    recursive=True
+
 556 Test line breaks
     [Tags]    linebreaks    556    formatting
     ${result} =    Run Process    python ../bin/meTypeset.py docx LineBreak.docx ./556 -s ./linebreakson.xml -d    shell=True
