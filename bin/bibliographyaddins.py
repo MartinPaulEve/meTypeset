@@ -113,6 +113,10 @@ class BibliographyAddins(Debuggable):
         Debuggable.__init__(self, 'Bibliography Handler')
 
     def run(self):
+        if int(self.gv.settings.args['--aggression']) < 4:
+            self.debug.print_debug(self, 'Aggression level less than 4: exiting module.')
+            return
+
         self.zotero_items = self.zotero_handler.run()
         self.mendeley_items = self.mendeley_handler.run()
         self.other_items = self.other_handler.run()

@@ -18,6 +18,10 @@ class BibliographyClassifier(Debuggable):
         Debuggable.__init__(self, 'Bibliography Classifier')
 
     def run(self):
+        if int(self.gv.settings.args['--aggression']) < 4:
+            self.debug.print_debug(self, 'Aggression level less than 4: exiting module.')
+            return
+
         tei_manipulator = TeiManipulate(self.gv)
 
         tei_manipulator.find_reference_list_in_word_list()

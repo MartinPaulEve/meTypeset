@@ -157,18 +157,23 @@ class MeTypeset (Debuggable):
                 DocxToTei(self.gv).run(False)
 
             # run size classifier
+            # aggression 5
             SizeClassifier(self.gv).run()
 
             # run list classifier
+            # aggression 4
             ListClassifier(self.gv).run()
 
             # run bibliographic addins handler
+            # aggression 4
             BibliographyAddins(self.gv).run()
 
             # run bibliographic classifier
+            # aggression 4
             BibliographyClassifier(self.gv).run()
 
             # tei
+            # aggression 3
             TeiManipulate(self.gv).run()
 
             # run tei to nlm conversion

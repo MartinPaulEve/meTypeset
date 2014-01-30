@@ -360,6 +360,11 @@ class SizeClassifier(Debuggable):
         return tree
 
     def run(self):
+
+        if int(self.gv.settings.args['--aggression']) < 5:
+            self.debug.print_debug(self, 'Aggression level less than 5: exiting module.')
+            return
+
         manipulate = TeiManipulate(self.gv)
 
         # transform bolded paragraphs into size-attributes with an extremely high threshold (so will be thought of as
