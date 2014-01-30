@@ -229,6 +229,7 @@ of this software, even if advised of the possibility of such damage.
 		  <xsl:if test="contains(following-sibling::w:r[w:instrText][1],'\r')"><r>instr_r</r></xsl:if>
 		  <xsl:if test="contains(following-sibling::w:r[w:instrText][1],'\f')"><r>instr_f</r></xsl:if>
 		  <xsl:if test="contains(following-sibling::w:r[w:instrText][1],'\n')"><r>instr_n</r></xsl:if>
+			<xsl:if test="contains(following-sibling::w:r[w:instrText][1],'\l')"><r>instr_n</r></xsl:if>
 		  <xsl:if test="contains(following-sibling::w:r[w:instrText][1],'MERGEFORMAT')"><r>mergeformat</r></xsl:if>
 		</xsl:variable>
 		<xsl:choose>
