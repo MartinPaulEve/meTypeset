@@ -192,9 +192,6 @@ class SizeClassifier(Debuggable):
                            u"@meTypesetHeadingID=\'{2}\']]".format(
                                str(iteration), str(iteration), str(iteration + 1)))
 
-        if float(size) == float(self.root):
-            manipulate.move_size_div(iteration, 0)
-
     def process_subsequent_headings(self, iteration, manipulate, processed_flag, section_ids, section_stack, size,
                                     sizes_ordered):
         if not processed_flag:
