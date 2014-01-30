@@ -128,14 +128,13 @@ class SizeClassifier(Debuggable):
         self.debug.print_debug(self,
                                u'Encountered final heading (size: {0}) [size ID: #{1}]'.format(str(size),
                                                                                                str(iteration)))
+
         # find appropriate previous sibling
         if size in section_stack:
             sibling_id = section_ids[section_stack.index(size)]
         else:
             # here, we need to figure out if the current size is bigger than anything else
-            #sibling_id = -1
             sibling_size = -1
-            print section_stack
             for x in section_stack:
                 if float(x) < float(size):
                     sibling_size = x
@@ -158,9 +157,6 @@ class SizeClassifier(Debuggable):
                     # use the sibling at the nearest depth
                     sibling_id = section_ids[section_stack.index(sibling_size)]
                     self.debug.print_debug(self, u'Treating final element as on par with sibling')
-
-            #sibling_id = section_ids[section_stack.index(sibling_size)]
-            #sibling_id = self.handle_misstacked(size, section_ids, section_stack)
 
         # enclose the REST OF THE DOCUMENT underneath this /next heading/
         manipulate.enclose(u"//tei:head[@meTypesetHeadingID=\'{0}\']".format(str(iteration)),
@@ -219,6 +215,8 @@ class SizeClassifier(Debuggable):
                     self.enclose_larger_heading(iteration, manipulate, next_size, section_ids, section_stack,
                                                 size)
 
+                    self.debug.print_debug(self, 'Previous section stack: {0}'.format(section_stack))
+
                     # create a slice of the stack so that we can modify the original while iterating
                     temp_stack = section_stack[:]
                     pointer = len(section_stack)
@@ -228,6 +226,8 @@ class SizeClassifier(Debuggable):
                         section_stack.pop()
                         section_ids.pop()
                         pointer -= 1
+
+                    self.debug.print_debug(self, 'New section stack: {0}'.format(section_stack))
 
                     # set the processed flag so that the next enclosure isn't handled
                     processed_flag = True
