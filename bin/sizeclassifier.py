@@ -195,7 +195,6 @@ class SizeClassifier(Debuggable):
         if float(size) == float(self.root):
             manipulate.move_size_div(iteration, 0)
 
-
     def process_subsequent_headings(self, iteration, manipulate, processed_flag, section_ids, section_stack, size,
                                     sizes_ordered):
         if not processed_flag:
@@ -398,8 +397,7 @@ class SizeClassifier(Debuggable):
                     heading_count = manipulate.tag_headings()
 
                     if heading_count > 1:
-
-                        for heading_id in range(1, heading_count):
+                        for heading_id in range(0, heading_count):
                             if heading_id < heading_count - 1:
                                 expression = u'//tei:head[@meTypesetHeadingID="{1}"] | ' \
                                              u'//*[following-sibling::tei:head[@meTypesetHeadingID="{0}"] and ' \

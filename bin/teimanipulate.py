@@ -362,7 +362,7 @@ class TeiManipulate(Manipulate):
         # move the elements
         for element in child:
             if not added:
-                element.getparent().addnext(div)
+                element.getparent().addprevious(div)
                 added = True
 
             div.append(element)
