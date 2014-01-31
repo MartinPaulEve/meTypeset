@@ -37,13 +37,16 @@ class DocxToTei(Debuggable):
         # convert .wmf images to .png
         image_filenames = os.listdir(self.gv.output_media_path)
         for image in image_filenames:
-            if re.match(r'.+?\.wmf', image) is not None:
-                image_name = re.sub(r'\.wmf', '', image)
-                imagemagick_command = 'unoconv -d graphics -f png -o {0}/{1}.png ' \
+            try:
+                if re.match(r'.+?\.wmf', image) is not None:
+                    image_name = re.sub(r'\.wmf', '', image)
+                    imagemagick_command = 'unoconv -d graphics -f png -o {0}/{1}.png ' \
                                       '{0}/{2}'.format(self.gv.output_media_path, image_name, image)
-                self.debug.print_debug(self, 'Calling: {0}'.format(imagemagick_command))
+                    self.debug.print_debug(self, 'Calling: {0}'.format(imagemagick_command))
 
-                subprocess.call(imagemagick_command.split(' '))
+                    subprocess.call(imagemagick_command.split(' '))
+            except:
+                pass
 
     def run(self, extract):
         # make output folders
