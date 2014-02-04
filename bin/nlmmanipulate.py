@@ -148,21 +148,37 @@ class NlmManipulate(Manipulate):
         """
         tree = self.load_dom_tree()
 
-        initial_nodes = tree.xpath('//{0}//{1}'.format(tag_name,search_xpath))
+        initial_nodes = tree.xpath('//{0}//{1}'.format(tag_name, search_xpath))
         self.debug.print_debug(self, 'Found {0} {1} nodes on which to close and open tag {2}'.format(
             len(initial_nodes), search_xpath, tag_name))
 
         nested_sibling = None
+        bail = False
 
         if len(initial_nodes) > 80 and int(self.gv.settings.args["--aggression"]) < 11:
             self.debug.print_debug(self, 'Bailing from replacement of tag {0} [limit exceeded]'.format(search_xpath))
             self.debug.write_error(self,
                                    'Bailing from replacement of tag {0} [limit exceeded]'.format(search_xpath),
                                    '001')
-            return
+            bail = True
 
-        for node in initial_nodes:
-            self.process_node_for_tags(nested_sibling, node, search_xpath, tag_name)
+        if not bail:
+            for node in initial_nodes:
+                if not bail:
+                    self.process_node_for_tags(nested_sibling, node, search_xpath, tag_name)
+        else:
+            # count the number of line breaks in this paragraph
+            # todo: fix this xpath to work (waiting on
+            # https://stackoverflow.com/questions/21552737/xpath-select-an-element-with-more-than-3-comments as I'm
+            # not sure of the syntax at present)
+            children = tree.xpath('//*[count({0}) > 3]'.format(search_xpath))
+
+            for child in children:
+                rend = 'error-001'
+                if u'rend' in child.attrib:
+                    rend = rend + u' {0}'.format(child.getparent().attrib[u'rend'].replace(rend, ''))
+
+                child.getparent().attrib[u'rend'] = rend
 
         tree.write(self.dom_temp_file)
         tree.write(self.dom_to_load)
