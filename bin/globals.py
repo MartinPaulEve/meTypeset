@@ -18,6 +18,7 @@ class GV (Debuggable):
         common2 = 'common2'
         nlm = 'nlm'
         chain = 'xsl'
+        error = 'error'
 
         self.settings = settings
 
@@ -87,6 +88,10 @@ class GV (Debuggable):
             self.xsl_folder_path = self.generate_path(settings, chain, self.output_folder_path)
             self.xsl_file_path = self.clean_path(self.concat_path(self.xsl_folder_path, "out.html"))
 
+
+            # error log chain paths
+            self.error_folder_path = self.generate_path(settings, error, self.output_folder_path)
+            self.error_file_path = self.clean_path(self.concat_path(self.error_folder_path, "errors.txt"))
 
             #Metadata paths
             self.metadata_style_sheet_path = self.clean_path(

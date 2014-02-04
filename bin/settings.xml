@@ -16,6 +16,7 @@
 		<mt:outputmedia>media</mt:outputmedia>
 	    <mt:nlm>nlm</mt:nlm>
 	    <mt:media>media</mt:media>
+        <mt:error>error</mt:error>
     </mt:folders>
     
     <mt:style-sheets>

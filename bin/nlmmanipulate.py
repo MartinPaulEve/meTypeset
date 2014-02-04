@@ -156,6 +156,9 @@ class NlmManipulate(Manipulate):
 
         if len(initial_nodes) > 80 and int(self.gv.settings.args["--aggression"]) < 11:
             self.debug.print_debug(self, 'Bailing from replacement of tag {0} [limit exceeded]'.format(search_xpath))
+            self.debug.write_error(self,
+                                   'Bailing from replacement of tag {0} [limit exceeded]'.format(search_xpath),
+                                   '001')
             return
 
         for node in initial_nodes:
