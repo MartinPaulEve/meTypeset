@@ -149,7 +149,7 @@ class NlmManipulate(Manipulate):
                 # just re-write the old value
                 rend = node.attrib[u'rend']
 
-        node.getparent().attrib[u'rend'] = rend
+        node.attrib[u'rend'] = rend
 
     def close_and_open_tag(self, search_xpath, tag_name):
         """
@@ -181,11 +181,8 @@ class NlmManipulate(Manipulate):
                 if not bail:
                     self.process_node_for_tags(nested_sibling, node, search_xpath, tag_name)
         else:
-            # count the number of line breaks in this paragraph
-            # todo: fix this xpath to work (waiting on
-            # https://stackoverflow.com/questions/21552737/xpath-select-an-element-with-more-than-3-comments as I'm
-            # not sure of the syntax at present)
-            children = tree.xpath('//*[count({0}) > 3]'.format(search_xpath))
+            # add an error tag to p elements where there are more than 3 comments within
+            children = tree.xpath('//*[count(comment()[.="meTypeset:br"]) > 3]'.format(search_xpath))
 
             for child in children:
                 self.add_error_tag(child, u'001')
