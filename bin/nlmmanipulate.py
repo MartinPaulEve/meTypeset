@@ -137,6 +137,20 @@ class NlmManipulate(Manipulate):
             last_node.addnext(new_element)
             node.getparent().remove(node)
 
+    @staticmethod
+    def add_error_tag(node, error_number):
+        rend = 'error-{0}'.format(error_number)
+
+        if u'rend' in node.attrib:
+            if not rend in node.attrib['rend']:
+                # append the new value
+                rend = u'{0} {1}'.format(node.attrib[u'rend'], rend)
+            else:
+                # just re-write the old value
+                rend = node.attrib[u'rend']
+
+        node.getparent().attrib[u'rend'] = rend
+
     def close_and_open_tag(self, search_xpath, tag_name):
         """
         Opens and closes an XML tag within a document. This is primarily useful when we have a marker such as
@@ -174,11 +188,7 @@ class NlmManipulate(Manipulate):
             children = tree.xpath('//*[count({0}) > 3]'.format(search_xpath))
 
             for child in children:
-                rend = 'error-001'
-                if u'rend' in child.attrib:
-                    rend = rend + u' {0}'.format(child.getparent().attrib[u'rend'].replace(rend, ''))
-
-                child.getparent().attrib[u'rend'] = rend
+                self.add_error_tag(child, u'001')
 
         tree.write(self.dom_temp_file)
         tree.write(self.dom_to_load)
