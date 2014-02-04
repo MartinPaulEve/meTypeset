@@ -68,6 +68,50 @@ class BibliographyDatabase(Debuggable):
         self.size_cutoff = 16
         Debuggable.__init__(self, 'Bibliography Database')
 
+    def parse_journal_item(self, item):
+        journal_item = JournalArticle()
+        for sub_item in item:
+            if sub_item.tag == 'person-group' and 'person-group-type' in sub_item.attrib:
+                if sub_item.attrib['person-group-type'] == 'author':
+                    authors = []
+                    for author_item in sub_item:
+                        author = Person()
+                        for names in author_item:
+                            if names.tag == 'surname':
+                                author.lastname = names.text
+                            elif names.tag == 'given-names':
+                                author.firstname = names.text
+                        authors.append(author)
+                    journal_item.authors += authors
+
+            elif sub_item.tag == 'article-title':
+                journal_item.title = sub_item.text
+
+            elif sub_item.tag == 'source':
+                journal_item.journal = sub_item.text
+
+            elif sub_item.tag == 'date':
+                for date_sub in sub_item:
+                    if date_sub.tag == 'year':
+                        journal_item.year = sub_item.text
+
+            elif sub_item.tag == 'volume':
+                journal_item.volume = sub_item.text
+
+            elif sub_item.tag == 'issue':
+                journal_item.issue = sub_item.text
+
+            elif sub_item.tag == 'fpage':
+                journal_item.fpage = sub_item.text
+
+            elif sub_item.tag == 'lpage':
+                journal_item.lpage = sub_item.text
+
+            elif sub_item.tag == 'pub-id-type' and 'pub-id-type' in sub_item.attrib:
+                if sub_item.attrib['pub-id-type'] == 'doi':
+                    journal_item.doi = sub_item.text
+        return journal_item
+
     def scan(self):
         self.gv.nlm_file_path = self.gv.settings.args['<input>']
         handle, self.gv.nlm_temp_path = tempfile.mkstemp()
@@ -81,48 +125,7 @@ class BibliographyDatabase(Debuggable):
         tree = manipulate.return_elements('//element-citation[@publication-type="journal"]')
 
         for item in tree:
-            journal_item = JournalArticle()
-
-            for sub_item in item:
-                if sub_item.tag == 'person-group' and 'person-group-type' in sub_item.attrib:
-                    if sub_item.attrib['person-group-type'] == 'author':
-                        authors = []
-                        for author_item in sub_item:
-                            author = Person()
-                            for names in author_item:
-                                if names.tag == 'surname':
-                                    author.lastname = names.text
-                                elif names.tag == 'given-names':
-                                    author.firstname = names.text
-                            authors.append(author)
-                        journal_item.authors += authors
-
-                elif sub_item.tag == 'article-title':
-                    journal_item.title = sub_item.text
-
-                elif sub_item.tag == 'source':
-                    journal_item.journal = sub_item.text
-
-                elif sub_item.tag == 'date':
-                    for date_sub in sub_item:
-                        if date_sub.tag == 'year':
-                            journal_item.year = sub_item.text
-
-                elif sub_item.tag == 'volume':
-                    journal_item.volume = sub_item.text
-
-                elif sub_item.tag == 'issue':
-                    journal_item.issue = sub_item.text
-
-                elif sub_item.tag == 'fpage':
-                    journal_item.fpage = sub_item.text
-
-                elif sub_item.tag == 'lpage':
-                    journal_item.lpage = sub_item.text
-
-                elif sub_item.tag == 'pub-id-type' and 'pub-id-type' in sub_item.attrib:
-                    if sub_item.attrib['pub-id-type'] == 'doi':
-                        journal_item.doi = sub_item.text
+            journal_item = self.parse_journal_item(item)
 
             print journal_item.get_citation()
 
