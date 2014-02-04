@@ -12,7 +12,6 @@ The transforms within this software can be invoked in several different ways:
 
 The modfications to the OxGarage stack contained within this project are Copyright Martin Paul Eve 2014 and released under the licenses specified in each respective file.
 
-
 #Running meTypeset
 
 First off, ensure you have the correct stack installed for your environment. meTypeset needs a valid python environment, a valid Java environment, the command line tools "unzip" and "basename" and a shell interpreter (eg Bash). Saxon, which is required, is pre-bundled. It has been shown to work correctly on *Nix derivatives and Mac OS X.
@@ -41,7 +40,17 @@ When running with the docxextracted command, input should be a folder containing
 
 When running with the bibscan command, input should be an NLM XML file, from which bibliographic reference information will be extracted.
 
-#Developer information
+##Unparseable Elements
+
+Occasionally, meTypeset will encounter a document with a greater number of idiosyncracies than it can handle. In this event, an error log will be written to "errors.txt" in the path specified by the [mt:error configuration value](bin/settings.xml). This document consists of a list of errors, each line beginning with a \[ERROR_NUMBER\] text (eg \[001\]).
+
+Furthermore, the parser will attempt to append an attribute named "rend" to the tags that it felt most problematic with the error number specified within (eg \<p rend="error-001"\>. This is designed to aid visual tools in analysing the problematic areas.
+
+###List of Error Codes and Tagging Behaviour
+
+* 001 - the number of linebreaks found in the document exceeded 80. The parser will mark up elements containing more than 3 comments with rend="error-001"
+
+#Developer Information
 
 ##Main Function and Initialization
 meTypeset works on a modular basis. The initial call to [meTypeset](bin/meTypeset.py) creates a new instance of the meTypeset class. This, in turn, initializes the debugger and the global settings variable class. It also parses the command line options using [docopt](http://docopt.org/).
