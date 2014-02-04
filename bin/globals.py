@@ -11,6 +11,7 @@ import ntpath
 class GV (Debuggable):
     def __init__(self, settings, debug):
         self.debug = debug
+        Debuggable.__init__(self, 'Globals')
 
         # todo: clean this up -- it's a mess
 
@@ -19,6 +20,7 @@ class GV (Debuggable):
         nlm = 'nlm'
         chain = 'xsl'
         error = 'error'
+        db = 'databasefile'
 
         self.settings = settings
 
@@ -104,7 +106,10 @@ class GV (Debuggable):
             self.nlm_file_path = ''
             self.nlm_temp_file_path = ''
 
-        Debuggable.__init__(self, 'Globals')
+        # database paths
+        self.database_file_path = self.clean_path(self.concat_path(os.path.join(settings.script_dir, 'database'),
+                                                                   self.value_for_tag(self.settings,
+                                                                                      'databasefile')))
 
     def check_file_exists(self, file_path):
         if file_path is None:

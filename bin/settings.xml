@@ -41,7 +41,7 @@
     </mt:xml-files>
 
     <mt:bibliographicdatabase>
-        <mt:databasefile>database/bibliography.db</mt:databasefile>
+        <mt:databasefile>bibliography.db</mt:databasefile>
     </mt:bibliographicdatabase>
     
     <mt:nlm>

@@ -5,7 +5,7 @@ __email__ = "martin@martineve.com"
 A class that scans for, stores and retrieves NLM citations
 
 """
-from CodernityDB.database import Database
+import shelve
 from debug import Debuggable
 import tempfile
 from nlmmanipulate import NlmManipulate
@@ -107,7 +107,7 @@ class BibliographyDatabase(Debuggable):
             elif sub_item.tag == 'lpage':
                 journal_item.lpage = sub_item.text
 
-            elif sub_item.tag == 'pub-id-type' and 'pub-id-type' in sub_item.attrib:
+            elif sub_item.tag == 'pub-id' and 'pub-id-type' in sub_item.attrib:
                 if sub_item.attrib['pub-id-type'] == 'doi':
                     journal_item.doi = sub_item.text
         return journal_item
@@ -119,6 +119,10 @@ class BibliographyDatabase(Debuggable):
 
         manipulate = NlmManipulate(self.gv)
 
+        # open the database
+        self.debug.print_debug(self, 'Opening database: {0}'.format(self.gv.database_file_path))
+        db = shelve.open(self.gv.database_file_path)
+
         # we /could/ use objectify, which would be cleaner, but it doesn't allow such rigidity of parsing
 
         # scan for journal items
@@ -127,7 +131,11 @@ class BibliographyDatabase(Debuggable):
         for item in tree:
             journal_item = self.parse_journal_item(item)
 
-            print journal_item.get_citation()
+            if not journal_item.doi is '':
+                self.debug.print_debug(self, 'Storing {0}'.format(journal_item.doi))
+                db[journal_item.doi] = journal_item
+
+        db.close()
 
     def retrieve(self, author, title, year):
         raise NotImplementedError()
