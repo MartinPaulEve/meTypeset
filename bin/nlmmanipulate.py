@@ -149,10 +149,14 @@ class NlmManipulate(Manipulate):
         tree = self.load_dom_tree()
 
         initial_nodes = tree.xpath('//{0}//{1}'.format(tag_name,search_xpath))
-        self.debug.print_debug(self, 'Found {0} nodes on which to close and open tag: {1}'.format(
-            len(initial_nodes), initial_nodes))
+        self.debug.print_debug(self, 'Found {0} {1} nodes on which to close and open tag {2}'.format(
+            len(initial_nodes), search_xpath, tag_name))
 
         nested_sibling = None
+
+        if len(initial_nodes) > 80 and int(self.gv.settings.args["--aggression"]) < 11:
+            self.debug.print_debug(self, 'Bailing from replacement of tag {0} [limit exceeded]'.format(search_xpath))
+            return
 
         for node in initial_nodes:
             self.process_node_for_tags(nested_sibling, node, search_xpath, tag_name)
@@ -172,8 +176,8 @@ class NlmManipulate(Manipulate):
         tree = self.load_dom_tree()
 
         initial_nodes = tree.xpath('//{0}//{1}'.format(tag_name,search_xpath))
-        self.debug.print_debug(self, 'Found {0} nodes on which to insert break: {1}'.format(
-            len(initial_nodes), initial_nodes))
+        self.debug.print_debug(self, 'Found {0} {1} nodes on which to insert break: {2}'.format(
+            len(initial_nodes), search_xpath, tag_name))
 
         for node in initial_nodes:
             break_element = etree.Element('break')

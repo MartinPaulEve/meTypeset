@@ -138,7 +138,10 @@ class MeTypeset (Debuggable):
         ag = int(self.gv.settings.args['--aggression'])
         self.debug.print_debug(self,
                                u'Running at aggression level {0} {1}'.format(ag,
-                                                                             "[grrr!]" if ag >= 10 else ""))
+                                                                             "[grrr!]" if ag == 10 else ""))
+
+        if ag > 10:
+            self.debug.print_debug(self, "WARNING: safety bail-out features are disabled at aggression level 11")
 
         if self.args['bibscan']:
 
