@@ -39,6 +39,10 @@
         <mt:word-document-xml>word/document.xml </mt:word-document-xml>
         <mt:runtime-catalog>runtime/catalog.xml</mt:runtime-catalog>
     </mt:xml-files>
+
+    <mt:bibliographicdatabase>
+        <mt:databasefile>database/bibliography.db</mt:databasefile>
+    </mt:bibliographicdatabase>
     
     <mt:nlm>
         <mt:linebreaks-as-comments>False</mt:linebreaks-as-comments>
