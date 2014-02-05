@@ -146,6 +146,66 @@ class BibliographyDatabase(Debuggable):
 
         return journal_entry
 
+
+    def parse_book_item(self, item):
+        book_entry = Book()
+
+        for sub_item in item:
+            if sub_item.tag == 'person-group' and 'person-group-type' in sub_item.attrib:
+                if sub_item.attrib['person-group-type'] == 'author':
+                    authors = []
+                    for author_item in sub_item:
+                        author = Person()
+                        for names in author_item:
+                            if names.tag == 'surname':
+                                author.lastname = names.text
+                            elif names.tag == 'given-names':
+                                author.firstname = names.text
+                        authors.append(author)
+                    book_entry.authors += authors
+
+            elif sub_item.tag == 'source':
+                book_entry.title = sub_item.text
+
+            elif sub_item.tag == 'date':
+                for date_sub in sub_item:
+                    if date_sub.tag == 'year':
+                        book_entry.year = date_sub.text
+
+            elif sub_item.tag == 'publisher-loc':
+                book_entry.place = sub_item.text
+
+            elif sub_item.tag == 'publisher-name':
+                book_entry.publisher = sub_item.text
+
+        return book_entry
+
+    def store_key(self, db, item, key):
+        self.debug.print_debug(self, 'Storing {0}'.format(key))
+        db[key] = item
+
+    def store_journal_item(self, db, tree):
+        for item in tree:
+            journal_item = self.parse_journal_item(item)
+
+            if len(journal_item.authors) > 0:
+                key = journal_item.year + journal_item.authors[0].lastname + journal_item.journal
+            else:
+                key = journal_item.year + journal_item.title + journal_item.journal
+
+            self.store_key(db, journal_item, key)
+
+    def store_book(self, db, tree):
+        for item in tree:
+            book = self.parse_book_item(item)
+
+            if len(book.authors) > 0:
+                key = book.year + book.authors[0].lastname + book.title
+            else:
+                key = book.year + book.title
+
+            self.store_key(db, book, key)
+
     def scan(self):
         self.gv.nlm_file_path = self.gv.settings.args['<input>']
         handle, self.gv.nlm_temp_path = tempfile.mkstemp()
@@ -161,19 +221,10 @@ class BibliographyDatabase(Debuggable):
 
         # scan for journal items
         tree = manipulate.return_elements('//element-citation[@publication-type="journal"]')
+        self.store_journal_item(db, tree)
 
-        for item in tree:
-            journal_item = self.parse_journal_item(item)
-
-            #print journal_item.get_citation()
-
-            if len(journal_item.authors) > 0:
-                key = journal_item.year + journal_item.authors[0].lastname + journal_item.journal
-            else:
-                key = journal_item.year + journal_item.title + journal_item.journal
-
-            self.debug.print_debug(self, 'Storing {0}'.format(key))
-            db[key] = journal_item
+        tree = manipulate.return_elements('//element-citation[@publication-type="book"]')
+        self.store_book(db, tree)
 
         db.close()
 
