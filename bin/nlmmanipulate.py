@@ -269,7 +269,7 @@ class NlmManipulate(Manipulate):
                         text += sub_element.text
                         text += sub_element.tail
 
-                    year_test = re.compile('(19|20)\d{2}')
+                    year_test = re.compile('(19|20)\d{2} || n\.d\.')
 
                     match = year_test.search(text)
 
