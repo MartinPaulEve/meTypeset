@@ -287,9 +287,11 @@ class NlmManipulate(Manipulate):
         self.reflist_year_match_method(tree)
 
         tree.write(self.gv.nlm_file_path)
+        tree.write(self.gv.nlm_temp_file_path)
 
     def tag_bibliography_refs(self):
         tree = self.load_dom_tree()
+
         rid = 1
         # change this to find <ref-list> elements after we're more certain of how to identify them
         for refs in tree.xpath('//sec[@reflist="yes"]/*'):
@@ -304,3 +306,4 @@ class NlmManipulate(Manipulate):
                 rid += 1
 
         tree.write(self.gv.nlm_file_path)
+        tree.write(self.gv.nlm_temp_file_path)
