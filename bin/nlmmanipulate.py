@@ -255,7 +255,7 @@ class NlmManipulate(Manipulate):
         sections = tree.xpath('//sec')
         for element in sections:
             found_other = False
-            found_one = False
+            count = 0
             for p in element:
                 if p.tag == 'p':
                     text = p.text
@@ -272,11 +272,15 @@ class NlmManipulate(Manipulate):
                         found_other = True
                         break
                     else:
-                        found_one = True
+                        count += 1
                         p.attrib['rend'] = 'ref'
 
-            if found_one and not found_other:
+            if count > 1 and not found_other:
                 element.attrib['reflist'] = 'yes'
+            else:
+                for p in element:
+                    if 'rend' in p.attrib:
+                        del p.attrib['rend']
 
     def find_or_create_element(self, tree, element_tag, add_xpath, is_sibling):
         # find_or_create_elements(tree, 'back', '//body', true)
