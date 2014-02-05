@@ -10,6 +10,7 @@ from debug import Debuggable
 import tempfile
 from nlmmanipulate import NlmManipulate
 import os
+from lxml import etree
 
 
 class Person():
@@ -24,8 +25,9 @@ class Person():
                 u'</name>'.format(self.lastname, self.firstname)
 
 class JournalArticle():
-    def __init__(self, authors=[], title='', journal='', issue='', volume='', fpage='', lpage='', year='', doi=''):
-        self.authors = authors
+    def __init__(self, authors=None, title='', journal='', issue='', volume='', fpage='', lpage='', year='', doi=''):
+        if authors is None:
+            self.authors = []
         self.title = title
         self.journal = journal
         self.issue = issue
@@ -69,7 +71,8 @@ class BibliographyDatabase(Debuggable):
         Debuggable.__init__(self, 'Bibliography Database')
 
     def parse_journal_item(self, item):
-        journal_item = JournalArticle()
+        journal_entry = JournalArticle()
+
         for sub_item in item:
             if sub_item.tag == 'person-group' and 'person-group-type' in sub_item.attrib:
                 if sub_item.attrib['person-group-type'] == 'author':
@@ -82,35 +85,37 @@ class BibliographyDatabase(Debuggable):
                             elif names.tag == 'given-names':
                                 author.firstname = names.text
                         authors.append(author)
-                    journal_item.authors += authors
+                    journal_entry.authors += authors
 
             elif sub_item.tag == 'article-title':
-                journal_item.title = sub_item.text
+                journal_entry.title = sub_item.text
 
             elif sub_item.tag == 'source':
-                journal_item.journal = sub_item.text
+                journal_entry.journal = sub_item.text
 
             elif sub_item.tag == 'date':
                 for date_sub in sub_item:
                     if date_sub.tag == 'year':
-                        journal_item.year = sub_item.text
+                        journal_entry.year = date_sub.text
 
             elif sub_item.tag == 'volume':
-                journal_item.volume = sub_item.text
+                journal_entry.volume = sub_item.text
 
             elif sub_item.tag == 'issue':
-                journal_item.issue = sub_item.text
+                journal_entry.issue = sub_item.text
 
             elif sub_item.tag == 'fpage':
-                journal_item.fpage = sub_item.text
+                journal_entry.fpage = sub_item.text
 
             elif sub_item.tag == 'lpage':
-                journal_item.lpage = sub_item.text
+                journal_entry.lpage = sub_item.text
 
             elif sub_item.tag == 'pub-id' and 'pub-id-type' in sub_item.attrib:
                 if sub_item.attrib['pub-id-type'] == 'doi':
-                    journal_item.doi = sub_item.text
-        return journal_item
+                    journal_entry.doi = sub_item.text
+
+        print journal_entry.authors
+        return journal_entry
 
     def scan(self):
         self.gv.nlm_file_path = self.gv.settings.args['<input>']
@@ -131,9 +136,15 @@ class BibliographyDatabase(Debuggable):
         for item in tree:
             journal_item = self.parse_journal_item(item)
 
-            if not journal_item.doi is '':
-                self.debug.print_debug(self, 'Storing {0}'.format(journal_item.doi))
-                db[journal_item.doi] = journal_item
+            #print journal_item.get_citation()
+
+            if len(journal_item.authors) > 0:
+                key = journal_item.year + journal_item.authors[0].lastname + journal_item.journal
+            else:
+                key = journal_item.year + journal_item.journal
+
+            self.debug.print_debug(self, 'Storing {0}'.format(key))
+            db[key] = journal_item
 
         db.close()
 
