@@ -141,7 +141,7 @@ class BibliographyDatabase(Debuggable):
             if len(journal_item.authors) > 0:
                 key = journal_item.year + journal_item.authors[0].lastname + journal_item.journal
             else:
-                key = journal_item.year + journal_item.journal
+                key = journal_item.year + journal_item.title + journal_item.journal
 
             self.debug.print_debug(self, 'Storing {0}'.format(key))
             db[key] = journal_item
