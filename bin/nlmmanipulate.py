@@ -255,6 +255,7 @@ class NlmManipulate(Manipulate):
         sections = tree.xpath('//sec')
         for element in sections:
             found_other = False
+            found_one = False
             for p in element:
                 if p.tag == 'p':
                     text = p.text
@@ -263,18 +264,17 @@ class NlmManipulate(Manipulate):
                         text += sub_element.text
                         text += sub_element.tail
 
-                    year_test = re.compile('(19|20)\d{2} || n\.d\.')
+                    year_test = re.compile('((19|20)\d{2})|(n\.d\.)')
 
                     match = year_test.search(text)
-
-                    print match
-                    print text
 
                     if not match:
                         found_other = True
                         break
+                    else:
+                        found_one = True
 
-            if not found_other:
+            if found_one and not found_other:
                 element.attrib['reflist'] = 'yes'
 
     def find_reference_list(self):
@@ -292,9 +292,15 @@ class NlmManipulate(Manipulate):
         tree = self.load_dom_tree()
         rid = 1
         # change this to find <ref-list> elements after we're more certain of how to identify them
-        for refs in tree.xpath('//sec[@reflist="yes"]/p | //sec[@reflist="yes"]/*/list-item | '
-                               '//sec[@reflist="yes"]/disp-quote'):
-            refs.tag = 'ref'
-            refs.attrib['rid'] = str(rid)
-            rid += 1
+        for refs in tree.xpath('//sec[@reflist="yes"]/*'):
+
+            if refs.tag == 'title':
+                self.debug.print_debug(self, 'Removing title element from reference item')
+                refs.getparent().remove(refs)
+            else:
+                self.debug.print_debug(self, 'Tagging element "{0}" as reference item'.format(refs.tag))
+                refs.tag = 'ref'
+                refs.attrib['rid'] = str(rid)
+                rid += 1
+
         tree.write(self.gv.nlm_file_path)
