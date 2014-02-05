@@ -24,6 +24,36 @@ class Person():
                     u'<given-names>{1}</given-names>' \
                 u'</name>'.format(self.lastname, self.firstname)
 
+class Book():
+    def __init__(self, authors=None, title='', publisher = '', place = '', year=''):
+        if authors is None:
+            self.authors = []
+        self.title = title
+        self.year = year
+        self.publisher = publisher
+        self.place = place
+
+    def get_citation(self):
+
+        author_block = ''
+        for author in self.authors:
+            author_block += author.get_citation()
+
+        return u'<ref>'  \
+                    u'<element-citation publication-type="book">' \
+                        u'<person-group person-group-type="author">' \
+                            u'{0}' \
+                            u'</person-group>' \
+                            u'<source>{1}</source>' \
+                            u'<date>' \
+                                u'<year>{2}</year>' \
+                            u'</date>' \
+                            u'<publisher-loc>{3}</publisher-loc>' \
+                            u'<publisher-name>{4}</publisher-name>' \
+                        u'</element-citation>' \
+                u'</ref>'.format(author_block, self.title, self.year, self.place, self.publisher)
+
+
 class JournalArticle():
     def __init__(self, authors=None, title='', journal='', issue='', volume='', fpage='', lpage='', year='', doi=''):
         if authors is None:
@@ -114,7 +144,6 @@ class BibliographyDatabase(Debuggable):
                 if sub_item.attrib['pub-id-type'] == 'doi':
                     journal_entry.doi = sub_item.text
 
-        print journal_entry.authors
         return journal_entry
 
     def scan(self):
