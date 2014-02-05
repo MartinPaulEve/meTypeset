@@ -10,7 +10,6 @@ from debug import Debuggable
 import tempfile
 from nlmmanipulate import NlmManipulate
 import os
-from lxml import etree
 
 
 class Person():
