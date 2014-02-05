@@ -273,15 +273,39 @@ class NlmManipulate(Manipulate):
                         break
                     else:
                         found_one = True
+                        p.attrib['rend'] = 'ref'
 
             if found_one and not found_other:
                 element.attrib['reflist'] = 'yes'
+
+    def find_or_create_element(self, tree, element_tag, add_xpath, is_sibling):
+        # find_or_create_elements(tree, 'back', '//body', true)
+        ret = None
+        try:
+            ret = tree.xpath(u'//' + element_tag, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+            self.debug.print_debug(self, u'Found existing {0}. Using it.'.format(element_tag))
+        except:
+            self.debug.print_debug(self, u'Unable to find an existing {0} element.'.format(element_tag))
+
+        if ret is None:
+            self.debug.print_debug(self, u'Creating new {0} element.'.format(element_tag))
+            ret = tree.xpath(add_xpath)[0]
+            new_element = etree.Element(element_tag)
+
+            if is_sibling:
+                ret.addnext(new_element)
+            else:
+                ret.append(new_element)
+
+            ret = new_element
+
+        return ret
 
     def find_reference_list(self):
         tree = self.load_dom_tree()
 
         # look for indents
-        self.reflist_indent_method(tree)
+        #self.reflist_indent_method(tree)
 
         # look for sections where very paragraph contains a year; likely to be a reference
         self.reflist_year_match_method(tree)
@@ -293,8 +317,13 @@ class NlmManipulate(Manipulate):
         tree = self.load_dom_tree()
 
         rid = 1
+
+        self.find_or_create_element(tree, 'back', '//body', True)
+        ref_list = self.find_or_create_element(tree, 'ref-list', '//back', False)
+
         # change this to find <ref-list> elements after we're more certain of how to identify them
-        for refs in tree.xpath('//sec[@reflist="yes"]/*'):
+        for refs in tree.xpath('//sec[@reflist="yes"]/p[@rend="ref"] | //sec[@reflist="yes"]/title '
+                               '| //sec[@reflist="yes"]/*/list-item'):
 
             if refs.tag == 'title':
                 self.debug.print_debug(self, 'Removing title element from reference item')
@@ -304,6 +333,7 @@ class NlmManipulate(Manipulate):
                 refs.tag = 'ref'
                 refs.attrib['rid'] = str(rid)
                 rid += 1
+                ref_list.append(refs)
 
         tree.write(self.gv.nlm_file_path)
         tree.write(self.gv.nlm_temp_file_path)
