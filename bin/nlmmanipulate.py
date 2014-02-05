@@ -337,6 +337,9 @@ class NlmManipulate(Manipulate):
                 refs.tag = 'ref'
                 refs.attrib['rid'] = str(rid)
                 rid += 1
+                if 'rend' in refs.attrib:
+                        del refs.attrib['rend']
+
                 ref_list.append(refs)
 
         tree.write(self.gv.nlm_file_path)
