@@ -15,3 +15,13 @@ R01 Simple Inline Reference
     ${paragraph}=    Get Element    ${xml}    body/sec/p
     Elements Should Match    ${paragraph}    <p>Before <xref id="INSERT ID HERE" ref-type="bibr">(Eve 2012)</xref> after</p>
     [Teardown]    Remove Directory    Inline    recursive=True
+
+R02 Year detection method
+    [Tags]    references    ref-list    R02
+    ${result} =    Run Process    python ../bin/meTypeset.py docx R02.docx ./R02 -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./R02/nlm/out.xml
+    ${paragraph}=    Get Element    ${xml}    back/ref-list
+    Elements Should Match    ${paragraph}    <ref-list><ref rid="1">Eve, Martin Paul, <italic>Pynchon and Philosophy</italic> (London: Palgrave MacMillan, 2014)</ref><ref rid="2">Thomas, Samuel, <italic>Pynchon and the Political </italic>(New York: Routledge, 2007)</ref></ref-list>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    R02    recursive=True
