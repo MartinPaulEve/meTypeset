@@ -251,14 +251,8 @@ class NlmManipulate(Manipulate):
             for item in indentmethod:
                 item.attrib['reflist'] = 'yes'
 
-    def find_reference_list(self):
-        tree = self.load_dom_tree()
-
-        self.reflist_indent_method(tree)
-
-        # look for sections where very paragraph contains a year; likely to be a reference
+    def reflist_year_match_method(self, tree):
         sections = tree.xpath('//sec')
-
         for element in sections:
             found_other = False
             for p in element:
@@ -282,6 +276,15 @@ class NlmManipulate(Manipulate):
 
             if not found_other:
                 element.attrib['reflist'] = 'yes'
+
+    def find_reference_list(self):
+        tree = self.load_dom_tree()
+
+        # look for indents
+        self.reflist_indent_method(tree)
+
+        # look for sections where very paragraph contains a year; likely to be a reference
+        self.reflist_year_match_method(tree)
 
         tree.write(self.gv.nlm_file_path)
 
