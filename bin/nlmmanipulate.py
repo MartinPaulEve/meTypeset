@@ -244,15 +244,45 @@ class NlmManipulate(Manipulate):
 
         tree.write(self.gv.nlm_file_path)
 
-    def find_reference_list(self):
-        tree = self.load_dom_tree()
+    def reflist_indent_method(self, tree):
         # tag the last item as a reference list
         indentmethod = tree.xpath('(//sec[title][disp-quote] | //sec[title][list])[last()]')
         if indentmethod:
             for item in indentmethod:
                 item.attrib['reflist'] = 'yes'
-        # add other methods here and use classifier code to evaluate which of several
-        # //sec[@reflist="yes"] elements should be changed to <ref-list>
+
+    def find_reference_list(self):
+        tree = self.load_dom_tree()
+
+        self.reflist_indent_method(tree)
+
+        # look for sections where very paragraph contains a year; likely to be a reference
+        sections = tree.xpath('//sec')
+
+        for element in sections:
+            found_other = False
+            for p in element:
+                if p.tag == 'p':
+                    text = p.text
+
+                    for sub_element in p:
+                        text += sub_element.text
+                        text += sub_element.tail
+
+                    year_test = re.compile('(19|20)\d{2}')
+
+                    match = year_test.search(text)
+
+                    print match
+                    print text
+
+                    if not match:
+                        found_other = True
+                        break
+
+            if not found_other:
+                element.attrib['reflist'] = 'yes'
+
         tree.write(self.gv.nlm_file_path)
 
     def tag_bibliography_refs(self):
