@@ -13,7 +13,8 @@
         <mt:word>word</mt:word>
         <mt:tei>tei</mt:tei>
 	<mt:xsl>xsl</mt:xsl>
-				<mt:outputmedia>media</mt:outputmedia>
+	<mt:outputmedia>media</mt:outputmedia>
+        <mt:error>error</mt:error>
 	<mt:nlm>nlm</mt:nlm>
 	<mt:media>media</mt:media>
     </mt:folders>
@@ -33,6 +34,10 @@
         </mt:metadata-stylesheet>
     </mt:style-sheets>
     
+    <mt:bibliographicdatabase>
+        <mt:databasefile>bibliography.db</mt:databasefile>
+    </mt:bibliographicdatabase>
+
     <mt:xml-files>
         <mt:default-metadata-file-path>metadata/metadataSample.xml </mt:default-metadata-file-path>
         <mt:word-document-xml>word/document.xml </mt:word-document-xml>
