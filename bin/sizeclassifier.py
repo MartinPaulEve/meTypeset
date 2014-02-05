@@ -340,12 +340,14 @@ class SizeClassifier(Debuggable):
         sizes = self.get_sizes(tree)
         sorted_list = []
         headings = {}
+
         # correlate tag sizes specified by true word headings ("heading 1", "heading 2" etc.) to our index
         for size, frequency in sizes.iteritems():
             if float(frequency) < float(self.max_headings) and float(size) > float(self.size_cutoff):
                 sorted_list.append(size)
+
         sorted_list = sorted(sorted_list)
-        iteration = 0
+
         if len(sorted_list) > 0:
             for count in range(0, len(sorted_list) - 1):
                 key = u'heading {0}'.format(count + 1)
@@ -357,7 +359,13 @@ class SizeClassifier(Debuggable):
         else:
             headings = {'heading 1': 100, 'heading 2': 90, 'heading 3': 80, 'heading 4': 70, 'heading 5': 60,
                         'heading 6': 50, 'heading 7': 40, 'heading 8': 30, 'heading 9': 20}
+
+            headings = dict(headings.items() + {'Heading 1': 100, 'Heading 2': 90, 'Heading 3': 80, 'Heading 4': 70,
+                                              'Heading 5': 60, 'Heading 6': 50, 'Heading 7': 40, 'Heading 8': 30,
+                                              'Heading 9': 20}.items())
+
         for key, value in headings.iteritems():
+            self.debug.print_debug(self, 'Changing {0} to size {1}'.format(key, value))
             self.handle_heading(manipulate, key, float(value))
 
         # reload the DOM
