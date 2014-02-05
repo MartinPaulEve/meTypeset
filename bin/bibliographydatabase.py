@@ -167,6 +167,9 @@ class BibliographyDatabase(Debuggable):
             elif sub_item.tag == 'source':
                 book_entry.title = sub_item.text
 
+            elif sub_item.tag == 'year':
+                book_entry.year = sub_item.text
+
             elif sub_item.tag == 'date':
                 for date_sub in sub_item:
                     if date_sub.tag == 'year':
