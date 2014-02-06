@@ -248,61 +248,62 @@ class BibliographyDatabase(Debuggable):
     def retrieve(self, db, key):
         raise NotImplementedError()
 
+    def process_database_references(self, db):
+        manipulate = NlmManipulate(self.gv)
+        master_tree = manipulate.load_dom_tree()
+        tree = master_tree.xpath('//back/ref-list/ref')
+        for element in tree:
+            cont = True
+            text = manipulate.get_stripped_text(element)
+
+            year_test = re.compile('((19|20)\d{2})|(n\.d\.)')
+
+            match = year_test.search(text)
+
+            if match:
+                # strip out elements in brackets that might scupper parsing
+                text = re.sub(r'(.+?)(\(.+?\))(.*)', r'\1\3', text)
+
+                list_split = text.split(',')
+                list_split = [x.strip() for x in list_split]
+
+                for length in range(1, len(list_split)):
+                    if not cont:
+                        break
+
+                    for permute in itertools.permutations(list_split, length):
+                        key = match.groups(0)[0] + ''.join(permute).strip()
+
+                        if key in db:
+                            obj = db[key]
+                            print ('Found {0} in database "{1}"'.format(obj.object_type(), obj.title))
+
+                            new_element = etree.fromstring(obj.get_citation())
+
+                            hash_object = hashlib.sha256(key)
+                            hex_dig = hash_object.hexdigest()
+
+                            new_element.attrib['id'] = hex_dig
+
+                            if 'id' in element.attrib:
+                                current_id = element.attrib['id']
+                                referrers = master_tree.xpath('//*[@rid={0}]'.format(current_id))
+
+                                for link in referrers:
+                                    link.attrib['rid'] = hex_dig
+
+                            element.addnext(new_element)
+                            element.getparent().remove(element)
+                            cont = False
+                            break
+        return manipulate, master_tree
+
     def run(self):
         if int(self.gv.settings.args['--aggression']) >= self.aggression:
             self.debug.print_debug(self, 'Opening database: {0}'.format(self.gv.database_file_path))
             db = shelve.open(self.gv.database_file_path)
 
-            manipulate = NlmManipulate(self.gv)
-
-            master_tree = manipulate.load_dom_tree()
-
-            tree = master_tree.xpath('//back/ref-list/ref')
-
-            for element in tree:
-                cont = True
-                text = manipulate.get_stripped_text(element)
-
-                year_test = re.compile('((19|20)\d{2})|(n\.d\.)')
-
-                match = year_test.search(text)
-
-                if match:
-                    # strip out elements in brackets that might scupper parsing
-                    text = re.sub(r'(.+?)(\(.+?\))(.*)', r'\1\3', text)
-
-                    list_split = text.split(',')
-                    list_split = [x.strip() for x in list_split]
-
-                    for length in range(1, len(list_split)):
-                        if not cont:
-                            break
-
-                        for permute in itertools.permutations(list_split, length):
-                            key = match.groups(0)[0] + ''.join(permute).strip()
-
-                            if key in db:
-                                obj = db[key]
-                                print ('Found {0} in database "{1}"'.format(obj.object_type(), obj.title))
-
-                                new_element = etree.fromstring(obj.get_citation())
-
-                                hash_object = hashlib.sha256(key)
-                                hex_dig = hash_object.hexdigest()
-
-                                new_element.attrib['id'] = hex_dig
-
-                                if 'id' in element.attrib:
-                                    current_id = element.attrib['id']
-                                    referrers = master_tree.xpath('//*[@rid={0}]'.format(current_id))
-
-                                    for link in referrers:
-                                        link.attrib['rid'] = hex_dig
-
-                                element.addnext(new_element)
-                                element.getparent().remove(element)
-                                cont = False
-                                break
+            manipulate, master_tree = self.process_database_references(db)
 
             manipulate.save_tree(master_tree)
 
