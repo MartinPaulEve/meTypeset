@@ -23,6 +23,7 @@ class Person():
                     u'<given-names>{1}</given-names>' \
                 u'</name>'.format(self.lastname, self.firstname)
 
+
 class Book():
     def __init__(self, authors=None, title='', publisher = '', place = '', year=''):
         if authors is None:
@@ -94,10 +95,11 @@ class JournalArticle():
 
 class BibliographyDatabase(Debuggable):
     def __init__(self, global_variables):
+        Debuggable.__init__(self, 'Bibliography Database')
         self.gv = global_variables
         self.debug = self.gv.debug
         self.size_cutoff = 16
-        Debuggable.__init__(self, 'Bibliography Database')
+        self.aggression = 8
 
     @staticmethod
     def parse_journal_item(item):
@@ -236,4 +238,7 @@ class BibliographyDatabase(Debuggable):
         raise NotImplementedError()
 
     def run(self):
-        pass
+        if int(self.gv.settings.args['--aggression']) >= self.aggression:
+            manipulate = NlmManipulate(self.gv)
+
+            tree = manipulate.return_elements('//back/ref-list/ref')
