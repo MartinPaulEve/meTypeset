@@ -90,6 +90,16 @@ class Manipulate(Debuggable):
             return None
 
     @staticmethod
+    def get_stripped_text(element):
+        text = element.text
+
+        for sub_element in element:
+            text += sub_element.text
+            text += sub_element.tail
+
+        return text
+
+    @staticmethod
     def replace_value_of_tag(text, new_value):
         obj = objectify.fromstring(text)
         # noinspection PyProtectedMember
