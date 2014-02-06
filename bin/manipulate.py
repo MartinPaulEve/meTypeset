@@ -94,8 +94,11 @@ class Manipulate(Debuggable):
         text = element.text
 
         for sub_element in element:
-            text += sub_element.text
-            text += sub_element.tail
+            if not sub_element.text is None:
+                text += sub_element.text
+
+            if not sub_element.tail is None:
+                text += sub_element.tail
 
         return text
 
