@@ -12,6 +12,7 @@ from nlmmanipulate import NlmManipulate
 import os
 import re
 import itertools
+import hashlib
 from lxml import etree
 
 
@@ -285,6 +286,18 @@ class BibliographyDatabase(Debuggable):
                                 print ('Found {0} in database "{1}"'.format(obj.object_type(), obj.title))
 
                                 new_element = etree.fromstring(obj.get_citation())
+
+                                hash_object = hashlib.sha256(key)
+                                hex_dig = hash_object.hexdigest()
+
+                                new_element.attrib['id'] = hex_dig
+
+                                if 'id' in element.attrib:
+                                    current_id = element.attrib['id']
+                                    referrers = master_tree.xpath('//*[@rid={0}]'.format(current_id))
+
+                                    for link in referrers:
+                                        link.attrib['rid'] = hex_dig
 
                                 element.addnext(new_element)
                                 element.getparent().remove(element)
