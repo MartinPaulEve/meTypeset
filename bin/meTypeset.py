@@ -185,6 +185,9 @@ class MeTypeset (Debuggable):
             # run metadata merge
             Metadata(self.gv).run()
 
+            # process any bibliography entries that are possible
+            BibliographyDatabase(self.gv).run()
+
             if self.args['--chain']:
                 # construct and run an XSLT chainer
                 XslChain(self.gv).run()

@@ -99,7 +99,8 @@ class BibliographyDatabase(Debuggable):
         self.size_cutoff = 16
         Debuggable.__init__(self, 'Bibliography Database')
 
-    def parse_journal_item(self, item):
+    @staticmethod
+    def parse_journal_item(item):
         journal_entry = JournalArticle()
 
         for sub_item in item:
@@ -146,7 +147,8 @@ class BibliographyDatabase(Debuggable):
         return journal_entry
 
 
-    def parse_book_item(self, item):
+    @staticmethod
+    def parse_book_item(item):
         book_entry = Book()
 
         for sub_item in item:
@@ -232,3 +234,6 @@ class BibliographyDatabase(Debuggable):
 
     def retrieve(self, author, title, year):
         raise NotImplementedError()
+
+    def run(self):
+        pass

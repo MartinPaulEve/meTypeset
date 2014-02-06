@@ -41,6 +41,8 @@ class TeiToNlm (Debuggable):
         manipulate.find_reference_list()
         manipulate.tag_bibliography_refs()
 
+
+
     def run_transform(self):
         self.gv.mk_dir(self.gv.nlm_folder_path)
         java_command = self.saxon_tei2nlm()
