@@ -1,0 +1,53 @@
+
+<mt:meTypeset xmlns:mt="https://github.com/MartinPaulEve/meTypeset">
+    
+    <mt:saxon-libs>
+        xml-resolver-1.1.jar;saxon9.jar
+    </mt:saxon-libs>
+    
+    <mt:folders>
+        <mt:docx>docx</mt:docx>
+        <mt:common2>common2</mt:common2>
+        <mt:runtime>runtime</mt:runtime>
+        <mt:binaries>bin</mt:binaries>
+        <mt:word>word</mt:word>
+        <mt:xsl>xsl</mt:xsl>
+        <mt:tei>tei</mt:tei>
+		<mt:outputmedia>media</mt:outputmedia>
+	    <mt:nlm>nlm</mt:nlm>
+	    <mt:media>media</mt:media>
+        <mt:error>error</mt:error>
+    </mt:folders>
+    
+    <mt:style-sheets>
+        <mt:docs-style-sheet-path>
+            docx/from/docxtotei.xsl
+        </mt:docs-style-sheet-path>
+        <mt:doc-to-tei-stylesheet>
+            from/docxtotei.xsl
+        </mt:doc-to-tei-stylesheet>
+        <mt:tei-to-nlm-stylesheet>
+           nlm/tei_to_nlm.xsl
+        </mt:tei-to-nlm-stylesheet>
+        <mt:metadata-stylesheet>
+        metadata/metadata.xsl
+        </mt:metadata-stylesheet>
+    </mt:style-sheets>
+    
+    <mt:xml-files>
+        <mt:default-metadata-file-path>metadata/metadataSample.xml </mt:default-metadata-file-path>
+        <mt:word-document-xml>word/document.xml </mt:word-document-xml>
+        <mt:runtime-catalog>runtime/catalog.xml</mt:runtime-catalog>
+    </mt:xml-files>
+
+    <mt:bibliographicdatabase>
+        <mt:databasefile>bibliography_test.db</mt:databasefile>
+    </mt:bibliographicdatabase>
+    
+    <mt:nlm>
+        <mt:linebreaks-as-comments>False</mt:linebreaks-as-comments>
+        <mt:drop-unknown-addins>False</mt:drop-unknown-addins>
+    </mt:nlm>
+    
+</mt:meTypeset>
+

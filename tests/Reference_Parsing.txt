@@ -18,7 +18,7 @@ R01 Simple Inline Reference
 
 R02 Year detection method
     [Tags]    references    ref-list    R02
-    ${result} =    Run Process    python ../bin/meTypeset.py docx R02.docx ./R02 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx R02.docx -s testsettings.xml ./R02 -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./R02/nlm/out.xml
