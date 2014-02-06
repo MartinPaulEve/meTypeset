@@ -56,7 +56,7 @@ class TeiManipulate(Manipulate):
 
                     child.getparent().remove(child)
 
-        tree.write(self.gv.tei_file_path)
+        tree.write(self.gv.tei_file_path, pretty_print=True)
 
     def find_reference_list_in_word_list(self):
         # load the DOM
@@ -154,7 +154,7 @@ class TeiManipulate(Manipulate):
 
             ref_parent.getparent().remove(ref_parent)
 
-        tree.write(self.gv.tei_file_path)
+        tree.write(self.gv.tei_file_path, pretty_print=True)
 
     def tag_bibliography(self, xpath, start_text, caller):
         # load the DOM
@@ -171,7 +171,7 @@ class TeiManipulate(Manipulate):
                             if child.getchildren()[0].text.startswith(start_text):
                                 child.getchildren()[0].text = child.getchildren()[0].text.replace(start_text, '')
 
-        tree.write(self.gv.tei_file_path)
+        tree.write(self.gv.tei_file_path, pretty_print=True)
 
     def tag_bibliography_non_csl(self, xpath, start_text, caller):
         # load the DOM
@@ -212,7 +212,7 @@ class TeiManipulate(Manipulate):
 
 
 
-        tree.write(self.gv.tei_file_path)
+        tree.write(self.gv.tei_file_path, pretty_print=True)
 
     def drop_addin(self, xpath, start_text, sub_tag, replace_tag, attribute, caller, wrap_tag, delete_original):
         # load the DOM
@@ -245,7 +245,7 @@ class TeiManipulate(Manipulate):
                     if delete_original:
                         child.getparent().remove(child)
 
-        tree.write(self.gv.tei_file_path)
+        tree.write(self.gv.tei_file_path, pretty_print=True)
 
     def tag_headings(self):
         # load the DOM
@@ -258,7 +258,7 @@ class TeiManipulate(Manipulate):
             child.attrib['meTypesetHeadingID'] = str(iterator)
             iterator += 1
 
-        tree.write(self.gv.tei_file_path)
+        tree.write(self.gv.tei_file_path, pretty_print=True)
 
         return iterator
 
@@ -271,7 +271,7 @@ class TeiManipulate(Manipulate):
             child.tag = new_value
             child.attrib['meTypesetSize'] = size_attribute
 
-        tree.write(self.gv.tei_file_path)
+        tree.write(self.gv.tei_file_path, pretty_print=True)
 
     # changes the parent element of the outer_xpath expression to the new_value
     def change_self_size(self, outer_xpath, size_attribute):
@@ -284,7 +284,7 @@ class TeiManipulate(Manipulate):
                 if u'bold' in child.attrib[u'rend']:
                     child.attrib[u'rend'] = child.attrib[u'rend'].replace(u'bold', u'')
 
-        tree.write(self.gv.tei_file_path)
+        tree.write(self.gv.tei_file_path, pretty_print=True)
 
     # changes the parent element of the outer_xpath expression to the new_value
     def enclose_and_change_self_size(self, outer_xpath, size_attribute, tag, change_tag):
@@ -303,7 +303,7 @@ class TeiManipulate(Manipulate):
                 if u'bold' in child.attrib[u'rend']:
                     child.attrib[u'rend'] = child.attrib[u'rend'].replace(u'bold', u'')
 
-        tree.write(self.gv.tei_file_path)
+        tree.write(self.gv.tei_file_path, pretty_print=True)
 
     def move_size_div(self, heading_id, sibling_id):
         tree = self.load_dom_tree()
@@ -316,7 +316,7 @@ class TeiManipulate(Manipulate):
 
         destination_node.addnext(source_node)
 
-        tree.write(self.gv.tei_file_path)
+        tree.write(self.gv.tei_file_path, pretty_print=True)
 
     def resize_headings(self, old_size, new_size):
         tree = self.load_dom_tree()
@@ -327,7 +327,7 @@ class TeiManipulate(Manipulate):
             node_to_downsize.attrib['meTypesetSize'] = new_size
             self.debug.print_debug(self, 'Resizing node from: {0} to {1}'.format(old_size, new_size))
 
-        tree.write(self.gv.tei_file_path)
+        tree.write(self.gv.tei_file_path, pretty_print=True)
 
     def enclose(self, start_xpath, select_xpath):
         tree = self.load_dom_tree()
@@ -345,7 +345,7 @@ class TeiManipulate(Manipulate):
         for element in child:
             div.append(element)
 
-        tree.write(self.gv.tei_file_path)
+        tree.write(self.gv.tei_file_path, pretty_print=True)
 
     def enclose_all(self, start_xpath, new_enclose, start_index):
         tree = self.load_dom_tree()
@@ -368,14 +368,14 @@ class TeiManipulate(Manipulate):
             div.append(element)
             index += 1
 
-        tree.write(self.gv.tei_file_path)
+        tree.write(self.gv.tei_file_path, pretty_print=True)
 
     def change_wmf_image_links(self):
         tree = self.load_dom_tree()
         for image_link in tree.xpath('//tei:graphic', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             converted_image_link = re.sub(r'\.wmf', '.png', image_link.xpath('@url')[0])
             image_link.attrib['url'] = converted_image_link
-        tree.write(self.gv.tei_file_path)
+        tree.write(self.gv.tei_file_path, pretty_print=True)
 
     def cleanup(self):
         tree = self.load_dom_tree()
@@ -395,7 +395,7 @@ class TeiManipulate(Manipulate):
             count += 1
 
         self.debug.print_debug(self, 'Removed {0} nodes during cleanup'.format(count))
-        tree.write(self.gv.tei_file_path)
+        tree.write(self.gv.tei_file_path, pretty_print=True)
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) < 3:
