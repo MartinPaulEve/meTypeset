@@ -253,7 +253,9 @@ class NlmManipulate(Manipulate):
 
     def reflist_year_match_method(self, tree):
         sections = tree.xpath('//sec')
-        for element in sections:
+
+        # work upwards as the last section is most likely to contain references
+        for element in reversed(sections):
             found_other = False
             count = 0
             for p in element:
@@ -277,6 +279,7 @@ class NlmManipulate(Manipulate):
 
             if count > 1 and not found_other:
                 element.attrib['reflist'] = 'yes'
+                break
             else:
                 for p in element:
                     if 'rend' in p.attrib:
