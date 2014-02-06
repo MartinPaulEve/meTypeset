@@ -12,6 +12,7 @@ from nlmmanipulate import NlmManipulate
 import os
 import re
 import itertools
+from lxml import etree
 
 
 class Person():
@@ -24,7 +25,6 @@ class Person():
                     u'<surname>{0}</surname>' \
                     u'<given-names>{1}</given-names>' \
                 u'</name>'.format(self.lastname, self.firstname)
-
 
 class Book():
     def __init__(self, authors=None, title='', publisher = '', place = '', year=''):
@@ -254,7 +254,9 @@ class BibliographyDatabase(Debuggable):
 
             manipulate = NlmManipulate(self.gv)
 
-            tree = manipulate.return_elements('//back/ref-list/ref')
+            master_tree = manipulate.load_dom_tree()
+
+            tree = master_tree.xpath('//back/ref-list/ref')
 
             for element in tree:
                 cont = True
@@ -281,8 +283,14 @@ class BibliographyDatabase(Debuggable):
                             if key in db:
                                 obj = db[key]
                                 print ('Found {0} in database "{1}"'.format(obj.object_type(), obj.title))
-                                
+
+                                new_element = etree.fromstring(obj.get_citation())
+
+                                element.addnext(new_element)
+                                element.getparent().remove(element)
                                 cont = False
                                 break
+
+            manipulate.save_tree(master_tree)
 
             db.close()

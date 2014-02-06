@@ -187,8 +187,11 @@ class NlmManipulate(Manipulate):
             for child in children:
                 self.add_error_tag(child, u'001')
 
-        tree.write(self.dom_temp_file)
-        tree.write(self.dom_to_load)
+        self.save_tree(tree)
+
+    def save_tree(self, tree):
+        tree.write(self.dom_temp_file, pretty_print=True)
+        tree.write(self.dom_to_load, pretty_print=True)
 
     def insert_break(self, search_xpath, tag_name):
         """
@@ -210,8 +213,7 @@ class NlmManipulate(Manipulate):
             node.addnext(break_element)
             node.getparent().remove(node)
 
-        tree.write(self.dom_temp_file)
-        tree.write(self.dom_to_load)
+        self.save_tree(tree)
 
     def tag_inline_refs(self):
         tree = self.load_dom_tree()
@@ -242,7 +244,7 @@ class NlmManipulate(Manipulate):
                     self.debug.print_debug(self, u'Inline reference handler detected and replaced '
                                                  u'{0}'.format(u'({0})'.format(match.group('author'))))
 
-        tree.write(self.gv.nlm_file_path)
+        self.save_tree(tree)
 
     def reflist_indent_method(self, tree):
         # tag the last item as a reference list
@@ -315,8 +317,7 @@ class NlmManipulate(Manipulate):
         # look for sections where very paragraph contains a year; likely to be a reference
         found = self.reflist_year_match_method(tree)
 
-        tree.write(self.gv.nlm_file_path)
-        tree.write(self.gv.nlm_temp_file_path)
+        self.save_tree(tree)
 
     def tag_bibliography_refs(self):
         tree = self.load_dom_tree()
