@@ -279,11 +279,13 @@ class NlmManipulate(Manipulate):
 
             if count > 1 and not found_other:
                 element.attrib['reflist'] = 'yes'
-                break
+                return True
             else:
                 for p in element:
                     if 'rend' in p.attrib:
                         del p.attrib['rend']
+
+        return False
 
     def find_or_create_element(self, tree, element_tag, add_xpath, is_sibling):
         # find_or_create_elements(tree, 'back', '//body', true)
@@ -315,7 +317,7 @@ class NlmManipulate(Manipulate):
         #self.reflist_indent_method(tree)
 
         # look for sections where very paragraph contains a year; likely to be a reference
-        self.reflist_year_match_method(tree)
+        found = self.reflist_year_match_method(tree)
 
         tree.write(self.gv.nlm_file_path)
         tree.write(self.gv.nlm_temp_file_path)
