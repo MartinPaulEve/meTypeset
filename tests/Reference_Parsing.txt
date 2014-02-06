@@ -23,5 +23,5 @@ R02 Year detection method
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./R02/nlm/out.xml
     ${paragraph}=    Get Element    ${xml}    back/ref-list
-    Elements Should Match    ${paragraph}    <ref-list><ref rid="1">Eve, Martin Paul, <italic>Pynchon and Philosophy</italic> (London: Palgrave MacMillan, 2014)</ref><ref rid="2">Thomas, Samuel, <italic>Pynchon and the Political </italic>(New York: Routledge, 2007)</ref></ref-list>    normalize_whitespace=yes
+    Elements Should Match    ${paragraph}    <ref-list><ref id="1">Eve, Martin Paul, <italic>Pynchon and Philosophy</italic> (London: Palgrave MacMillan, 2014)</ref><ref id="2">Thomas, Samuel, <italic>Pynchon and the Political </italic>(New York: Routledge, 2007)</ref></ref-list>    normalize_whitespace=yes
     [Teardown]    Remove Directory    R02    recursive=True
