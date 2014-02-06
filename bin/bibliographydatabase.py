@@ -10,6 +10,8 @@ from debug import Debuggable
 import tempfile
 from nlmmanipulate import NlmManipulate
 import os
+import re
+import itertools
 
 
 class Person():
@@ -32,6 +34,10 @@ class Book():
         self.year = year
         self.publisher = publisher
         self.place = place
+
+    @staticmethod
+    def object_type():
+        return "book"
 
     def get_citation(self):
 
@@ -66,6 +72,10 @@ class JournalArticle():
         self.lpage = lpage
         self.year = year
         self.doi = doi
+
+    @staticmethod
+    def object_type():
+        return "journal article"
 
     def get_citation(self):
 
@@ -234,11 +244,45 @@ class BibliographyDatabase(Debuggable):
 
         db.close()
 
-    def retrieve(self, author, title, year):
+    def retrieve(self, db, key):
         raise NotImplementedError()
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) >= self.aggression:
+            self.debug.print_debug(self, 'Opening database: {0}'.format(self.gv.database_file_path))
+            db = shelve.open(self.gv.database_file_path)
+
             manipulate = NlmManipulate(self.gv)
 
             tree = manipulate.return_elements('//back/ref-list/ref')
+
+            for element in tree:
+                cont = True
+                text = manipulate.get_stripped_text(element)
+
+                year_test = re.compile('((19|20)\d{2})|(n\.d\.)')
+
+                match = year_test.search(text)
+
+                if match:
+                    # strip out elements in brackets that might scupper parsing
+                    text = re.sub(r'(.+?)(\(.+?\))(.*)', r'\1\3', text)
+
+                    list_split = text.split(',')
+                    list_split = [x.strip() for x in list_split]
+
+                    for length in range(1, len(list_split)):
+                        if not cont:
+                            break
+
+                        for permute in itertools.permutations(list_split, length):
+                            key = match.groups(0)[0] + ''.join(permute).strip()
+
+                            if key in db:
+                                obj = db[key]
+                                print ('Found {0} in database "{1}"'.format(obj.object_type(), obj.title))
+                                
+                                cont = False
+                                break
+
+            db.close()
