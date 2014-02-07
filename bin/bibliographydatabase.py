@@ -27,6 +27,59 @@ class Person():
                     u'<given-names>{1}</given-names>' \
                 u'</name>'.format(self.lastname, self.firstname)
 
+class BookChapter():
+    def __init__(self, authors=None, title='', book_title='', publisher='', place='', year='', editors=None):
+        if authors is None:
+            self.authors = []
+        else:
+            self.authors = authors
+
+        if editors is None:
+            self.editors = []
+        else:
+            self.editors = editors
+
+        self.title = title
+        self.book_title = book_title
+        self.year = year
+        self.publisher = publisher
+        self.place = place
+
+    @staticmethod
+    def object_type():
+        return "book chapter"
+
+    def get_citation(self):
+
+        author_block = ''
+        for author in self.authors:
+            author_block += author.get_citation()
+
+        editor_block = ''
+
+        # note that this kind of check will always be necessary when forward-migrating database schema
+        if hasattr(self, 'editors'):
+            for editor in self.editors:
+                editor_block += editor.get_citation()
+
+        return u'<ref>'  \
+                    u'<element-citation publication-type="bookchapter">' \
+                        u'<person-group person-group-type="author">' \
+                            u'{0}' \
+                        u'</person-group>' \
+                        u'<article-title>{5}</article-title>' \
+                        u'<source>{1}</source>' \
+                        u'<date>' \
+                            u'<year>{2}</year>' \
+                        u'</date>' \
+                        u'<person-group person-group-type="editor">' \
+                            u'{5}' \
+                        u'</person-group>' \
+                        u'<publisher-loc>{3}</publisher-loc>' \
+                        u'<publisher-name>{4}</publisher-name>' \
+                    u'</element-citation>' \
+                u'</ref>'.format(author_block, self.book_title, self.year, self.place, self.publisher, editor_block, self.title)
+
 class Book():
     def __init__(self, authors=None, title='', publisher='', place='', year='', editors=None):
         if authors is None:
