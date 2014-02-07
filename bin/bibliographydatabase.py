@@ -28,9 +28,17 @@ class Person():
                 u'</name>'.format(self.lastname, self.firstname)
 
 class Book():
-    def __init__(self, authors=None, title='', publisher = '', place = '', year=''):
+    def __init__(self, authors=None, title='', publisher='', place='', year='', editors=None):
         if authors is None:
             self.authors = []
+        else:
+            self.authors = authors
+
+        if editors is None:
+            self.editors = []
+        else:
+            self.editors = editors
+
         self.title = title
         self.year = year
         self.publisher = publisher
@@ -46,19 +54,29 @@ class Book():
         for author in self.authors:
             author_block += author.get_citation()
 
+        editor_block = ''
+
+        # note that this kind of check will always be necessary when forward-migrating database schema
+        if hasattr(self, 'editors'):
+            for editor in self.editors:
+                editor_block += editor.get_citation()
+
         return u'<ref>'  \
                     u'<element-citation publication-type="book">' \
                         u'<person-group person-group-type="author">' \
                             u'{0}' \
-                            u'</person-group>' \
-                            u'<source>{1}</source>' \
-                            u'<date>' \
-                                u'<year>{2}</year>' \
-                            u'</date>' \
-                            u'<publisher-loc>{3}</publisher-loc>' \
-                            u'<publisher-name>{4}</publisher-name>' \
-                        u'</element-citation>' \
-                u'</ref>'.format(author_block, self.title, self.year, self.place, self.publisher)
+                        u'</person-group>' \
+                        u'<source>{1}</source>' \
+                        u'<date>' \
+                            u'<year>{2}</year>' \
+                        u'</date>' \
+                        u'<person-group person-group-type="editor">' \
+                            u'{5}' \
+                        u'</person-group>' \
+                        u'<publisher-loc>{3}</publisher-loc>' \
+                        u'<publisher-name>{4}</publisher-name>' \
+                    u'</element-citation>' \
+                u'</ref>'.format(author_block, self.title, self.year, self.place, self.publisher, editor_block)
 
 
 class JournalArticle():
@@ -119,15 +137,7 @@ class BibliographyDatabase(Debuggable):
         for sub_item in item:
             if sub_item.tag == 'person-group' and 'person-group-type' in sub_item.attrib:
                 if sub_item.attrib['person-group-type'] == 'author':
-                    authors = []
-                    for author_item in sub_item:
-                        author = Person()
-                        for names in author_item:
-                            if names.tag == 'surname':
-                                author.lastname = names.text
-                            elif names.tag == 'given-names':
-                                author.firstname = names.text
-                        authors.append(author)
+                    authors = BibliographyDatabase.parse_person(sub_item)
                     journal_entry.authors += authors
 
             elif sub_item.tag == 'article-title':
@@ -161,22 +171,33 @@ class BibliographyDatabase(Debuggable):
 
 
     @staticmethod
+    def parse_person(sub_item):
+        people_list = []
+
+        for author_item in sub_item:
+            person = Person()
+            for names in author_item:
+                if names.tag == 'surname':
+                    person.lastname = names.text
+                elif names.tag == 'given-names':
+                    person.firstname = names.text
+            people_list.append(person)
+
+        return people_list
+
+    @staticmethod
     def parse_book_item(item):
         book_entry = Book()
 
         for sub_item in item:
             if sub_item.tag == 'person-group' and 'person-group-type' in sub_item.attrib:
                 if sub_item.attrib['person-group-type'] == 'author':
-                    authors = []
-                    for author_item in sub_item:
-                        author = Person()
-                        for names in author_item:
-                            if names.tag == 'surname':
-                                author.lastname = names.text
-                            elif names.tag == 'given-names':
-                                author.firstname = names.text
-                        authors.append(author)
+                    authors = BibliographyDatabase.parse_person(authors, sub_item)
                     book_entry.authors += authors
+
+                if sub_item.attrib['person-group-type'] == 'editor':
+                    editors = BibliographyDatabase.parse_person(editors, sub_item)
+                    book_entry.editors += editors
 
             elif sub_item.tag == 'source':
                 book_entry.title = sub_item.text
