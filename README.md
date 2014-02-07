@@ -12,7 +12,18 @@ The transforms within this software can be invoked in several different ways:
 
 The modfications to the OxGarage stack contained within this project are Copyright Martin Paul Eve 2014 and released under the licenses specified in each respective file.
 
-#Running meTypeset
+##Features
+
+* Automated Microsoft Word (docx) to JATS XML
+* Intelligent size processing and section grouping algorithm
+* Reference list detection
+* Free-text list detection
+* Footnote handling
+* Full table support
+* Metadata handling from platform-generated input
+* Built-in bibliographic database
+
+##Running meTypeset
 
 First off, ensure you have the correct stack installed for your environment. meTypeset needs a valid python environment, a valid Java environment, the command line tools "unzip" and "basename" and a shell interpreter (eg Bash). Saxon, which is required, is pre-bundled. It has been shown to work correctly on *Nix derivatives and Mac OS X.
 
@@ -92,6 +103,9 @@ The [TEI to NLM transform](bin/teitonlm.py) procedure is then called, which as w
 
 ###Metadata Merge
 The [metadata merge](bin/metadata.py) merges in a metadata heading with the NLM. Ideally, this is produced by a plugin in your journal/content management system.
+
+###Bibliographic Database
+The [bibliographic database](bin/bibliographydatabase.py) inserts fully marked-up JATS element-citation blocks for citations that it has encountered previously. These can be imported by using the "bibscan" command.
 
 ###Chain
 Finally, an [optional additional XSL](bin/xslchainer.py) file can be specified to be transformed by passing the --chain option.
