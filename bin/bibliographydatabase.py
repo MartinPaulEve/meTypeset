@@ -271,6 +271,44 @@ class BibliographyDatabase(Debuggable):
 
         return book_entry
 
+    @staticmethod
+    def parse_book_chapter_item(item):
+		# todo: this needs to be able to distinguish book authors from the chapter authors
+        book_entry = BookChapter()
+
+        for sub_item in item:
+            if sub_item.tag == 'person-group' and 'person-group-type' in sub_item.attrib:
+                if sub_item.attrib['person-group-type'] == 'author':
+                    authors = BibliographyDatabase.parse_person(authors, sub_item)
+                    book_entry.authors += authors
+
+                if sub_item.attrib['person-group-type'] == 'editor':
+                    editors = BibliographyDatabase.parse_person(editors, sub_item)
+                    book_entry.editors += editors
+
+            elif sub_item.tag == 'article-title':
+                book_entry.title = sub_item.text
+
+            elif sub_item.tag == 'source':
+                book_entry.book_title = sub_item.text
+
+            elif sub_item.tag == 'year':
+                book_entry.year = sub_item.text
+
+            elif sub_item.tag == 'date':
+                for date_sub in sub_item:
+                    if date_sub.tag == 'year':
+                        book_entry.year = date_sub.text
+
+            elif sub_item.tag == 'publisher-loc':
+                book_entry.place = sub_item.text
+
+            elif sub_item.tag == 'publisher-name':
+                book_entry.publisher = sub_item.text
+
+        return book_entry
+
+
     def store_key(self, db, item, key):
         self.debug.print_debug(self, 'Storing {0}'.format(key))
         db[key] = item
@@ -289,6 +327,17 @@ class BibliographyDatabase(Debuggable):
     def store_book(self, db, tree):
         for item in tree:
             book = self.parse_book_item(item)
+
+            if len(book.authors) > 0:
+                key = book.year + book.authors[0].lastname + book.title
+            else:
+                key = book.year + book.title
+
+            self.store_key(db, book, key)
+
+    def store_book_chapter(self, db, tree):
+        for item in tree:
+            book = self.parse_book_chapter_item(item)
 
             if len(book.authors) > 0:
                 key = book.year + book.authors[0].lastname + book.title
@@ -316,6 +365,9 @@ class BibliographyDatabase(Debuggable):
 
         tree = manipulate.return_elements('//element-citation[@publication-type="book"]')
         self.store_book(db, tree)
+
+        tree = manipulate.return_elements('//element-citation[@publication-type="bookchapter"]')
+        self.store_book_chapter(db, tree)
 
         db.close()
 
