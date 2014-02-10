@@ -400,6 +400,9 @@ class BibliographyDatabase(Debuggable):
                     for permute in itertools.permutations(list_split, length):
                         key = match.groups(0)[0] + ''.join(permute).strip()
 
+                        if isinstance(key, unicode):
+                            key = key.encode("utf-16le")
+
                         if key in db:
                             obj = db[key]
                             print ('Found {0} in database "{1}"'.format(obj.object_type(), obj.title))
