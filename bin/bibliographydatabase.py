@@ -393,38 +393,40 @@ class BibliographyDatabase(Debuggable):
                 list_split = text.split(',')
                 list_split = [x.strip() for x in list_split]
 
-                for length in range(1, len(list_split)):
-                    if not cont:
-                        break
+                if len(list_split < 10):
 
-                    for permute in itertools.permutations(list_split, length):
-                        key = match.groups(0)[0] + ''.join(permute).strip()
-
-                        if isinstance(key, unicode):
-                            key = key.encode("utf-16le")
-
-                        if key in db:
-                            obj = db[key]
-                            print ('Found {0} in database "{1}"'.format(obj.object_type(), obj.title))
-
-                            new_element = etree.fromstring(obj.get_citation())
-
-                            hash_object = hashlib.sha256(key)
-                            hex_dig = hash_object.hexdigest()
-
-                            new_element.attrib['id'] = hex_dig
-
-                            if 'id' in element.attrib:
-                                current_id = element.attrib['id']
-                                referrers = master_tree.xpath('//*[@rid={0}]'.format(current_id))
-
-                                for link in referrers:
-                                    link.attrib['rid'] = hex_dig
-
-                            element.addnext(new_element)
-                            element.getparent().remove(element)
-                            cont = False
+                    for length in range(1, len(list_split)):
+                        if not cont:
                             break
+
+                        for permute in itertools.permutations(list_split, length):
+                            key = match.groups(0)[0] + ''.join(permute).strip()
+
+                            if isinstance(key, unicode):
+                                key = key.encode("utf-16le")
+
+                            if key in db:
+                                obj = db[key]
+                                print ('Found {0} in database "{1}"'.format(obj.object_type(), obj.title))
+
+                                new_element = etree.fromstring(obj.get_citation())
+
+                                hash_object = hashlib.sha256(key)
+                                hex_dig = hash_object.hexdigest()
+
+                                new_element.attrib['id'] = hex_dig
+
+                                if 'id' in element.attrib:
+                                    current_id = element.attrib['id']
+                                    referrers = master_tree.xpath('//*[@rid={0}]'.format(current_id))
+
+                                    for link in referrers:
+                                        link.attrib['rid'] = hex_dig
+
+                                element.addnext(new_element)
+                                element.getparent().remove(element)
+                                cont = False
+                                break
         return manipulate, master_tree
 
     def run(self):
