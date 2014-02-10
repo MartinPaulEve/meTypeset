@@ -93,6 +93,9 @@ class Manipulate(Debuggable):
     def get_stripped_text(element):
         text = element.text
 
+        if text is None:
+            text = ''
+
         for sub_element in element:
             if not sub_element.text is None:
                 text += sub_element.text
