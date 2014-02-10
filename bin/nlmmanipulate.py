@@ -269,8 +269,14 @@ class NlmManipulate(Manipulate):
                     match = year_test.search(text)
 
                     if not match:
-                        found_other = True
-                        break
+                        blank_text = re.compile('XXXX')
+                        match_inner = blank_text.search(text)
+                        if not match_inner:
+                            found_other = True
+                            break
+                        else:
+                            count += 1
+                            p.attrib['rend'] = 'ref'
                     else:
                         count += 1
                         p.attrib['rend'] = 'ref'
