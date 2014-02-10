@@ -260,11 +260,19 @@ class NlmManipulate(Manipulate):
         for element in reversed(sections):
             found_other = False
             count = 0
+            use_tag = None
             for p in element:
-                if p.tag == 'p':
+                # use either p or disp-quote, but not a mix
+                if use_tag is None:
+                    if p.tag == 'p':
+                        use_tag = 'p'
+                    elif p.tag == 'disp-quote':
+                        use_tag = 'disp-quote'
+
+                if p.tag == use_tag:
                     text = self.get_stripped_text(p)
 
-                    year_test = re.compile('((19|20)\d{2})|(n\.d\.)')
+                    year_test = re.compile('((19|20)\d{2}[a-z])|(n\.d\.)')
 
                     match = year_test.search(text)
 
@@ -280,6 +288,11 @@ class NlmManipulate(Manipulate):
                     else:
                         count += 1
                         p.attrib['rend'] = 'ref'
+
+                else:
+                    # found a tag other than the one we want
+                    found_other = True
+                    break
 
             if count > 1 and not found_other:
                 element.attrib['reflist'] = 'yes'
