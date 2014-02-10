@@ -272,7 +272,7 @@ class NlmManipulate(Manipulate):
                 if p.tag == use_tag:
                     text = self.get_stripped_text(p)
 
-                    year_test = re.compile('((19|20)\d{2}[a-z])|(n\.d\.)')
+                    year_test = re.compile('((19|20)\d{2}[a-z]?)|(n\.d\.)')
 
                     match = year_test.search(text)
 
