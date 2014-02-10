@@ -393,7 +393,7 @@ class BibliographyDatabase(Debuggable):
                 list_split = text.split(',')
                 list_split = [x.strip() for x in list_split]
 
-                if len(list_split < 10):
+                if len(list_split) < 10:
 
                     for length in range(1, len(list_split)):
                         if not cont:
