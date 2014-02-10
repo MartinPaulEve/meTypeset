@@ -289,8 +289,8 @@ class NlmManipulate(Manipulate):
                         count += 1
                         p.attrib['rend'] = 'ref'
 
-                else:
-                    # found a tag other than the one we want
+                elif p.tag != 'title':
+                    # found a tag other than the one we want or 'title'
                     found_other = True
                     break
 
