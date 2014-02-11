@@ -270,6 +270,11 @@ class NlmManipulate(Manipulate):
                         use_tag = p.tag
 
                 if p.tag == use_tag:
+                    for sub_element in p:
+                        if sub_element.tag == 'p':
+                            p = sub_element
+                            break
+
                     text = self.get_stripped_text(p)
 
                     year_test = re.compile('((19|20)\d{2}[a-z]?)|(n\.d\.)')
@@ -280,13 +285,12 @@ class NlmManipulate(Manipulate):
                         blank_text = re.compile('XXXX')
                         match_inner = blank_text.search(text)
                         if not match_inner:
-                            print text
                             diff_count += 1
 
                             if diff_count > tolerance:
                                 self.debug.print_debug(self, u'Too many different non-year matches found in this'
-                                                             u' section to classify as a reference block. '
-                                                             u'(Allowed: {0})'.format(tolerance))
+                                                             u' {1} section to classify as a reference block. '
+                                                             u'(Allowed: {0})'.format(tolerance, root))
                                 found_other = True
                                 break
                         else:
@@ -301,12 +305,18 @@ class NlmManipulate(Manipulate):
                     diff_count += 1
 
                     if diff_count > tolerance:
-                        self.debug.print_debug(self, u'Too many different elements found in this section to classify '
-                                                     u'as a reference block. (Allowed: {0})'.format(tolerance))
+                        self.debug.print_debug(self, u'Too many different elements found in this {1} section to '
+                                                     u'classify as a reference block. (Allowed: {0})'.format(tolerance,
+                                                                                                             root))
                         found_other = True
                         break
 
             if count > 1 and not found_other:
+                self.debug.print_debug(self, u'Found a reference list in a {0} block with '
+                                             u'tolerance {1}'.format(root, tolerance))
+                while element.tag != 'sec':
+                    element = element.getparent()
+
                 element.attrib['reflist'] = 'yes'
                 return True
             else:
@@ -373,7 +383,7 @@ class NlmManipulate(Manipulate):
 
         # change this to find <ref-list> elements after we're more certain of how to identify them
         for refs in tree.xpath('//sec[@reflist="yes"]/p[@rend="ref"] | //sec[@reflist="yes"]/title '
-                               '| //sec[@reflist="yes"]/*/list-item'):
+                               '| //sec[@reflist="yes"]/*/list-item/p'):
 
             if refs.tag == 'title':
                 self.debug.print_debug(self, 'Removing title element from reference item')
