@@ -29,7 +29,6 @@ class NlmManipulate(Manipulate):
                         break
             else:
                 found = True
-                break
 
             if not found:
                 paragraph.getparent().remove(paragraph)
