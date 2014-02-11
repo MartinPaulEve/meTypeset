@@ -253,8 +253,8 @@ class NlmManipulate(Manipulate):
             for item in indentmethod:
                 item.attrib['reflist'] = 'yes'
 
-    def reflist_year_match_method(self, tree, tolerance):
-        sections = tree.xpath('//sec')
+    def reflist_year_match_method(self, tree, root, tolerance):
+        sections = tree.xpath(root)
 
         # work upwards as the last section is most likely to contain references
         for element in reversed(sections):
@@ -280,11 +280,12 @@ class NlmManipulate(Manipulate):
                         blank_text = re.compile('XXXX')
                         match_inner = blank_text.search(text)
                         if not match_inner:
+                            print text
                             diff_count += 1
 
                             if diff_count > tolerance:
-                                self.debug.print_debug(self, u'Too many different elements found in this section to '
-                                                             u'classify as a reference block. '
+                                self.debug.print_debug(self, u'Too many different non-year matches found in this'
+                                                             u' section to classify as a reference block. '
                                                              u'(Allowed: {0})'.format(tolerance))
                                 found_other = True
                                 break
@@ -345,13 +346,20 @@ class NlmManipulate(Manipulate):
         #self.reflist_indent_method(tree)
 
         # look for sections where very paragraph contains a year; likely to be a reference
-        found = self.reflist_year_match_method(tree, 0)
+        tags = ['//sec', '//sec/list']
 
-        if not found:
-            found = self.reflist_year_match_method(tree, 1)
+        found = False
+
+        for tag in tags:
+            found = self.reflist_year_match_method(tree, tag, 0)
 
             if not found:
-                found = self.reflist_year_match_method(tree, 2)
+                found = self.reflist_year_match_method(tree, tag, 1)
+
+            if not found:
+                found = self.reflist_year_match_method(tree, tag, 2)
+
+
 
         self.save_tree(tree)
 
