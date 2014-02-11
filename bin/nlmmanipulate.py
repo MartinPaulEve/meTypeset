@@ -395,7 +395,8 @@ class NlmManipulate(Manipulate):
 
         # change this to find <ref-list> elements after we're more certain of how to identify them
         for refs in tree.xpath('//sec[@reflist="yes"]/p[@rend="ref"] | //sec[@reflist="yes"]/title '
-                               '| //sec[@reflist="yes"]/*/list-item/p'):
+                               '| //sec[@reflist="yes"]/*/list-item/p[@rend="ref"] | '
+                               '//sec[@reflist="yes"]/*/p[@rend="ref"]'):
 
             if refs.tag == 'title':
                 self.debug.print_debug(self, 'Removing title element from reference item')
