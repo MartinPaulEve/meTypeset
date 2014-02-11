@@ -293,11 +293,11 @@ class NlmManipulate(Manipulate):
 
                     year_test = re.compile('((19|20)\d{2}[a-z]?)|(n\.d\.)')
 
-                    match = year_test.search(text)
+                    match = year_test.findall(text)
 
                     if not match:
                         blank_text = re.compile('XXXX')
-                        match_inner = blank_text.search(text)
+                        match_inner = blank_text.findall(text)
                         if not match_inner:
                             diff_count += 1
 
@@ -310,9 +310,14 @@ class NlmManipulate(Manipulate):
                         else:
                             count += 1
                             p.attrib['rend'] = 'ref'
-                    else:
+                    elif len(match) == 1:
+                        # only do this if we find 1 match on the line; otherwise, it's a problem
                         count += 1
                         p.attrib['rend'] = 'ref'
+                    else:
+                        self.debug.print_debug(self, u'More than one year match found in this {0}'.format(root))
+                        found_other = True
+                        break
 
                 elif p.tag != 'title' and not use_tag is None:
                     # found a tag other than the one we want or 'title'

@@ -37,6 +37,8 @@ class TeiToNlm (Debuggable):
         manipulate.insert_break('comment()[. = "meTypeset:br"]', 'td')
         manipulate.insert_break('comment()[. = "meTypeset:br"]', 'title')
 
+        manipulate.remove_empty_elements('//sec/p')
+
         manipulate.tag_inline_refs()
         manipulate.find_reference_list()
         manipulate.tag_bibliography_refs()
