@@ -253,7 +253,7 @@ class NlmManipulate(Manipulate):
             for item in indentmethod:
                 item.attrib['reflist'] = 'yes'
 
-    def reflist_year_match_method(self, tree):
+    def reflist_year_match_method(self, tree, tolerance):
         sections = tree.xpath('//sec')
 
         # work upwards as the last section is most likely to contain references
@@ -261,6 +261,8 @@ class NlmManipulate(Manipulate):
             found_other = False
             count = 0
             use_tag = None
+            diff_count = 0
+
             for p in element:
                 # use either p or disp-quote, but not a mix
                 if use_tag is None:
@@ -280,8 +282,14 @@ class NlmManipulate(Manipulate):
                         blank_text = re.compile('XXXX')
                         match_inner = blank_text.search(text)
                         if not match_inner:
-                            found_other = True
-                            break
+                            diff_count += 1
+
+                            if diff_count > tolerance:
+                                self.debug.print_debug(self, u'Too many different elements found in this section to '
+                                                             u'classify as a reference block. '
+                                                             u'(Allowed: {0})'.format(tolerance))
+                                found_other = True
+                                break
                         else:
                             count += 1
                             p.attrib['rend'] = 'ref'
@@ -289,10 +297,15 @@ class NlmManipulate(Manipulate):
                         count += 1
                         p.attrib['rend'] = 'ref'
 
-                elif p.tag != 'title':
+                elif p.tag != 'title' and not use_tag is None:
                     # found a tag other than the one we want or 'title'
-                    found_other = True
-                    break
+                    diff_count += 1
+
+                    if diff_count > tolerance:
+                        self.debug.print_debug(self, u'Too many different elements found in this section to classify '
+                                                     u'as a reference block. (Allowed: {0})'.format(tolerance))
+                        found_other = True
+                        break
 
             if count > 1 and not found_other:
                 element.attrib['reflist'] = 'yes'
@@ -334,7 +347,13 @@ class NlmManipulate(Manipulate):
         #self.reflist_indent_method(tree)
 
         # look for sections where very paragraph contains a year; likely to be a reference
-        found = self.reflist_year_match_method(tree)
+        found = self.reflist_year_match_method(tree, 0)
+
+        if not found:
+            found = self.reflist_year_match_method(tree, 1)
+
+            if not found:
+                found = self.reflist_year_match_method(tree, 2)
 
         self.save_tree(tree)
 
