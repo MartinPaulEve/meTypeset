@@ -314,17 +314,27 @@ class NlmManipulate(Manipulate):
                             count += 1
                             p.attrib['rend'] = 'ref'
                         else:
-                            self.debug.print_debug(self, u'More than one year match found in this {0}'.format(root))
-                            found_other = True
-                            break
+                            page_test = re.compile('(((19|20)\d{2})\-((19|20)\d{2}))')
+                            is_page_range = page_test.search(text)
+
+                            if not is_page_range:
+                                self.debug.print_debug(self, u'More than one year match found in this {0} '
+                                                             u'element: {1}'.format(root, text))
+                                found_other = True
+                                break
                     elif len(match) == 1:
                         # only do this if we find 1 match on the line; otherwise, it's a problem
                         count += 1
                         p.attrib['rend'] = 'ref'
                     else:
-                        self.debug.print_debug(self, u'More than one year match found in this {0}'.format(root))
-                        found_other = True
-                        break
+                        page_test = re.compile('(((19|20)\d{2})\-((19|20)\d{2}))')
+                        is_page_range = page_test.search(text)
+
+                        if not is_page_range:
+                            self.debug.print_debug(self, u'More than one year match found in this {0} '
+                                                         u'element: {1}'.format(root, text))
+                            found_other = True
+                            break
 
                 elif p.tag != 'title' and not use_tag is None:
                     # found a tag other than the one we want or 'title'
@@ -394,6 +404,9 @@ class NlmManipulate(Manipulate):
 
             if not found:
                 found = self.reflist_year_match_method(tree, tag, 2)
+
+            if not found:
+                found = self.reflist_year_match_method(tree, tag, 3)
 
         self.save_tree(tree)
 
