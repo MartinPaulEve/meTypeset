@@ -204,9 +204,15 @@ class SizeClassifier(Debuggable):
     def process_subsequent_headings(self, iteration, manipulate, processed_flag, section_ids, section_stack, size,
                                     sizes_ordered):
         if not processed_flag:
+            last = True
+
+            # determine if is last
+            for index in range(iteration + 1, len(sizes_ordered) - 1):
+                if float(sizes_ordered[index]) >= float(self.size_cutoff):
+                    last = False
 
             # ascertain the next size
-            if iteration < (len(sizes_ordered) - 1):
+            if not last:
                 next_size, next_id = self.get_next_size(iteration, sizes_ordered)
 
                 if float(size) == float(next_size):
@@ -317,6 +323,11 @@ class SizeClassifier(Debuggable):
                     else:
                         section_ids[section_stack.index(size)] = iteration
 
+                iteration += 1
+
+            else:
+                self.debug.print_debug(self, u'Ignoring heading {0} because its size ({1}) '
+                                             u'is less than {2}'.format(iteration, size, self.size_cutoff))
                 iteration += 1
 
     def get_sizes(self, tree):
