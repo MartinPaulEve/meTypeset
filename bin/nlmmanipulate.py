@@ -266,10 +266,8 @@ class NlmManipulate(Manipulate):
             for p in element:
                 # use either p or disp-quote, but not a mix
                 if use_tag is None:
-                    if p.tag == 'p':
-                        use_tag = 'p'
-                    elif p.tag == 'disp-quote':
-                        use_tag = 'disp-quote'
+                    if p.tag == 'p' or p.tag == 'disp-quote' or p.tag == 'list-item':
+                        use_tag = p.tag
 
                 if p.tag == use_tag:
                     text = self.get_stripped_text(p)
