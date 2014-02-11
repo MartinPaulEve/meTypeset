@@ -17,6 +17,20 @@ class NlmManipulate(Manipulate):
         self.mod_name = 'NLM'
         Manipulate.__init__(self, gv)
 
+    def remove_empty_lists(self):
+        tree = self.load_dom_tree()
+
+        for paragraph in tree.xpath('//sec/list'):
+            found = False
+            for item in paragraph:
+                if self.get_stripped_text(item) != '':
+                    found = True
+                    break
+
+            if not found:
+                paragraph.getparent().remove(paragraph)
+
+        self.save_tree(tree)
 
     @staticmethod
     def handle_nested_elements(iter_node, move_node, node, node_parent, outer_node, tag_name, tail_stack,

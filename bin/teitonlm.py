@@ -40,6 +40,7 @@ class TeiToNlm (Debuggable):
         manipulate.tag_inline_refs()
         manipulate.find_reference_list()
         manipulate.tag_bibliography_refs()
+        manipulate.remove_empty_lists()
 
 
 
