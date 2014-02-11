@@ -318,8 +318,7 @@ class NlmManipulate(Manipulate):
                             is_page_range = page_test.search(text)
 
                             if not is_page_range:
-                                self.debug.print_debug(self, u'More than one year match found in this {0} '
-                                                             u'element: {1}'.format(root, text))
+                                self.debug.print_debug(self, u'More than one year match found in this {0}'.format(root))
                                 found_other = True
                                 break
                     elif len(match) == 1:
@@ -331,8 +330,7 @@ class NlmManipulate(Manipulate):
                         is_page_range = page_test.search(text)
 
                         if not is_page_range:
-                            self.debug.print_debug(self, u'More than one year match found in this {0} '
-                                                         u'element: {1}'.format(root, text))
+                            self.debug.print_debug(self, u'More than one year match found in this {0}'.format(root))
                             found_other = True
                             break
 
