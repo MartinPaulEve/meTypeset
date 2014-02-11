@@ -307,9 +307,13 @@ class NlmManipulate(Manipulate):
                                                              u'(Allowed: {0})'.format(tolerance, root))
                                 found_other = True
                                 break
-                        else:
+                        elif len(match_inner) == 1:
                             count += 1
                             p.attrib['rend'] = 'ref'
+                        else:
+                            self.debug.print_debug(self, u'More than one year match found in this {0}'.format(root))
+                            found_other = True
+                            break
                     elif len(match) == 1:
                         # only do this if we find 1 match on the line; otherwise, it's a problem
                         count += 1
