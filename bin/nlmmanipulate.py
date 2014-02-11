@@ -22,10 +22,14 @@ class NlmManipulate(Manipulate):
 
         for paragraph in tree.xpath(element):
             found = False
-            for item in paragraph:
-                if self.get_stripped_text(item) != '':
-                    found = True
-                    break
+            if not paragraph.text and paragraph.text != '':
+                for item in paragraph:
+                    if self.get_stripped_text(item) != '':
+                        found = True
+                        break
+            else:
+                found = True
+                break
 
             if not found:
                 paragraph.getparent().remove(paragraph)
