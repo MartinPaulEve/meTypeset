@@ -369,8 +369,6 @@ class NlmManipulate(Manipulate):
             if not found:
                 found = self.reflist_year_match_method(tree, tag, 2)
 
-
-
         self.save_tree(tree)
 
     def tag_bibliography_refs(self):
