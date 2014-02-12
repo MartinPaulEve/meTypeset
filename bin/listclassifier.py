@@ -14,6 +14,7 @@ A class that looks for common list encodings and handles them properly.
 from debug import Debuggable
 import math
 from copy import copy
+import re
 
 
 class ListClassifier(Debuggable):
@@ -285,6 +286,18 @@ class ListClassifier(Debuggable):
                 footnote.attrib['id'] = 'fn_from_list{0}'.format(current)
 
                 footnote.append(found[current])
+
+                replace_regex = '^({0}[\.\s\)]*)'.format(len(found) - current)
+
+                if found[current].text and not found[current].text.startswith(str(len(found) - current)):
+                    # in this case the footnote text is inside a sub-element
+                    for sub_element in found:
+                        if sub_element.text and sub_element.text.startswith(str(len(found) - current)):
+                            sub_element.text = re.sub(replace_regex, '', sub_element.text)
+                            break
+                    pass
+                elif found[current].text:
+                    found[current].text = re.sub(replace_regex, '', found[current].text)
 
                 current += 1
 
