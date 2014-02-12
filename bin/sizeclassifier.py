@@ -328,7 +328,10 @@ class SizeClassifier(Debuggable):
             else:
                 self.debug.print_debug(self, u'Ignoring heading {0} because its size ({1}) '
                                              u'is less than {2}'.format(iteration, size, self.size_cutoff))
-                iteration += 1
+
+                # TODO: with this line commented out, we don't crash. With it in, we fail to classify the last header
+                # on occasion
+                #iteration += 1
 
     def get_sizes(self, tree):
         sizes = self.get_values(tree, "meTypesetSize")
