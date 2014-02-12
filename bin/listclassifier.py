@@ -268,11 +268,27 @@ class ListClassifier(Debuggable):
 
                 if current > len(footnote_text) - 1:
                     break
-                    
+
                 current_value = footnote_text[current]
+
+        # note: all lists are reversed by this point (ie go from the back of the document upwards)
 
         if len(found) == len(footnote_list):
             self.debug.print_debug(self, 'Found superscripted footnote entries')
+
+            current = 0
+            for footnote in footnote_list:
+                # null the text (this will be generated automatically)
+                footnote.text = ''
+
+                footnote.tag = 'note'
+                footnote.attrib['id'] = 'fn_from_list{0}'.format(current)
+
+                footnote.append(found[current])
+
+                current += 1
+
+        tree.write(self.gv.tei_file_path)
 
     def process_curly_list(self, tree, manipulate, treestring):
 
