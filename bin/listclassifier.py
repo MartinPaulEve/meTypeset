@@ -300,6 +300,9 @@ class ListClassifier(Debuggable):
                     found[current].text = re.sub(replace_regex, '', found[current].text)
 
                 current += 1
+        else:
+            self.debug.print_debug(self, 'Found {0} superscripted footnote entries but could not correlate this with'
+                                         ' {1} paragraph entries'.format(len(footnote_list), len(found)))
 
         tree.write(self.gv.tei_file_path)
 
