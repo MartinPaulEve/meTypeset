@@ -230,6 +230,50 @@ class ListClassifier(Debuggable):
 
         tree.write(self.gv.tei_file_path)
 
+    def process_superscript_footnotes(self, tree, manipulate):
+        self.debug.print_debug(self, 'Scanning for superscripted footnote entries')
+
+        superscripts = reversed(tree.xpath('//*[@rend="superscript"]'))
+
+        footnote_list = []
+        footnote_text = []
+
+        for item in superscripts:
+            text = manipulate.get_stripped_text(item).strip()
+            if self.gv.is_number(text):
+                footnote_list.append(item)
+                footnote_text.append(text)
+
+        if len(footnote_list) == 0:
+            self.debug.print_debug(self, 'Found no superscripted footnote entries')
+            return
+
+        # if it doesn't work, this is an expensive operation
+        # however, once we've found all we can stop, so it's worth doing
+
+        whole_document = reversed(tree.xpath('//tei:p', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}))
+
+        current = 0
+        current_value = footnote_text[current]
+
+        found = []
+
+        for item in whole_document:
+            text = manipulate.get_stripped_text(item).strip()
+
+            if text.startswith(current_value):
+                found.append(item)
+
+                current += 1
+
+                if current > len(footnote_text) - 1:
+                    break
+                    
+                current_value = footnote_text[current]
+
+        if len(found) == len(footnote_list):
+            self.debug.print_debug(self, 'Found superscripted footnote entries')
+
     def process_curly_list(self, tree, manipulate, treestring):
 
         if not u'>(' in treestring:
@@ -317,10 +361,11 @@ class ListClassifier(Debuggable):
         if int(self.gv.settings.args['--aggression']) >= 10:
             backup_tree = copy(tree)
             try:
-                # look for reference list [1], [2] etc.
+                # look for footnote list [1], [2] etc.
                 self.process_enclosed_ref_list(tree, manipulate, string_version)
             except:
                 self.debug.print_debug(self, 'Error processing footnote or reference list. Reverting to backup tree')
                 tree = backup_tree
                 tree.write(self.gv.tei_file_path)
 
+        self.process_superscript_footnotes(tree, manipulate)

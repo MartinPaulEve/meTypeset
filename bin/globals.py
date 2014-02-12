@@ -168,3 +168,11 @@ class GV (Debuggable):
             java_class_path += self.concat_path(self.runtime_folder_path, lib)
             java_class_path += ":"
         return '"' + java_class_path.rstrip(':') + '"'
+
+    @staticmethod
+    def is_number(s):
+        try:
+            float(s)
+            return True
+        except ValueError:
+            return False
