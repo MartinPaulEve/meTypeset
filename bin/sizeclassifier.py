@@ -80,6 +80,11 @@ class SizeClassifier(Debuggable):
         manipulate.enclose_and_change_self_size(expression, str(root_size), 'p', 'hi')
 
     def handle_misstacked(self, next_size, section_ids, section_stack):
+
+        if float(next_size) > float(self.size_cutoff):
+            # normalize the size
+            next_size = self.size_cutoff
+
         sibling_size = 0
         for x in section_stack:
             if x > next_size:
@@ -329,9 +334,9 @@ class SizeClassifier(Debuggable):
                 self.debug.print_debug(self, u'Ignoring heading {0} because its size ({1}) '
                                              u'is less than {2}'.format(iteration, size, self.size_cutoff))
 
-                # TODO: with this line commented out, we don't crash. With it in, we fail to classify the last header
-                # on occasion
-                #iteration += 1
+                # fix for regression at b55b890f202557a8ceee917cc3ddced932bf2bb7 handled by size normalization in
+                # mismatched size handler
+                iteration += 1
 
     def get_sizes(self, tree):
         sizes = self.get_values(tree, "meTypesetSize")
