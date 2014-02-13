@@ -128,14 +128,14 @@ class TeiManipulate(Manipulate):
         try:
             sub_element = tree.xpath('//tei:back/tei:div[@type="bibliogr"]',
                                      namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
-            self.debug.print_debug(self, u'Found existing back block. Using it.')
+            self.debug.print_debug(self, u'Found existing bibliography block. Using it.')
         except:
-            self.debug.print_debug(self, u'Creating back block.')
+            self.debug.print_debug(self, u'Creating bibliography block.')
             sub_element = etree.Element(sub_tag)
             sub_element.attrib[attrib] = attribvalue
             new_element.insert(0, sub_element)
 
-        if not parent.tag == top_tag:
+        if not parent.tag == top_tag and not parent.tag == '{http://www.tei-c.org/ns/1.0}' + top_tag:
             parent.addnext(new_element)
 
         for element in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):

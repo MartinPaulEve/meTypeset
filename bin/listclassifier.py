@@ -56,10 +56,13 @@ class ListClassifier(Debuggable):
                 element.append(sub_element)
             in_list_run = False
             to_append = element.getnext()
+
         element.tag = 'p'
         element.attrib['rend'] = u'Bibliography'
+
         element.text = element.text[(int(offset) + int(math.floor(int(iteration / 10)))):]
         list_element.append(element)
+
         if not in_list_run:
             if not to_append is None:
                 if not to_append.text is None:

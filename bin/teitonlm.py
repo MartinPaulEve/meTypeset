@@ -42,8 +42,10 @@ class TeiToNlm (Debuggable):
         manipulate.tag_inline_refs()
 
         if process_ref_lists:
+            self.debug.print_debug(self, 'Finding potential reference lists')
             manipulate.find_reference_list()
             manipulate.tag_bibliography_refs()
+
         manipulate.remove_empty_elements('//sec/list')
         manipulate.remove_empty_elements('//sec/disp-quote')
 
