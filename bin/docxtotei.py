@@ -36,6 +36,11 @@ class DocxToTei(Debuggable):
     def handle_wmf(self):
         # convert .wmf images to .png
         image_filenames = os.listdir(self.gv.output_media_path)
+
+        if len(image_filenames) > 30:
+            self.debug.print_debug(self, 'Abandoning image conversion as there are over thirty images (DoS mitigation)')
+            return
+
         for image in image_filenames:
             if re.match(r'.+?\.wmf', image) is not None:
                 image_name = re.sub(r'\.wmf', '', image)
