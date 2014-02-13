@@ -163,24 +163,26 @@ class MeTypeset (Debuggable):
             # aggression 5
             SizeClassifier(self.gv).run()
 
+            # run bibliographic addins handler
+            # aggression 4
+            found_bibliography = BibliographyAddins(self.gv).run()
+
+            if not found_bibliography:
+
+                # run bibliographic classifier
+                # aggression 4
+                BibliographyClassifier(self.gv).run()
+
             # run list classifier
             # aggression 4
             ListClassifier(self.gv).run()
-
-            # run bibliographic addins handler
-            # aggression 4
-            BibliographyAddins(self.gv).run()
-
-            # run bibliographic classifier
-            # aggression 4
-            BibliographyClassifier(self.gv).run()
 
             # tei
             # aggression 3
             TeiManipulate(self.gv).run()
 
             # run tei to nlm conversion
-            TeiToNlm(self.gv).run()
+            TeiToNlm(self.gv).run(found_bibliography)
 
             # run metadata merge
             Metadata(self.gv).run()

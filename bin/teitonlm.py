@@ -27,7 +27,7 @@ class TeiToNlm (Debuggable):
                    ]
             return ' '.join(cmd)
 
-    def run_quirks(self):
+    def run_quirks(self, process_ref_lists):
         manipulate = NlmManipulate(self.gv)
         if self.gv.setting('linebreaks-as-comments') == 'False':
             # we need to convert every instance of <!--meTypeset:br--> to a new paragraph
@@ -40,8 +40,10 @@ class TeiToNlm (Debuggable):
         manipulate.remove_empty_elements('//sec//p')
 
         manipulate.tag_inline_refs()
-        manipulate.find_reference_list()
-        manipulate.tag_bibliography_refs()
+
+        if process_ref_lists:
+            manipulate.find_reference_list()
+            manipulate.tag_bibliography_refs()
         manipulate.remove_empty_elements('//sec/list')
         manipulate.remove_empty_elements('//sec/disp-quote')
 
@@ -55,6 +57,6 @@ class TeiToNlm (Debuggable):
         if self.gv.nlm_temp_file_path != self.gv.nlm_file_path:
             shutil.copy2(self.gv.nlm_temp_file_path, self.gv.nlm_file_path)
 
-    def run(self):
+    def run(self, process_ref_lists):
         self.run_transform()
-        self.run_quirks()
+        self.run_quirks(process_ref_lists)

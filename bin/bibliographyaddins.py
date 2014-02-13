@@ -143,4 +143,9 @@ class BibliographyAddins(Debuggable):
 
         self.zotero_items = self.zotero_handler.run()
         self.mendeley_items = self.mendeley_handler.run()
-        #self.other_items = self.other_handler.run()
+        self.other_items = self.other_handler.run()
+
+        if len(self.zotero_items) > 0 or len(self.mendeley_items) > 0:
+            return True
+        else:
+            return False
