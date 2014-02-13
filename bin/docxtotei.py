@@ -21,6 +21,10 @@ class DocxToTei(Debuggable):
         Debuggable.__init__(self, 'DOCX to TEI')
 
     def saxon_doc2tei(self):
+            """
+            Creates the appropriate java command to run Saxon
+            @return: a string to run on the command line
+            """
             cmd = ["java", "-classpath", self.gv.java_class_path,
                    "-Dxml.catalog.files="+self.gv.runtime_catalog_path,
                    "net.sf.saxon.Transform",
@@ -34,12 +38,16 @@ class DocxToTei(Debuggable):
             return ' '.join(cmd)
 
     def handle_wmf(self):
-        # convert .wmf images to .png
+        """
+        Calls unoconv to convert wmf images into png format. This method has a hard limit of 30 images.
+
+        @return: False if fails (more than 30 images), True otherwise
+        """
         image_filenames = os.listdir(self.gv.output_media_path)
 
         if len(image_filenames) > 30:
             self.debug.print_debug(self, 'Abandoning image conversion as there are over thirty images (DoS mitigation)')
-            return
+            return False
 
         for image in image_filenames:
             if re.match(r'.+?\.wmf', image) is not None:
@@ -50,8 +58,15 @@ class DocxToTei(Debuggable):
                 self.debug.print_debug(self, 'Calling: {0}'.format(imagemagick_command))
 
                 subprocess.call(imagemagick_command.split(' '))
+        return True
 
     def run(self, extract):
+        """
+        This method converts from docx to TEI. It creates the necessary output folders, optionally extracts the file and
+        runs the Saxon process necessary to conduct the transform
+        @param extract: whether or not to extract a docx file. True to extract, False to work on a pre-extracted folder
+        """
+
         # make output folders
         self.gv.mk_dir(self.gv.output_folder_path)
         self.gv.mk_dir(self.gv.docx_temp_folder_path)
