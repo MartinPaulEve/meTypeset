@@ -157,3 +157,16 @@ Library           Collections
     ${ptwo}=    Get Element    ${xml}    back/fn-group
     Elements Should Match    ${ptwo}    <fn-group><fn id="bibd2e35"><p>The footnote should link here</p></fn><fn id="bibd2e40"><p>A second footnote</p></fn></fn-group>    normalize_whitespace=yes
     [Teardown]    Remove Directory    011    recursive=True
+
+012 Superscripted footnotes
+    [Tags]    formatting    listclassifier    012
+    ${result} =    Run Process    python ../bin/meTypeset.py docx SuperscriptFootnotes.docx ./012 -s testsettings.xml -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./012/nlm/out.xml
+    ${secs}=    Get Elements    ${xml}    body/sec
+    ${sec}=    Get From List    ${secs}    0
+    Elements Should Match    ${sec}    <sec><title>Article</title><p>Line.<xref ref-type="fn" rid="bibd2e38"/>Line.<xref ref-type="fn" rid="bibd2e42"/> Line.<xref ref-type="fn" rid="bibd2e46"/> Line.<xref ref-type="fn" rid="bibd2e50"/> Line.<xref ref-type="fn" rid="bibd2e54"/> Line.<xref ref-type="fn" rid="bibd2e59"/> Line.<xref ref-type="fn" rid="bibd2e63"/> Line.<xref ref-type="fn" rid="bibd2e67"/> Line.<xref ref-type="fn" rid="bibd2e71"/> Line.<xref ref-type="fn" rid="bibd2e75"/> Line.<xref ref-type="fn" rid="bibd2e79"/></p></sec>    normalize_whitespace=yes
+    ${ptwo}=    Get Element    ${xml}    back/fn-group
+    Elements Should Match    ${ptwo}    <fn-group><fn id="bibd2e38"><p>Footnote number 1</p></fn><fn id="bibd2e42"><p>Footnote number 2</p></fn><fn id="bibd2e46"><p>Footnote number 3</p></fn><fn id="bibd2e50"><p>Footnote number 4</p></fn><fn id="bibd2e54"><p>Footnote number 5</p></fn><fn id="bibd2e59"><p>Footnote number 6</p></fn><fn id="bibd2e63"><p>Footnote number 7</p></fn><fn id="bibd2e67"><p>Footnote number 8</p></fn><fn id="bibd2e71"><p>Footnote number 9</p></fn><fn id="bibd2e75"><p>Footnote number 10</p></fn><fn id="bibd2e79"><p>Footnote number 11</p></fn></fn-group>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    012    recursive=True
