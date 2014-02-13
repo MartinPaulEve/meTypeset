@@ -4,6 +4,10 @@
     <mt:saxon-libs>
         xml-resolver-1.1.jar;saxon9.jar
     </mt:saxon-libs>
+
+    <mt:executables>
+        <mt:unoconv>unoconv</mt:unoconv>
+    </mt:executables>
     
     <mt:folders>
         <mt:docx>docx</mt:docx>
