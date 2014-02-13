@@ -12,7 +12,10 @@ class ZoteroHandler(Debuggable):
         Debuggable.__init__(self, 'Zotero Handler')
 
     def handle_bibliography(self, tei_manipulator):
-
+        """
+        Handle Zotero bibliographies
+        @param tei_manipulator: a TEI Manipulator object to handle the XML
+        """
         tei_manipulator.tag_bibliography('//tei:p[@rend="Bibliography"]/tei:ref',
                                          ' ADDIN ZOTERO_BIBL {"custom":[]} ', self)
 
@@ -28,6 +31,11 @@ class ZoteroHandler(Debuggable):
                                                   'back', 'div', 'type', 'bibliogr')
 
     def run(self):
+        """
+        Handle Zotero in-line reference items
+
+        @return: a list of items handled
+        """
         tei_manipulator = TeiManipulate(self.gv)
         object_list = tei_manipulator.get_object_list('//tei:ref[@rend="ref"]', ' ADDIN EN.CITE', u'zoterobiblio')
         object_list += tei_manipulator.get_object_list('//tei:ref', ' ADDIN ZOTERO_ITEM CSL_CITATION', u'zoterobiblio')
@@ -53,7 +61,11 @@ class MendeleyHandler(Debuggable):
         Debuggable.__init__(self, 'Mendeley Handler')
 
     def handle_bibliography(self, tei_manipulator):
-        # remove the Zotero crap marker
+        """
+        Process Mendeley bibliographies
+
+        @param tei_manipulator: a TEI Manipulator object to handle the XML
+        """
         tei_manipulator.tag_bibliography('//tei:p[@rend="Bibliography"]/tei:ref',
                                          ' ADDIN ZOTERO_BIBL {"custom":[]} CSL_BIBLIOGRAPHY ',
                                          self)
@@ -63,6 +75,11 @@ class MendeleyHandler(Debuggable):
                                                   'back', 'div', 'type', 'bibliogr')
 
     def run(self):
+        """
+        Handle Mendeley reference tags, replacing them with NLM-spec references
+
+        @return: a list of processed tags
+        """
         tei_manipulator = TeiManipulate(self.gv)
         object_list = tei_manipulator.get_object_list('//tei:ref[@rend="ref"]', 'ADDIN CSL_CITATION', u'zoterobiblio')
 
@@ -85,6 +102,11 @@ class OtherHandler(Debuggable):
         Debuggable.__init__(self, 'Other Addin Handler')
 
     def run(self):
+        """
+        Handle all unknown types of addin, stripping them from the output
+
+        @return: a list of tags that were removed
+        """
         tei_manipulator = TeiManipulate(self.gv)
         object_list = tei_manipulator.get_object_list('//*', ' ADDIN', u'addin')
 
@@ -113,6 +135,9 @@ class BibliographyAddins(Debuggable):
         Debuggable.__init__(self, 'Bibliography Handler')
 
     def run(self):
+        """
+        Run the procedure to process different types of bibliography
+        """
         if int(self.gv.settings.args['--aggression']) < 4:
             self.debug.print_debug(self, 'Aggression level less than 4: exiting module.')
             return
