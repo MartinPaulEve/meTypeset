@@ -156,7 +156,9 @@ class TeiManipulate(Manipulate):
 
         tree.write(self.gv.tei_file_path)
 
-    def tag_bibliography(self, xpath, start_text, caller):
+    def tag_bibliography(self, xpath, start_text, caller, parent_tag=u'{http://www.tei-c.org/ns/1.0}sec',
+                         classify_siblings=False, sibling_tag=u'{http://www.tei-c.org/ns/1.0}cit',
+                         sub_xpath='//tei:quote/tei:p'):
         # load the DOM
         tree = self.load_dom_tree()
 
@@ -164,12 +166,43 @@ class TeiManipulate(Manipulate):
             if not type(child) is etree._Element:
                 if child.text.startswith(start_text):
                     child.text = child.text.replace(start_text, '')
+            elif child.text and child.text.startswith(start_text):
+                child.text = child.text.replace(start_text, '')
             else:
                 if not child.getchildren()[0] is None:
                     if child.getchildren()[0].tag == "{http://www.tei-c.org/ns/1.0}hi":
                         if not child.getchildren()[0].text is None:
                             if child.getchildren()[0].text.startswith(start_text):
                                 child.getchildren()[0].text = child.getchildren()[0].text.replace(start_text, '')
+
+            parent = child.getparent()
+
+            while parent is not None:
+
+                if parent.tag == parent_tag:
+                    parent.attrib['rend'] = 'Bibliography'
+                    parent = None
+                else:
+                    parent = parent.getparent()
+
+            if classify_siblings:
+                parent = child.getparent()
+
+                sibling = None
+
+                while parent is not None:
+                    if parent.tag == sibling_tag:
+                        sibling = parent
+                        parent = None
+                    else:
+                        parent = parent.getparent()
+
+                if sibling is not None:
+                    for child in sibling.itersiblings():
+                        for element in child.xpath(sub_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+                            element.attrib['rend'] = 'Bibliography'
+                else:
+                    self.debug.print_debug(self, 'Failed to find sibling in bibliographic addin classification')
 
         tree.write(self.gv.tei_file_path)
 
