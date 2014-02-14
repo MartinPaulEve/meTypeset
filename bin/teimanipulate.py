@@ -170,9 +170,26 @@ class TeiManipulate(Manipulate):
                 found_element = child
 
         if found_element is not None:
-            found_element.attrib['rend'] = 'Bibliography'
+            found_element.attrib['rend'] = 'REMOVE'
+
             for sibling in found_element.itersiblings():
-                sibling.attrib['rend'] = 'Bibliography'
+                text = self.get_stripped_text(sibling)
+
+                year_test = re.compile('((19|20)\d{2}[a-z]?)|(n\.d\.)')
+                match = year_test.findall(text)
+
+                if not match:
+                    blank_text = re.compile('XXXX')
+                    match_inner = blank_text.findall(text)
+                    if len(match_inner) == 1:
+                        self.debug.print_debug(self, u'Adding bibliography element from linguistic cue')
+                        sibling.attrib['rend'] = 'Bibliography'
+                elif len(match) >= 1:
+                        # only do this if we find 1 match on the line; otherwise, it's a problem
+                        self.debug.print_debug(self, u'Adding bibliography element from linguistic cue')
+                        sibling.attrib['rend'] = 'Bibliography'
+
+            found_element.getparent().remove(found_element)
 
         tree.write(self.gv.tei_file_path)
 
