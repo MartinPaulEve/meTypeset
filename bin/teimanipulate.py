@@ -159,9 +159,18 @@ class TeiManipulate(Manipulate):
     def find_references_from_cue(self, cue, tree):
         # load the DOM
 
-        for child in tree.xpath('//p', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            pass
+        found_element = None
 
+        for child in reversed(tree.xpath('//p', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})):
+            if self.get_stripped_text(child) == cue:
+                found_element = child
+
+        if found_element is not None:
+            found_element.attrib['rend'] = 'Bibliography'
+            for sibling in found_element.itersiblings():
+                sibling.attrib['rend'] = 'Bibliography'
+
+        tree.write(self.gv.tei_file_path)
 
     def tag_bibliography(self, xpath, start_text, caller, parent_tag=u'{http://www.tei-c.org/ns/1.0}sec',
                          classify_siblings=False, sibling_tag=u'{http://www.tei-c.org/ns/1.0}cit',
