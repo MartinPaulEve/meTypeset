@@ -156,6 +156,13 @@ class TeiManipulate(Manipulate):
 
         tree.write(self.gv.tei_file_path)
 
+    def find_references_from_cue(self, cue, tree):
+        # load the DOM
+
+        for child in tree.xpath('//p', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            pass
+
+
     def tag_bibliography(self, xpath, start_text, caller, parent_tag=u'{http://www.tei-c.org/ns/1.0}sec',
                          classify_siblings=False, sibling_tag=u'{http://www.tei-c.org/ns/1.0}cit',
                          sub_xpath='//tei:quote/tei:p'):

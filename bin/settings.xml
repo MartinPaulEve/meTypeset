@@ -44,6 +44,10 @@
         <mt:runtime-catalog>runtime/catalog.xml</mt:runtime-catalog>
     </mt:xml-files>
 
+    <mt:languages>
+        <mt:reference-languages>en<mt:reference-languages>
+    </mt:languages>
+
     <mt:bibliographicdatabase>
         <mt:databasefile>bibliography.db</mt:databasefile>
     </mt:bibliographicdatabase>
