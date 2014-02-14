@@ -162,7 +162,16 @@ class SizeClassifier(Debuggable):
                     self.debug.print_debug(self, u'Treating final element as smaller than all others')
                 else:
                     # use the sibling at the nearest depth
-                    sibling_id = section_ids[section_stack.index(sibling_size)]
+                    if float(size) == float(self.root) or float(size) == float(self.size_cutoff):
+                        sibling_id = section_ids[0]
+                    else:
+                        for index in section_stack:
+                            if float(size) == float(index):
+                                sibling_id = section_ids[index]
+
+                        if not sibling_id:
+                            sibling_id = section_ids[0]
+
                     self.debug.print_debug(self, u'Treating final element as on par with sibling')
 
         # enclose the REST OF THE DOCUMENT underneath this /next heading/
