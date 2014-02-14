@@ -166,7 +166,6 @@ class TeiManipulate(Manipulate):
 
         for child in tree.xpath('//tei:p | //tei:head', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             stripped_text = self.get_stripped_text(child)
-            print stripped_text
             if stripped_text == cue:
                 found_element = child
 

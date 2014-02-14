@@ -22,6 +22,7 @@ class SizeClassifier(Debuggable):
         self.max_headings = 40
         self.aggression_threshold = 8
         self.root = 0
+        self.tree = None
         Debuggable.__init__(self, 'Size Classifier')
 
     @staticmethod
@@ -48,11 +49,11 @@ class SizeClassifier(Debuggable):
 
         return sizes_ordered
 
-    @staticmethod
-    def set_dom_tree(filename):
+    def set_dom_tree(self, filename):
         p = etree.XMLParser(remove_blank_text=True, resolve_entities=False)
+        self.tree = etree.parse(filename, p)
 
-        return etree.parse(filename, p)
+        return self.tree
 
     @staticmethod
     def handle_bold_only_paragraph(manipulate, root_size):
