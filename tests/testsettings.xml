@@ -37,6 +37,10 @@
         metadata/metadata.xsl
         </mt:metadata-stylesheet>
     </mt:style-sheets>
+
+    <mt:languages>
+        <mt:reference-languages>en</mt:reference-languages>
+    </mt:languages>
     
     <mt:xml-files>
         <mt:default-metadata-file-path>metadata/metadataSample.xml </mt:default-metadata-file-path>

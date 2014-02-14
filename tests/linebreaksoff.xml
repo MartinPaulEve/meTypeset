@@ -41,6 +41,10 @@
     <mt:bibliographicdatabase>
         <mt:databasefile>bibliography.db</mt:databasefile>
     </mt:bibliographicdatabase>
+
+    <mt:languages>
+        <mt:reference-languages>en</mt:reference-languages>
+    </mt:languages>
     
     <mt:xml-files>
         <mt:default-metadata-file-path>metadata/metadataSample.xml </mt:default-metadata-file-path>
