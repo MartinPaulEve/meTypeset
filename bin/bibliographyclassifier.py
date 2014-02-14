@@ -36,10 +36,11 @@ class BibliographyClassifier(Debuggable):
 
         tei_manipulator = TeiManipulate(self.gv)
 
-        tei_manipulator.find_reference_list_in_word_list()
-
         tree = tei_manipulator.load_dom_tree()
 
-        self.linguistic_cues(tei_manipulator, tree)
+        found = tei_manipulator.find_reference_list_in_word_list(tree)
+
+        if not found:
+            self.linguistic_cues(tei_manipulator, tree)
 
         tei_manipulator.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]', 'back', 'div', 'type', 'bibliogr')

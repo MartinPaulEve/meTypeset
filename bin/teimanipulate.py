@@ -58,17 +58,18 @@ class TeiManipulate(Manipulate):
 
         tree.write(self.gv.tei_file_path)
 
-    def find_reference_list_in_word_list(self):
-        # load the DOM
-        tree = self.load_dom_tree()
+    def find_reference_list_in_word_list(self, tree):
 
         # determine if the last element in the document is a list
         select = u'//tei:div[last()]/*[last()]'
+
+        found = False
 
         for last_list in tree.xpath(select, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             if last_list.tag == '{http://www.tei-c.org/ns/1.0}list':
                 # it is a list, so change to reference list
                 self.debug.print_debug(self, u'Found a list as last element. Treating as bibliography.')
+                found = True
                 last_list.tag = '{http://www.tei-c.org/ns/1.0}div'
                 last_list.attrib['rend'] = u'Bibliography'
 
@@ -85,6 +86,8 @@ class TeiManipulate(Manipulate):
                     list_item.attrib['target'] = 'None'
 
         tree.write(self.gv.tei_file_path)
+
+        return found
 
     def find_or_create_element(self, tree, element_tag, add_xpath, is_sibling):
         # find_or_create_elements(tree, 'back', '//body', true)
