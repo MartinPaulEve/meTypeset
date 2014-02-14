@@ -161,8 +161,10 @@ class TeiManipulate(Manipulate):
 
         found_element = None
 
-        for child in reversed(tree.xpath('//p', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})):
-            if self.get_stripped_text(child) == cue:
+        for child in tree.xpath('//tei:p | //tei:head', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            stripped_text = self.get_stripped_text(child)
+            print stripped_text
+            if stripped_text == cue:
                 found_element = child
 
         if found_element is not None:
