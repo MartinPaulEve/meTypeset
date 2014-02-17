@@ -70,12 +70,14 @@ class ReplaceObject(Debuggable):
             return
 
         for sub_element in self.paragraph:
-            if self.replace_text in sub_element.text:
-                self.replace_in_text(id, sub_element)
+            if sub_element.tag is not 'xref':
+                if self.replace_text in sub_element.text:
+                    self.replace_in_text(id, sub_element)
 
-                self.debug.print_debug(self,
-                                       u'Successfully linked {0} to {1} from sub-element'.format(self.replace_text, id))
-                return
+                    self.debug.print_debug(self,
+                                           u'Successfully linked {0} to {1} from sub-element'.format(self.replace_text,
+                                                                                                     id))
+                    return
 
             if sub_element.tail is not None and self.replace_text in sub_element.tail:
                 self.replace_in_tail(id, sub_element)
@@ -140,6 +142,7 @@ class ReferenceLinker(Debuggable):
 
         for link in to_link:
             link.link()
+            #pass
 
         tree.write(self.gv.nlm_file_path)
         tree.write(self.gv.nlm_temp_file_path)
