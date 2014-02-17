@@ -13,12 +13,48 @@ from debug import Debuggable
 from nlmmanipulate import NlmManipulate
 import re
 import lxml
+import hashlib
 
-class ReplaceObject():
-    def __init__(self, paragraph, replace_text, reference_to_link):
+
+class ReplaceObject(Debuggable):
+    def __init__(self, global_variables, paragraph, replace_text, reference_to_link):
         self.paragraph = paragraph
         self.replace_text = replace_text
         self.reference_to_link = reference_to_link
+        self.gv = global_variables
+        self.debug = self.gv.debug
+        Debuggable.__init__(self, 'Reference Linker Object')
+
+    def link(self):
+        # this procedure is more complex than desirable because the content can appear between tags (like italic)
+        # otherwise it would be a straight replace
+
+        id = ''
+
+        if 'id' in self.reference_to_link.attrib:
+            id = self.reference_to_link.attrib['id']
+        else:
+            hash_object = hashlib.sha256(etree.tostring(self.reference_to_link))
+            hex_dig = hash_object.hexdigest()
+            self.reference_to_link.attrib['id'] = hex_dig
+            id = hex_dig
+
+        self.debug.print_debug(self, u'Attempting to link {0} to {1}'.format(self.replace_text, id))
+
+        if self.replace_text in self.paragraph.text:
+            before_after = self.paragraph.text.split(self.replace_text)
+
+            self.paragraph.text = before_after[0]
+
+            new_element = etree.Element('xref')
+            new_element.attrib['rid'] = 'AFJD'
+            new_element.attrib['ref-type'] = 'bibr'
+            new_element.text = self.replace_text
+            new_element.tail = before_after[1]
+
+            self.paragraph.append(new_element)
+
+        pass
 
 
 class ReferenceLinker(Debuggable):
@@ -69,7 +105,12 @@ class ReferenceLinker(Debuggable):
                                 found = False
 
                         if len(bare_items) > 0 and found:
-                            to_link.append(ReplaceObject(p, item, ref))
+                            to_link.append(ReplaceObject(self.gv, p, item.strip(), ref))
 
+        for link in to_link:
+            link.link()
+
+        tree.write(self.gv.nlm_file_path)
+        tree.write(self.gv.nlm_temp_file_path)
 
 
