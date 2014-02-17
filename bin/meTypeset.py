@@ -34,6 +34,7 @@ from bibliographydatabase import BibliographyDatabase
 from bibliographyclassifier import BibliographyClassifier
 from listclassifier import ListClassifier
 from metadata import Metadata
+from referencelinker import ReferenceLinker
 from xslchainer import XslChain
 
 
@@ -180,10 +181,11 @@ class MeTypeset (Debuggable):
             # aggression 3
             TeiManipulate(self.gv).run()
 
-
-
             # run tei to nlm conversion
             TeiToNlm(self.gv).run(not found_bibliography)
+
+            # run reference linker
+            ReferenceLinker(self.gv).run()
 
             # run metadata merge
             Metadata(self.gv).run()
