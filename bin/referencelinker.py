@@ -39,7 +39,7 @@ class ReplaceObject(Debuggable):
 
     def replace_in_tail(self, id, element):
 
-        before_after = element.tail.split(self.replace_text)
+        before_after = element.tail.split(self.replace_text, 1)
 
         new_element = etree.Element('xref')
         new_element.attrib['rid'] = unicode(id)
@@ -57,42 +57,43 @@ class ReplaceObject(Debuggable):
         # this procedure is more complex than desirable because the content can appear between tags (like italic)
         # otherwise it would be a straight replace
 
-        id = ''
+        bib_id = ''
 
         if 'id' in self.reference_to_link.attrib:
-            id = self.reference_to_link.attrib['id']
+            bib_id = self.reference_to_link.attrib['id']
         else:
             hash_object = hashlib.sha256(etree.tostring(self.reference_to_link))
             hex_dig = hash_object.hexdigest()
             self.reference_to_link.attrib['id'] = hex_dig
-            id = hex_dig
+            bib_id = hex_dig
 
         if self.replace_text in self.paragraph.text:
-            self.replace_in_text(id, self.paragraph)
+            self.replace_in_text(bib_id, self.paragraph)
 
-            self.debug.print_debug(self, u'Successfully linked {0} to {1}'.format(self.replace_text, id))
+            self.debug.print_debug(self, u'Successfully linked {0} to {1}'.format(self.replace_text, bib_id))
             return
 
         for sub_element in self.paragraph:
             if sub_element.tag != 'xref':
                 if self.replace_text in sub_element.text:
-                    self.replace_in_text(id, sub_element)
+                    self.replace_in_text(bib_id, sub_element)
 
                     self.debug.print_debug(self,
                                            u'Successfully linked {0} to {1} from sub-element'.format(self.replace_text,
-                                                                                                     id))
+                                                                                                     bib_id))
                     return
 
             if sub_element.tail is not None and self.replace_text in sub_element.tail:
-                new_element = self.replace_in_tail(id, sub_element)
+                new_element = self.replace_in_tail(bib_id, sub_element)
 
                 self.debug.print_debug(self,
-                                       u'Successfully linked {0} to {1} from sub-tail'.format(self.replace_text, id))
+                                       u'Successfully linked {0} to {1} from sub-tail'.format(self.replace_text, bib_id))
 
                 return
 
+        print etree.tostring(self.paragraph)
 
-        self.debug.print_debug(self, u'Failed to link {0} to {1}'.format(self.replace_text, id))
+        self.debug.print_debug(self, u'Failed to link {0} to {1}'.format(self.replace_text, bib_id))
 
 
 class ReferenceLinker(Debuggable):
