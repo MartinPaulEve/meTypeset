@@ -37,6 +37,18 @@ class ReplaceObject(Debuggable):
 
         element.append(new_element)
 
+    def replace_in_tail(self, id, element):
+        before_after = element.tail.split(self.replace_text)
+        element.tail = before_after[0]
+
+        new_element = etree.Element('xref')
+        new_element.attrib['rid'] = unicode(id)
+        new_element.attrib['ref-type'] = 'bibr'
+        new_element.text = self.replace_text
+        new_element.tail = before_after[1]
+
+        element.addnext(new_element)
+
     def link(self):
         # this procedure is more complex than desirable because the content can appear between tags (like italic)
         # otherwise it would be a straight replace
@@ -63,6 +75,13 @@ class ReplaceObject(Debuggable):
 
                 self.debug.print_debug(self,
                                        u'Successfully linked {0} to {1} from sub-element'.format(self.replace_text, id))
+                return
+
+            if sub_element.tail is not None and self.replace_text in sub_element.tail:
+                self.replace_in_tail(id, sub_element)
+
+                self.debug.print_debug(self,
+                                       u'Successfully linked {0} to {1} from sub-tail'.format(self.replace_text, id))
                 return
 
 
