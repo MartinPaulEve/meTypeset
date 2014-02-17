@@ -49,8 +49,15 @@ class ReferenceLinker(Debuggable):
 
                         bare_ref = manipulate.get_stripped_text(ref)
 
+                        bare_refs = bare_ref.split(' ')
+
                         for sub_item in bare_items:
-                            if not sub_item in bare_ref:
+                            found_ref = False
+                            for sub_ref in bare_refs:
+                                if sub_item == sub_ref.strip(',.<>();:@\'\#~}{[]"'):
+                                    found_ref = True
+
+                            if not found_ref:
                                 found = False
 
                         if len(bare_items) > 0 and found:
