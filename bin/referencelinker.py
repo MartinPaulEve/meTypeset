@@ -14,6 +14,12 @@ from nlmmanipulate import NlmManipulate
 import re
 import lxml
 
+class ReplaceObject():
+    def __init__(self, paragraph, replace_text, reference_to_link):
+        self.paragraph = paragraph
+        self.replace_text = replace_text
+        self.reference_to_link = reference_to_link
+
 
 class ReferenceLinker(Debuggable):
     def __init__(self, global_variables):
@@ -31,6 +37,8 @@ class ReferenceLinker(Debuggable):
         if len(ref_items) == 0:
             self.debug.print_debug(self, 'Found no references to link')
             return
+
+        to_link = []
 
         for p in tree.xpath('//p'):
             text = manipulate.get_stripped_text(p)
@@ -61,7 +69,7 @@ class ReferenceLinker(Debuggable):
                                 found = False
 
                         if len(bare_items) > 0 and found:
-                            print item
-                            print bare_ref
+                            to_link.append(ReplaceObject(p, item, ref))
+
 
 
