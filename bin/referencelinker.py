@@ -26,28 +26,32 @@ class ReplaceObject(Debuggable):
         Debuggable.__init__(self, 'Reference Linker Object')
 
     def replace_in_text(self, id, element):
-        before_after = element.text.split(self.replace_text)
+        before_after = element.text.split(self.replace_text, 1)
         element.text = before_after[0]
 
         new_element = etree.Element('xref')
         new_element.attrib['rid'] = unicode(id)
         new_element.attrib['ref-type'] = 'bibr'
         new_element.text = self.replace_text
-        new_element.tail = before_after[1]
+        new_element.tail = ''.join(before_after[1:])
 
         element.append(new_element)
 
     def replace_in_tail(self, id, element):
+
         before_after = element.tail.split(self.replace_text)
-        element.tail = before_after[0]
 
         new_element = etree.Element('xref')
         new_element.attrib['rid'] = unicode(id)
         new_element.attrib['ref-type'] = 'bibr'
         new_element.text = self.replace_text
-        new_element.tail = before_after[1]
+        new_element.tail = ''.join(before_after[1:])
 
-        element.addnext(new_element)
+        element.getparent().insert(element.getparent().index(element) + 1, new_element)
+
+        element.tail = before_after[0]
+
+        return new_element
 
     def link(self):
         # this procedure is more complex than desirable because the content can appear between tags (like italic)
@@ -70,7 +74,7 @@ class ReplaceObject(Debuggable):
             return
 
         for sub_element in self.paragraph:
-            if sub_element.tag is not 'xref':
+            if sub_element.tag != 'xref':
                 if self.replace_text in sub_element.text:
                     self.replace_in_text(id, sub_element)
 
@@ -80,10 +84,11 @@ class ReplaceObject(Debuggable):
                     return
 
             if sub_element.tail is not None and self.replace_text in sub_element.tail:
-                self.replace_in_tail(id, sub_element)
+                new_element = self.replace_in_tail(id, sub_element)
 
                 self.debug.print_debug(self,
                                        u'Successfully linked {0} to {1} from sub-tail'.format(self.replace_text, id))
+
                 return
 
 
