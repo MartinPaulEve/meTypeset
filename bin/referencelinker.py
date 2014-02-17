@@ -25,6 +25,18 @@ class ReplaceObject(Debuggable):
         self.debug = self.gv.debug
         Debuggable.__init__(self, 'Reference Linker Object')
 
+    def replace_in_text(self, id, element):
+        before_after = element.text.split(self.replace_text)
+        element.text = before_after[0]
+
+        new_element = etree.Element('xref')
+        new_element.attrib['rid'] = unicode(id)
+        new_element.attrib['ref-type'] = 'bibr'
+        new_element.text = self.replace_text
+        new_element.tail = before_after[1]
+
+        element.append(new_element)
+
     def link(self):
         # this procedure is more complex than desirable because the content can appear between tags (like italic)
         # otherwise it would be a straight replace
@@ -39,22 +51,22 @@ class ReplaceObject(Debuggable):
             self.reference_to_link.attrib['id'] = hex_dig
             id = hex_dig
 
-        self.debug.print_debug(self, u'Attempting to link {0} to {1}'.format(self.replace_text, id))
-
         if self.replace_text in self.paragraph.text:
-            before_after = self.paragraph.text.split(self.replace_text)
+            self.replace_in_text(id, self.paragraph)
 
-            self.paragraph.text = before_after[0]
+            self.debug.print_debug(self, u'Successfully linked {0} to {1}'.format(self.replace_text, id))
+            return
 
-            new_element = etree.Element('xref')
-            new_element.attrib['rid'] = 'AFJD'
-            new_element.attrib['ref-type'] = 'bibr'
-            new_element.text = self.replace_text
-            new_element.tail = before_after[1]
+        for sub_element in self.paragraph:
+            if self.replace_text in sub_element.text:
+                self.replace_in_text(id, sub_element)
 
-            self.paragraph.append(new_element)
+                self.debug.print_debug(self,
+                                       u'Successfully linked {0} to {1} from sub-element'.format(self.replace_text, id))
+                return
 
-        pass
+
+        self.debug.print_debug(self, u'Failed to link {0} to {1}'.format(self.replace_text, id))
 
 
 class ReferenceLinker(Debuggable):
