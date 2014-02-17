@@ -180,6 +180,8 @@ class MeTypeset (Debuggable):
             # aggression 3
             TeiManipulate(self.gv).run()
 
+
+
             # run tei to nlm conversion
             TeiToNlm(self.gv).run(not found_bibliography)
 
