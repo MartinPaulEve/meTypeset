@@ -54,14 +54,23 @@ class SettingsConfiguration:
         self.args = args
         self.settings_file = set_file
 
+    @staticmethod
+    def setup_settings_file(args):
+        if '--settings' in args:
+            settings = args['--settings']
+            if settings:
+                return settings
+
 
 class MeTypeset (Debuggable):
     def __init__(self):
         # read  command line arguments
-        self.args = docopt(__doc__, version='meTypeset 0.1')
+        self.args = self.read_command_line()
 
         # absolute first priority is to initialize debugger so that anything triggered here can be logged
         self.debug = Debug()
+
+        Debuggable.__init__(self, 'Main')
 
         if self.args['--debug']:
             self.debug.enable_debug()
@@ -69,11 +78,13 @@ class MeTypeset (Debuggable):
         # read settings file
         self.settings_file_path = 'default'
         self.tei_file_path = None
-        self.setup_settings_file()
+        self.settings_file_path = SettingsConfiguration.setup_settings_file(self.args)
         self.settings = SettingsConfiguration(self.get_settings_file(), self.args)
         self.gv = GV(self.settings, self.debug)
-        self.debug = self.gv.debug
-        Debuggable.__init__(self, 'Main')
+
+    @staticmethod
+    def read_command_line():
+        return docopt(__doc__, version='meTypeset 0.1')
 
     def set_metadata_file(self):
         metadata_file_arg = self.settings.args['--metadata']
@@ -116,7 +127,7 @@ class MeTypeset (Debuggable):
 
                 script_dir = "NONPATH"
 
-        if self.settings_file_path == 'default':
+        if self.settings_file_path == 'default' or self.settings_file_path is None:
             if script_dir != '':
                 set_file = '{0}/bin/settings.xml'.format(script_dir)
                 self.check_settings_file_exists(set_file)
@@ -128,12 +139,6 @@ class MeTypeset (Debuggable):
             self.check_settings_file_exists(set_file)
 
         return set_file
-
-    def setup_settings_file(self):
-        if '--settings' in self.args:
-            settings = self.args['--settings']
-            if settings:
-                self.settings_file_path = self.args['--settings']
 
     def run_modules(self):
         ag = int(self.gv.settings.args['--aggression'])

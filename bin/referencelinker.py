@@ -13,7 +13,9 @@ from debug import Debuggable
 from nlmmanipulate import NlmManipulate
 import re
 import lxml
+from docopt import docopt
 import hashlib
+#from bare_globals import GV
 
 
 class ReplaceObject(Debuggable):
@@ -152,3 +154,12 @@ class ReferenceLinker(Debuggable):
         tree.write(self.gv.nlm_temp_file_path)
 
 
+def main():
+    #bare_gv = GV()
+
+    rl_instance = ReferenceLinker()
+    #rl_instance.run()
+
+
+if __name__ == '__main__':
+    main()
