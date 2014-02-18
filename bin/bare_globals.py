@@ -14,17 +14,22 @@ from settingsconfiguration import SettingsConfiguration
 
 
 class GV (Debuggable):
-    def __init__(self):
+    def __init__(self, args):
         # read  command line arguments
-        self.args = SettingsConfiguration.read_command_line()
+        self.args = args
 
         # absolute first priority is to initialize debugger so that anything triggered here can be logged
         self.debug = Debug()
         Debuggable.__init__(self, 'Globals')
 
-        # read the configuaration
+        # read the configuration
         self.settings_file_path = 'default'
         self.tei_file_path = None
-        #SettingsConfiguration.setup_settings_file(self.args)
-        #self.settings = SettingsConfiguration(self.get_settings_file(), self.args)
+        SettingsConfiguration.setup_settings_file(self.args)
+        self.settings = SettingsConfiguration(SettingsConfiguration.get_settings_file(self, self.settings_file_path),
+                                              self.args)
 
+        self.input_file_path = self.settings.args['<input>'].strip()
+
+        self.nlm_file_path = self.input_file_path
+        self.nlm_temp_file_path = self.input_file_path + '.tmp'

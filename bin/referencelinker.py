@@ -1,4 +1,15 @@
 #!/usr/bin/env python
+"""referencelinker.py: a tool to link parenthetical references to ref-list elements in a JATS file
+
+Usage:
+    referencelinker.py link <input> [options]
+
+Options:
+    -d, --debug                                     Enable debug output
+    -h, --help                                      Show this screen.
+    -v, --version                                   Show version.
+"""
+
 from teimanipulate import *
 
 __author__ = "Martin Paul Eve"
@@ -15,6 +26,7 @@ import re
 import lxml
 import hashlib
 from bare_globals import GV
+from docopt import docopt
 
 
 class ReplaceObject(Debuggable):
@@ -154,10 +166,14 @@ class ReferenceLinker(Debuggable):
 
 
 def main():
-    #bare_gv = GV()
+    args = docopt(__doc__, version='meTypeset 0.1')
+    bare_gv = GV(args)
 
-    rl_instance = ReferenceLinker()
-    #rl_instance.run()
+    if args['--debug']:
+        bare_gv.debug.enable_debug()
+
+    rl_instance = ReferenceLinker(bare_gv)
+    rl_instance.run()
 
 
 if __name__ == '__main__':

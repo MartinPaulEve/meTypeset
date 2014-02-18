@@ -64,7 +64,8 @@ class MeTypeset (Debuggable):
         self.settings_file_path = 'default'
         self.tei_file_path = None
         self.settings_file_path = SettingsConfiguration.setup_settings_file(self.args)
-        self.settings = SettingsConfiguration(self.get_settings_file(), self.args)
+        self.settings = SettingsConfiguration(SettingsConfiguration.get_settings_file(self, self.settings_file_path),
+                                              self.args)
         self.gv = GV(self.settings, self.debug)
 
     @staticmethod
@@ -84,46 +85,6 @@ class MeTypeset (Debuggable):
                                          'Falling back to {0}'.format(metadata_file))
 
         return metadata_file
-
-    def check_settings_file_exists(self, set_file):
-        # noinspection PyBroadException
-        try:
-            os.path.isfile(set_file)
-        except:
-            self.debug.fatal_error(self, 'Settings file {0} does not exist'.format(set_file))
-
-    def get_settings_file(self):
-
-        # read  the home folder, either from the path or from the settings file
-        # noinspection PyBroadException
-        try:
-            script_dir = os.environ['METYPESET']
-
-        except:
-            # noinspection PyBroadException
-            try:
-                mod_path = os.path.dirname(docxtotei.__file__)
-                script_dir = os.path.dirname(mod_path + '/../')
-                os.environ['METYPESET'] = script_dir
-
-            except:
-                self.debug.fatal_error(self, '$METYPESET path not variable is not set '
-                                             'and/or was unable to determine runtime path.')
-
-                script_dir = "NONPATH"
-
-        if self.settings_file_path == 'default' or self.settings_file_path is None:
-            if script_dir != '':
-                set_file = '{0}/bin/settings.xml'.format(script_dir)
-                self.check_settings_file_exists(set_file)
-            else:
-                    set_file = 'NOFILE'
-                    pass
-        else:
-            set_file = self.settings_file_path
-            self.check_settings_file_exists(set_file)
-
-        return set_file
 
     def run_modules(self):
         ag = int(self.gv.settings.args['--aggression'])
