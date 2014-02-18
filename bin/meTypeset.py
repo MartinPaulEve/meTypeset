@@ -36,6 +36,7 @@ from listclassifier import ListClassifier
 from metadata import Metadata
 from referencelinker import ReferenceLinker
 from xslchainer import XslChain
+from settingsconfiguration import SettingsConfiguration
 
 
 # check whether lxml is installed
@@ -44,22 +45,6 @@ try:
     from lxml import etree
 except ImportError:
     print("Failed to import lxml")
-
-
-class SettingsConfiguration:
-    def __init__(self, set_file, args):
-        tree = etree.parse(set_file)
-        self.tree = tree
-        self.script_dir = os.environ['METYPESET']
-        self.args = args
-        self.settings_file = set_file
-
-    @staticmethod
-    def setup_settings_file(args):
-        if '--settings' in args:
-            settings = args['--settings']
-            if settings:
-                return settings
 
 
 class MeTypeset (Debuggable):

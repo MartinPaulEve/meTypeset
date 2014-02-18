@@ -10,22 +10,13 @@ from debug import *
 from lxml import *
 import os
 import docopt
-from meTypeset import MeTypeset
-
-
-class SettingsConfiguration:
-    def __init__(self, set_file, args):
-        tree = etree.parse(set_file)
-        self.tree = tree
-        self.script_dir = os.environ['METYPESET']
-        self.args = args
-        self.settings_file = set_file
+from settingsconfiguration import SettingsConfiguration
 
 
 class GV (Debuggable):
     def __init__(self):
         # read  command line arguments
-        self.args = MeTypeset.read_command_line()
+        self.args = SettingsConfiguration.read_command_line()
 
         # absolute first priority is to initialize debugger so that anything triggered here can be logged
         self.debug = Debug()
