@@ -97,8 +97,7 @@ class Manipulate(Debuggable):
             text = ''
 
         for sub_element in element:
-            if not sub_element.text is None:
-                text += Manipulate.get_stripped_text(sub_element)
+            text += ' ' + Manipulate.get_stripped_text(sub_element)
 
             if not sub_element.tail is None:
                 text += sub_element.tail
