@@ -91,8 +91,6 @@ class ReplaceObject(Debuggable):
 
                 return
 
-        print etree.tostring(self.paragraph)
-
         self.debug.print_debug(self, u'Failed to link {0} to {1}'.format(self.replace_text, bib_id))
 
 
