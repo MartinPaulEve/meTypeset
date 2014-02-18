@@ -61,6 +61,25 @@ Furthermore, the parser will attempt to append an attribute named "rend" to the 
 
 * 001 - the number of linebreaks found in the document exceeded 80. The parser will mark up elements containing more than 3 comments with rend="error-001"
 
+##Other tools
+
+Some portions of the meTypeset stack can be run independently of the main application.
+
+###Reference linker
+The reference linker will scan an NLM document for paranthetical references and match them up to ref elements.
+
+```
+referencelinker.py: a tool to link parenthetical references to ref-list elements in a JATS file
+
+Usage:
+    referencelinker.py link <input> [options]
+
+Options:
+    -d, --debug                                     Enable debug output
+    -h, --help                                      Show this screen.
+    -v, --version                                   Show version.
+```
+
 #Developer Information
 
 ##Main Function and Initialization
