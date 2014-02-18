@@ -16,13 +16,14 @@ class ZoteroHandler(Debuggable):
         Handle Zotero bibliographies
         @param tei_manipulator: a TEI Manipulator object to handle the XML
         """
-        tei_manipulator.tag_bibliography('//tei:p[@rend="Bibliography"]/tei:ref',
-                                         ' ADDIN ZOTERO_BIBL {"custom":[]} ', self)
 
-        # remove the Zotero crap marker
+        # remove the Zotero marker
         tei_manipulator.tag_bibliography('//tei:p[@rend="Bibliography"]/tei:ref',
                                          ' ADDIN ZOTERO_BIBL {"custom":[]} CSL_BIBLIOGRAPHY ',
                                          self)
+
+        tei_manipulator.tag_bibliography('//tei:p[@rend="Bibliography"]/tei:ref',
+                                         ' ADDIN ZOTERO_BIBL {"custom":[]} ', self)
 
         tei_manipulator.tag_bibliography_non_csl('//tei:p/tei:ref[@rend="ref"]', ' ADDIN EN.REFLIST ', self)
 
