@@ -78,7 +78,8 @@ class BookChapter():
                         u'<publisher-loc>{3}</publisher-loc>' \
                         u'<publisher-name>{4}</publisher-name>' \
                     u'</element-citation>' \
-                u'</ref>'.format(author_block, self.book_title, self.year, self.place, self.publisher, editor_block, self.title)
+                u'</ref>'.format(author_block, self.book_title, self.year, self.place, self.publisher, editor_block,
+                                 self.title)
 
 class Book():
     def __init__(self, authors=None, title='', publisher='', place='', year='', editors=None):
