@@ -24,7 +24,7 @@ from debug import Debuggable
 from nlmmanipulate import NlmManipulate
 import re
 import lxml
-import hashlib
+import uuid
 from bare_globals import GV
 from docopt import docopt
 
@@ -75,10 +75,8 @@ class ReplaceObject(Debuggable):
         if 'id' in self.reference_to_link.attrib:
             bib_id = self.reference_to_link.attrib['id']
         else:
-            hash_object = hashlib.sha256(etree.tostring(self.reference_to_link))
-            hex_dig = hash_object.hexdigest()
-            self.reference_to_link.attrib['id'] = hex_dig
-            bib_id = hex_dig
+            self.reference_to_link.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+            bib_id = u'ID{0}'.format(unicode(uuid.uuid4()))
 
         if self.replace_text in self.paragraph.text:
             self.replace_in_text(bib_id, self.paragraph)
