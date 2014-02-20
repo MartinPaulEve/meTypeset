@@ -25,6 +25,24 @@ class SettingsConfiguration:
                 return settings
 
     @staticmethod
+    def clean_path(path):
+        # TODO: cross-platform fix?
+        path = ''.join(path.split())
+        return path.replace('\n ', '').replace(" ", "").replace("//", "/")
+
+    @staticmethod
+    def concat_path(parent, child):
+        return parent + os.sep + '/' + child
+
+    @staticmethod
+    def value_for_tag(settings, tag_name, caller):
+        # todo: would be good to have some handling for defaults here
+        expr = "//*[local-name() = $name]"
+        tag = settings.tree.xpath(expr, name=tag_name, namespaces={'mt': 'https://github.com/MartinPaulEve/meTypeset'})
+        return settings.clean_path(tag[0].text) if tag \
+            else caller.debug.fatal_error(caller, '{0} is not defined in settings.xml'.format(tag_name))
+
+    @staticmethod
     def check_settings_file_exists(caller, set_file):
         # noinspection PyBroadException
         try:

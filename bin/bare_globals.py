@@ -33,3 +33,12 @@ class GV (Debuggable):
 
         self.nlm_file_path = self.input_file_path
         self.nlm_temp_file_path = self.input_file_path + '.tmp'
+
+        self.settings.args['--aggression'] = 11
+
+        self.database_file_path = \
+            self.settings.clean_path(self.settings.concat_path(os.path.join(self.settings.script_dir,
+                                                                            'database'),
+                                                               self.settings.value_for_tag(self.settings,
+                                                                                           'databasefile',
+                                                                                           self)))

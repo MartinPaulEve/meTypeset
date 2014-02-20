@@ -1,3 +1,16 @@
+#!/usr/bin/env python
+"""bibliographydatabase: a tool to match plaintext values inside NLM ref tags against a known database
+
+Usage:
+    bibliographydatabase.py <input> [options]
+
+Options:
+    -d, --debug                                     Enable debug output
+    -h, --help                                      Show this screen.
+    -v, --version                                   Show version.
+
+"""
+
 __author__ = "Martin Paul Eve"
 __email__ = "martin@martineve.com"
 
@@ -14,6 +27,8 @@ import re
 import itertools
 import uuid
 from lxml import etree
+from docopt import docopt
+from bare_globals import GV
 
 
 class Person():
@@ -439,3 +454,18 @@ class BibliographyDatabase(Debuggable):
             manipulate.save_tree(master_tree)
 
             db.close()
+
+
+def main():
+    args = docopt(__doc__, version='meTypeset 0.1')
+    bare_gv = GV(args)
+
+    if args['--debug']:
+        bare_gv.debug.enable_debug()
+
+    bibliography_database_instance = BibliographyDatabase(bare_gv)
+    bibliography_database_instance.run()
+
+
+if __name__ == '__main__':
+    main()
