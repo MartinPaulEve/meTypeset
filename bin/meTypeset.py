@@ -10,6 +10,7 @@ Options:
     -a, --aggression <aggression_level>             Parser aggression level 0-10 [default: 10]
     -c, --chain <xslt>                              Specify a subsequent XSL transform to pass the NLM to
     -d, --debug                                     Enable debug output
+    -i, --identifiers                               Generate unique identifiers for all supported NLM elements
     -h, --help                                      Show this screen.
     -m, --metadata <metadata_file>                  Metadata file
     -s, --settings <settings_file>                  Settings file
@@ -37,6 +38,7 @@ from metadata import Metadata
 from referencelinker import ReferenceLinker
 from xslchainer import XslChain
 from settingsconfiguration import SettingsConfiguration
+from idgenerator import IdGenerator
 
 
 # check whether lxml is installed
@@ -143,6 +145,9 @@ class MeTypeset (Debuggable):
 
             # process any bibliography entries that are possible
             BibliographyDatabase(self.gv).run()
+
+            if self.args['--identifiers']:
+                IdGenerator(self.gv).run()
 
             if self.args['--chain']:
                 # construct and run an XSLT chainer
