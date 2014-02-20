@@ -27,7 +27,20 @@ class IdGenerator(Debuggable):
         Debuggable.__init__(self, 'ID Generator')
 
     def run(self):
-        elements = ['p', 'title', 'sec', 'disp-quote', 'ref', 'ref-list', 'fn', 'table', 'xref', 'graphic', 'caption']
+        elements = ['abbrev', 'abstract', 'ack', 'address', 'aff', 'alt-text', 'app', 'app-group', 'array',
+                    'article-title', 'attrib', 'author-comment', 'author-notes', 'award-group', 'bio', 'boxed-text',
+                    'caption', 'chem-struct', 'chem-struct-wrap', 'col', 'colgroup', 'collab', 'compound-kwd',
+                    'contrib', 'contrib-group', 'corresp', 'custom-meta', 'def', 'def-item', 'def-list', 'disp-formula',
+                    'disp-formula-group', 'disp-quote', 'element-citation', 'ext-link', 'fig', 'fig-group', 'fn',
+                    'fn-group', 'funding-source', 'glossary', 'glyph-data', 'graphic', 'inline-formula',
+                    'inline-graphic', 'inline-supplementary-material', 'institution', 'kwd', 'kwd-group', 'list',
+                    'list-item', 'long-desc', 'media', 'milestone-end', 'milestone-start', 'mixed-citation',
+                    'named-content', 'nlm-citation', 'note', 'notes', 'p', 'person-group', 'preformat',
+                    'product', 'ref', 'ref-list', 'related-article', 'related-object', 'response', 'sec', 'sig',
+                    'sig-block', 'source', 'speech', 'statement', 'sub-article', 'supplementary-material', 'table',
+                    'table-wrap', 'table-wrap-group', 'tbody', 'td', 'term', 'tex-math', 'tfoot', 'th', 'thead',
+                    'title', 'tr', 'trans-abstract', 'trans-source', 'trans-title', 'trans-title-group', 'verse-group',
+                    'xref']
 
         manipulate = NlmManipulate(self.gv)
 
