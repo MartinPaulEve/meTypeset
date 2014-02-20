@@ -12,7 +12,7 @@ from nlmmanipulate import NlmManipulate
 import os
 import re
 import itertools
-import hashlib
+import uuid
 from lxml import etree
 
 
@@ -411,8 +411,7 @@ class BibliographyDatabase(Debuggable):
 
                                 new_element = etree.fromstring(obj.get_citation())
 
-                                hash_object = hashlib.sha256(key)
-                                hex_dig = hash_object.hexdigest()
+                                hex_dig = u'ID{0}'.format(unicode(uuid.uuid4()))
 
                                 new_element.attrib['id'] = hex_dig
 
