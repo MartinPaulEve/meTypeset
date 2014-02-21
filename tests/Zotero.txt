@@ -34,5 +34,8 @@ Z03 Zotero JSON Inline Field and Bibliography
     ${xml}=    Parse XML    ./Z03/nlm/out.xml
     ${paragraph}=    Get Elements    ${xml}    body/sec/p
     ${paragraphone}=    Get From List    ${paragraph}    0
-    Elements Should Match    ${paragraphone}    <p>A reference (<xref rid="5cf212c2f48676a60d6efc8c547ddcbe0e5bf3434e3a35a6d0d63219c556d6be" ref-type="bibr">Herman</xref>)</p>    normalize_whitespace=yes
+    ${xref}=    Get Elements    ${paragraphone}    xref
+    ${xrefone}=    Get From List    ${xref}    0
+    Should Be Equal As Strings    ${xrefone.text}    Herman
+    Should Be Equal As Strings    ${xrefone.tail}    )
     [Teardown]    Remove Directory    Z03    recursive=True
