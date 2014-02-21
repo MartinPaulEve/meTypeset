@@ -45,6 +45,8 @@ class TableClassifier(Debuggable):
                     title = split_title[0]
                     caption = (''.join(split_title[1:])).strip()
 
+                    self.debug.print_debug(self, u'Handling title and caption for "{0}"'.format(title))
+
                     title_element = None
 
                     # use an existing title element if one exists
