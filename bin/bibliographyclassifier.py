@@ -18,7 +18,7 @@ class BibliographyClassifier(Debuggable):
         Debuggable.__init__(self, 'Bibliography Classifier')
 
     def linguistic_cues(self, manipulate, tree):
-        language_list = self.gv.value_for_tag(self.gv.settings, 'reference-languages').split(',')
+        language_list = self.gv.settings.value_for_tag(self.gv.settings, 'reference-languages', self).split(',')
 
         for language in language_list:
             with open ('{0}/language/ref_marker_{1}.txt'.format(self.gv.script_dir,
