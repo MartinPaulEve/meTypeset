@@ -170,3 +170,22 @@ Library           Collections
     ${ptwo}=    Get Element    ${xml}    back/fn-group
     Elements Should Match    ${ptwo}    <fn-group><fn id="bibd2e38"><p>Footnote number 1</p></fn><fn id="bibd2e42"><p>Footnote number 2</p></fn><fn id="bibd2e46"><p>Footnote number 3</p></fn><fn id="bibd2e50"><p>Footnote number 4</p></fn><fn id="bibd2e54"><p>Footnote number 5</p></fn><fn id="bibd2e59"><p>Footnote number 6</p></fn><fn id="bibd2e63"><p>Footnote number 7</p></fn><fn id="bibd2e67"><p>Footnote number 8</p></fn><fn id="bibd2e71"><p>Footnote number 9</p></fn><fn id="bibd2e75"><p>Footnote number 10</p></fn><fn id="bibd2e79"><p>Footnote number 11</p></fn></fn-group>    normalize_whitespace=yes
     [Teardown]    Remove Directory    012    recursive=True
+
+013 Table parsing
+    [Tags]    formatting    listclassifier    013
+    ${result} =    Run Process    python ../bin/meTypeset.py docx TableClassifier1.docx ./013 -s testsettings.xml -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./013/nlm/out.xml
+    ${secs}=    Get Elements    ${xml}    body/sec/p
+    ${title}=    Get Element    ${xml}    body/sec/table-wrap/title
+    ${caption}=    Get Element    ${xml}    body/sec/table-wrap/caption/p
+    ${pone}=    Get From List    ${secs}    0
+    ${ptwo}=    Get From List    ${secs}    1
+    ${xrefone}=    Get Element    ${pone}    xref
+    ${xreftwo}=    Get Element    ${ptwo}    xref
+    Should Be Equal As Strings    ${title.text}    Table 1
+    Should Be Equal As Strings    ${caption.text}    Some data.
+    Should Be Equal As Strings    ${xrefone.text}    Table 1
+    Should Be Equal As Strings    ${xreftwo.text}    Table 1
+    [Teardown]    Remove Directory    013    recursive=True
