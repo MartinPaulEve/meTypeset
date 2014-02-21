@@ -16,6 +16,7 @@ from bare_globals import GV
 from debug import Debuggable
 from nlmmanipulate import NlmManipulate
 from lxml import etree
+import uuid
 
 
 class TableClassifier(Debuggable):
@@ -23,6 +24,65 @@ class TableClassifier(Debuggable):
         self.gv = global_variables
         self.debug = self.gv.debug
         Debuggable.__init__(self, 'Table Classifier')
+
+    def replace_in_text(self, id, element):
+        before_after = element.text.split(self.replace_text, 1)
+        element.text = before_after[0]
+
+        new_element = etree.Element('xref')
+        new_element.attrib['rid'] = unicode(id)
+        new_element.attrib['ref-type'] = 'table'
+        new_element.text = self.replace_text
+        new_element.tail = ''.join(before_after[1:])
+
+        element.append(new_element)
+
+    def replace_in_tail(self, id, element):
+
+        before_after = element.tail.split(self.replace_text, 1)
+
+        new_element = etree.Element('xref')
+        new_element.attrib['rid'] = unicode(id)
+        new_element.attrib['ref-type'] = 'table'
+        new_element.text = self.replace_text
+        new_element.tail = ''.join(before_after[1:])
+
+        element.getparent().insert(element.getparent().index(element) + 1, new_element)
+
+        element.tail = before_after[0]
+
+        return new_element
+
+    def link(self, table_id, replace_texts, paragraphs):
+        # this procedure is more complex than desirable because the content can appear between tags (like italic)
+        # otherwise it would be a straight replace
+
+        for paragraph in paragraphs:
+            for replace_text in replace_texts:
+                if replace_text in paragraph.text:
+                    self.replace_in_text(table_id, paragraph)
+
+                    self.debug.print_debug(self, u'Successfully linked {0} to {1}'.format(replace_text, table_id))
+                    return
+
+                for sub_element in paragraph:
+                    if sub_element.tag != 'xref':
+                        if replace_text in sub_element.text:
+                            self.replace_in_text(table_id, sub_element)
+
+                            self.debug.print_debug(self,
+                                                   u'Successfully linked {0} to '
+                                                   u'{1} from sub-element'.format(replace_text, table_id))
+                            return
+
+                    if sub_element.tail is not None and replace_text in sub_element.tail:
+                        new_element = self.replace_in_tail(table_id, sub_element)
+
+                        self.debug.print_debug(self,
+                                               u'Successfully linked {0} to {1} from sub-tail'.format(replace_text,
+                                                                                                      table_id))
+
+                        return
 
     def run(self):
         manipulate = NlmManipulate(self.gv)
@@ -65,6 +125,9 @@ class TableClassifier(Debuggable):
                     p.text = p.text.replace(': ', '')
                     p.text = p.text.replace(':', '')
                     p.text = p.text.replace(title, '')
+
+                    if not 'id' in table.attrib:
+                        table.attrib = u'ID{0}'.format(unicode(uuid.uuid4()))
 
         tree.write(self.gv.nlm_file_path)
         tree.write(self.gv.nlm_temp_file_path)
