@@ -25,26 +25,26 @@ class TableClassifier(Debuggable):
         self.debug = self.gv.debug
         Debuggable.__init__(self, 'Table Classifier')
 
-    def replace_in_text(self, id, element):
-        before_after = element.text.split(self.replace_text, 1)
+    def replace_in_text(self, id, element, replace_text):
+        before_after = element.text.split(replace_text, 1)
         element.text = before_after[0]
 
         new_element = etree.Element('xref')
         new_element.attrib['rid'] = unicode(id)
         new_element.attrib['ref-type'] = 'table'
-        new_element.text = self.replace_text
+        new_element.text = replace_text
         new_element.tail = ''.join(before_after[1:])
 
         element.append(new_element)
 
-    def replace_in_tail(self, id, element):
+    def replace_in_tail(self, id, element, replace_text):
 
-        before_after = element.tail.split(self.replace_text, 1)
+        before_after = element.tail.split(replace_text, 1)
 
         new_element = etree.Element('xref')
         new_element.attrib['rid'] = unicode(id)
         new_element.attrib['ref-type'] = 'table'
-        new_element.text = self.replace_text
+        new_element.text = replace_text
         new_element.tail = ''.join(before_after[1:])
 
         element.getparent().insert(element.getparent().index(element) + 1, new_element)
@@ -53,36 +53,34 @@ class TableClassifier(Debuggable):
 
         return new_element
 
-    def link(self, table_id, replace_texts, paragraphs):
+    def link(self, table_ids, replace_texts, paragraphs):
         # this procedure is more complex than desirable because the content can appear between tags (like italic)
         # otherwise it would be a straight replace
 
         for paragraph in paragraphs:
             for replace_text in replace_texts:
+                table_id = table_ids[replace_texts.index(replace_text)]
+
                 if replace_text in paragraph.text:
-                    self.replace_in_text(table_id, paragraph)
+                    self.replace_in_text(table_id, paragraph, replace_text)
 
                     self.debug.print_debug(self, u'Successfully linked {0} to {1}'.format(replace_text, table_id))
-                    return
 
                 for sub_element in paragraph:
                     if sub_element.tag != 'xref':
                         if replace_text in sub_element.text:
-                            self.replace_in_text(table_id, sub_element)
+                            self.replace_in_text(table_id, sub_element, replace_text)
 
                             self.debug.print_debug(self,
                                                    u'Successfully linked {0} to '
                                                    u'{1} from sub-element'.format(replace_text, table_id))
-                            return
 
                     if sub_element.tail is not None and replace_text in sub_element.tail:
-                        new_element = self.replace_in_tail(table_id, sub_element)
+                        new_element = self.replace_in_tail(table_id, sub_element, replace_text)
 
                         self.debug.print_debug(self,
                                                u'Successfully linked {0} to {1} from sub-tail'.format(replace_text,
                                                                                                       table_id))
-
-                        return
 
     def run(self):
         manipulate = NlmManipulate(self.gv)
@@ -90,6 +88,9 @@ class TableClassifier(Debuggable):
         tree = manipulate.load_dom_tree()
 
         tables = tree.xpath('//table-wrap')
+
+        table_titles = []
+        table_ids = []
 
         for table in tables:
             # get the next sibling
@@ -127,7 +128,14 @@ class TableClassifier(Debuggable):
                     p.text = p.text.replace(title, '')
 
                     if not 'id' in table.attrib:
-                        table.attrib = u'ID{0}'.format(unicode(uuid.uuid4()))
+                        table.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+
+                    table_titles.append(title)
+                    table_ids.append(table.attrib['id'])
+
+        paragraphs = tree.xpath('//p')
+
+        self.link(table_ids, table_titles, paragraphs)
 
         tree.write(self.gv.nlm_file_path)
         tree.write(self.gv.nlm_temp_file_path)
