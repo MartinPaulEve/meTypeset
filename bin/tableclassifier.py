@@ -96,7 +96,7 @@ class TableClassifier(Debuggable):
             # get the next sibling
             p = table.getnext()
 
-            if p.tag == 'p':
+            if p is not None and p.tag == 'p':
                 text = manipulate.get_stripped_text(p)
 
                 if len(text) < 140 and u':' in text:

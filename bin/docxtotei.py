@@ -54,7 +54,8 @@ class DocxToTei(Debuggable):
                 image_name = re.sub(r'\.wmf', '', image)
                 imagemagick_command = '{3} -d graphics -f png -o {0}/{1}.png ' \
                                       '{0}/{2}'.format(self.gv.output_media_path, image_name, image,
-                                                       self.gv.value_for_tag(self.gv.settings, 'unoconv'))
+                                                       self.gv.settings.value_for_tag(self.gv.settings, 'unoconv',
+                                                                                      self))
                 self.debug.print_debug(self, 'Calling: {0}'.format(imagemagick_command))
 
                 subprocess.call(imagemagick_command.split(' '))
