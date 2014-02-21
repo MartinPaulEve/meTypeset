@@ -39,6 +39,7 @@ from referencelinker import ReferenceLinker
 from xslchainer import XslChain
 from settingsconfiguration import SettingsConfiguration
 from idgenerator import IdGenerator
+from tableclassifier import TableClassifier
 
 
 # check whether lxml is installed
@@ -143,6 +144,9 @@ class MeTypeset (Debuggable):
 
             # run reference linker
             ReferenceLinker(self.gv).run()
+
+            # run table classifier
+            TableClassifier(self.gv).run()
 
             # run metadata merge
             Metadata(self.gv).run()
