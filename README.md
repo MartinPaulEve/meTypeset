@@ -80,6 +80,11 @@ Options:
     -h, --help                                      Show this screen.
     -v, --version                                   Show version.
 ```
+##Troubleshooting
+
+I am getting errors like "UnicodeEncodeError: 'ascii' codec can't encode character u'\xa0' in position 20: ordinal not in range(128)"
+
+Solution: Set the environment variable PYTHONIOENCODING=UTF-8
 
 #Developer Information
 
