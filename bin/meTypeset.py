@@ -146,7 +146,9 @@ class MeTypeset (Debuggable):
             ReferenceLinker(self.gv).run()
 
             # run table classifier
-            CaptionClassifier(self.gv).run_tables()
+            cc = CaptionClassifier(self.gv)
+            cc.run_tables()
+            cc.run_graphics()
 
             # run metadata merge
             Metadata(self.gv).run()
