@@ -1,8 +1,10 @@
 #!/usr/bin/env python
-"""tableclassfier: a tool to search for potential table titles and then link in-text entities
+"""captionclassfier: a tool to search for potential table titles and then link in-text entities
 
 Usage:
-   tableclassfier.py <input> [options]
+   captionclassfier.py tables <input> [options]
+   captionclassfier.py graphics <input> [options]
+   captionclassfier.py all <input> [options]
 
 Options:
     -d, --debug                                     Enable debug output
@@ -88,6 +90,8 @@ class CaptionClassifier(Debuggable):
         # <p>Figure 1: Martin Eve at the pub<graphic xlink:href="media/image1.jpeg" position="float"
         # orientation="portrait" xlink:type="simple"/>
 
+        self.debug.print_debug(self, u'Attempting to classify captions for graphics objects')
+
         manipulate = NlmManipulate(self.gv)
 
         tree = manipulate.load_dom_tree()
@@ -157,6 +161,8 @@ class CaptionClassifier(Debuggable):
         tree.write(self.gv.nlm_temp_file_path)
 
     def run_tables(self):
+        self.debug.print_debug(self, u'Attempting to classify captions for table objects')
+
         manipulate = NlmManipulate(self.gv)
 
         tree = manipulate.load_dom_tree()
@@ -223,7 +229,12 @@ def main():
         bare_gv.debug.enable_debug()
 
     table_classifier_instance = CaptionClassifier(bare_gv)
-    table_classifier_instance.run_tables()
+
+    if args['all'] or args['tables']:
+        table_classifier_instance.run_tables()
+
+    if args['all'] or args['graphics']:
+        table_classifier_instance.run_graphics()
 
 
 if __name__ == '__main__':
