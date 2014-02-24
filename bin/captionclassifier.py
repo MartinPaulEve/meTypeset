@@ -68,7 +68,7 @@ class CaptionClassifier(Debuggable):
 
                 for sub_element in paragraph:
                     if sub_element.tag != 'xref':
-                        if replace_text in sub_element.text:
+                        if sub_element.text and replace_text in sub_element.text:
                             self.replace_in_text(table_id, sub_element, replace_text, ref_type)
 
                             self.debug.print_debug(self,
@@ -148,6 +148,10 @@ class CaptionClassifier(Debuggable):
 
                     graphic_titles.append(title)
                     graphic_ids.append(graphic.attrib['id'])
+
+        paragraphs = tree.xpath('//p')
+
+        self.link(graphic_ids, graphic_titles, paragraphs, 'fig')
 
         tree.write(self.gv.nlm_file_path)
         tree.write(self.gv.nlm_temp_file_path)
