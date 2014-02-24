@@ -136,7 +136,7 @@ class ReferenceLinker(Debuggable):
         to_link = []
         to_stub = []
 
-        for p in tree.xpath('//p'):
+        for p in tree.xpath('//sec/p'):
             text = manipulate.get_stripped_text(p)
 
             reference_test = re.compile('\((?P<text>.+?)\)')
