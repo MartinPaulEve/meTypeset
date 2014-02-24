@@ -173,7 +173,6 @@ class ReferenceLinker(Debuggable):
                 bare_refs = bare_ref.split(' ')
 
                 replace_chars = ',.<>\(\);:@\'\#~}{[]"'
-                to_remove = []
 
                 for sub_item in bare_items:
                     found_ref = False
