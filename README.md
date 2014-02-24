@@ -69,16 +69,22 @@ Some portions of the meTypeset stack can be run independently of the main applic
 ###Reference linker
 The reference linker will scan an NLM document for paranthetical references and match them up to ref elements.
 
+If called with the "scan" option, the reference linker will attempt to match text in brackets to likely reference list elements.
+
+If called with the "link" option, the reference linker will change the "rid" attribute on the xref element with an "id" attribute equal to "source\_id" to the value of "dest\_id".
+
 ```
-referencelinker.py: a tool to link parenthetical references to ref-list elements in a JATS file
+"""referencelinker.py: a tool to link parenthetical references to ref-list elements in a JATS file
 
 Usage:
-    referencelinker.py link <input> [options]
+    referencelinker.py scan <input> [options]
+    referencelinker.py link <input> <source_id> <dest_id> [options]
 
 Options:
     -d, --debug                                     Enable debug output
     -h, --help                                      Show this screen.
     -v, --version                                   Show version.
+"""
 ```
 ##Troubleshooting
 
