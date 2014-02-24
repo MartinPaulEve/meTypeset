@@ -22,6 +22,10 @@
 	    <mt:media>media</mt:media>
         <mt:error>error</mt:error>
     </mt:folders>
+
+    <mt:display>
+        <mt:color>True</mt:color>
+    </mt:display>
     
     <mt:style-sheets>
         <mt:docs-style-sheet-path>

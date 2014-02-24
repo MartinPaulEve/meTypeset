@@ -7,6 +7,7 @@ Usage:
 
 Options:
     -d, --debug                                     Enable debug output
+    --interactive                                   Prompt the user to assist in interactive tagging
     -h, --help                                      Show this screen.
     -v, --version                                   Show version.
 """
@@ -28,6 +29,7 @@ import lxml
 import uuid
 from bare_globals import GV
 from docopt import docopt
+from interactive import Interactive
 
 
 class ReplaceObject(Debuggable):
@@ -197,6 +199,33 @@ class ReferenceLinker(Debuggable):
         tree.write(self.gv.nlm_file_path)
         tree.write(self.gv.nlm_temp_file_path)
 
+    def search_references(self, search_term, ref_items, manipulate, input_block):
+        results = []
+
+        for ref in ref_items:
+            found = True
+
+            bare_ref = manipulate.get_stripped_text(ref)
+
+            bare_refs = bare_ref.split(' ')
+
+            replace_chars = ',.<>\(\);:@\'\#~}{[]"'
+
+            found_ref = False
+
+            for sub_ref in bare_refs:
+                if search_term.strip(replace_chars).lower() == sub_ref.strip(replace_chars).lower():
+                    found_ref = True
+                    break
+
+            if not found_ref:
+                found = False
+
+            if found:
+                results.append(ReplaceObject(self.gv, input_block, ref))
+
+        return results
+
     def link_items(self, source_id, dest_id):
         self.debug.print_debug(self, 'Attempting to link XREF {0} to REF {1}'.format(source_id, dest_id))
 
@@ -212,6 +241,80 @@ class ReferenceLinker(Debuggable):
         tree.write(self.gv.nlm_file_path)
         tree.write(self.gv.nlm_temp_file_path)
 
+    def handle_search(self, manipulate, opts, p, prompt, ref_items):
+        name = prompt.input_('Enter search term:')
+        result_list = self.search_references(name, ref_items, manipulate, p)
+        sel = prompt.choose_candidate(result_list, manipulate, opts)
+
+        self.handle_input(manipulate, opts, p, prompt, ref_items, sel, result_list)
+        pass
+
+    def handle_input(self, manipulate, opts, p, prompt, ref_items, sel, candidates=None):
+        if sel == 'a':
+            prompt.print_(u"Leaving interactive mode on user command")
+            return "abort"
+        elif sel == 'd':
+            # TODO: delete the surrounding xref
+            pass
+        elif sel == 'e':
+            # let the user search references
+            self.handle_search(manipulate, opts, p, prompt, ref_items)
+        elif sel == 'l':
+            # directly link the item
+            ref_id = prompt.input_('Enter reference ID:')
+            self.link_items(p.attrib['id'], ref_id)
+            pass
+        elif sel == 's':
+            # skip this item
+            prompt.print_(u'Skipping this item')
+            pass
+        else:
+            # numerical input
+            selected = candidates[sel - 1]
+
+            # do link
+            selected.link()
+
+
+    def run_prompt(self):
+        self.debug.print_debug(self, 'Entering interactive mode')
+
+        prompt = Interactive(self.gv)
+
+        manipulate = NlmManipulate(self.gv)
+
+        tree = manipulate.load_dom_tree()
+
+        ref_items = tree.xpath('//back/ref-list/ref')
+
+        if len(ref_items) == 0:
+            self.debug.print_debug(self, 'Found no references to link: leaving interactive mode')
+            return
+
+        for p in tree.xpath('//xref[@ref-type="bibr"]'):
+            text = manipulate.get_stripped_text(p)
+
+            if 'rid' in p.attrib and p.attrib['rid'] == 'TO_LINK':
+                prompt.print_(u"Found an unhandled reference marker: {0}".format(text))
+            elif 'rid' in p.attrib:
+                remote = next((x for x in ref_items if x.attrib['id'] == p.attrib['rid']), None)
+                remote_text = manipulate.get_stripped_text(remote)
+                prompt.print_(u"Found a handled reference marker: \"{0}\" which links to \"{1}\"".format(text,
+                                                                                                         remote_text))
+
+            opts = ('Skip', 'Delete', 'Enter search', 'enter Link id', 'Abort')
+
+            sel = prompt.input_options(opts)
+
+            result = self.handle_input(manipulate, opts, p, prompt, ref_items, sel)
+
+            if result == 'abort':
+                return
+
+        tree.write(self.gv.nlm_file_path)
+        tree.write(self.gv.nlm_temp_file_path)
+
+
 def main():
     args = docopt(__doc__, version='meTypeset 0.1')
     bare_gv = GV(args)
@@ -223,6 +326,9 @@ def main():
 
     if args['scan']:
         rl_instance.run()
+
+        if args['--interactive']:
+            rl_instance.run_prompt()
     elif args['link']:
         rl_instance.link_items(args["<source_id>"], args["<dest_id>"])
 
