@@ -61,8 +61,8 @@ Library           Collections
     Elements Should Match    ${firstname}    <given-names>Martin Paul</given-names>
     ${surname}=    Get Element    ${xml}    front/article-meta/contrib-group/contrib/name/surname
     Elements Should Match    ${surname}    <surname>Eve</surname>
-    ${aff}=    Get Element    ${xml}    front/article-meta/aff
-    Elements Should Match    ${aff}    <aff>University of Lincoln</aff>
+    ${aff}=    Get Element    ${xml}    front/article-meta/contrib-group/aff
+    Elements Should Match    ${aff}    <aff id="lincoln">University of Lincoln</aff>
     ${year}=    Get Element    ${xml}    front/article-meta/pub-date/year
     Elements Should Match    ${year}    <year>2013</year>
     ${volume}=    Get Element    ${xml}    front/article-meta/volume
@@ -70,7 +70,7 @@ Library           Collections
     ${issue}=    Get Element    ${xml}    front/article-meta/issue
     Elements Should Match    ${issue}    <issue>1</issue>
     ${copyright}=    Get Element    ${xml}    front/article-meta/permissions/copyright-statement
-    Elements Should Match    ${copyright}    <copyright-statement>Copyright © 2013, Martin Paul Eve</copyright-statement>
+    Elements Should Match    ${copyright}    <copyright-statement>Copyright © 2014, Martin Paul Eve</copyright-statement>
     ${license}=    Get Element    ${xml}    front/article-meta/permissions/license/license-p
     Elements Should Match    ${license}    <license-p>This is an open-access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited. The citation of this article must include: the name(s) of the authors, the name of the journal, the full URL of the article (in a hyperlinked format if distributed online) and the DOI number of the article.</license-p>
     ${uri}=    Get Element    ${xml}    front/article-meta/self-uri
