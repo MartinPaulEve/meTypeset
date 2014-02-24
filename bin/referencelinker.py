@@ -2,7 +2,8 @@
 """referencelinker.py: a tool to link parenthetical references to ref-list elements in a JATS file
 
 Usage:
-    referencelinker.py link <input> [options]
+    referencelinker.py scan <input> [options]
+    referencelinker.py link <input> <source_id> <dest_id> [options]
 
 Options:
     -d, --debug                                     Enable debug output
@@ -69,6 +70,7 @@ class ReplaceStub(Debuggable):
         new_element = etree.Element('xref')
         new_element.attrib['rid'] = 'TO_LINK'
         new_element.attrib['ref-type'] = 'bibr'
+        new_element.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
         new_element.text = self.replace_text
         new_element.tail = ''.join(before_after[1:])
 
@@ -81,6 +83,7 @@ class ReplaceStub(Debuggable):
         new_element = etree.Element('xref')
         new_element.attrib['rid'] = 'TO_LINK'
         new_element.attrib['ref-type'] = 'bibr'
+        new_element.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
         new_element.text = self.replace_text
         new_element.tail = ''.join(before_after[1:])
 
@@ -206,7 +209,11 @@ def main():
         bare_gv.debug.enable_debug()
 
     rl_instance = ReferenceLinker(bare_gv)
-    rl_instance.run()
+
+    if args['scan']:
+        rl_instance.run()
+    elif args['link']:
+        pass
 
 
 if __name__ == '__main__':
