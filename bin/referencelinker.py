@@ -39,9 +39,6 @@ class ReplaceObject(Debuggable):
         Debuggable.__init__(self, 'Reference Linker Object')
 
     def link(self):
-        # this procedure is more complex than desirable because the content can appear between tags (like italic)
-        # otherwise it would be a straight replace
-
         bib_id = ''
 
         if 'id' in self.reference_to_link.attrib:
@@ -200,6 +197,20 @@ class ReferenceLinker(Debuggable):
         tree.write(self.gv.nlm_file_path)
         tree.write(self.gv.nlm_temp_file_path)
 
+    def link_items(self, source_id, dest_id):
+        self.debug.print_debug(self, 'Attempting to link XREF {0} to REF {1}'.format(source_id, dest_id))
+
+        manipulate = NlmManipulate(self.gv)
+
+        tree = manipulate.load_dom_tree()
+
+        source = tree.xpath('//xref[@id="{0}"]'.format(source_id))[0]
+        dest = tree.xpath('//ref[@id="{0}"]'.format(dest_id))[0]
+
+        ReplaceObject(self.gv, source, dest).link()
+
+        tree.write(self.gv.nlm_file_path)
+        tree.write(self.gv.nlm_temp_file_path)
 
 def main():
     args = docopt(__doc__, version='meTypeset 0.1')
@@ -213,8 +224,7 @@ def main():
     if args['scan']:
         rl_instance.run()
     elif args['link']:
-        pass
-
+        rl_instance.link_items(args["<source_id>"], args["<dest_id>"])
 
 if __name__ == '__main__':
     main()
