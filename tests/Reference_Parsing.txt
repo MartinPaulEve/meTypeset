@@ -13,7 +13,7 @@ R01 Simple Inline Reference
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./Inline/nlm/out.xml
     ${paragraph}=    Get Element    ${xml}    body/sec/p
-    Elements Should Match    ${paragraph}    <p>Before <xref id="INSERT ID HERE" ref-type="bibr">(Eve 2012)</xref> after</p>
+    Elements Should Match    ${paragraph}    <p>Before (<xref rid="TO_LINK" ref-type="bibr">Eve 2012</xref>) after</p>
     [Teardown]    Remove Directory    Inline    recursive=True
 
 R02 Year detection method
