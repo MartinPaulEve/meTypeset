@@ -172,17 +172,34 @@ class ReferenceLinker(Debuggable):
 
                 bare_refs = bare_ref.split(' ')
 
+                replace_chars = ',.<>\(\);:@\'\#~}{[]"'
+                to_remove = []
+
+                for char in replace_chars:
+                    if char in item:
+                        to_remove.append(char)
+
+                for char in to_remove:
+                    replace_chars = replace_chars.replace(char, '')
+
                 for sub_item in bare_items:
                     found_ref = False
                     for sub_ref in bare_refs:
-                        if sub_item == sub_ref.strip(',.<>();:@\'\#~}{[]"'):
+                        print sub_item
+                        print sub_ref.strip(replace_chars)
+                        if sub_item == sub_ref.strip(replace_chars):
                             found_ref = True
+                            break
 
                     if not found_ref:
+                        print "*************END"
                         found = False
 
                 if len(bare_items) > 0 and found:
                     to_link.append(ReplaceObject(self.gv, p, ref))
+
+        if len(to_link) == 0:
+            self.debug.print_debug(self, 'Found no references to link')
 
         for link in to_link:
             link.link()

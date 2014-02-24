@@ -12,7 +12,7 @@ M01 Mendeley Inline JSON Field
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./M01/nlm/out.xml
-    ${paragraph}=    Get Elements    ${xml}    body/sec/p
+    ${paragraph}=    Get Elements    ${xml}    body/sec/p/xref
     ${paragraphone}=    Get From List    ${paragraph}    1
     Elements Should Match    ${paragraphone}    <p>Here is one of them: (Silva, Rodrigues, Oliveira, &amp; da F. Costa, 2013)</p>    normalize_whitespace=yes
     [Teardown]    Remove Directory    M01    recursive=True
