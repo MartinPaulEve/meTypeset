@@ -175,24 +175,14 @@ class ReferenceLinker(Debuggable):
                 replace_chars = ',.<>\(\);:@\'\#~}{[]"'
                 to_remove = []
 
-                for char in replace_chars:
-                    if char in item:
-                        to_remove.append(char)
-
-                for char in to_remove:
-                    replace_chars = replace_chars.replace(char, '')
-
                 for sub_item in bare_items:
                     found_ref = False
                     for sub_ref in bare_refs:
-                        print sub_item
-                        print sub_ref.strip(replace_chars)
-                        if sub_item == sub_ref.strip(replace_chars):
+                        if sub_item.strip(replace_chars) == sub_ref.strip(replace_chars):
                             found_ref = True
                             break
 
                     if not found_ref:
-                        print "*************END"
                         found = False
 
                 if len(bare_items) > 0 and found:
