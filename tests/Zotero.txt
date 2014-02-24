@@ -13,7 +13,7 @@ Z01 Zotero XML Fields
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./Z01/nlm/out.xml
     ${paragraph}=    Get Element    ${xml}    body/sec/p
-    Elements Should Match    ${paragraph}    <p>See (Hardt &amp; Negri, 2001; Monbiot, 2001)</p>
+    Elements Should Match    ${paragraph}    <p>See (<xref rid="TO_LINK" ref-type="bibr">Hardt &amp; Negri, 2001</xref>; <xref rid="TO_LINK" ref-type="bibr">Monbiot, 2001</xref>)</p>
     [Teardown]    Remove Directory    Z01    recursive=True
 
 Z02 Zotero JSON Footnote Fields
