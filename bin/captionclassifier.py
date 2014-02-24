@@ -126,17 +126,22 @@ class CaptionClassifier(Debuggable):
                     title_element.text = title
 
                     caption_element = etree.Element('caption')
-                    caption_element.append(p)
-                    graphic.insert(1, caption_element)
+                    new_p = etree.Element('p')
+                    new_p.text = caption
+
+                    caption_element.append(new_p)
+                    graphic.append(caption_element)
 
                     p.text = p.text.replace(': ', '')
                     p.text = p.text.replace(':', '')
                     p.text = p.text.replace(title, '')
+                    p.text = p.text.replace(caption, '')
 
                     if graphic.tail:
                         graphic.tail = graphic.tail.replace(': ', '')
                         graphic.tail = graphic.tail.replace(':', '')
                         graphic.tail = graphic.tail.replace(title, '')
+                        graphic.tail = graphic.tail.replace(caption, '')
 
                     if not 'id' in graphic.attrib:
                         graphic.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
