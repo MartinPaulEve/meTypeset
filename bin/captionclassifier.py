@@ -19,31 +19,31 @@ from lxml import etree
 import uuid
 
 
-class TableClassifier(Debuggable):
+class CaptionClassifier(Debuggable):
     def __init__(self, global_variables):
         self.gv = global_variables
         self.debug = self.gv.debug
-        Debuggable.__init__(self, 'Table Classifier')
+        Debuggable.__init__(self, 'Caption Classifier')
 
-    def replace_in_text(self, id, element, replace_text):
+    def replace_in_text(self, id, element, replace_text, ref_type):
         before_after = element.text.split(replace_text, 1)
         element.text = before_after[0]
 
         new_element = etree.Element('xref')
         new_element.attrib['rid'] = unicode(id)
-        new_element.attrib['ref-type'] = 'table'
+        new_element.attrib['ref-type'] = ref_type
         new_element.text = replace_text
         new_element.tail = ''.join(before_after[1:])
 
         element.append(new_element)
 
-    def replace_in_tail(self, id, element, replace_text):
+    def replace_in_tail(self, id, element, replace_text, ref_type):
 
         before_after = element.tail.split(replace_text, 1)
 
         new_element = etree.Element('xref')
         new_element.attrib['rid'] = unicode(id)
-        new_element.attrib['ref-type'] = 'table'
+        new_element.attrib['ref-type'] = ref_type
         new_element.text = replace_text
         new_element.tail = ''.join(before_after[1:])
 
@@ -53,7 +53,7 @@ class TableClassifier(Debuggable):
 
         return new_element
 
-    def link(self, table_ids, replace_texts, paragraphs):
+    def link(self, table_ids, replace_texts, paragraphs, ref_type):
         # this procedure is more complex than desirable because the content can appear between tags (like italic)
         # otherwise it would be a straight replace
 
@@ -62,27 +62,27 @@ class TableClassifier(Debuggable):
                 table_id = table_ids[replace_texts.index(replace_text)]
 
                 if replace_text in paragraph.text:
-                    self.replace_in_text(table_id, paragraph, replace_text)
+                    self.replace_in_text(table_id, paragraph, replace_text, ref_type)
 
                     self.debug.print_debug(self, u'Successfully linked {0} to {1}'.format(replace_text, table_id))
 
                 for sub_element in paragraph:
                     if sub_element.tag != 'xref':
                         if replace_text in sub_element.text:
-                            self.replace_in_text(table_id, sub_element, replace_text)
+                            self.replace_in_text(table_id, sub_element, replace_text, ref_type)
 
                             self.debug.print_debug(self,
                                                    u'Successfully linked {0} to '
                                                    u'{1} from sub-element'.format(replace_text, table_id))
 
                     if sub_element.tail is not None and replace_text in sub_element.tail:
-                        new_element = self.replace_in_tail(table_id, sub_element, replace_text)
+                        new_element = self.replace_in_tail(table_id, sub_element, replace_text, ref_type)
 
                         self.debug.print_debug(self,
                                                u'Successfully linked {0} to {1} from sub-tail'.format(replace_text,
                                                                                                       table_id))
 
-    def run(self):
+    def run_tables(self):
         manipulate = NlmManipulate(self.gv)
 
         tree = manipulate.load_dom_tree()
@@ -135,7 +135,7 @@ class TableClassifier(Debuggable):
 
         paragraphs = tree.xpath('//p')
 
-        self.link(table_ids, table_titles, paragraphs)
+        self.link(table_ids, table_titles, paragraphs, 'table')
 
         tree.write(self.gv.nlm_file_path)
         tree.write(self.gv.nlm_temp_file_path)
@@ -148,8 +148,8 @@ def main():
     if args['--debug']:
         bare_gv.debug.enable_debug()
 
-    table_classifier_instance = TableClassifier(bare_gv)
-    table_classifier_instance.run()
+    table_classifier_instance = CaptionClassifier(bare_gv)
+    table_classifier_instance.run_tables()
 
 
 if __name__ == '__main__':
