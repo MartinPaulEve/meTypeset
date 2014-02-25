@@ -260,6 +260,7 @@ class ReferenceLinker(Debuggable):
             return "abort"
         elif sel == 'd':
             # delete the surrounding xref
+            self.debug.print_debug(self, u'Deleting reference {0}'.format(p.attrib['id']))
             self.extract_contents(p)
             pass
         elif sel == 'e':
@@ -274,6 +275,11 @@ class ReferenceLinker(Debuggable):
             # skip this item
             prompt.print_(u'Skipping this item')
             pass
+        elif sel == 't':
+            # delete all
+            self.debug.print_debug(self, u'Deleting reference {0}'.format(p.attrib['id']))
+            self.extract_contents(p)
+            return "delall"
         else:
             # numerical input
             selected = candidates[sel - 1]
@@ -296,6 +302,8 @@ class ReferenceLinker(Debuggable):
         # note that we don't want to exit even if there are no references to link because the user may want to delete
         # some
 
+        delete_all = False
+
         for p in tree.xpath('//xref[@ref-type="bibr"]'):
             text = manipulate.get_stripped_text(p)
 
@@ -307,14 +315,21 @@ class ReferenceLinker(Debuggable):
                 prompt.print_(u"Found a handled reference marker: \"{0}\" which links to \"{1}\"".format(text,
                                                                                                          remote_text))
 
-            opts = ('Skip', 'Delete', 'Enter search', 'enter Link id', 'Abort')
+            opts = ('Skip', 'Delete', 'deleTe all', 'Enter search', 'enter Link id', 'Abort')
 
-            sel = prompt.input_options(opts)
+            sel = ''
+
+            if delete_all:
+                sel = 'd'
+            else:
+                sel = prompt.input_options(opts)
 
             result = self.handle_input(manipulate, opts, p, prompt, ref_items, sel)
 
             if result == 'abort':
                 return
+            elif result == 'delall':
+                delete_all = True
 
         tree.write(self.gv.nlm_file_path)
         tree.write(self.gv.nlm_temp_file_path)
