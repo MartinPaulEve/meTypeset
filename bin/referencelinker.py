@@ -249,12 +249,18 @@ class ReferenceLinker(Debuggable):
         self.handle_input(manipulate, opts, p, prompt, ref_items, sel, result_list)
         pass
 
+    def extract_contents(self, p):
+        p.tag = 'REMOVE'
+
+        etree.strip_tags(p.getparent(), 'REMOVE')
+
     def handle_input(self, manipulate, opts, p, prompt, ref_items, sel, candidates=None):
         if sel == 'a':
             prompt.print_(u"Leaving interactive mode on user command")
             return "abort"
         elif sel == 'd':
-            # TODO: delete the surrounding xref
+            # delete the surrounding xref
+            self.extract_contents(p)
             pass
         elif sel == 'e':
             # let the user search references
@@ -287,9 +293,8 @@ class ReferenceLinker(Debuggable):
 
         ref_items = tree.xpath('//back/ref-list/ref')
 
-        if len(ref_items) == 0:
-            self.debug.print_debug(self, 'Found no references to link: leaving interactive mode')
-            return
+        # note that we don't want to exit even if there are no references to link because the user may want to delete
+        # some
 
         for p in tree.xpath('//xref[@ref-type="bibr"]'):
             text = manipulate.get_stripped_text(p)
