@@ -146,7 +146,7 @@ class ReferenceLinker(Debuggable):
                             namespaces={'mml': '"http://www.w3.org/1998/Math/MathML"'}):
             text = manipulate.get_stripped_text(p)
 
-            reference_test = re.compile('\((?P<text>.+?)\)')
+            reference_test = re.compile('^.+\((?P<text>.+?)\)')
             matches = reference_test.finditer(text)
 
             for match in matches:
