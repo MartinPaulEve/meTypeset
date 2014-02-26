@@ -96,7 +96,7 @@ class ReplaceStub(Debuggable):
         # this procedure is more complex than desirable because the content can appear between tags (like italic)
         # otherwise it would be a straight replace
 
-        if self.replace_text in self.paragraph.text:
+        if self.paragraph.text and self.replace_text in self.paragraph.text:
             self.replace_in_text(self.paragraph)
 
             self.debug.print_debug(self, u'Successfully linked {0} stub'.format(self.replace_text))

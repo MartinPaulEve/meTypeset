@@ -326,7 +326,7 @@
       </xsl:for-each>
     </xsl:element>
   </xsl:template>
-  
+
 <!-- Handling of items in profileDesc. -->
   <xsl:template match="profileDesc"><xsl:apply-templates /></xsl:template>
   <xsl:template match="textClass"><xsl:apply-templates /></xsl:template>
@@ -375,13 +375,18 @@
       <xsl:apply-templates />
     </xsl:element>
   </xsl:template>
+
+  <xsl:template match="mml:math">
+    <xsl:copy-of select = "."/>
+  </xsl:template>
   
+
   <xsl:template match="p | ab">
     <xsl:element name="p">
       <xsl:apply-templates />
     </xsl:element>    
   </xsl:template>
-  
+
   <!-- New list types added, according to nlm 
   order           Ordered list. Prefix character is a number or a letter, depending on style.
   bullet          Unordered or bulleted list. Prefix character is a bullet, dash, or other symbol.
@@ -893,5 +898,6 @@ have a shot at styling it. -->
   <xsl:template match="hi[@rend='overline']">
     <xsl:element name="overline"><xsl:apply-templates /></xsl:element>
   </xsl:template>
+
 
 </xsl:stylesheet>
