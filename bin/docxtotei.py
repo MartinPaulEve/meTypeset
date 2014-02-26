@@ -71,13 +71,14 @@ class DocxToTei(Debuggable):
         for image in image_filenames:
             if re.match(r'.+?\.wmf', image) is not None:
                 image_name = re.sub(r'\.wmf', '', image)
-                imagemagick_command = '{3} -d graphics -f png -o {0}/{1}.png ' \
+                imagemagick_command = '{3}*DELIMITER*-d*DELIMITER*graphics*DELIMITER*-f*DELIMITER*png*DELIMITER*-o' \
+                                      '*DELIMITER*{0}/{1}.png*DELIMITER*' \
                                       '{0}/{2}'.format(self.gv.output_media_path, image_name, image,
                                                        self.gv.settings.value_for_tag(self.gv.settings, 'unoconv',
                                                                                       self))
-                self.debug.print_debug(self, 'Calling: {0}'.format(imagemagick_command))
+                self.debug.print_debug(self, 'Calling: {0}'.format(imagemagick_command.replace('*DELIMITER*', ' ')))
 
-                subprocess.call(imagemagick_command.split(' '))
+                subprocess.call(imagemagick_command.split('*DELIMITER*'))
         return True
 
     def clean_proprietary(self):
