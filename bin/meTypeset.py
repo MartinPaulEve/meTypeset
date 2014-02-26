@@ -11,6 +11,7 @@ Options:
     -c, --chain <xslt>                              Specify a subsequent XSL transform to pass the NLM to
     -d, --debug                                     Enable debug output
     -i, --identifiers                               Generate unique identifiers for all supported NLM elements
+    --interactive                                   Enable step-by-step interactive mode
     -h, --help                                      Show this screen.
     -m, --metadata <metadata_file>                  Metadata file
     -s, --settings <settings_file>                  Settings file
@@ -143,7 +144,7 @@ class MeTypeset (Debuggable):
             TeiToNlm(self.gv).run(not found_bibliography)
 
             # run reference linker
-            ReferenceLinker(self.gv).run()
+            ReferenceLinker(self.gv).run(self.args['--interactive'])
 
             # run table classifier
             cc = CaptionClassifier(self.gv)

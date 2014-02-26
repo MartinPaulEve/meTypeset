@@ -128,7 +128,11 @@ class ReferenceLinker(Debuggable):
         self.debug = self.gv.debug
         Debuggable.__init__(self, 'Reference Linker')
 
-    def run(self):
+    def run(self, interactive):
+        if interactive:
+            self.run_prompt()
+            return
+
         manipulate = NlmManipulate(self.gv)
 
         tree = manipulate.load_dom_tree()
