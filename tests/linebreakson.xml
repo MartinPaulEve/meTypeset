@@ -36,6 +36,9 @@
         <mt:metadata-stylesheet>
         metadata/metadata.xsl
         </mt:metadata-stylesheet>
+        <mt:proprietary-math-stylesheet>
+            proprietary/ommlwrapper.xsl
+        </mt:proprietary-math-stylesheet>
     </mt:style-sheets>
     
     <mt:bibliographicdatabase>
