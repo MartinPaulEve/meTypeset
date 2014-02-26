@@ -104,7 +104,7 @@ class ReplaceStub(Debuggable):
 
         for sub_element in self.paragraph:
             if sub_element.tag != 'xref':
-                if self.replace_text in sub_element.text:
+                if sub_element.text and self.replace_text in sub_element.text:
                     self.replace_in_text(sub_element)
 
                     self.debug.print_debug(self,
@@ -142,7 +142,8 @@ class ReferenceLinker(Debuggable):
         to_link = []
         to_stub = []
 
-        for p in tree.xpath('//sec/p'):
+        for p in tree.xpath('//sec/p[not(mml:math)]',
+                            namespaces={'mml': '"http://www.w3.org/1998/Math/MathML"'}):
             text = manipulate.get_stripped_text(p)
 
             reference_test = re.compile('\((?P<text>.+?)\)')
