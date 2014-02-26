@@ -206,7 +206,7 @@ class TeiManipulate(Manipulate):
             elif child.text and child.text.startswith(start_text):
                 child.text = child.text.replace(start_text, '')
             else:
-                if not child.getchildren()[0] is None:
+                if not len(child.getchildren()) == 0:
                     if child.getchildren()[0].tag == "{http://www.tei-c.org/ns/1.0}hi":
                         if not child.getchildren()[0].text is None:
                             if child.getchildren()[0].text.startswith(start_text):
