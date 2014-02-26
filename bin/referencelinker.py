@@ -96,6 +96,10 @@ class ReplaceStub(Debuggable):
         # this procedure is more complex than desirable because the content can appear between tags (like italic)
         # otherwise it would be a straight replace
 
+        if self.replace_text is not None and self.replace_text == '':
+            self.debug.print_debug(self, u'Replace text is empty: bailing')
+            return
+
         if self.paragraph.text and self.replace_text in self.paragraph.text:
             self.replace_in_text(self.paragraph)
 
