@@ -40,6 +40,9 @@
         <mt:metadata-stylesheet>
         metadata/metadata.xsl
         </mt:metadata-stylesheet>
+        <mt:proprietary-math-stylesheet>
+            proprietary/omml2mml.xsl
+        </mt:proprietary-math-stylesheet>
     </mt:style-sheets>
     
     <mt:xml-files>

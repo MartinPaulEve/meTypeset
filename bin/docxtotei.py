@@ -20,22 +20,39 @@ class DocxToTei(Debuggable):
         self.debug = gv.debug
         Debuggable.__init__(self, 'DOCX to TEI')
 
-    def saxon_doc2tei(self):
-            """
-            Creates the appropriate java command to run Saxon
-            @return: a string to run on the command line
-            """
-            cmd = ["java", "-classpath", self.gv.java_class_path,
-                   "-Dxml.catalog.files="+self.gv.runtime_catalog_path,
-                   "net.sf.saxon.Transform",
-                   "-x", "org.apache.xml.resolver.tools.ResolvingXMLReader",
-                   "-y", "org.apache.xml.resolver.tools.ResolvingXMLReader",
-                   "-r",  "org.apache.xml.resolver.tools.CatalogResolver",
-                   "-o", self.gv.tei_file_path,
-                   self.gv.word_document_xml,
-                   self.gv.docx_to_tei_stylesheet
-                   ]
-            return ' '.join(cmd)
+    def saxon_doc_to_tei(self):
+        """
+        Creates the appropriate java command to run Saxon
+        @return: a string to run on the command line
+        """
+        cmd = ["java", "-classpath", self.gv.java_class_path,
+               "-Dxml.catalog.files="+self.gv.runtime_catalog_path,
+               "net.sf.saxon.Transform",
+               "-x", "org.apache.xml.resolver.tools.ResolvingXMLReader",
+               "-y", "org.apache.xml.resolver.tools.ResolvingXMLReader",
+               "-r",  "org.apache.xml.resolver.tools.CatalogResolver",
+               "-o", self.gv.tei_file_path,
+               self.gv.word_document_xml,
+               self.gv.docx_to_tei_stylesheet
+               ]
+        return ' '.join(cmd)
+
+    def saxon_omml_to_mml(self):
+        """
+        Creates the appropriate java command to run Saxon
+        @return: a string to run on the command line
+        """
+        cmd = ["java", "-classpath", self.gv.java_class_path,
+               "-Dxml.catalog.files="+self.gv.runtime_catalog_path,
+               "net.sf.saxon.Transform",
+               "-x", "org.apache.xml.resolver.tools.ResolvingXMLReader",
+               "-y", "org.apache.xml.resolver.tools.ResolvingXMLReader",
+               "-r",  "org.apache.xml.resolver.tools.CatalogResolver",
+               "-o", self.gv.word_document_xml,
+               self.gv.word_document_xml,
+               self.gv.proprietary_style_sheet
+               ]
+        return ' '.join(cmd)
 
     def handle_wmf(self):
         """
@@ -61,11 +78,12 @@ class DocxToTei(Debuggable):
                 subprocess.call(imagemagick_command.split(' '))
         return True
 
-    def run(self, extract):
+    def run(self, extract, run_proprietary):
         """
         This method converts from docx to TEI. It creates the necessary output folders, optionally extracts the file and
         runs the Saxon process necessary to conduct the transform
         @param extract: whether or not to extract a docx file. True to extract, False to work on a pre-extracted folder
+        @param run_proprietary: whether or not to run proprietary math transforms
         """
 
         # make output folders
@@ -76,14 +94,14 @@ class DocxToTei(Debuggable):
 
         #copy folders
         self.gv.copy_folder(self.gv.common2_lib_path,
-                       self.gv.common2_temp_folder_path, False, None)
+                            self.gv.common2_temp_folder_path, False, None)
         self.gv.copy_folder(self.gv.docx_folder_path,
-                       self.gv.docx_temp_folder_path, False, None)
+                            self.gv.docx_temp_folder_path, False, None)
 
         if extract:
             # decompress the docx
             self.debug.print_debug(self, 'Unzipping {0} to {1}'.format(self.gv.input_file_path,
-                                                                          self.gv.docx_temp_folder_path))
+                                                                       self.gv.docx_temp_folder_path))
 
             with zipfile.ZipFile(self.gv.input_file_path, "r") as z:
                 z.extractall(self.gv.docx_temp_folder_path)
@@ -107,8 +125,14 @@ class DocxToTei(Debuggable):
             pass
             #self.gv.tei_file_path = self.gv.tei_file_path + 'tei.xml'
 
+        if run_proprietary:
+            # run a transform on the copied docx to generate a new version of the Word XML that includes MML
+            java_command = self.saxon_omml_to_mml()
+            self.debug.print_debug(self, 'Running saxon transform (DOCX->MML DOCX) [proprietary]')
+            subprocess.call(java_command, stdin=None, shell=True)
+
         # saxon converter
-        java_command = self.saxon_doc2tei()
+        java_command = self.saxon_doc_to_tei()
         self.debug.print_debug(self, 'Running saxon transform (DOCX->TEI)')
         subprocess.call(java_command, stdin=None, shell=True)
 

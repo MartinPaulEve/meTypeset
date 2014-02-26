@@ -56,8 +56,13 @@ class GV (Debuggable):
                 self.docx_temp_folder_path + '/' + settings.value_for_tag(settings, 'word-document-xml', self))
 
             self.docx_style_sheet_dir = settings.concat_path(self.script_dir,
-                                                         settings.value_for_tag(settings, 'docs-style-sheet-path',
-                                                                                self))
+                                                             settings.value_for_tag(settings, 'docs-style-sheet-path',
+                                                                                    self))
+            self.proprietary_style_sheet = settings.concat_path(self.script_dir,
+                                                                settings.value_for_tag(settings,
+                                                                                       'proprietary-math-stylesheet',
+                                                                                       self))
+
             self.docx_to_tei_stylesheet = settings.clean_path(
                 self.docx_temp_folder_path + '/' + settings.value_for_tag(settings, 'doc-to-tei-stylesheet', self))
 

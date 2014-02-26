@@ -14,6 +14,7 @@ Options:
     --interactive                                   Enable step-by-step interactive mode
     -h, --help                                      Show this screen.
     -m, --metadata <metadata_file>                  Metadata file
+    -p, --proprietary                               Enables proprietary math parsing. Requires omml2mml.xsl
     -s, --settings <settings_file>                  Settings file
     -v, --version                                   Show version.
 
@@ -114,10 +115,11 @@ class MeTypeset (Debuggable):
 
             if self.args['docx']:
                 # run docx to tei conversion
-                DocxToTei(self.gv).run(True)
+                # includes hooks for proprietary transforms if enabled
+                DocxToTei(self.gv).run(True, self.args['--proprietary'])
             else:
                 self.debug.print_debug(self, 'Skipping docx extraction')
-                DocxToTei(self.gv).run(False)
+                DocxToTei(self.gv).run(False, self.args['--proprietary'])
 
             # run size classifier
             # aggression 5
