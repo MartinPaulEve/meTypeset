@@ -13,6 +13,8 @@ __author__ = "Dulip Withanage"
 __email__ = "dulip.withanage@gmail.com"
 
 from debug import Debuggable
+from teimanipulate import TeiManipulate
+from lxml import etree
 
 class DocxToTei(Debuggable):
     def __init__(self, gv):
@@ -78,6 +80,26 @@ class DocxToTei(Debuggable):
                 subprocess.call(imagemagick_command.split(' '))
         return True
 
+    def clean_proprietary(self):
+        p = etree.XMLParser(remove_blank_text=True, resolve_entities=False)
+
+        tree = etree.parse(self.gv.word_document_xml, p)
+
+        omml = tree.xpath('//m:oMath', namespaces={'m': 'http://schemas.openxmlformats.org/officeDocument/2006/math'})
+
+        for omml_paragraph in omml:
+            omml_paragraph.tag = '{http://www.w3.org/1998/Math/MathML}math'
+
+        etree.strip_tags(tree, '{http://schemas.openxmlformats.org/officeDocument/2006/math}oMathPara')
+
+        omml = tree.xpath('//m:oMathParaPr',
+                          namespaces={'m': 'http://schemas.openxmlformats.org/officeDocument/2006/math'})
+
+        for omml_paragraph in omml:
+            omml_paragraph.getparent().remove(omml_paragraph)
+
+        tree.write(self.gv.word_document_xml)
+
     def run(self, extract, run_proprietary):
         """
         This method converts from docx to TEI. It creates the necessary output folders, optionally extracts the file and
@@ -130,6 +152,7 @@ class DocxToTei(Debuggable):
             java_command = self.saxon_omml_to_mml()
             self.debug.print_debug(self, 'Running saxon transform (DOCX->MML DOCX) [proprietary]')
             subprocess.call(java_command, stdin=None, shell=True)
+            self.clean_proprietary()
 
         # saxon converter
         java_command = self.saxon_doc_to_tei()
