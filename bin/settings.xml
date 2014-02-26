@@ -41,7 +41,7 @@
         metadata/metadata.xsl
         </mt:metadata-stylesheet>
         <mt:proprietary-math-stylesheet>
-            proprietary/omml2mml.xsl
+            proprietary/ommlwrapper.xsl
         </mt:proprietary-math-stylesheet>
     </mt:style-sheets>
     
