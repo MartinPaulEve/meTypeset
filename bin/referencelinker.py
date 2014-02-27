@@ -4,6 +4,7 @@
 Usage:
     referencelinker.py scan <input> [options]
     referencelinker.py link <input> <source_id> <dest_id> [options]
+    referencelinker.py prune <input> [options]
 
 Options:
     -d, --debug                                     Enable debug output
@@ -343,6 +344,18 @@ class ReferenceLinker(Debuggable):
         tree.write(self.gv.nlm_file_path)
         tree.write(self.gv.nlm_temp_file_path)
 
+    def prune(self):
+        self.debug.print_debug(self, 'Deleting all stubs from article')
+
+        manipulate = NlmManipulate(self.gv)
+
+        tree = manipulate.load_dom_tree()
+
+        for p in tree.xpath('//xref[@ref-type="bibr" and @rid="TO_LINK"]'):
+            self.extract_contents(p)
+
+        tree.write(self.gv.nlm_file_path)
+        tree.write(self.gv.nlm_temp_file_path)
 
 def main():
     args = docopt(__doc__, version='meTypeset 0.1')
@@ -360,6 +373,9 @@ def main():
             rl_instance.run_prompt()
     elif args['link']:
         rl_instance.link_items(args["<source_id>"], args["<dest_id>"])
+
+    elif args['prune']:
+        rl_instance.prune()
 
 if __name__ == '__main__':
     main()
