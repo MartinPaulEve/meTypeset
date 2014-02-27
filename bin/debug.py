@@ -16,9 +16,6 @@ class Debug(object):
         self.debug = False
         self.has_run = False
         self.prompt = None
-        self.got_git_folders = False
-        self.tei_folder_path = None
-        self.nlm_folder_path = None
 
         self.git_objects = []
 
@@ -41,10 +38,12 @@ class Debug(object):
     def mkdir(self, path):
         try:
             os.makedirs(path)
-            self.print_(self, u'Initializing git repo at {0}'.format(path))
-            repo = Git(path)
-            repo.init()
-            self.git_objects.append(repo)
+            
+            if self.debug:
+                self.print_(self, u'Initializing git repo at {0}'.format(path))
+                repo = Git(path)
+                repo.init()
+                self.git_objects.append(repo)
         except:
             self.fatal_error(self, 'Output directory {0} already exists'.format(path))
 
@@ -58,7 +57,9 @@ class Debug(object):
             self.print_(module, message)
 
             # optionally, if the calling module has a "gv" object within it, we will try to take a git snapshot
-
+            for repo in self.git_objects:
+                repo.add('.', with_exceptions=False)
+                repo.commit('-m', message, with_exceptions=False)
 
     def write_error(self, module, message, error_number):
         """
