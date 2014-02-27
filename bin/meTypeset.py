@@ -135,10 +135,12 @@ class MeTypeset (Debuggable):
             # aggression 4
             ListClassifier(self.gv).run()
 
+            bibliography_classifier = BibliographyClassifier(self.gv)
+
             if not found_bibliography:
                 # run bibliographic classifier
                 # aggression 4
-                BibliographyClassifier(self.gv).run()
+                bibliography_classifier.run()
 
             # tei
             # aggression 3
@@ -157,6 +159,9 @@ class MeTypeset (Debuggable):
 
             # run metadata merge
             Metadata(self.gv).run()
+
+            if self.args['--interactive']:
+                bibliography_classifier.run_prompt(True)
 
             # process any bibliography entries that are possible
             BibliographyDatabase(self.gv).run()
