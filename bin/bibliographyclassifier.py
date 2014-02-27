@@ -10,6 +10,7 @@ A class that assists with bibliography classification.
 
 from debug import Debuggable
 
+
 class BibliographyClassifier(Debuggable):
 
     def __init__(self, global_variables):
@@ -21,13 +22,11 @@ class BibliographyClassifier(Debuggable):
         language_list = self.gv.settings.value_for_tag(self.gv.settings, 'reference-languages', self).split(',')
 
         for language in language_list:
-            with open ('{0}/language/ref_marker_{1}.txt'.format(self.gv.script_dir,
-                                                                    language), 'r') as lang_file:
+            with open ('{0}/language/ref_marker_{1}.txt'.format(self.gv.script_dir, language), 'r') as lang_file:
                 lines = lang_file.read().split('\n')
 
                 for line in lines:
                     manipulate.find_references_from_cue(line, tree)
-
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) < 4:

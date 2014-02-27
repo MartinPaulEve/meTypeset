@@ -357,6 +357,7 @@ class ReferenceLinker(Debuggable):
         tree.write(self.gv.nlm_file_path)
         tree.write(self.gv.nlm_temp_file_path)
 
+
 def main():
     args = docopt(__doc__, version='meTypeset 0.1')
     bare_gv = GV(args)
