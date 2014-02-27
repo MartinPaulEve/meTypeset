@@ -28,7 +28,7 @@
                 </name>     
                 <xref ref-type="aff" rid="lincoln" />
             </contrib>
-        <aff id="lincoln">University of Lincoln</aff>
+            <aff id="lincoln"><institution>University of Lincoln</institution></aff>
         </contrib-group>
 
         <pub-date pub-type="epub">
