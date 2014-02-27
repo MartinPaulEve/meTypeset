@@ -372,7 +372,7 @@
   
   <xsl:template match="div/head">
     <xsl:element name="title">
-      <xsl:if test="@rend">
+      <xsl:if test="@rend='ref-list-parent' or @rend='ref-list-before'">
         <xsl:attribute name="meTypesetRender">
           <xsl:message><xsl:value-of select="@rend"/></xsl:message>
           <xsl:value-of select="@rend"/>
