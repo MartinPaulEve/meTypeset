@@ -4,6 +4,8 @@ __author__ = 'Martin Paul Eve'
 __email__ = "martin@martineve.com"
 
 import sys
+import os
+from git import *
 
 class Debug(object):
     def __init__(self):
@@ -14,12 +16,37 @@ class Debug(object):
         self.debug = False
         self.has_run = False
         self.prompt = None
+        self.got_git_folders = False
+        self.tei_folder_path = None
+        self.nlm_folder_path = None
+
+        self.git_objects = []
 
     def enable_debug(self):
         self.debug = True
 
     def enable_prompt(self, prompt):
         self.prompt = prompt
+
+    def print_(self, module, message):
+        if self.prompt is None:
+            print(u'[{0}] {1}'.format(module.get_module_name(), unicode(message)))
+        else:
+            self.prompt.print_(u'[{0}] {1}'.format(self.prompt.colorize('red', module.get_module_name()),
+                                                   unicode(message)))
+
+    def get_module_name(self):
+        return 'Debugger'
+
+    def mkdir(self, path):
+        try:
+            os.makedirs(path)
+            self.print_(self, u'Initializing git repo at {0}'.format(path))
+            repo = Git(path)
+            repo.init()
+            self.git_objects.append(repo)
+        except:
+            self.fatal_error(self, 'Output directory {0} already exists'.format(path))
 
     def print_debug(self, module, message):
         """
@@ -28,11 +55,10 @@ class Debug(object):
         @param message: the debug message to print
         """
         if self.debug:
-            if self.prompt is None:
-                print(u'[{0}] {1}'.format(module.get_module_name(), unicode(message)))
-            else:
-                self.prompt.print_(u'[{0}] {1}'.format(self.prompt.colorize('red', module.get_module_name()),
-                                                       unicode(message)))
+            self.print_(module, message)
+
+            # optionally, if the calling module has a "gv" object within it, we will try to take a git snapshot
+
 
     def write_error(self, module, message, error_number):
         """

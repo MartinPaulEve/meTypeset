@@ -133,10 +133,7 @@ class GV (Debuggable):
         return settings.clean_path(settings.concat_path(path, settings.value_for_tag(settings, tag, self)))
 
     def mk_dir(self, path):
-        try:
-            os.makedirs(path)
-        except:
-            self.debug.fatal_error(self, 'Output directory {0} already exists'.format(path))
+        self.debug.mkdir(path)
 
     def setting(self, tag):
         return self.settings.value_for_tag(self.settings, tag, self)
