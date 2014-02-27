@@ -110,7 +110,7 @@ class ListClassifier(Debuggable):
                     to_append.tag = 'note'
                     to_append.attrib['id'] = 'fn_from_list{0}'.format(iteration + 1)
                     to_append.text = to_append.text[(int(offset) + int(math.floor(int(iteration / 10)))):]
-                    self.debug.print_debug(self, u'Appending ref element: {0}'.format(to_append.text))
+                    self.debug.print_debug(self, u'Appending fn element: {0}'.format(to_append.text))
                     list_element.append(to_append)
 
         return iteration, list_element
@@ -138,6 +138,20 @@ class ListClassifier(Debuggable):
         footnote_test = '//text()[contains(self::text(), "[1]")]'
         footnotes = tree.xpath(footnote_test, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
         is_footnote = len(footnotes) > 1
+
+        # append an attribute to the preceding element to signal a return point for references if they were wrongly
+        # classified
+
+        if not is_footnote and len(elements) > 0:
+            prev = elements[0].getprevious()
+            print prev
+
+            if prev is not None:
+                prev.attrib['rend'] = 'ref-list-before'
+            else:
+                prev = elements[0].getparent()
+                if prev is not None:
+                    prev.attrib['rend'] = 'ref-list-parent'
 
         for element in elements:
             if iteration == 0:

@@ -372,6 +372,12 @@
   
   <xsl:template match="div/head">
     <xsl:element name="title">
+      <xsl:if test="@rend">
+        <xsl:attribute name="meTypesetRender">
+          <xsl:message><xsl:value-of select="@rend"/></xsl:message>
+          <xsl:value-of select="@rend"/>
+        </xsl:attribute>
+      </xsl:if>
       <xsl:apply-templates />
     </xsl:element>
   </xsl:template>

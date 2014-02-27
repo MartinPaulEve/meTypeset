@@ -1,5 +1,20 @@
 #!/usr/bin/env python
+"""bibliographyclassfier.py: a tool to manipulate reference lists
+
+Usage:
+    bibliographyclassifier.py confirm <input> [options]
+
+Options:
+    -d, --debug                                     Enable debug output
+    --interactive                                   Prompt the user to assist in interactive tagging
+    -h, --help                                      Show this screen.
+    -v, --version                                   Show version.
+"""
+
 from teimanipulate import *
+from docopt import docopt
+from bare_globals import GV
+from interactive import Interactive
 
 __author__ = "Martin Paul Eve"
 __email__ = "martin@martineve.com"
@@ -43,3 +58,27 @@ class BibliographyClassifier(Debuggable):
             self.linguistic_cues(tei_manipulator, tree)
 
         tei_manipulator.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]', 'back', 'div', 'type', 'bibliogr')
+
+    def run_prompt(self, interactive):
+        if not interactive:
+            self.debug.fatal_error('Cannot enter confirmation mode without interactive flag')
+
+        prompt = Interactive(self.gv)
+
+        opts = ('Confirm', 'Unconfirm', 'cOnfirm all' 'uNconfirm all' 'Abort')
+
+
+def main():
+    args = docopt(__doc__, version='meTypeset 0.1')
+    bare_gv = GV(args)
+
+    if args['--debug']:
+        bare_gv.debug.enable_debug()
+
+    bc_instance = BibliographyClassifier(bare_gv)
+
+    if args['confirm']:
+        bc_instance.run_prompt(args['--interactive'])
+
+if __name__ == '__main__':
+    main()

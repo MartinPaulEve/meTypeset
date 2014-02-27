@@ -8,7 +8,8 @@ Usage:
 
 Options:
     -a, --aggression <aggression_level>             Parser aggression level 0-10 [default: 10]
-    -c, --chain <xslt>                              Specify a subsequent XSL transform to pass the NLM to
+    --chain <xslt>                                  Specify a subsequent XSL transform to pass the NLM to
+    -c, --clean                                     Produce final XML, not intermediate markup with additional metadata
     -d, --debug                                     Enable debug output
     -i, --identifiers                               Generate unique identifiers for all supported NLM elements
     --interactive                                   Enable step-by-step interactive mode
@@ -42,6 +43,7 @@ from xslchainer import XslChain
 from settingsconfiguration import SettingsConfiguration
 from idgenerator import IdGenerator
 from captionclassifier import CaptionClassifier
+from complianceenforcer import ComplianceEnforcer
 
 
 # check whether lxml is installed
@@ -165,6 +167,9 @@ class MeTypeset (Debuggable):
             if self.args['--chain']:
                 # construct and run an XSLT chainer
                 XslChain(self.gv).run()
+
+            if self.args['--clean']:
+                ComplianceEnforcer(self.gv).run()
 
     def run(self):
         self.run_modules()
