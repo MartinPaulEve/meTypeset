@@ -44,6 +44,7 @@ from settingsconfiguration import SettingsConfiguration
 from idgenerator import IdGenerator
 from captionclassifier import CaptionClassifier
 from complianceenforcer import ComplianceEnforcer
+from interactive import Interactive
 
 
 # check whether lxml is installed
@@ -74,6 +75,8 @@ class MeTypeset (Debuggable):
         self.settings = SettingsConfiguration(SettingsConfiguration.get_settings_file(self, self.settings_file_path),
                                               self.args)
         self.gv = GV(self.settings, self.debug)
+
+        self.debug.enable_prompt(Interactive(self.gv))
 
     @staticmethod
     def read_command_line():

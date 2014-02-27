@@ -363,7 +363,6 @@ class Interactive(Debuggable):
             txt = txt.encode(self._encoding(), 'replace')
         print(txt)
 
-
     def color_diff_suffix(self, a, b, highlight='red'):
         """Colorize the differing suffix between two strings."""
         a, b = unicode(a), unicode(b)

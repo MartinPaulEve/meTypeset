@@ -13,9 +13,13 @@ class Debug(object):
         """
         self.debug = False
         self.has_run = False
+        self.prompt = None
 
     def enable_debug(self):
         self.debug = True
+
+    def enable_prompt(self, prompt):
+        self.prompt = prompt
 
     def print_debug(self, module, message):
         """
@@ -24,7 +28,11 @@ class Debug(object):
         @param message: the debug message to print
         """
         if self.debug:
-            print(u'[{0}] {1}'.format(module.get_module_name(), unicode(message)))
+            if self.prompt is None:
+                print(u'[{0}] {1}'.format(module.get_module_name(), unicode(message)))
+            else:
+                self.prompt.print_(u'[{0}] {1}'.format(self.prompt.colorize('red', module.get_module_name()),
+                                                       unicode(message)))
 
     def write_error(self, module, message, error_number):
         """
