@@ -56,11 +56,13 @@ class ReplaceObject(Debuggable):
 
 
 class ReplaceStub(Debuggable):
-    def __init__(self, global_variables, paragraph, replace_text):
+    def __init__(self, global_variables, paragraph, replace_text, tree, manipulate):
         self.paragraph = paragraph
         self.replace_text = replace_text
         self.gv = global_variables
         self.debug = self.gv.debug
+        self.tree = tree
+        self.manipulate = manipulate
         Debuggable.__init__(self, 'Reference Stub Linker Object')
 
     def replace_in_text(self, element):
@@ -104,6 +106,8 @@ class ReplaceStub(Debuggable):
         if self.paragraph.text and self.replace_text in self.paragraph.text:
             self.replace_in_text(self.paragraph)
 
+            self.manipulate.save_tree(self.tree)
+
             self.debug.print_debug(self, u'Successfully linked {0} stub'.format(self.replace_text))
             return
 
@@ -112,17 +116,22 @@ class ReplaceStub(Debuggable):
                 if sub_element.text and self.replace_text in sub_element.text:
                     self.replace_in_text(sub_element)
 
+                    self.manipulate.save_tree(self.tree)
+
                     self.debug.print_debug(self,
-                                           u'Successfully linked {0} stub'.format(self.replace_text))
+                                           u'Successfully linked {0} stub from sub element'.format(self.replace_text))
                     return
 
             if sub_element.tail is not None and self.replace_text in sub_element.tail:
                 new_element = self.replace_in_tail(sub_element)
 
+                self.manipulate.save_tree(self.tree)
+
                 self.debug.print_debug(self,
-                                       u'Successfully linked {0} stub'.format(self.replace_text))
+                                       u'Successfully linked {0} stub from sub element tail'.format(self.replace_text))
 
                 return
+
 
         self.debug.print_debug(self, u'Failed to link {0} stub'.format(self.replace_text))
 
@@ -156,7 +165,7 @@ class ReferenceLinker(Debuggable):
 
             for match in matches:
                 for item in match.group('text').split(u';'):
-                    to_stub.append(ReplaceStub(self.gv, p, item.strip()))
+                    to_stub.append(ReplaceStub(self.gv, p, item.strip(), tree, manipulate))
 
         for link in to_stub:
             link.link()
