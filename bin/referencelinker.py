@@ -111,6 +111,15 @@ class ReplaceStub(Debuggable):
             self.debug.print_debug(self, u'Successfully linked {0} stub'.format(self.replace_text))
             return
 
+        if self.paragraph.text and self.replace_text in self.paragraph.text and len(self.paragraph) > 0:
+            self.replace_in_text(self.paragraph)
+
+            self.manipulate.save_tree(self.tree)
+
+            self.debug.print_debug(self, u'Successfully linked {0} stub with sub elements'.format(self.replace_text))
+
+            return
+
         for sub_element in self.paragraph:
             if sub_element.tag != 'xref':
                 if sub_element.text and self.replace_text in sub_element.text:
@@ -377,10 +386,8 @@ def main():
     rl_instance = ReferenceLinker(bare_gv)
 
     if args['scan']:
-        rl_instance.run()
+        rl_instance.run(args['--interactive'])
 
-        if args['--interactive']:
-            rl_instance.run_prompt()
     elif args['link']:
         rl_instance.link_items(args["<source_id>"], args["<dest_id>"])
 
