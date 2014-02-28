@@ -67,7 +67,9 @@ class ReplaceStub(Debuggable):
 
     def replace_in_text(self, element):
         before_after = element.text.split(self.replace_text, 1)
-        element.text = before_after[0]
+
+        encapsulate = etree.Element(element.tag)
+        encapsulate.text = before_after[0]
 
         new_element = etree.Element('xref')
         new_element.attrib['rid'] = 'TO_LINK'
@@ -76,7 +78,13 @@ class ReplaceStub(Debuggable):
         new_element.text = self.replace_text
         new_element.tail = ''.join(before_after[1:])
 
-        element.append(new_element)
+        encapsulate.append(new_element)
+
+        for sub_element in element:
+            encapsulate.append(sub_element)
+
+        element.addnext(encapsulate)
+        element.getparent().remove(element)
 
     def replace_in_tail(self, element):
 
