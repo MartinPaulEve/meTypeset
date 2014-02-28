@@ -20,9 +20,18 @@ class ComplianceEnforcer(Debuggable):
 
         render_attributes = tree.xpath('//*[@meTypesetRender]')
 
-        self.debug.print_debug(self, u'Removing {0} meTypesetRender attributes'.format(len(render_attributes)))
-
         for attribute in render_attributes:
             del attribute.attrib['meTypesetRender']
 
         manipulate.save_tree(tree)
+        self.debug.print_debug(self, u'Removing {0} meTypesetRender attributes'.format(len(render_attributes)))
+
+        unlinked_xrefs = tree.xpath('//xref')
+
+        for xref in unlinked_xrefs:
+            if 'rid' in xref.attrib and xref.attrib['rid'] == 'TO_LINK':
+                xref.tag = 'REMOVE'
+                etree.strip_tags(xref.getparent(), 'REMOVE')
+
+        manipulate.save_tree(tree)
+        self.debug.print_debug(self, u'Removing {0} unlinked xref elements'.format(len(unlinked_xrefs)))
