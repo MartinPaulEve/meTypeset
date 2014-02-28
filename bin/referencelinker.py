@@ -103,7 +103,7 @@ class ReplaceStub(Debuggable):
             self.debug.print_debug(self, u'Replace text is empty: bailing')
             return
 
-        if self.paragraph.text and self.replace_text in self.paragraph.text:
+        if self.paragraph.text and self.replace_text in self.paragraph.text and len(self.paragraph) == 0:
             self.replace_in_text(self.paragraph)
 
             self.manipulate.save_tree(self.tree)
