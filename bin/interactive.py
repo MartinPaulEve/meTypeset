@@ -26,7 +26,6 @@ from difflib import SequenceMatcher
 import locale
 
 
-
 class Interactive(Debuggable):
     def __init__(self, global_variables):
         self.gv = global_variables
@@ -201,7 +200,6 @@ class Interactive(Debuggable):
             # Prompt for new input.
             resp = self.input_(fallback_prompt)
 
-
     def input_(self, prompt=None):
         """Like `raw_input`, but decodes the result to a Unicode string.
         Raises a UserError if stdin is not available. The prompt is sent to
@@ -249,8 +247,8 @@ class Interactive(Debuggable):
 
     def colorize(self, color, text):
         """Colorize text if colored output is enabled. (Like _colorize but
-    conditional.)
-    """
+        conditional.)
+        """
         if self.gv.settings.value_for_tag(self.gv.settings, 'color', self) == 'True':
             return self._colorize(color, text)
         else:

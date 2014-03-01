@@ -41,6 +41,10 @@
         </mt:proprietary-math-stylesheet>
     </mt:style-sheets>
 
+    <mt:display>
+        <mt:color>False</mt:color>
+    </mt:display>
+
     <mt:languages>
         <mt:reference-languages>en</mt:reference-languages>
     </mt:languages>

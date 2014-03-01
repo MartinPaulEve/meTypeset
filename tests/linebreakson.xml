@@ -22,6 +22,10 @@
 	<mt:nlm>nlm</mt:nlm>
 	<mt:media>media</mt:media>
     </mt:folders>
+
+    <mt:display>
+        <mt:color>False</mt:color>
+    </mt:display>
     
     <mt:style-sheets>
         <mt:docs-style-sheet-path>
