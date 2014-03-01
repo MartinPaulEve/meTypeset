@@ -66,6 +66,10 @@ class ReplaceStub(Debuggable):
         Debuggable.__init__(self, 'Reference Stub Linker Object')
 
     def replace_in_text(self, element):
+        if not self.replace_text in element.text:
+            # safety check: if not in the text, just return
+            return element
+
         before_after = element.text.split(self.replace_text, 1)
 
         encapsulate = etree.Element(element.tag)
@@ -86,6 +90,8 @@ class ReplaceStub(Debuggable):
         element.addnext(encapsulate)
         element.getparent().remove(element)
 
+        return encapsulate
+
     def replace_in_tail(self, element):
 
         before_after = element.tail.split(self.replace_text, 1)
@@ -103,7 +109,19 @@ class ReplaceStub(Debuggable):
 
         return new_element
 
-    def link(self):
+    def replace_in_text_and_update_others(self, object_list):
+        to_update = []
+        if object_list is not None:
+            for item in object_list:
+                if item.paragraph is self.paragraph:
+                    to_update.append(item)
+
+        self.paragraph = self.replace_in_text(self.paragraph)
+
+        for item in to_update:
+            item.paragraph = self.paragraph
+
+    def link(self, object_list = None):
         # this procedure is more complex than desirable because the content can appear between tags (like italic)
         # otherwise it would be a straight replace
 
@@ -111,21 +129,26 @@ class ReplaceStub(Debuggable):
             self.debug.print_debug(self, u'Replace text is empty: bailing')
             return
 
-        if self.paragraph.text and self.replace_text in self.paragraph.text and len(self.paragraph) == 0:
-            self.replace_in_text(self.paragraph)
-
-            self.manipulate.save_tree(self.tree)
-
-            self.debug.print_debug(self, u'Successfully linked {0} stub'.format(self.replace_text))
-            return
-
         if self.paragraph.text and self.replace_text in self.paragraph.text and len(self.paragraph) > 0:
-            self.replace_in_text(self.paragraph)
+            self.replace_in_text_and_update_others(object_list)
 
             self.manipulate.save_tree(self.tree)
 
             self.debug.print_debug(self, u'Successfully linked {0} stub with sub elements'.format(self.replace_text))
 
+            self.tree = self.manipulate.load_dom_tree()
+
+            return
+
+        if self.paragraph.text and self.replace_text in self.paragraph.text and len(self.paragraph) == 0:
+            self.replace_in_text_and_update_others(object_list)
+            self.paragraph = self.replace_in_text(self.paragraph)
+
+            self.manipulate.save_tree(self.tree)
+
+            self.debug.print_debug(self, u'Successfully linked {0} stub'.format(self.replace_text))
+
+            self.tree = self.manipulate.load_dom_tree()
             return
 
         for sub_element in self.paragraph:
@@ -185,7 +208,7 @@ class ReferenceLinker(Debuggable):
                     to_stub.append(ReplaceStub(self.gv, p, item.strip(), tree, manipulate))
 
         for link in to_stub:
-            link.link()
+            link.link(to_stub)
             #pass
 
         if len(ref_items) == 0:
