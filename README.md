@@ -37,11 +37,14 @@ Usage:
 
 Options:
     -a, --aggression <aggression_level>             Parser aggression level 0-10 [default: 10]
-    -c, --chain <xslt>                              Specify a subsequent XSL transform to pass the NLM to
+    --chain <xslt>                                  Specify a subsequent XSL transform to pass the NLM to
+    -c, --clean                                     Produce final XML, not intermediate markup with additional metadata
     -d, --debug                                     Enable debug output
     -i, --identifiers                               Generate unique identifiers for all supported NLM elements
+    --interactive                                   Enable step-by-step interactive mode
     -h, --help                                      Show this screen.
     -m, --metadata <metadata_file>                  Metadata file
+    -p, --proprietary                               Enables proprietary math parsing. Requires omml2mml.xsl
     -s, --settings <settings_file>                  Settings file
     -v, --version                                   Show version.
 ```
@@ -79,9 +82,11 @@ If called with the "link" option, the reference linker will change the "rid" att
 Usage:
     referencelinker.py scan <input> [options]
     referencelinker.py link <input> <source_id> <dest_id> [options]
+    referencelinker.py prune <input> [options]
 
 Options:
     -d, --debug                                     Enable debug output
+    --interactive                                   Prompt the user to assist in interactive tagging
     -h, --help                                      Show this screen.
     -v, --version                                   Show version.
 """
