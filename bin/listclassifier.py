@@ -296,6 +296,23 @@ class ListClassifier(Debuggable):
 
             current = 0
             for footnote in footnote_list:
+                self.debug.print_debug(self, u'Processing footnote {0}'.format(current + 1))
+
+                # safety check: if found[current] is a parent of the footnote, bail
+                try:
+                    while True:
+                        parent = footnote.getparent()
+
+                        if parent is None:
+                            break
+
+                        if parent is found[current]:
+                            self.debug.print_debug(self, u'Aborting footnote matching: a footnote\'s text was the '
+                                                         u'parent of the sub-element.')
+                            return
+                except:
+                    pass
+
                 # null the text (this will be generated automatically)
                 footnote.text = ''
 
