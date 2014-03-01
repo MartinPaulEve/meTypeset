@@ -239,7 +239,7 @@ class TeiManipulate(Manipulate):
                         for element in child.xpath(sub_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
                             element.attrib['rend'] = 'Bibliography'
                 else:
-                    self.debug.print_debug(self, 'Failed to find sibling in bibliographic addin classification')
+                    self.debug.print_debug(self, u'Failed to find sibling in bibliographic addin classification')
 
         tree.write(self.gv.tei_file_path)
 
@@ -362,7 +362,7 @@ class TeiManipulate(Manipulate):
 
         # search the tree and grab the parent
         for child in tree.xpath(outer_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            self.debug.print_debug(self, 'Enclosing and changing size: {0} to {1}'.format(child.tag, change_tag))
+            self.debug.print_debug(self, u'Enclosing and changing size: {0} to {1}'.format(child.tag, change_tag))
             new_element = etree.Element(tag)
             child.attrib[u'meTypesetSize'] = size_attribute
             child.tag = change_tag
@@ -395,7 +395,7 @@ class TeiManipulate(Manipulate):
                                        namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
         for node_to_downsize in nodes_to_downsize:
             node_to_downsize.attrib['meTypesetSize'] = new_size
-            self.debug.print_debug(self, 'Resizing node from: {0} to {1}'.format(old_size, new_size))
+            self.debug.print_debug(self, u'Resizing node from: {0} to {1}'.format(old_size, new_size))
 
         tree.write(self.gv.tei_file_path)
 
@@ -406,7 +406,7 @@ class TeiManipulate(Manipulate):
         div = etree.Element('div')
         node.addprevious(div)
 
-        self.debug.print_debug(self, 'Selecting for enclosure: {0}'.format(select_xpath))
+        self.debug.print_debug(self, u'Selecting for enclosure: {0}'.format(select_xpath))
 
         # search the tree and grab the elements
         child = tree.xpath(select_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
@@ -420,7 +420,7 @@ class TeiManipulate(Manipulate):
     def enclose_all(self, start_xpath, new_enclose, start_index):
         tree = self.load_dom_tree()
 
-        self.debug.print_debug(self, 'Selecting for enclosure: {0}'.format(start_xpath))
+        self.debug.print_debug(self, u'Selecting for enclosure: {0}'.format(start_xpath))
 
         # search the tree and grab the elements
         child = tree.xpath(start_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
@@ -464,12 +464,12 @@ class TeiManipulate(Manipulate):
             # TODO: this is unsafe and trashes vast portions of documents; needs investigation
             count += 1
 
-        self.debug.print_debug(self, 'Removed {0} nodes during cleanup'.format(count))
+        self.debug.print_debug(self, u'Removed {0} nodes during cleanup'.format(count))
         tree.write(self.gv.tei_file_path)
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) < 3:
-            self.debug.print_debug(self, 'Aggression level less than 3: exiting module.')
+            self.debug.print_debug(self, u'Aggression level less than 3: exiting module.')
             return
         # convert .wmf image links to png
         self.change_wmf_image_links()

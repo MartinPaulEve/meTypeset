@@ -249,7 +249,7 @@ class ListClassifier(Debuggable):
         tree.write(self.gv.tei_file_path)
 
     def process_superscript_footnotes(self, tree, manipulate):
-        self.debug.print_debug(self, 'Scanning for superscripted footnote entries')
+        self.debug.print_debug(self, u'Scanning for superscripted footnote entries')
 
         superscripts = reversed(tree.xpath('//*[@rend="superscript"]'))
 
@@ -263,7 +263,7 @@ class ListClassifier(Debuggable):
                 footnote_text.append(text)
 
         if len(footnote_list) == 0:
-            self.debug.print_debug(self, 'Found no superscripted footnote entries')
+            self.debug.print_debug(self, u'Found no superscripted footnote entries')
             return
 
         # if it doesn't work, this is an expensive operation
@@ -292,7 +292,7 @@ class ListClassifier(Debuggable):
         # note: all lists are reversed by this point (ie go from the back of the document upwards)
 
         if len(found) == len(footnote_list):
-            self.debug.print_debug(self, 'Found superscripted footnote entries')
+            self.debug.print_debug(self, u'Found superscripted footnote entries')
 
             current = 0
             for footnote in footnote_list:
@@ -318,7 +318,7 @@ class ListClassifier(Debuggable):
 
                 current += 1
         else:
-            self.debug.print_debug(self, 'Found {0} superscripted footnote entries but could not correlate this with'
+            self.debug.print_debug(self, u'Found {0} superscripted footnote entries but could not correlate this with'
                                          ' {1} paragraph entries'.format(len(footnote_list), len(found)))
 
         tree.write(self.gv.tei_file_path)
@@ -387,7 +387,7 @@ class ListClassifier(Debuggable):
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) < 4:
-            self.debug.print_debug(self, 'Aggression level less than 4: exiting module.')
+            self.debug.print_debug(self, u'Aggression level less than 4: exiting module.')
             return
 
         # load the DOM
@@ -413,7 +413,7 @@ class ListClassifier(Debuggable):
                 # look for footnote list [1], [2] etc.
                 self.process_enclosed_ref_list(tree, manipulate, string_version)
             except:
-                self.debug.print_debug(self, 'Error processing footnote or reference list. Reverting to backup tree')
+                self.debug.print_debug(self, u'Error processing footnote or reference list. Reverting to backup tree')
                 tree = backup_tree
                 tree.write(self.gv.tei_file_path)
 

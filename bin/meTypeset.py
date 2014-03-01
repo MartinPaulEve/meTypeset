@@ -95,7 +95,7 @@ class MeTypeset (Debuggable):
                                                                                 'default-metadata-file-path',
                                                                                 self)))
 
-            self.debug.print_debug(self, 'Metadata file wasn\'t specified. '
+            self.debug.print_debug(self, u'Metadata file wasn\'t specified. '
                                          'Falling back to {0}'.format(metadata_file))
 
         return metadata_file
@@ -123,7 +123,7 @@ class MeTypeset (Debuggable):
                 # includes hooks for proprietary transforms if enabled
                 DocxToTei(self.gv).run(True, self.args['--proprietary'])
             else:
-                self.debug.print_debug(self, 'Skipping docx extraction')
+                self.debug.print_debug(self, u'Skipping docx extraction')
                 DocxToTei(self.gv).run(False, self.args['--proprietary'])
 
             # run size classifier

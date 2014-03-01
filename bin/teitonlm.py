@@ -42,7 +42,7 @@ class TeiToNlm (Debuggable):
         #manipulate.tag_inline_refs()
 
         if process_ref_lists:
-            self.debug.print_debug(self, 'Finding potential reference lists')
+            self.debug.print_debug(self, u'Finding potential reference lists')
             manipulate.find_reference_list()
             manipulate.tag_bibliography_refs()
 
@@ -53,7 +53,7 @@ class TeiToNlm (Debuggable):
     def run_transform(self):
         self.gv.mk_dir(self.gv.nlm_folder_path)
         java_command = self.saxon_tei2nlm()
-        self.debug.print_debug(self, 'Running saxon transform (TEI->NLM)')
+        self.debug.print_debug(self, u'Running saxon transform (TEI->NLM)')
         subprocess.call(java_command, stdin=None, shell=True)
 
         if self.gv.nlm_temp_file_path != self.gv.nlm_file_path:

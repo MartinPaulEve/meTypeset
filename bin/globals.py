@@ -123,7 +123,7 @@ class GV (Debuggable):
 
     def check_file_exists(self, file_path):
         if file_path is None:
-            self.debug.print_debug(self, 'An empty file path was passed')
+            self.debug.print_debug(self, u'An empty file path was passed')
         try:
             os.path.isfile(file_path)
         except:

@@ -189,7 +189,7 @@ class ReferenceLinker(Debuggable):
             #pass
 
         if len(ref_items) == 0:
-            self.debug.print_debug(self, 'Found no references to link')
+            self.debug.print_debug(self, u'Found no references to link')
 
             tree.write(self.gv.nlm_file_path)
             tree.write(self.gv.nlm_temp_file_path)
@@ -226,7 +226,7 @@ class ReferenceLinker(Debuggable):
                     to_link.append(ReplaceObject(self.gv, p, ref))
 
         if len(to_link) == 0:
-            self.debug.print_debug(self, 'Found no references to link')
+            self.debug.print_debug(self, u'Found no references to link')
 
         for link in to_link:
             link.link()
@@ -263,7 +263,7 @@ class ReferenceLinker(Debuggable):
         return results
 
     def link_items(self, source_id, dest_id):
-        self.debug.print_debug(self, 'Attempting to link XREF {0} to REF {1}'.format(source_id, dest_id))
+        self.debug.print_debug(self, u'Attempting to link XREF {0} to REF {1}'.format(source_id, dest_id))
 
         manipulate = NlmManipulate(self.gv)
 
@@ -325,7 +325,7 @@ class ReferenceLinker(Debuggable):
 
 
     def run_prompt(self):
-        self.debug.print_debug(self, 'Entering interactive mode')
+        self.debug.print_debug(self, u'Entering interactive mode')
 
         prompt = Interactive(self.gv)
 
@@ -371,7 +371,7 @@ class ReferenceLinker(Debuggable):
         tree.write(self.gv.nlm_temp_file_path)
 
     def prune(self):
-        self.debug.print_debug(self, 'Deleting all stubs from article')
+        self.debug.print_debug(self, u'Deleting all stubs from article')
 
         manipulate = NlmManipulate(self.gv)
 

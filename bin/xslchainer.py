@@ -32,7 +32,7 @@ class XslChain (Debuggable):
         self.gv.mk_dir(self.gv.xsl_folder_path)
         java_command = self.saxon_arbitrary_xsl()
         print(java_command)
-        self.debug.print_debug(self, 'Running saxon transform (XSL CHAIN)')
+        self.debug.print_debug(self, u'Running saxon transform (XSL CHAIN)')
         subprocess.call(java_command, stdin=None, shell=True)
 
     def run(self):

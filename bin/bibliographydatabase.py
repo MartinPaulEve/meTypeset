@@ -326,7 +326,7 @@ class BibliographyDatabase(Debuggable):
 
 
     def store_key(self, db, item, key):
-        self.debug.print_debug(self, 'Storing {0}'.format(key))
+        self.debug.print_debug(self, u'Storing {0}'.format(key))
         db[key] = item
 
     def store_journal_item(self, db, tree):
@@ -370,7 +370,7 @@ class BibliographyDatabase(Debuggable):
         manipulate = NlmManipulate(self.gv)
 
         # open the database
-        self.debug.print_debug(self, 'Opening database: {0}'.format(self.gv.database_file_path))
+        self.debug.print_debug(self, u'Opening database: {0}'.format(self.gv.database_file_path))
         db = shelve.open(self.gv.database_file_path)
 
         # we /could/ use objectify, which would be cleaner, but it doesn't allow such rigidity of parsing
@@ -446,7 +446,7 @@ class BibliographyDatabase(Debuggable):
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) >= self.aggression:
-            self.debug.print_debug(self, 'Opening database: {0}'.format(self.gv.database_file_path))
+            self.debug.print_debug(self, u'Opening database: {0}'.format(self.gv.database_file_path))
             db = shelve.open(self.gv.database_file_path)
 
             manipulate, master_tree = self.process_database_references(db)

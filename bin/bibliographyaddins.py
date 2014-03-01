@@ -139,7 +139,7 @@ class BibliographyAddins(Debuggable):
         Run the procedure to process different types of bibliography
         """
         if int(self.gv.settings.args['--aggression']) < 4:
-            self.debug.print_debug(self, 'Aggression level less than 4: exiting module.')
+            self.debug.print_debug(self, u'Aggression level less than 4: exiting module.')
             return
 
         self.zotero_items = self.zotero_handler.run()

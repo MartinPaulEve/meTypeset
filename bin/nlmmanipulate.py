@@ -115,7 +115,7 @@ class NlmManipulate(Manipulate):
         new_element = etree.Element(tag_name)
         new_element.text = ''
         nodes_to_copy = node.xpath('//{0}/following-sibling::node()'.format(search_xpath))
-        self.debug.print_debug(self, 'Found {0} nodes to copy: {1}'.format(len(nodes_to_copy),
+        self.debug.print_debug(self, u'Found {0} nodes to copy: {1}'.format(len(nodes_to_copy),
                                                                            nodes_to_copy))
         #for element in nodes_to_copy:
         element = nodes_to_copy[0]
@@ -180,14 +180,14 @@ class NlmManipulate(Manipulate):
         tree = self.load_dom_tree()
 
         initial_nodes = tree.xpath('//{0}//{1}'.format(tag_name, search_xpath))
-        self.debug.print_debug(self, 'Found {0} {1} nodes on which to close and open tag {2}'.format(
+        self.debug.print_debug(self, u'Found {0} {1} nodes on which to close and open tag {2}'.format(
             len(initial_nodes), search_xpath, tag_name))
 
         nested_sibling = None
         bail = False
 
         if len(initial_nodes) > 80 and int(self.gv.settings.args["--aggression"]) < 11:
-            self.debug.print_debug(self, 'Bailing from replacement of tag {0} [limit exceeded]'.format(search_xpath))
+            self.debug.print_debug(self, u'Bailing from replacement of tag {0} [limit exceeded]'.format(search_xpath))
             self.debug.write_error(self,
                                    'Bailing from replacement of tag {0} [limit exceeded]'.format(search_xpath),
                                    '001')
@@ -222,7 +222,7 @@ class NlmManipulate(Manipulate):
         tree = self.load_dom_tree()
 
         initial_nodes = tree.xpath('//{0}//{1}'.format(tag_name,search_xpath))
-        self.debug.print_debug(self, 'Found {0} {1} nodes on which to insert break: {2}'.format(
+        self.debug.print_debug(self, u'Found {0} {1} nodes on which to insert break: {2}'.format(
             len(initial_nodes), search_xpath, tag_name))
 
         for node in initial_nodes:
@@ -422,10 +422,10 @@ class NlmManipulate(Manipulate):
                                '//sec[@reflist="yes"]/*/p[@rend="ref"]'):
 
             if refs.tag == 'title':
-                self.debug.print_debug(self, 'Removing title element from reference item')
+                self.debug.print_debug(self, u'Removing title element from reference item')
                 refs.getparent().remove(refs)
             else:
-                self.debug.print_debug(self, 'Tagging element "{0}" as reference item'.format(refs.tag))
+                self.debug.print_debug(self, u'Tagging element "{0}" as reference item'.format(refs.tag))
                 refs.tag = 'ref'
                 refs.attrib['id'] = str(rid)
                 rid += 1

@@ -65,7 +65,7 @@ class DocxToTei(Debuggable):
         image_filenames = os.listdir(self.gv.output_media_path)
 
         if len(image_filenames) > 30:
-            self.debug.print_debug(self, 'Abandoning image conversion as there are over thirty images (DoS mitigation)')
+            self.debug.print_debug(self, u'Abandoning image conversion as there are over thirty images (DoS mitigation)')
             return False
 
         for image in image_filenames:
@@ -76,7 +76,7 @@ class DocxToTei(Debuggable):
                                       '{0}/{2}'.format(self.gv.output_media_path, image_name, image,
                                                        self.gv.settings.value_for_tag(self.gv.settings, 'unoconv',
                                                                                       self))
-                self.debug.print_debug(self, 'Calling: {0}'.format(imagemagick_command.replace('*DELIMITER*', ' ')))
+                self.debug.print_debug(self, u'Calling: {0}'.format(imagemagick_command.replace('*DELIMITER*', ' ')))
 
                 subprocess.call(imagemagick_command.split('*DELIMITER*'))
         return True
@@ -123,7 +123,7 @@ class DocxToTei(Debuggable):
 
         if extract:
             # decompress the docx
-            self.debug.print_debug(self, 'Unzipping {0} to {1}'.format(self.gv.input_file_path,
+            self.debug.print_debug(self, u'Unzipping {0} to {1}'.format(self.gv.input_file_path,
                                                                        self.gv.docx_temp_folder_path))
 
             with zipfile.ZipFile(self.gv.input_file_path, "r") as z:
@@ -131,10 +131,10 @@ class DocxToTei(Debuggable):
         else:
             self.gv.copy_folder(self.gv.input_file_path, self.gv.docx_temp_folder_path)
 
-        self.debug.print_debug(self, 'Looking for presence of media directory {0}'.format(self.gv.docx_media_path))
+        self.debug.print_debug(self, u'Looking for presence of media directory {0}'.format(self.gv.docx_media_path))
 
         if os.path.isdir(self.gv.docx_media_path):
-            self.debug.print_debug(self, 'Ripping out media directory')
+            self.debug.print_debug(self, u'Ripping out media directory')
 
             self.gv.mk_dir(self.gv.output_media_path)
             self.gv.copy_folder(self.gv.docx_media_path, self.gv.output_media_path, False, None)
@@ -151,13 +151,13 @@ class DocxToTei(Debuggable):
         if run_proprietary:
             # run a transform on the copied docx to generate a new version of the Word XML that includes MML
             java_command = self.saxon_omml_to_mml()
-            self.debug.print_debug(self, 'Running saxon transform (DOCX->MML DOCX) [proprietary]')
+            self.debug.print_debug(self, u'Running saxon transform (DOCX->MML DOCX) [proprietary]')
             subprocess.call(java_command, stdin=None, shell=True)
             self.clean_proprietary()
 
         # saxon converter
         java_command = self.saxon_doc_to_tei()
-        self.debug.print_debug(self, 'Running saxon transform (DOCX->TEI)')
+        self.debug.print_debug(self, u'Running saxon transform (DOCX->TEI)')
         subprocess.call(java_command, stdin=None, shell=True)
 
         # delete temp folders

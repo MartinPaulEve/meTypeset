@@ -240,7 +240,7 @@ class SizeClassifier(Debuggable):
                     self.enclose_larger_heading(iteration, manipulate, next_size, section_ids, section_stack,
                                                 size, next_id)
 
-                    self.debug.print_debug(self, 'Previous section stack: {0}'.format(section_stack))
+                    self.debug.print_debug(self, u'Previous section stack: {0}'.format(section_stack))
 
                     # create a slice of the stack so that we can modify the original while iterating
                     temp_stack = section_stack[:]
@@ -252,7 +252,7 @@ class SizeClassifier(Debuggable):
                         section_ids.pop()
                         pointer -= 1
 
-                    self.debug.print_debug(self, 'New section stack: {0}'.format(section_stack))
+                    self.debug.print_debug(self, u'New section stack: {0}'.format(section_stack))
 
                     # set the processed flag so that the next enclosure isn't handled
                     processed_flag = True
@@ -305,9 +305,9 @@ class SizeClassifier(Debuggable):
                     sizes_ordered = [root_size if x == size else x for x in sizes_ordered]
 
         if len(set(sizes_ordered)) == 1:
-            self.debug.print_debug(self, 'After normalization, found a single heading size. Treating as such')
+            self.debug.print_debug(self, u'After normalization, found a single heading size. Treating as such')
             self.handle_single_size(manipulate, sizes)
-            self.debug.print_debug(self, 'Shutting down module')
+            self.debug.print_debug(self, u'Shutting down module')
             return
 
         for size in sizes_ordered:
@@ -394,7 +394,7 @@ class SizeClassifier(Debuggable):
                                               'Heading 9': 20}.items())
 
         for key, value in headings.iteritems():
-            self.debug.print_debug(self, 'Changing {0} to size {1}'.format(key, value))
+            self.debug.print_debug(self, u'Changing {0} to size {1}'.format(key, value))
             self.handle_heading(manipulate, key, float(value))
 
         # reload the DOM
@@ -428,7 +428,7 @@ class SizeClassifier(Debuggable):
 
                     if heading_count > 1:
                         for heading_id in range(0, heading_count):
-                            self.debug.print_debug(self, 'Handling heading ID {0}'.format(heading_id))
+                            self.debug.print_debug(self, u'Handling heading ID {0}'.format(heading_id))
                             if heading_id < heading_count - 1:
                                 expression = u'//tei:head[@meTypesetHeadingID="{1}"] | ' \
                                              u'//*[following-sibling::tei:head[@meTypesetHeadingID="{0}"] and ' \
@@ -453,7 +453,7 @@ class SizeClassifier(Debuggable):
     def run(self):
 
         if int(self.gv.settings.args['--aggression']) < 5:
-            self.debug.print_debug(self, 'Aggression level less than 5: exiting module.')
+            self.debug.print_debug(self, u'Aggression level less than 5: exiting module.')
             return
 
         manipulate = TeiManipulate(self.gv)

@@ -54,6 +54,10 @@ class Debug(object):
         @param message: the debug message to print
         """
         if self.debug:
+
+            if not isinstance(message, unicode):
+                self.fatal_error(self, u'A non unicode string was passed to the debugger')
+
             self.print_(module, message)
 
             # optionally, if the calling module has a "gv" object within it, we will try to take a git snapshot
