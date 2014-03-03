@@ -46,6 +46,23 @@ class Manipulate(Debuggable):
     def xml_end(tag):
         return '</' + tag + '>'
 
+    @staticmethod
+    def append_safe(base, child, caller):
+        try:
+            while True:
+                parent = child.getparent()
+
+                if parent is None:
+                    break
+
+                if parent is base:
+                    caller.debug.print_debug(caller, u'Aborting append: attempted to add a parent to its own child')
+                    return False
+        except:
+            pass
+
+        base.append(child)
+
     def return_elements(self, xpath):
         tree = self.load_dom_read()
         return tree.xpath(xpath, namespaces=self.namespaces)
