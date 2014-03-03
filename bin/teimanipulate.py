@@ -52,7 +52,7 @@ class TeiManipulate(Manipulate):
 
                     for subchild in child:
                         if type(subchild) is etree._Element:
-                            new_element.append(subchild)
+                            Manipulate.append_safe(new_element, subchild, self)
 
                     child.getparent().remove(child)
 
@@ -81,7 +81,7 @@ class TeiManipulate(Manipulate):
                     new_element.attrib['rend'] = u'Bibliography'
 
                     list_item.addnext(new_element)
-                    new_element.append(list_item)
+                    Manipulate.append_safe(new_element, list_item, self)
                     list_item.tag = '{http://www.tei-c.org/ns/1.0}ref'
                     list_item.attrib['target'] = 'None'
 
@@ -106,7 +106,7 @@ class TeiManipulate(Manipulate):
             if is_sibling:
                 ret.addnext(new_element)
             else:
-                ret.append(new_element)
+                Manipulate.append_safe(ret, new_element, self)
 
             ret = new_element
 
@@ -142,7 +142,7 @@ class TeiManipulate(Manipulate):
             parent.addnext(new_element)
 
         for element in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            sub_element.append(element)
+            Manipulate.append_safe(sub_element, element, self)
 
         # remove all refs within
         for ref in tree.xpath('//tei:p[@rend="Bibliography"]/tei:ref',
@@ -262,7 +262,7 @@ class TeiManipulate(Manipulate):
 
             new_element = etree.Element('div')
             change_element.addnext(new_element)
-            new_element.append(change_element)
+            Manipulate.append_safe(new_element, change_element, self)
 
             # change all sub-elements to ref
             for element in change_element:
@@ -275,8 +275,8 @@ class TeiManipulate(Manipulate):
                     element.tag = 'ref'
                     element.attrib['target'] = 'None'
 
-                    outer.append(element)
-                    new_element.append(outer)
+                    Manipulate.append_safe(outer, element, self)
+                    Manipulate.append_safe(new_element, outer, self)
 
             new_element.remove(change_element)
 
@@ -367,7 +367,7 @@ class TeiManipulate(Manipulate):
             child.attrib[u'meTypesetSize'] = size_attribute
             child.tag = change_tag
             child.addnext(new_element)
-            new_element.append(child)
+            Manipulate.append_safe(new_element, child, self)
 
             if not (child.attrib['rend'] is None):
                 if u'bold' in child.attrib[u'rend']:
@@ -413,7 +413,7 @@ class TeiManipulate(Manipulate):
 
         # move the elements
         for element in child:
-            div.append(element)
+            Manipulate.append_safe(div, element, self)
 
         tree.write(self.gv.tei_file_path)
 
@@ -435,7 +435,7 @@ class TeiManipulate(Manipulate):
                 element.getparent().addprevious(div)
                 added = True
 
-            div.append(element)
+            Manipulate.append_safe(div, element, self)
             index += 1
 
         tree.write(self.gv.tei_file_path)

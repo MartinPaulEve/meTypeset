@@ -37,7 +37,7 @@ class CaptionClassifier(Debuggable):
         new_element.text = replace_text
         new_element.tail = ''.join(before_after[1:])
 
-        element.append(new_element)
+        NlmManipulate.append_safe(element, new_element, self)
 
     def replace_in_tail(self, id, element, replace_text, ref_type):
 
@@ -133,8 +133,8 @@ class CaptionClassifier(Debuggable):
                     new_p = etree.Element('p')
                     new_p.text = caption
 
-                    caption_element.append(new_p)
-                    graphic.append(caption_element)
+                    NlmManipulate.append_safe(caption_element, new_p, self)
+                    NlmManipulate.append_safe(graphic, caption_element, self)
 
                     p.text = p.text.replace(': ', '')
                     p.text = p.text.replace(':', '')
@@ -200,7 +200,7 @@ class CaptionClassifier(Debuggable):
                     title_element.text = title
 
                     caption_element = etree.Element('caption')
-                    caption_element.append(p)
+                    NlmManipulate.append_safe(caption_element, p, self)
                     table.insert(1, caption_element)
 
                     p.text = p.text.replace(': ', '')

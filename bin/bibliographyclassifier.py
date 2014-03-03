@@ -82,7 +82,7 @@ class BibliographyClassifier(Debuggable):
         if old_reference_point is not None:
             p.tag = 'p'
             if parent:
-                old_reference_point.append(p)
+                Manipulate.append_safe(old_reference_point, p, self)
             else:
                 old_reference_point.addnext(p)
 

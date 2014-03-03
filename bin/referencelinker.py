@@ -82,10 +82,10 @@ class ReplaceStub(Debuggable):
         new_element.text = self.replace_text
         new_element.tail = ''.join(before_after[1:])
 
-        encapsulate.append(new_element)
+        Manipulate.append_safe(encapsulate, new_element, self)
 
         for sub_element in element:
-            encapsulate.append(sub_element)
+            Manipulate.append_safe(encapsulate, sub_element, self)
 
         element.addnext(encapsulate)
         element.getparent().remove(element)
@@ -114,7 +114,7 @@ class ReplaceStub(Debuggable):
         if object_list is not None:
             for item in object_list:
                 if item.paragraph is self.paragraph:
-                    to_update.append(item)
+                    Manipulate.append_safe(to_update, item, self)
 
         self.paragraph = self.replace_in_text(self.paragraph)
 

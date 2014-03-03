@@ -53,7 +53,7 @@ class ListClassifier(Debuggable):
             # this can happen with italics
             self.debug.print_debug(self, u'Ref run/anomaly on {0}'.format(element.getnext()))
             for sub_element in element.getnext():
-                element.append(sub_element)
+                Manipulate.append_safe(element, sub_element, self)
             in_list_run = False
             to_append = element.getnext()
 
@@ -61,7 +61,7 @@ class ListClassifier(Debuggable):
         element.attrib['rend'] = u'Bibliography'
 
         element.text = element.text[(int(offset) + int(math.floor(int(iteration / 10)))):]
-        list_element.append(element)
+        Manipulate.append_safe(list_element, element, self)
 
         if not in_list_run:
             if not to_append is None:
@@ -70,7 +70,7 @@ class ListClassifier(Debuggable):
                     to_append.attrib['rend'] = u'Bibliography'
                     to_append.text = to_append.text[(int(offset) + int(math.floor(int(iteration / 10)))):]
                     self.debug.print_debug(self, u'Appending ref element: {0}'.format(to_append.text))
-                    list_element.append(to_append)
+                    Manipulate.append_safe(list_element, to_append, self)
         return iteration
 
     def handle_footnote_item(self, element, elements, in_list_run, iteration, list_element, offset, to_append):
@@ -96,13 +96,13 @@ class ListClassifier(Debuggable):
             # this can happen with italics
             self.debug.print_debug(self, u'Footnote run/anomaly on {0}'.format(element.getnext()))
             for sub_element in element.getnext():
-                element.append(sub_element)
+                Manipulate.append_safe(element, sub_element, self)
             in_list_run = False
             to_append = element.getnext()
         element.tag = 'note'
         element.attrib['id'] = 'fn_from_list{0}'.format(iteration)
         element.text = element.text[(int(offset) + int(math.floor(int(iteration / 10)))):]
-        list_element.append(element)
+        Manipulate.append_safe(list_element, element, self)
 
         if not in_list_run:
             if not to_append is None:
@@ -111,7 +111,7 @@ class ListClassifier(Debuggable):
                     to_append.attrib['id'] = 'fn_from_list{0}'.format(iteration + 1)
                     to_append.text = to_append.text[(int(offset) + int(math.floor(int(iteration / 10)))):]
                     self.debug.print_debug(self, u'Appending fn element: {0}'.format(to_append.text))
-                    list_element.append(to_append)
+                    Manipulate.append_safe(list_element, to_append, self)
 
         return iteration, list_element
 
@@ -177,7 +177,7 @@ class ListClassifier(Debuggable):
         if is_footnote:
             back = manipulate.find_or_create_element(tree, 'back', '//tei:body', True)
 
-            back.append(list_element)
+            Manipulate.append_safe(back, list_element, self)
 
             new_element_list = list_element
 
@@ -190,7 +190,7 @@ class ListClassifier(Debuggable):
 
                 split = footnote.split("[{0}]".format(count))
                 footnote.getparent().text = split[0]
-                footnote.getparent().append(note)
+                manipulate.append_safe(footnote.getparent(), note, self)
                 note.tail = split[1]
 
             back.remove(list_element)
@@ -236,7 +236,7 @@ class ListClassifier(Debuggable):
 
             element.tag = 'item'
             element.text = element.text[2:]
-            list_element.append(element)
+            Manipulate.append_safe(list_element, element, self)
 
             if not in_list_run:
                 if not to_append is None:
@@ -244,7 +244,7 @@ class ListClassifier(Debuggable):
                         to_append.tag = 'item'
                         to_append.text = to_append.text[2:]
                         self.debug.print_debug(self, u'Appending final list element: {0}'.format(to_append.text))
-                        list_element.append(to_append)
+                        Manipulate.append_safe(list_element, to_append, self)
 
         tree.write(self.gv.tei_file_path)
 
@@ -298,40 +298,28 @@ class ListClassifier(Debuggable):
             for footnote in footnote_list:
                 self.debug.print_debug(self, u'Processing footnote {0}'.format(current + 1))
 
-                # safety check: if found[current] is a parent of the footnote, bail
-                try:
-                    while True:
-                        parent = footnote.getparent()
-
-                        if parent is None:
-                            break
-
-                        if parent is found[current]:
-                            self.debug.print_debug(self, u'Aborting footnote matching: a footnote\'s text was the '
-                                                         u'parent of the sub-element.')
-                            return
-                except:
-                    pass
-
                 # null the text (this will be generated automatically)
-                footnote.text = ''
+                if Manipulate.append_safe(footnote, found[current], self):
+                    footnote.text = ''
 
-                footnote.tag = 'note'
-                footnote.attrib['id'] = 'fn_from_list{0}'.format(current)
+                    footnote.tag = 'note'
+                    footnote.attrib['id'] = 'fn_from_list{0}'.format(current)
 
-                footnote.append(found[current])
 
-                replace_regex = '^({0}[\.\s\)]*)'.format(len(found) - current)
+                    replace_regex = '^({0}[\.\s\)]*)'.format(len(found) - current)
 
-                if found[current].text and not found[current].text.startswith(str(len(found) - current)):
-                    # in this case the footnote text is inside a sub-element
-                    for sub_element in found:
-                        if sub_element.text and sub_element.text.startswith(str(len(found) - current)):
-                            sub_element.text = re.sub(replace_regex, '', sub_element.text)
-                            break
-                    pass
-                elif found[current].text:
-                    found[current].text = re.sub(replace_regex, '', found[current].text)
+                    if found[current].text and not found[current].text.startswith(str(len(found) - current)):
+                        # in this case the footnote text is inside a sub-element
+                        for sub_element in found:
+                            if sub_element.text and sub_element.text.startswith(str(len(found) - current)):
+                                sub_element.text = re.sub(replace_regex, '', sub_element.text)
+                                break
+                        pass
+                    elif found[current].text:
+                        found[current].text = re.sub(replace_regex, '', found[current].text)
+                else:
+                    # failed to add a footnote
+                    return
 
                 current += 1
         else:
@@ -390,7 +378,7 @@ class ListClassifier(Debuggable):
 
             element.tag = 'item'
             element.text = element.text[(int(offset) + int(math.floor(int(iteration/10)))):]
-            list_element.append(element)
+            Manipulate.append_safe(list_element, element, self)
 
             if not in_list_run:
                 if not to_append is None:
@@ -398,7 +386,7 @@ class ListClassifier(Debuggable):
                         to_append.tag = 'item'
                         to_append.text = to_append.text[(int(offset) + int(math.floor(int(iteration/10)))):]
                         self.debug.print_debug(self, u'Appending final list element: {0}'.format(to_append.text))
-                        list_element.append(to_append)
+                        Manipulate.append_safe(list_element, to_append, self)
 
         tree.write(self.gv.tei_file_path)
 

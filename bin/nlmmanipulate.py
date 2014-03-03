@@ -63,7 +63,7 @@ class NlmManipulate(Manipulate):
                 tail_stack_objects[0].addnext(sub_element)
                 append_location = sub_element
             else:
-                append_location.append(sub_element)
+                Manipulate.append_safe(append_location, sub_element, None)
                 append_location = sub_element
 
         # remove the old node (this is in the element above)
@@ -85,13 +85,13 @@ class NlmManipulate(Manipulate):
                     last_append = append_location
                     if move_node:
                         node.tail = new_node
-                        last_append.append(node)
+                        Manipulate.append_safe(last_append, node, None)
                     else:
                         last_append.text = new_node
                 else:
                     last_append.tail = new_node
             else:
-                append_location.append(new_node)
+                Manipulate.append_safe(append_location, new_node, None)
                 last_append = new_node
         if nested_sibling is None:
             node_parent.addnext(new_element)
@@ -149,7 +149,7 @@ class NlmManipulate(Manipulate):
                 new_element.tail = node.tail
                 node.tail = ''
         else:
-            new_element.append(element)
+            Manipulate.append_safe(new_element, element, self)
         if not last_node is None:
             last_node.addnext(new_element)
             node.getparent().remove(node)
@@ -377,7 +377,7 @@ class NlmManipulate(Manipulate):
             if is_sibling:
                 ret.addnext(new_element)
             else:
-                ret.append(new_element)
+                Manipulate.append_safe(ret, new_element, self)
 
             ret = new_element
 
@@ -432,7 +432,7 @@ class NlmManipulate(Manipulate):
                 if 'rend' in refs.attrib:
                         del refs.attrib['rend']
 
-                ref_list.append(refs)
+                Manipulate.append_safe(ref_list, refs, self)
 
         tree.write(self.gv.nlm_file_path)
         tree.write(self.gv.nlm_temp_file_path)
