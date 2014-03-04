@@ -2,7 +2,9 @@
 #@Author Dulip Withanage
 import subprocess
 import shutil
+from lxml import etree
 from nlmmanipulate import NlmManipulate
+from teimanipulate import TeiManipulate
 from debug import Debuggable
 
 
@@ -49,8 +51,43 @@ class TeiToNlm (Debuggable):
         manipulate.remove_empty_elements('//sec/list')
         manipulate.remove_empty_elements('//sec/disp-quote')
 
+    def pre_cleanup(self):
+        manipulate = TeiManipulate(self.gv)
+
+        tree = manipulate.load_dom_tree()
+
+        # make sure that head elements are not encapsulated within any elements that will stop them from being
+        # correctly transformed by the XSL
+        allowed = ['{http://www.tei-c.org/ns/1.0}div', '{http://www.tei-c.org/ns/1.0}body']
+
+        head_elements = tree.xpath('//tei:div[tei:head]', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+
+        count = 0
+
+        for element in head_elements:
+            current = element
+
+            while current is not None:
+                current = current.getparent()
+
+                if current is not None:
+                    if current.tag and current.tag not in allowed:
+                        print current.tag
+                        current.tag = 'REMOVE'
+                        count += 1
+                    elif current.tag and current.tag in allowed:
+                        break
+                else:
+                    break
+
+        if count > 0:
+            etree.strip_tags(tree, 'REMOVE')
+            tree.write(self.gv.tei_file_path)
+            self.debug.print_debug(self, u'Extracted {0} headings from inside invalid elements'.format(count))
 
     def run_transform(self):
+        self.pre_cleanup()
+
         self.gv.mk_dir(self.gv.nlm_folder_path)
         java_command = self.saxon_tei2nlm()
         self.debug.print_debug(self, u'Running saxon transform (TEI->NLM)')
