@@ -249,6 +249,7 @@ class ListClassifier(Debuggable):
         tree.write(self.gv.tei_file_path)
 
     def process_superscript_footnotes(self, tree, manipulate):
+
         self.debug.print_debug(self, u'Scanning for superscripted footnote entries')
 
         superscripts = reversed(tree.xpath('//*[@rend="superscript"]'))

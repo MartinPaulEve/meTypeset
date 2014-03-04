@@ -137,8 +137,8 @@ class SizeClassifier(Debuggable):
                                                                                                str(iteration)))
 
         # find appropriate previous sibling
-        if size in section_stack:
-            sibling_id = section_ids[section_stack.index(size)]
+        if size in section_stack and float(size) != float(self.size_cutoff):
+            sibling_id = section_ids[(len(section_stack) - 1) - section_stack[::-1].index(size)]
         else:
             # here, we need to figure out if the current size is bigger than anything else
             sibling_size = -1
@@ -163,13 +163,15 @@ class SizeClassifier(Debuggable):
                 else:
                     # use the sibling at the nearest depth
                     if float(size) == float(self.root) or float(size) == float(self.size_cutoff):
-                        sibling_id = section_ids[0]
+                        self.debug.print_debug(self, u'Selecting root element as sibling')
+                        sibling_id = 0
                     else:
-                        for index in section_stack:
+                        for index in section_stack[::-1]:
                             if float(size) == float(index):
                                 sibling_id = section_ids[index]
 
                         if not sibling_id:
+                            self.debug.print_debug(self, u'Selecting root element as sibling as none found')
                             sibling_id = section_ids[0]
 
                     self.debug.print_debug(self, u'Treating final element as on par with sibling')
@@ -180,12 +182,12 @@ class SizeClassifier(Debuggable):
                            u"@meTypesetHeadingID=\'{1}\']]".format(
                                str(iteration), str(iteration)))
 
-        self.debug.print_debug(self,u'Moving block ID #{0} to be sibling of block ID #{1}'.format(str(iteration),
-                                                                                                  str(sibling_id)))
-
         if sibling_id != -1:
         # move this heading to directly beneath the previous sibling
             manipulate.move_size_div(iteration, sibling_id)
+
+        self.debug.print_debug(self,u'Moving block ID #{0} to be sibling of block ID #{1}'.format(str(iteration),
+                                                                                                  str(sibling_id)))
 
     def enclose_smaller_heading(self, iteration, manipulate, next_size, size):
         self.debug.print_debug(self,
@@ -451,7 +453,6 @@ class SizeClassifier(Debuggable):
                         manipulate.enclose_all(expression, 'div', 1)
 
     def run(self):
-
         if int(self.gv.settings.args['--aggression']) < 5:
             self.debug.print_debug(self, u'Aggression level less than 5: exiting module.')
             return
