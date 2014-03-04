@@ -189,6 +189,7 @@ class TeiManipulate(Manipulate):
         tree.write(self.gv.tei_file_path)
 
         self.debug.print_debug(self, u'Processed bibliography')
+        return True
 
     def find_references_from_cue(self, cue, tree):
         # load the DOM
