@@ -193,11 +193,44 @@ class ReferenceLinker(Debuggable):
 
         ref_items = tree.xpath('//back/ref-list/ref')
 
+        parsed = 0
+
+        for ref in ref_items:
+            if ref.text is not None and ord(ref.text[0]) == 8212 and ord(ref.text[1]) == 8212 and \
+                            ord(ref.text[2]) == 8212 and ref.text[3] == '.':
+                try:
+                    current = ref
+
+                    while True:
+                        previous = current
+                        current = current.getprevious()
+
+                        if current is None:
+                            break
+
+                        if current.text is not None and ord(current.text[0]) != 8212:
+                            authorname = current.text.split('.')[0]
+
+                            ref.text = authorname + ref.text[3:]
+                            parsed += 1
+                            break
+
+                except:
+                    pass
+
+        if parsed > 0:
+
+            tree.write(self.gv.nlm_file_path)
+            tree.write(self.gv.nlm_temp_file_path)
+
+            self.debug.print_debug(self, u'Replace {0} instances of "---." at start of references'.format(parsed))
+
         to_link = []
         to_stub = []
 
         for p in tree.xpath('//sec/p[not(mml:math)]',
                             namespaces={'mml': '"http://www.w3.org/1998/Math/MathML"'}):
+
             text = manipulate.get_stripped_text(p)
 
             reference_test = re.compile('^.+\((?P<text>.+?)\)')

@@ -133,7 +133,7 @@ class MeTypeset (Debuggable):
             # run bibliographic addins handler
             # aggression 4
             found_bibliography = BibliographyAddins(self.gv).run()
-            
+
             # run list classifier
             # aggression 4
             ListClassifier(self.gv).run()
