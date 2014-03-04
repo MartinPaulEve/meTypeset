@@ -72,7 +72,6 @@ class TeiToNlm (Debuggable):
 
                 if current is not None:
                     if current.tag and current.tag not in allowed:
-                        print current.tag
                         current.tag = 'REMOVE'
                         count += 1
                     elif current.tag and current.tag in allowed:
