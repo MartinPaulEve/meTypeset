@@ -134,8 +134,12 @@ class TeiManipulate(Manipulate):
 
     def enclose_bibliography_tags(self, xpath, top_tag, sub_tag, attrib, attribvalue):
         #tei_manipulator.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]', 'back', 'div', 'type', 'bibliogr')
+
         # load the DOM
         tree = self.load_dom_tree()
+
+        if len(tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})) == 0:
+            return False
 
         parent = None
 
@@ -165,19 +169,26 @@ class TeiManipulate(Manipulate):
             Manipulate.append_safe(sub_element, element, self)
 
         # remove all refs within
-        for ref in tree.xpath('//tei:p[@rend="Bibliography"]/tei:ref',
-                              namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            ref.tag = 'p'
-            ref.attrib['rend'] = 'Bibliography'
-            del ref.attrib['target']
+        if len(tree.xpath(xpath + u'/tei:ref', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})) > 0:
+            for ref in tree.xpath(xpath + u'/tei:ref',
+                                  namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+                ref.tag = 'p'
+                ref.attrib['rend'] = 'Bibliography'
+                del ref.attrib['target']
 
-            ref_parent = ref.getparent()
+                ref_parent = ref.getparent()
 
-            ref_parent.addnext(ref)
+                ref_parent.addnext(ref)
 
-            ref_parent.getparent().remove(ref_parent)
+                ref_parent.getparent().remove(ref_parent)
+        else:
+            for ref in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+                ref.tag = 'p'
+                ref.attrib['rend'] = 'Bibliography'
 
         tree.write(self.gv.tei_file_path)
+
+        self.debug.print_debug(self, u'Processed bibliography')
 
     def find_references_from_cue(self, cue, tree):
         # load the DOM

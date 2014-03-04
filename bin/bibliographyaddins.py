@@ -9,6 +9,7 @@ class ZoteroHandler(Debuggable):
     def __init__(self, gv):
         self.gv = gv
         self.debug = self.gv.debug
+        self.found_biblio = False
         Debuggable.__init__(self, 'Zotero Handler')
 
     def handle_bibliography(self, tei_manipulator):
@@ -28,8 +29,13 @@ class ZoteroHandler(Debuggable):
         tei_manipulator.tag_bibliography_non_csl('//tei:p/tei:ref[@rend="ref"]', ' ADDIN EN.REFLIST ', self)
 
         # create a back/div[@type='bibliogr'] section
-        tei_manipulator.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]',
-                                                  'back', 'div', 'type', 'bibliogr')
+        self.found_biblio = tei_manipulator.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]',
+                                                                      'back', 'div', 'type', 'bibliogr')
+
+        if not self.found_biblio:
+            # create a back/div[@type='bibliogr'] section
+            self.found_biblio = tei_manipulator.enclose_bibliography_tags('//tei:p[@rend="Bibliography 1"]',
+                                                                          'back', 'div', 'type', 'bibliogr')
 
     def run(self):
         """
@@ -146,7 +152,7 @@ class BibliographyAddins(Debuggable):
         self.mendeley_items = self.mendeley_handler.run()
         self.other_items = self.other_handler.run()
 
-        if len(self.zotero_items) > 0 or len(self.mendeley_items) > 0:
+        if len(self.zotero_items) > 0 or len(self.mendeley_items) > 0 or self.zotero_handler.found_biblio:
             return True
         else:
             return False
