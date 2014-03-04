@@ -49,7 +49,19 @@ class Manipulate(Debuggable):
     @staticmethod
     def append_safe(base, child, caller):
         try:
-            base.append(child)
+            parent = child
+
+            while True:
+                parent = parent.getparent()
+
+                if parent is None:
+                    break
+
+                if parent is base:
+                    if caller is not None:
+                        caller.debug.print_debug(caller, u'Aborting append: attempted to add a parent to its own child')
+                    return False
+
             return True
         except:
             return False
