@@ -114,7 +114,7 @@ class ReplaceStub(Debuggable):
         if object_list is not None:
             for item in object_list:
                 if item.paragraph is self.paragraph:
-                    Manipulate.append_safe(to_update, item, self)
+                    to_update.append(item)
 
         self.paragraph = self.replace_in_text(self.paragraph)
 

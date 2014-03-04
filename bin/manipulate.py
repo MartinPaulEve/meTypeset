@@ -49,7 +49,7 @@ class Manipulate(Debuggable):
     @staticmethod
     def append_safe(base, child, caller):
         try:
-            parent = child
+            parent = base
 
             while True:
                 parent = parent.getparent()
@@ -57,14 +57,16 @@ class Manipulate(Debuggable):
                 if parent is None:
                     break
 
-                if parent is base:
+                if parent is child:
                     if caller is not None:
                         caller.debug.print_debug(caller, u'Aborting append: attempted to add a parent to its own child')
                     return False
 
+            base.append(child)
             return True
         except:
-            return False
+            base.append(child)
+            return True
 
     def return_elements(self, xpath):
         tree = self.load_dom_read()

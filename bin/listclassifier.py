@@ -305,7 +305,6 @@ class ListClassifier(Debuggable):
                     footnote.tag = 'note'
                     footnote.attrib['id'] = 'fn_from_list{0}'.format(current)
 
-
                     replace_regex = '^({0}[\.\s\)]*)'.format(len(found) - current)
 
                     if found[current].text and not found[current].text.startswith(str(len(found) - current)):
@@ -319,6 +318,7 @@ class ListClassifier(Debuggable):
                         found[current].text = re.sub(replace_regex, '', found[current].text)
                 else:
                     # failed to add a footnote
+                    self.debug.print_debug(self, u'Footnote failure. Aborting process.')
                     return
 
                 current += 1
