@@ -195,6 +195,7 @@ class ReferenceLinker(Debuggable):
 
         parsed = 0
 
+        # this checks for items beginning with "---." and replaces them with the real author name
         for ref in ref_items:
             if ref.text is not None and ord(ref.text[0]) == 8212 and ord(ref.text[1]) == 8212 and \
                             ord(ref.text[2]) == 8212 and ref.text[3] == '.':
