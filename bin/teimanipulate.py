@@ -58,14 +58,10 @@ class TeiManipulate(Manipulate):
 
         tree.write(self.gv.tei_file_path)
 
-    def find_reference_list_in_word_list(self, tree):
-
-        # determine if the last element in the document is a list
-        select = u'//tei:div[last()]/*[last()]'
-
+    def do_list_bibliography(self, xpath):
         found = False
 
-        for last_list in tree.xpath(select, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+        for last_list in xpath:
             if last_list.tag == '{http://www.tei-c.org/ns/1.0}list':
                 # it is a list, so change to reference list
                 self.debug.print_debug(self, u'Found a list as last element. Treating as bibliography.')
@@ -84,6 +80,30 @@ class TeiManipulate(Manipulate):
                     Manipulate.append_safe(new_element, list_item, self)
                     list_item.tag = '{http://www.tei-c.org/ns/1.0}ref'
                     list_item.attrib['target'] = 'None'
+        return found
+
+    def find_reference_list_in_word_list(self, tree):
+
+        # determine if the last element in the document is a list
+        select = u'//tei:div[last()]/*[last()]'
+
+        found = False
+
+        xpath = tree.xpath(select, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+
+        found = self.do_list_bibliography(xpath)
+
+        if not found:
+            # iterate up one more paragraph
+            try:
+                last_para = tree.xpath(select, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+
+                second_last = last_para.getprevious()
+
+                found = self.do_list_bibliography(second_last)
+
+            except:
+                pass
 
         tree.write(self.gv.tei_file_path)
 
