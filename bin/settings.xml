@@ -33,6 +33,10 @@
     <mt:display>
         <mt:color>True</mt:color>
     </mt:display>
+
+    <mt:sizeclassifier>
+        <mt:minimum-heading-size>16</mt:minimum-heading-size>
+    </mt:sizeclassifier>
     
     <mt:style-sheets>
         <mt:docs-style-sheet-path>

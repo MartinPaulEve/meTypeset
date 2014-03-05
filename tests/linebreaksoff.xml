@@ -30,6 +30,10 @@
 	<mt:media>media</mt:media>
     </mt:folders>
 
+    <mt:sizeclassifier>
+        <mt:minimum-heading-size>16</mt:minimum-heading-size>
+    </mt:sizeclassifier>
+
     <mt:display>
         <mt:color>False</mt:color>
     </mt:display>
