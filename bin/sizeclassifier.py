@@ -454,7 +454,7 @@ class SizeClassifier(Debuggable):
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('sizeclassifier', self,
                                                                                          domain='aggression')):
-            self.debug.print_debug(self, u'Aggression level less than 5: exiting module.')
+            self.debug.print_debug(self, u'Aggression level too low: exiting module.')
             return
 
         manipulate = TeiManipulate(self.gv)

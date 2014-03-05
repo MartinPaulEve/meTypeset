@@ -146,7 +146,7 @@ class BibliographyAddins(Debuggable):
         """
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('bibliographyaddins', self,
                                                                                          domain='aggression')):
-            self.debug.print_debug(self, u'Aggression level less than 4: exiting module.')
+            self.debug.print_debug(self, u'Aggression level too low: exiting module.')
             return
 
         self.zotero_items = self.zotero_handler.run()

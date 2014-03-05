@@ -394,7 +394,7 @@ class ListClassifier(Debuggable):
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('listclassifier',
                                                                                          self, domain='aggression')):
-            self.debug.print_debug(self, u'Aggression level less than 4: exiting module.')
+            self.debug.print_debug(self, u'Aggression level too low: exiting module.')
             return
 
         dash_lists = self.gv.settings.get_setting('dash-lists', self) == "True"
