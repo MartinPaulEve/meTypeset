@@ -30,10 +30,16 @@ class Settings:
     def concat_path(parent, child):
         return parent + os.sep + '/' + child
 
-    def get_setting(self, tag_name, caller):
+    def get_setting(self, tag_name, caller, domain=None):
         settings = self
-        expr = "//*[local-name() = $name]"
+
+        if domain is None:
+            expr = "//*[local-name() = $name]"
+        else:
+            expr = "//mt:{0}/*[local-name() = $name]".format(domain, tag_name)
+
         tag = settings.tree.xpath(expr, name=tag_name, namespaces={'mt': 'https://github.com/MartinPaulEve/meTypeset'})
+
         return settings.clean_path(tag[0].text) if tag \
             else caller.debug.fatal_error(caller, '{0} is not defined in settings.xml'.format(tag_name))
 

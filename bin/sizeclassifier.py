@@ -20,7 +20,6 @@ class SizeClassifier(Debuggable):
         self.debug = self.gv.debug
         self.size_cutoff = int(self.gv.settings.get_setting('minimum-heading-size', self))
         self.max_headings = 40
-        self.aggression_threshold = 8
         self.root = 0
         self.tree = None
         Debuggable.__init__(self, 'Size Classifier')
@@ -453,7 +452,8 @@ class SizeClassifier(Debuggable):
                         manipulate.enclose_all(expression, 'div', 1)
 
     def run(self):
-        if int(self.gv.settings.args['--aggression']) < 5:
+        if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('sizeclassifier', self,
+                                                                                         domain='aggression')):
             self.debug.print_debug(self, u'Aggression level less than 5: exiting module.')
             return
 
