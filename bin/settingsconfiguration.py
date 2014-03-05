@@ -30,8 +30,8 @@ class SettingsConfiguration:
     def concat_path(parent, child):
         return parent + os.sep + '/' + child
 
-    @staticmethod
-    def value_for_tag(settings, tag_name, caller):
+    def value_for_tag(self, tag_name, caller):
+        settings = self
         expr = "//*[local-name() = $name]"
         tag = settings.tree.xpath(expr, name=tag_name, namespaces={'mt': 'https://github.com/MartinPaulEve/meTypeset'})
         return settings.clean_path(tag[0].text) if tag \

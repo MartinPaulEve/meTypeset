@@ -396,11 +396,11 @@ class ListClassifier(Debuggable):
             self.debug.print_debug(self, u'Aggression level less than 4: exiting module.')
             return
 
-        dash_lists = self.gv.settings.value_for_tag(self.gv.settings, 'dash-lists', self) == "True"
-        bracket_lists = self.gv.settings.value_for_tag(self.gv.settings, 'bracket-lists', self) == "True"
-        bracket_refs = self.gv.settings.value_for_tag(self.gv.settings, 'bracket-references-and-footnotes',
+        dash_lists = self.gv.settings.value_for_tag('dash-lists', self) == "True"
+        bracket_lists = self.gv.settings.value_for_tag('bracket-lists', self) == "True"
+        bracket_refs = self.gv.settings.value_for_tag('bracket-references-and-footnotes',
                                                       self) == "True"
-        superscripted_footnotes = self.gv.settings.value_for_tag(self.gv.settings, 'superscripted-footnotes',
+        superscripted_footnotes = self.gv.settings.value_for_tag('superscripted-footnotes',
                                                                  self) == "True"
 
         if not dash_lists and not bracket_lists and not bracket_refs and not superscripted_footnotes:

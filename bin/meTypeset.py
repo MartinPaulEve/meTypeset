@@ -91,8 +91,7 @@ class MeTypeset (Debuggable):
             metadata_file = \
                 self.gv.settings.clean_path(
                     self.gv.settings.concat_path(self.settings.script_dir,
-                                                 self.gv.settings.value_for_tag(self.settings,
-                                                                                'default-metadata-file-path',
+                                                 self.gv.settings.value_for_tag('default-metadata-file-path',
                                                                                 self)))
 
             self.debug.print_debug(self, u'Metadata file wasn\'t specified. '
