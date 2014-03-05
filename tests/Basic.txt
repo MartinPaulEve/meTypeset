@@ -189,3 +189,16 @@ Library           Collections
     Should Be Equal As Strings    ${xrefone.text}    Table 1
     Should Be Equal As Strings    ${xreftwo.text}    Table 1
     [Teardown]    Remove Directory    013    recursive=True
+
+014 Graphic caption parsing
+    [Tags]    formatting    captions    014
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ImageCaption1.docx ./014 -s testsettings.xml -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./014/nlm/out.xml
+    ${secs}=    Get Element    ${xml}    body/sec/p/graphic
+    ${title}=    Get Element    ${secs}    title
+    ${caption}=    Get Element    ${secs}    caption/p
+    Should Be Equal As Strings    ${title.text}    Figure 1
+    Should Be Equal As Strings    ${caption.text}    Martin Eve at the pub
+    [Teardown]    Remove Directory    014    recursive=True
