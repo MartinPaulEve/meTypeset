@@ -24,6 +24,8 @@
         <mt:tablecaptions>5</mt:tablecaptions>
         <mt:graphiccaptions>5</mt:graphiccaptions>
         <mt:listclassifier>4</mt:listclassifier>
+        <mt:wmfimagereplace>5</mt:wmfimagereplace>
+	    <mt:teicleanup>3</mt:teicleanup>
     </mt:aggression>
 
     <mt:folders>

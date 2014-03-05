@@ -23,6 +23,8 @@
         <mt:sizeclassifier>5</mt:sizeclassifier>
         <mt:bibliographyaddins>4</mt:bibliographyaddins>
         <mt:bibliographyclassifier>4</mt:bibliographyclassifier>
+	<mt:wmfimagereplace>5</mt:wmfimagereplace>
+	<mt:teicleanup>3</mt:teicleanup>
     </mt:aggression>
     
     <mt:folders>

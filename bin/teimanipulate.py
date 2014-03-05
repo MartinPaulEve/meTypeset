@@ -500,13 +500,14 @@ class TeiManipulate(Manipulate):
         tree.write(self.gv.tei_file_path)
 
     def run(self):
-        if int(self.gv.settings.args['--aggression']) < 3:
-            self.debug.print_debug(self, u'Aggression level less than 3: exiting module.')
-            return
-        # convert .wmf image links to png
-        self.change_wmf_image_links()
+        if int(self.gv.settings.args['--aggression']) > int(self.gv.settings.get_setting('wmfimagereplace', self,
+                                                                                         domain='aggression')):
+            # convert .wmf image links to png
+            self.change_wmf_image_links()
 
-        self.cleanup()
+        if int(self.gv.settings.args['--aggression']) > int(self.gv.settings.get_setting('teicleanup', self,
+                                                                                         domain='aggression')):
+            self.cleanup()
 
         os.remove(self.dom_temp_file)
 
