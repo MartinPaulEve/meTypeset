@@ -5,7 +5,7 @@ from lxml import etree
 import os
 import docxtotei
 
-class SettingsConfiguration:
+class Settings:
     def __init__(self, set_file, args):
         tree = etree.parse(set_file)
         self.tree = tree
@@ -30,7 +30,7 @@ class SettingsConfiguration:
     def concat_path(parent, child):
         return parent + os.sep + '/' + child
 
-    def value_for_tag(self, tag_name, caller):
+    def get_setting(self, tag_name, caller):
         settings = self
         expr = "//*[local-name() = $name]"
         tag = settings.tree.xpath(expr, name=tag_name, namespaces={'mt': 'https://github.com/MartinPaulEve/meTypeset'})
@@ -69,12 +69,12 @@ class SettingsConfiguration:
         if settings_file_path == 'default' or settings_file_path is None:
             if script_dir != '':
                 set_file = '{0}/bin/settings.xml'.format(script_dir)
-                SettingsConfiguration.check_settings_file_exists(caller, set_file)
+                Settings.check_settings_file_exists(caller, set_file)
             else:
                     set_file = 'NOFILE'
                     pass
         else:
             set_file = settings_file_path
-            SettingsConfiguration.check_settings_file_exists(caller, set_file)
+            Settings.check_settings_file_exists(caller, set_file)
 
         return set_file

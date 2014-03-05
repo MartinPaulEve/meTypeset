@@ -10,7 +10,7 @@ from debug import *
 from lxml import *
 import os
 import docopt
-from settingsconfiguration import SettingsConfiguration
+from settingsconfiguration import Settings
 
 
 class GV (Debuggable):
@@ -25,8 +25,8 @@ class GV (Debuggable):
         # read the configuration
         self.settings_file_path = 'default'
         self.tei_file_path = None
-        SettingsConfiguration.setup_settings_file(self.args)
-        self.settings = SettingsConfiguration(SettingsConfiguration.get_settings_file(self, self.settings_file_path),
+        Settings.setup_settings_file(self.args)
+        self.settings = Settings(Settings.get_settings_file(self, self.settings_file_path),
                                               self.args)
 
         self.input_file_path = self.settings.args['<input>'].strip()
@@ -39,6 +39,6 @@ class GV (Debuggable):
         self.database_file_path = \
             self.settings.clean_path(self.settings.concat_path(os.path.join(self.settings.script_dir,
                                                                             'database'),
-                                                               self.settings.value_for_tag(self.settings,
+                                                               self.settings.get_setting(self.settings,
                                                                                            'databasefile',
                                                                                            self)))

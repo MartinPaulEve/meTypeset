@@ -74,7 +74,7 @@ class DocxToTei(Debuggable):
                 imagemagick_command = '{3}*DELIMITER*-d*DELIMITER*graphics*DELIMITER*-f*DELIMITER*png*DELIMITER*-o' \
                                       '*DELIMITER*{0}/{1}.png*DELIMITER*' \
                                       '{0}/{2}'.format(self.gv.output_media_path, image_name, image,
-                                                       self.gv.settings.value_for_tag('unoconv',
+                                                       self.gv.settings.get_setting('unoconv',
                                                                                       self))
                 self.debug.print_debug(self, u'Calling: {0}'.format(imagemagick_command.replace('*DELIMITER*', ' ')))
 

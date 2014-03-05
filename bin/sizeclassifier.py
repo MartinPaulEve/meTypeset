@@ -18,7 +18,7 @@ class SizeClassifier(Debuggable):
     def __init__(self, global_variables):
         self.gv = global_variables
         self.debug = self.gv.debug
-        self.size_cutoff = int(self.gv.settings.value_for_tag('minimum-heading-size', self))
+        self.size_cutoff = int(self.gv.settings.get_setting('minimum-heading-size', self))
         self.max_headings = 40
         self.aggression_threshold = 8
         self.root = 0

@@ -40,7 +40,7 @@ from listclassifier import ListClassifier
 from metadata import Metadata
 from referencelinker import ReferenceLinker
 from xslchainer import XslChain
-from settingsconfiguration import SettingsConfiguration
+from settingsconfiguration import Settings
 from idgenerator import IdGenerator
 from captionclassifier import CaptionClassifier
 from complianceenforcer import ComplianceEnforcer
@@ -71,8 +71,8 @@ class MeTypeset (Debuggable):
         # read settings file
         self.settings_file_path = 'default'
         self.tei_file_path = None
-        self.settings_file_path = SettingsConfiguration.setup_settings_file(self.args)
-        self.settings = SettingsConfiguration(SettingsConfiguration.get_settings_file(self, self.settings_file_path),
+        self.settings_file_path = Settings.setup_settings_file(self.args)
+        self.settings = Settings(Settings.get_settings_file(self, self.settings_file_path),
                                               self.args)
         self.gv = GV(self.settings, self.debug)
 
@@ -91,7 +91,7 @@ class MeTypeset (Debuggable):
             metadata_file = \
                 self.gv.settings.clean_path(
                     self.gv.settings.concat_path(self.settings.script_dir,
-                                                 self.gv.settings.value_for_tag('default-metadata-file-path',
+                                                 self.gv.settings.get_setting('default-metadata-file-path',
                                                                                 self)))
 
             self.debug.print_debug(self, u'Metadata file wasn\'t specified. '

@@ -116,7 +116,7 @@ class OtherHandler(Debuggable):
         tei_manipulator = TeiManipulate(self.gv)
         object_list = tei_manipulator.get_object_list('//*', ' ADDIN', u'addin')
 
-        drop = self.gv.settings.value_for_tag('drop-unknown-addins', self)
+        drop = self.gv.settings.get_setting('drop-unknown-addins', self)
 
         tei_manipulator.drop_addin('//*', ' ADDIN', 'EndNote',
                                    'hi', 'unknown_addin_text', self, u'addin',

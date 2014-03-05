@@ -249,7 +249,7 @@ class Interactive(Debuggable):
         """Colorize text if colored output is enabled. (Like _colorize but
         conditional.)
         """
-        if self.gv.settings.value_for_tag('color', self) == 'True':
+        if self.gv.settings.get_setting('color', self) == 'True':
             return self._colorize(color, text)
         else:
             return text
@@ -340,7 +340,7 @@ class Interactive(Debuggable):
         """Colorize differences between two values if color is enabled.
     (Like _colordiff but conditional.)
     """
-        if self.gv.settings.value_for_tag('color', self) == 'True':
+        if self.gv.settings.get_setting('color', self) == 'True':
             return self._colordiff(a, b, highlight)
         else:
             return unicode(a), unicode(b)
@@ -364,7 +364,7 @@ class Interactive(Debuggable):
     def color_diff_suffix(self, a, b, highlight='red'):
         """Colorize the differing suffix between two strings."""
         a, b = unicode(a), unicode(b)
-        if not self.gv.settings.value_for_tag('color', self) == 'True':
+        if not self.gv.settings.get_setting('color', self) == 'True':
             return a, b
 
         # Fast path.
