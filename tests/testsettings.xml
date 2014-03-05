@@ -15,6 +15,12 @@
         <mt:bracket-references-and-footnotes>True</mt:bracket-references-and-footnotes>
         <mt:superscripted-footnotes>True</mt:superscripted-footnotes>
     </mt:parse>
+
+    <mt:aggression>
+        <mt:sizeclassifier>5</mt:sizeclassifier>
+        <mt:bibliographyaddins>4</mt:bibliographyaddins>
+        <mt:bibliographyclassifier>4</mt:bibliographyclassifier>
+    </mt:aggression>
     
     <mt:folders>
         <mt:docx>docx</mt:docx>
