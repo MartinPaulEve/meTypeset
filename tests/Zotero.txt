@@ -41,4 +41,12 @@ Z03 Zotero JSON Inline Field and Bibliography
     ${xrefone}=    Get From List    ${xref}    0
     Should Be Equal As Strings    ${xrefone.text}    Herman
     Should Be Equal As Strings    ${xrefone.tail}    )
+    ${refs}=    Get Elements    ${xml}    back/ref-list/ref
+    ${refone}=    Get From List    ${refs}    0
+    ${refonestyle}=    Get Element    ${refone}    italic
+    ${reftwo}=    Get From List    ${refs}    1
+    Should Be Equal As Strings    ${refone.text}    Herman, Luc.\ \
+    Should Be Equal As Strings    ${refonestyle.text}    Gravity’s Rainbow, Domination, and Freedom
+    Should Be Equal As Strings    ${refonestyle.tail}    . Athens: The University of Georgia Press, 2013. Print.
+    Should Be Equal As Strings    ${reftwo.text}    Hume, Kathryn. “Attenuated Realities: Pynchon’s Trajectory from V. to Inherent Vice.”
     [Teardown]    Remove Directory    Z03    recursive=True
