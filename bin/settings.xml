@@ -17,9 +17,12 @@
     </mt:parse>
 
     <mt:aggression>
+        <!-- values should be from 0 to 10. Values above 10 are used internally to disable safety checks -->
         <mt:sizeclassifier>5</mt:sizeclassifier>
         <mt:bibliographyaddins>4</mt:bibliographyaddins>
         <mt:bibliographyclassifier>4</mt:bibliographyclassifier>
+        <mt:tablecaptions>5</mt:tablecaptions>
+        <mt:graphiccaptions>5</mt:graphiccaptions>
     </mt:aggression>
 
     <mt:folders>

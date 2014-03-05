@@ -156,8 +156,13 @@ class MeTypeset (Debuggable):
 
             # run table classifier
             cc = CaptionClassifier(self.gv)
-            cc.run_tables()
-            cc.run_graphics()
+            if int(self.args['--aggression']) > int(self.gv.settings.get_setting('tablecaptions',
+                                                                                 self, domain='aggression')):
+                cc.run_tables()
+
+            if int(self.args['--aggression']) > int(self.gv.settings.get_setting('graphiccaptions',
+                                                                                 self, domain='aggression')):
+                cc.run_graphics()
 
             # run metadata merge
             Metadata(self.gv).run()
