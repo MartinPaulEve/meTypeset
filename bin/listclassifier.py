@@ -392,7 +392,8 @@ class ListClassifier(Debuggable):
         tree.write(self.gv.tei_file_path)
 
     def run(self):
-        if int(self.gv.settings.args['--aggression']) < 4:
+        if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('listclassifier',
+                                                                                         self, domain='aggression')):
             self.debug.print_debug(self, u'Aggression level less than 4: exiting module.')
             return
 
