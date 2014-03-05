@@ -396,6 +396,16 @@ class ListClassifier(Debuggable):
             self.debug.print_debug(self, u'Aggression level less than 4: exiting module.')
             return
 
+        dash_lists = self.gv.settings.value_for_tag(self.gv.settings, 'dash-lists', self) == "True"
+        bracket_lists = self.gv.settings.value_for_tag(self.gv.settings, 'bracket-lists', self) == "True"
+        bracket_refs = self.gv.settings.value_for_tag(self.gv.settings, 'bracket-references-and-footnotes',
+                                                      self) == "True"
+        superscripted_footnotes = self.gv.settings.value_for_tag(self.gv.settings, 'superscripted-footnotes',
+                                                                 self) == "True"
+
+        if not dash_lists and not bracket_lists and not bracket_refs and not superscripted_footnotes:
+            return
+
         # load the DOM
         tree = self.set_dom_tree(self.gv.tei_file_path)
 
@@ -406,14 +416,16 @@ class ListClassifier(Debuggable):
         # look for dash separated list
         # - Item 1
         # - Item 2
-        self.process_dash_list(tree, manipulate, string_version)
+        if dash_lists:
+            self.process_dash_list(tree, manipulate, string_version)
 
         # look for curly bracket separated list
         # (1) Item 1
         # (2) Item 2
-        self.process_curly_list(tree, manipulate, string_version)
+        if bracket_lists:
+            self.process_curly_list(tree, manipulate, string_version)
 
-        if int(self.gv.settings.args['--aggression']) >= 10:
+        if int(self.gv.settings.args['--aggression']) >= 10 and bracket_refs:
             backup_tree = copy(tree)
             try:
                 # look for footnote list [1], [2] etc.
@@ -423,4 +435,5 @@ class ListClassifier(Debuggable):
                 tree = backup_tree
                 tree.write(self.gv.tei_file_path)
 
-        self.process_superscript_footnotes(tree, manipulate)
+        if superscripted_footnotes:
+            self.process_superscript_footnotes(tree, manipulate)

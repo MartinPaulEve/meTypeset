@@ -14,10 +14,6 @@ class SettingsConfiguration:
         self.settings_file = set_file
 
     @staticmethod
-    def read_command_line():
-        return docopt(__doc__, version='meTypeset 0.1')
-
-    @staticmethod
     def setup_settings_file(args):
         if '--settings' in args:
             settings = args['--settings']
@@ -36,7 +32,6 @@ class SettingsConfiguration:
 
     @staticmethod
     def value_for_tag(settings, tag_name, caller):
-        # todo: would be good to have some handling for defaults here
         expr = "//*[local-name() = $name]"
         tag = settings.tree.xpath(expr, name=tag_name, namespaces={'mt': 'https://github.com/MartinPaulEve/meTypeset'})
         return settings.clean_path(tag[0].text) if tag \

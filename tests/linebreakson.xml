@@ -8,7 +8,14 @@
     <mt:executables>
         <mt:unoconv>unoconv</mt:unoconv>
     </mt:executables>
-    
+
+    <mt:parse>
+        <mt:dash-lists>True</mt:dash-lists>
+        <mt:bracket-lists>True</mt:bracket-lists>
+        <mt:bracket-references-and-footnotes>True</mt:bracket-references-and-footnotes>
+        <mt:superscripted-footnotes>True</mt:superscripted-footnotes>
+    </mt:parse>
+
     <mt:folders>
         <mt:docx>docx</mt:docx>
         <mt:common2>common2</mt:common2>
