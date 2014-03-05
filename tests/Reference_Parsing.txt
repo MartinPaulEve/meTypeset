@@ -25,3 +25,21 @@ R02 Year detection method
     ${paragraph}=    Get Element    ${xml}    back/ref-list
     Elements Should Match    ${paragraph}    <ref-list><ref id="1">Eve, Martin Paul, <italic>Pynchon and Philosophy</italic> (London: Palgrave MacMillan, 2014)</ref><ref id="2">Thomas, Samuel, <italic>Pynchon and the Political </italic>(New York: Routledge, 2007)</ref></ref-list>    normalize_whitespace=yes
     [Teardown]    Remove Directory    R02    recursive=True
+
+R03 Link parsing with external link (tests re-assembly order)
+    [Tags]    formatting    referencelinker    R03
+    ${mkdir} =    Run Process    mkdir ./R03    shell=True
+    ${cp} =    Run Process    cp LinkSubElements.xml ./R03/    shell=True
+    ${result} =    Run Process    python ../bin/referencelinker.py scan ./R03/LinkSubElements.xml -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./R03/LinkSubElements.xml
+    ${secs}=    Get Element    ${xml}    body/sec/p
+    ${xref}=    Get Element    ${secs}    xref
+    ${link}=    Get Element    ${secs}    ext-link
+    Should Be Equal As Strings    ${secs.text}    Some text (
+    Should Be Equal As Strings    ${xref.text}    to link
+    Should Be Equal As Strings    ${xref.tail}    ) and\ \
+    Should Be Equal As Strings    ${link.text}    a link
+    Should Be Equal As Strings    ${link.tail}    \ text.
+    [Teardown]    Remove Directory    R03    recursive=True
