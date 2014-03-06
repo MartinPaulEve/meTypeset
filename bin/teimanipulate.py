@@ -18,6 +18,10 @@ class TeiManipulate(Manipulate):
         self.mod_name = 'TEI'
         Manipulate.__init__(self, gv)
 
+    def save_tree(self, tree):
+        tree.write(self.dom_temp_file, pretty_print=True)
+        tree.write(self.dom_to_load, pretty_print=True)
+
     def get_object_list(self, xpath, start_text, wrap_tag):
         # load the DOM
         tree = self.load_dom_tree()
@@ -56,7 +60,7 @@ class TeiManipulate(Manipulate):
 
                     child.getparent().remove(child)
 
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
     def do_list_bibliography(self, xpath):
         found = False
@@ -105,7 +109,7 @@ class TeiManipulate(Manipulate):
             except:
                 pass
 
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
         return found
 
@@ -186,7 +190,7 @@ class TeiManipulate(Manipulate):
                 ref.tag = 'p'
                 ref.attrib['rend'] = 'Bibliography'
 
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
         self.debug.print_debug(self, u'Processed bibliography')
         return True
@@ -223,7 +227,7 @@ class TeiManipulate(Manipulate):
 
             found_element.getparent().remove(found_element)
 
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
     def tag_bibliography(self, xpath, start_text, caller, parent_tag=u'{http://www.tei-c.org/ns/1.0}sec',
                          classify_siblings=False, sibling_tag=u'{http://www.tei-c.org/ns/1.0}cit',
@@ -273,7 +277,7 @@ class TeiManipulate(Manipulate):
                 else:
                     self.debug.print_debug(self, u'Failed to find sibling in bibliographic addin classification')
 
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
     def tag_bibliography_non_csl(self, xpath, start_text, caller):
         # load the DOM
@@ -314,7 +318,7 @@ class TeiManipulate(Manipulate):
 
 
 
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
     def drop_addin(self, xpath, start_text, sub_tag, replace_tag, attribute, caller, wrap_tag, delete_original):
         # load the DOM
@@ -347,7 +351,7 @@ class TeiManipulate(Manipulate):
                     if delete_original:
                         child.getparent().remove(child)
 
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
     def tag_headings(self):
         # load the DOM
@@ -360,7 +364,7 @@ class TeiManipulate(Manipulate):
             child.attrib['meTypesetHeadingID'] = str(iterator)
             iterator += 1
 
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
         return iterator
 
@@ -373,7 +377,7 @@ class TeiManipulate(Manipulate):
             child.tag = new_value
             child.attrib['meTypesetSize'] = size_attribute
 
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
     # changes the parent element of the outer_xpath expression to the new_value
     def change_self_size(self, outer_xpath, size_attribute):
@@ -386,7 +390,7 @@ class TeiManipulate(Manipulate):
                 if u'bold' in child.attrib[u'rend']:
                     child.attrib[u'rend'] = child.attrib[u'rend'].replace(u'bold', u'')
 
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
     # changes the parent element of the outer_xpath expression to the new_value
     def enclose_and_change_self_size(self, outer_xpath, size_attribute, tag, change_tag):
@@ -405,7 +409,7 @@ class TeiManipulate(Manipulate):
                 if u'bold' in child.attrib[u'rend']:
                     child.attrib[u'rend'] = child.attrib[u'rend'].replace(u'bold', u'')
 
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
     def move_size_div(self, heading_id, sibling_id):
         tree = self.load_dom_tree()
@@ -418,7 +422,7 @@ class TeiManipulate(Manipulate):
 
         destination_node.addnext(source_node)
 
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
     def resize_headings(self, old_size, new_size):
         tree = self.load_dom_tree()
@@ -429,7 +433,7 @@ class TeiManipulate(Manipulate):
             node_to_downsize.attrib['meTypesetSize'] = new_size
             self.debug.print_debug(self, u'Resizing node from: {0} to {1}'.format(old_size, new_size))
 
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
     def enclose(self, start_xpath, select_xpath):
         tree = self.load_dom_tree()
@@ -447,7 +451,7 @@ class TeiManipulate(Manipulate):
         for element in child:
             Manipulate.append_safe(div, element, self)
 
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
     def enclose_all(self, start_xpath, new_enclose, start_index):
         tree = self.load_dom_tree()
@@ -470,14 +474,14 @@ class TeiManipulate(Manipulate):
             Manipulate.append_safe(div, element, self)
             index += 1
 
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
     def change_wmf_image_links(self):
         tree = self.load_dom_tree()
         for image_link in tree.xpath('//tei:graphic', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             converted_image_link = re.sub(r'\.wmf', '.png', image_link.xpath('@url')[0])
             image_link.attrib['url'] = converted_image_link
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
     def cleanup(self):
         tree = self.load_dom_tree()
@@ -497,7 +501,7 @@ class TeiManipulate(Manipulate):
             count += 1
 
         self.debug.print_debug(self, u'Removed {0} nodes during cleanup'.format(count))
-        tree.write(self.gv.tei_file_path)
+        self.save_tree(tree)
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) > int(self.gv.settings.get_setting('wmfimagereplace', self,
