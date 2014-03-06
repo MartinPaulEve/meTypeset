@@ -43,7 +43,7 @@ class TeiManipulate(Manipulate):
             if not (child.text is None):
                 # check that this is a known addin
                 if child.text.startswith(start_text):
-                    tag_to_parse = re.sub(r'.+}', '', child.text)
+                    tag_to_parse = re.sub(r'.+}\s?', '', child.text)
 
                     new_element = etree.Element(replace_tag, rel=attribute)
                     new_element.text = tag_to_parse

@@ -46,10 +46,14 @@ class ZoteroHandler(Debuggable):
         tei_manipulator = TeiManipulate(self.gv)
         object_list = tei_manipulator.get_object_list('//tei:ref[@rend="ref"]', ' ADDIN EN.CITE', u'zoterobiblio')
         object_list += tei_manipulator.get_object_list('//tei:ref', ' ADDIN ZOTERO_ITEM CSL_CITATION', u'zoterobiblio')
+
         tei_manipulator.drop_addin('//tei:ref[@rend="ref"]', ' ADDIN EN.CITE', 'EndNote',
                                    'hi', 'reference_to_link', self, u'zoterobiblio', True)
 
         tei_manipulator.drop_addin_json('//tei:ref', ' ADDIN ZOTERO_ITEM CSL_CITATION',
+                                        'hi', 'reference_to_link', self)
+
+        tei_manipulator.drop_addin_json('//tei:ref', ' ADDIN ZOTERO_ITEM',
                                         'hi', 'reference_to_link', self)
 
         # handle bibliography
