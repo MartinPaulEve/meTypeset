@@ -278,17 +278,19 @@ class ListClassifier(Debuggable):
         found = []
 
         for item in whole_document:
-            text = manipulate.get_stripped_text(item).strip()
+            if 'rend' in item.attrib:
+                if item.attrib['rend'] != 'Bibliography':
+                    text = manipulate.get_stripped_text(item).strip()
 
-            if text.startswith(current_value):
-                found.append(item)
+                    if text.startswith(current_value):
+                        found.append(item)
 
-                current += 1
+                        current += 1
 
-                if current > len(footnote_text) - 1:
-                    break
+                        if current > len(footnote_text) - 1:
+                            break
 
-                current_value = footnote_text[current]
+                        current_value = footnote_text[current]
 
         # note: all lists are reversed by this point (ie go from the back of the document upwards)
 
