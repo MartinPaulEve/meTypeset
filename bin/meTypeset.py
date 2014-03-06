@@ -15,6 +15,7 @@ Options:
     --interactive                                   Enable step-by-step interactive mode
     -h, --help                                      Show this screen.
     -m, --metadata <metadata_file>                  Metadata file
+    --prettytei                                     Indent and format intermediary TEI
     -p, --proprietary                               Enables proprietary math parsing. Requires omml2mml.xsl
     -s, --settings <settings_file>                  Settings file
     -v, --version                                   Show version.

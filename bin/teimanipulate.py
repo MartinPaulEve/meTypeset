@@ -19,8 +19,8 @@ class TeiManipulate(Manipulate):
         Manipulate.__init__(self, gv)
 
     def save_tree(self, tree):
-        tree.write(self.dom_temp_file, pretty_print=True)
-        tree.write(self.dom_to_load, pretty_print=True)
+        tree.write(self.dom_temp_file, pretty_print=self.gv.settings.args['--prettytei'])
+        tree.write(self.dom_to_load, pretty_print=self.gv.settings.args['--prettytei'])
 
     def get_object_list(self, xpath, start_text, wrap_tag):
         # load the DOM
