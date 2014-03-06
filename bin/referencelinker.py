@@ -238,8 +238,16 @@ class ReferenceLinker(Debuggable):
             matches = reference_test.finditer(text)
 
             for match in matches:
-                for item in match.group('text').split(u';'):
-                    to_stub.append(ReplaceStub(self.gv, p, item.strip(), tree, manipulate))
+                # exclude any square brackets with numbers inside
+                sub_match = re.compile('^.+\[\d+\.*\]')
+                smatch = sub_match.match(match.group('text'))
+
+                if smatch:
+                    self.debug.print_debug(self, u'Skipping link of {0} because found square '
+                                                 u'bracket match'.format(match.group('text')))
+                else:
+                    for item in match.group('text').split(u';'):
+                        to_stub.append(ReplaceStub(self.gv, p, item.strip(), tree, manipulate))
 
         for link in to_stub:
             link.link(to_stub)
