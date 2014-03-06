@@ -232,8 +232,7 @@ class ReferenceLinker(Debuggable):
                 etree.strip_tags(item.getparent(), 'REMOVE')
 
         if count > 0:
-            tree.write(self.gv.nlm_file_path)
-            tree.write(self.gv.nlm_temp_file_path)
+            manipulate.save_tree(tree)
             self.debug.print_debug(self, u'Removed {0} blank ext-link tags'.format(count))
 
         ref_items = tree.xpath('//back/ref-list/ref')
@@ -253,8 +252,7 @@ class ReferenceLinker(Debuggable):
 
         if parsed > 0:
 
-            tree.write(self.gv.nlm_file_path)
-            tree.write(self.gv.nlm_temp_file_path)
+            manipulate.save_tree(tree)
 
             self.debug.print_debug(self, u'Replace {0} instances of "---." at start of references'.format(parsed))
 
@@ -295,8 +293,7 @@ class ReferenceLinker(Debuggable):
         if len(ref_items) == 0:
             self.debug.print_debug(self, u'Found no references to link')
 
-            tree.write(self.gv.nlm_file_path)
-            tree.write(self.gv.nlm_temp_file_path)
+            manipulate.save_tree(tree)
 
             return
 
@@ -344,8 +341,7 @@ class ReferenceLinker(Debuggable):
             link.link()
             #pass
 
-        tree.write(self.gv.nlm_file_path)
-        tree.write(self.gv.nlm_temp_file_path)
+        manipulate.save_tree(tree)
 
     def search_references(self, search_term, ref_items, manipulate, input_block):
         results = []
@@ -386,8 +382,7 @@ class ReferenceLinker(Debuggable):
 
         ReplaceObject(self.gv, source, dest).link()
 
-        tree.write(self.gv.nlm_file_path)
-        tree.write(self.gv.nlm_temp_file_path)
+        manipulate.save_tree(tree)
 
     def handle_search(self, manipulate, opts, p, prompt, ref_items):
         name = prompt.input_('Enter search term:')
@@ -482,8 +477,7 @@ class ReferenceLinker(Debuggable):
             elif result == 'delall':
                 delete_all = True
 
-        tree.write(self.gv.nlm_file_path)
-        tree.write(self.gv.nlm_temp_file_path)
+        manipulate.save_tree(tree)
 
     def prune(self):
         self.debug.print_debug(self, u'Deleting all stubs from article')
@@ -495,8 +489,7 @@ class ReferenceLinker(Debuggable):
         for p in tree.xpath('//xref[@ref-type="bibr" and @rid="TO_LINK"]'):
             self.extract_contents(p)
 
-        tree.write(self.gv.nlm_file_path)
-        tree.write(self.gv.nlm_temp_file_path)
+        manipulate.save_tree(tree)
 
 
 def main():

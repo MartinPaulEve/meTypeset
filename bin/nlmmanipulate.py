@@ -414,5 +414,4 @@ class NlmManipulate(Manipulate):
 
                 Manipulate.append_safe(ref_list, refs, self)
 
-        tree.write(self.gv.nlm_file_path)
-        tree.write(self.gv.nlm_temp_file_path)
+        self.save_tree(tree)
