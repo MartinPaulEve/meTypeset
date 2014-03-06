@@ -48,7 +48,7 @@ class ReplaceObject(Debuggable):
             bib_id = self.reference_to_link.attrib['id']
         else:
             self.reference_to_link.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
-            bib_id = u'ID{0}'.format(unicode(uuid.uuid4()))
+            bib_id = self.reference_to_link.attrib['id']
 
         self.paragraph.attrib['rid'] = bib_id
 
