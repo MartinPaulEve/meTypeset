@@ -133,7 +133,6 @@ class ReplaceStub(Debuggable):
             self.debug.print_debug(self, u'Replace text is too short: bailing')
             return
 
-
         if self.paragraph.text and self.replace_text in self.paragraph.text and len(self.paragraph) > 0:
             self.replace_in_text_and_update_others(object_list)
 
@@ -387,7 +386,6 @@ class ReferenceLinker(Debuggable):
             # do link
             selected.link()
 
-
     def run_prompt(self):
         self.debug.print_debug(self, u'Entering interactive mode')
 
@@ -458,6 +456,9 @@ def main():
     rl_instance = ReferenceLinker(bare_gv)
 
     if args['scan']:
+        if args['--interactive'] is True:
+            rl_instance.run(False)
+
         rl_instance.run(args['--interactive'])
 
     elif args['link']:
