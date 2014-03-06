@@ -152,7 +152,9 @@ class MeTypeset (Debuggable):
             TeiToNlm(self.gv).run(not found_bibliography)
 
             # run reference linker
-            ReferenceLinker(self.gv).run(self.args['--interactive'])
+            rl = ReferenceLinker(self.gv)
+            rl.run(self.args['--interactive'])
+            rl.cleanup()
 
             # run table classifier
             cc = CaptionClassifier(self.gv)

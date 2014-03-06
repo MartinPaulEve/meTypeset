@@ -56,16 +56,19 @@ class ReplaceObject(Debuggable):
 
 
 class ReplaceStub(Debuggable):
-    def __init__(self, global_variables, paragraph, replace_text, tree, manipulate):
+    def __init__(self, global_variables, paragraph, replace_text, tree, manipulate, link_text='TO_LINK',
+                 length_ignore=False):
         self.paragraph = paragraph
         self.replace_text = replace_text
         self.gv = global_variables
         self.debug = self.gv.debug
         self.tree = tree
         self.manipulate = manipulate
+        self.link_text = link_text
+        self.length_ignore = length_ignore
         Debuggable.__init__(self, 'Reference Stub Linker Object')
 
-    def replace_in_text(self, element):
+    def replace_in_text(self, element, link_text):
         if not self.replace_text in element.text:
             # safety check: if not in the text, just return
             return element
@@ -76,7 +79,7 @@ class ReplaceStub(Debuggable):
         encapsulate.text = before_after[0]
 
         new_element = etree.Element('xref')
-        new_element.attrib['rid'] = 'TO_LINK'
+        new_element.attrib['rid'] = link_text
         new_element.attrib['ref-type'] = 'bibr'
         new_element.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
         new_element.text = self.replace_text
@@ -92,12 +95,12 @@ class ReplaceStub(Debuggable):
 
         return encapsulate
 
-    def replace_in_tail(self, element):
+    def replace_in_tail(self, element, link_text):
 
         before_after = element.tail.split(self.replace_text, 1)
 
         new_element = etree.Element('xref')
-        new_element.attrib['rid'] = 'TO_LINK'
+        new_element.attrib['rid'] = link_text
         new_element.attrib['ref-type'] = 'bibr'
         new_element.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
         new_element.text = self.replace_text
@@ -109,19 +112,19 @@ class ReplaceStub(Debuggable):
 
         return new_element
 
-    def replace_in_text_and_update_others(self, object_list):
+    def replace_in_text_and_update_others(self, object_list, link_text):
         to_update = []
         if object_list is not None:
             for item in object_list:
                 if item.paragraph is self.paragraph:
                     to_update.append(item)
 
-        self.paragraph = self.replace_in_text(self.paragraph)
+        self.paragraph = self.replace_in_text(self.paragraph, self.link_text)
 
         for item in to_update:
             item.paragraph = self.paragraph
 
-    def link(self, object_list = None):
+    def link(self, object_list=None):
         # this procedure is more complex than desirable because the content can appear between tags (like italic)
         # otherwise it would be a straight replace
 
@@ -129,12 +132,12 @@ class ReplaceStub(Debuggable):
             self.debug.print_debug(self, u'Replace text is empty: bailing')
             return
 
-        if len(self.replace_text) < 3:
+        if not self.length_ignore and len(self.replace_text) < 3:
             self.debug.print_debug(self, u'Replace text is too short: bailing')
             return
 
         if self.paragraph.text and self.replace_text in self.paragraph.text and len(self.paragraph) > 0:
-            self.replace_in_text_and_update_others(object_list)
+            self.replace_in_text_and_update_others(object_list, self.link_text)
 
             self.manipulate.save_tree(self.tree)
 
@@ -143,8 +146,8 @@ class ReplaceStub(Debuggable):
             self.tree = self.manipulate.load_dom_tree()
 
         if self.paragraph.text and self.replace_text in self.paragraph.text and len(self.paragraph) == 0:
-            self.replace_in_text_and_update_others(object_list)
-            self.paragraph = self.replace_in_text(self.paragraph)
+            self.replace_in_text_and_update_others(object_list, self.link_text)
+            self.paragraph = self.replace_in_text(self.paragraph, self.link_text)
 
             self.manipulate.save_tree(self.tree)
 
@@ -155,7 +158,7 @@ class ReplaceStub(Debuggable):
         for sub_element in self.paragraph:
             if sub_element.tag != 'xref':
                 if sub_element.text and self.replace_text in sub_element.text:
-                    self.replace_in_text(sub_element)
+                    self.replace_in_text(sub_element, self.link_text)
 
                     self.manipulate.save_tree(self.tree)
 
@@ -163,7 +166,7 @@ class ReplaceStub(Debuggable):
                                            u'Successfully linked {0} stub from sub element'.format(self.replace_text))
 
             if sub_element.tail is not None and self.replace_text in sub_element.tail:
-                new_element = self.replace_in_tail(sub_element)
+                new_element = self.replace_in_tail(sub_element, self.link_text)
 
                 self.manipulate.save_tree(self.tree)
 
@@ -180,19 +183,8 @@ class ReferenceLinker(Debuggable):
         self.debug = self.gv.debug
         Debuggable.__init__(self, 'Reference Linker')
 
-    def run(self, interactive):
-        if interactive:
-            self.run_prompt()
-            return
-
-        manipulate = NlmManipulate(self.gv)
-
-        tree = manipulate.load_dom_tree()
-
-        ref_items = tree.xpath('//back/ref-list/ref')
-
+    def process_ibid_authors(self, ref_items):
         parsed = 0
-
         # this checks for items beginning with "---." and replaces them with the real author name
         for ref in ref_items:
             if ref.text is not None and ord(ref.text[0]) == 8212 and ord(ref.text[1]) == 8212 and \
@@ -216,6 +208,31 @@ class ReferenceLinker(Debuggable):
 
                 except:
                     pass
+        return parsed
+
+    def run(self, interactive):
+        if interactive:
+            self.run_prompt()
+            return
+
+        manipulate = NlmManipulate(self.gv)
+
+        tree = manipulate.load_dom_tree()
+
+        ref_items = tree.xpath('//back/ref-list/ref')
+
+        # handle numbered reference items
+        references_and_numbers = {}
+
+        for ref in ref_items:
+            text = manipulate.get_stripped_text(ref)
+            ref_match = re.compile('^(?P<number>\d+)\.*')
+            result = ref_match.match(text)
+
+            if result:
+                references_and_numbers[result.group('number')] = ref
+
+        parsed = self.process_ibid_authors(ref_items)
 
         if parsed > 0:
 
@@ -232,18 +249,25 @@ class ReferenceLinker(Debuggable):
 
             text = manipulate.get_stripped_text(p)
 
-            reference_test = re.compile('^.+\((?P<text>.+?)\)')
+            reference_test = re.compile('\((?P<text>.+?)\)')
             matches = reference_test.finditer(text)
 
-            for match in matches:
-                # exclude any square brackets with numbers inside
-                sub_match = re.compile('^.+\[\d+\.*\]')
-                smatch = sub_match.match(match.group('text'))
+            # exclude any square brackets with numbers inside
+            sub_match = re.compile('\[(?P<square>\d*[,;\d\s]*)\]')
+            smatch = sub_match.search(text)
 
-                if smatch:
-                    self.debug.print_debug(self, u'Skipping link of {0} because found square '
-                                                 u'bracket match'.format(match.group('text')))
-                else:
+            if smatch:
+                smatches = sub_match.finditer(text)
+                for smatch in smatches:
+                    self.debug.print_debug(self, u'Handling references in square '
+                                                 u'brackets: [{0}] '.format(smatch.group('square')))
+
+                    for item in re.split(';|,', smatch.group('square')):
+                        if item in references_and_numbers:
+                            to_stub.append(ReplaceStub(self.gv, p, item.strip(), tree, manipulate, 'TO_LINK_NUMBER',
+                                                       length_ignore=True))
+            else:
+                for match in matches:
                     for item in match.group('text').split(u';'):
                         to_stub.append(ReplaceStub(self.gv, p, item.strip(), tree, manipulate))
 
@@ -258,6 +282,14 @@ class ReferenceLinker(Debuggable):
             tree.write(self.gv.nlm_temp_file_path)
 
             return
+
+        for p in tree.xpath('//xref[@rid="TO_LINK_NUMBER"]'):
+            text = manipulate.get_stripped_text(p)
+
+            if text in references_and_numbers:
+                ReplaceObject(self.gv, p, references_and_numbers[text]).link()
+            else:
+                p.attrib['rid'] = 'TO_LINK'
 
         for p in tree.xpath('//xref[@rid="TO_LINK"]'):
             text = manipulate.get_stripped_text(p)
@@ -347,6 +379,10 @@ class ReferenceLinker(Debuggable):
 
         self.handle_input(manipulate, opts, p, prompt, ref_items, sel, result_list)
         pass
+
+    def cleanup(self):
+        manipulate = NlmManipulate(self.gv)
+        manipulate.remove_reference_numbering()
 
     def extract_contents(self, p):
         p.tag = 'REMOVE'
