@@ -129,6 +129,11 @@ class ReplaceStub(Debuggable):
             self.debug.print_debug(self, u'Replace text is empty: bailing')
             return
 
+        if len(self.replace_text) < 3:
+            self.debug.print_debug(self, u'Replace text is too short: bailing')
+            return
+
+
         if self.paragraph.text and self.replace_text in self.paragraph.text and len(self.paragraph) > 0:
             self.replace_in_text_and_update_others(object_list)
 
@@ -137,8 +142,6 @@ class ReplaceStub(Debuggable):
             self.debug.print_debug(self, u'Successfully linked {0} stub with sub elements'.format(self.replace_text))
 
             self.tree = self.manipulate.load_dom_tree()
-
-            return
 
         if self.paragraph.text and self.replace_text in self.paragraph.text and len(self.paragraph) == 0:
             self.replace_in_text_and_update_others(object_list)
@@ -149,7 +152,6 @@ class ReplaceStub(Debuggable):
             self.debug.print_debug(self, u'Successfully linked {0} stub'.format(self.replace_text))
 
             self.tree = self.manipulate.load_dom_tree()
-            return
 
         for sub_element in self.paragraph:
             if sub_element.tag != 'xref':
@@ -160,7 +162,6 @@ class ReplaceStub(Debuggable):
 
                     self.debug.print_debug(self,
                                            u'Successfully linked {0} stub from sub element'.format(self.replace_text))
-                    return
 
             if sub_element.tail is not None and self.replace_text in sub_element.tail:
                 new_element = self.replace_in_tail(sub_element)
@@ -169,8 +170,6 @@ class ReplaceStub(Debuggable):
 
                 self.debug.print_debug(self,
                                        u'Successfully linked {0} stub from sub element tail'.format(self.replace_text))
-
-                return
 
 
         self.debug.print_debug(self, u'Failed to link {0} stub'.format(self.replace_text))
