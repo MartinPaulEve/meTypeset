@@ -14,6 +14,7 @@ A class that scans for meTypeset size fields in a TEI file.
 
 from debug import Debuggable
 
+
 class SizeClassifier(Debuggable):
     def __init__(self, global_variables):
         self.gv = global_variables

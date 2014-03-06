@@ -368,14 +368,43 @@ class TeiManipulate(Manipulate):
 
         return iterator
 
-    # changes the parent element of the outer_xpath expression to the new_value
+    def check_for_disallowed_elements(self, allowed_elements, sub_element):
+        add = True
+        if sub_element.tag \
+            and not sub_element.tag.replace('{http://www.tei-c.org/ns/1.0}', '') in allowed_elements:
+            add = False
+            self.debug.print_debug(self, u'Guessed title contained a disallowed '
+                                         u'element ({0}). Skipping.'.format(sub_element.tag))
+        return add
+
     def change_outer(self, outer_xpath, new_value, size_attribute):
+        # changes the parent element of the outer_xpath expression to the new_value
         tree = self.load_dom_tree()
+
+        allowed_elements = ['bold', 'italic', 'p', 'hi']
 
         # search the tree and grab the parent
         for child in tree.xpath(outer_xpath + "/..", namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            child.tag = new_value
-            child.attrib['meTypesetSize'] = size_attribute
+            add = True
+
+            for sub_element in child:
+                add = self.check_for_disallowed_elements(allowed_elements, sub_element)
+
+                if not add:
+                    break
+
+                for sub_child in sub_element:
+                    add = self.check_for_disallowed_elements(allowed_elements, sub_child)
+
+                    if not add:
+                        break
+
+                if not add:
+                    break
+
+            if add:
+                child.tag = new_value
+                child.attrib['meTypesetSize'] = size_attribute
 
         self.save_tree(tree)
 
