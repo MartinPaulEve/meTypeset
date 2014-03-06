@@ -41,7 +41,7 @@ class TeiToNlm (Debuggable):
 
         manipulate.remove_empty_elements('//sec//p')
 
-        #manipulate.tag_inline_refs()
+        manipulate.remove_reference_numbering()
 
         if process_ref_lists:
             self.debug.print_debug(self, u'Finding potential reference lists')

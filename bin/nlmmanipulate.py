@@ -17,6 +17,17 @@ class NlmManipulate(Manipulate):
         self.mod_name = 'NLM'
         Manipulate.__init__(self, gv)
 
+    def remove_reference_numbering(self):
+        tree = self.load_dom_tree()
+
+        for ref in tree.xpath('//ref'):
+            if hasattr(ref, 'text') and ref.text is not None:
+                text = ref.text
+
+                ref.text = re.sub(r'^\d\d*\s*\.?\s*', r'', text)
+
+        self.save_tree(tree)
+
     def remove_empty_elements(self, element):
         tree = self.load_dom_tree()
 
