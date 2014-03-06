@@ -219,6 +219,23 @@ class ReferenceLinker(Debuggable):
 
         tree = manipulate.load_dom_tree()
 
+        # pre-cleanup: remove all empty ext-links as these break the linker
+        items_to_clean = tree.xpath('//ext-link')
+
+        count = 0
+
+        for item in items_to_clean:
+            if '{http://www.w3.org/1999/xlink}href' in item.attrib and \
+                    item.attrib['{http://www.w3.org/1999/xlink}href'] == '':
+                count += 1
+                item.tag = 'REMOVE'
+                etree.strip_tags(item.getparent(), 'REMOVE')
+
+        if count > 0:
+            tree.write(self.gv.nlm_file_path)
+            tree.write(self.gv.nlm_temp_file_path)
+            self.debug.print_debug(self, u'Removed {0} blank ext-link tags'.format(count))
+
         ref_items = tree.xpath('//back/ref-list/ref')
 
         # handle numbered reference items
@@ -245,7 +262,7 @@ class ReferenceLinker(Debuggable):
         to_stub = []
 
         for p in tree.xpath('//sec/p[not(mml:math)]',
-                            namespaces={'mml': '"http://www.w3.org/1998/Math/MathML"'}):
+                            namespaces={'mml': 'http://www.w3.org/1998/Math/MathML'}):
 
             text = manipulate.get_stripped_text(p)
 
