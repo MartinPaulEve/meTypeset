@@ -401,10 +401,8 @@ class ListClassifier(Debuggable):
 
         dash_lists = self.gv.settings.get_setting('dash-lists', self) == "True"
         bracket_lists = self.gv.settings.get_setting('bracket-lists', self) == "True"
-        bracket_refs = self.gv.settings.get_setting('bracket-references-and-footnotes',
-                                                      self) == "True"
-        superscripted_footnotes = self.gv.settings.get_setting('superscripted-footnotes',
-                                                                 self) == "True"
+        bracket_refs = self.gv.settings.get_setting('bracket-references-and-footnotes', self) == "True"
+        superscripted_footnotes = self.gv.settings.get_setting('superscripted-footnotes', self) == "True"
 
         if not dash_lists and not bracket_lists and not bracket_refs and not superscripted_footnotes:
             return
