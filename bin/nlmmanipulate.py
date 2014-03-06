@@ -243,37 +243,6 @@ class NlmManipulate(Manipulate):
 
         self.save_tree(tree)
 
-    def tag_inline_refs(self):
-        tree = self.load_dom_tree()
-
-        for paragraph in tree.xpath('//*//text()'):
-            # tag numbered refs
-            xref_paragraph_numbered = re.sub(r'(,|\[)([0-9]{1,3})(,|\])',
-                                             r'\[<xref id="\2" ref-type="bibr">\2</xref>\]', paragraph)
-            # tag authorname refs
-            # first_author_list does not currently exist!
-
-            # populate a dummy first_author_list for testing
-            first_author_list = ['Eve']
-
-            for authorname in first_author_list:
-                match = re.match(r'(?P<before>.+?)\((?P<author>.*?' + authorname + r'.*?[^amp])(;|\))(?P<after>.+)',
-                                 xref_paragraph_numbered)
-
-                if match:
-                    xref = etree.Element('xref', {'id':'INSERT ID HERE', 'ref-type':'bibr'})
-                    xref.text = u'({0})'.format(match.group('author'))
-                    xref.tail = match.group('after')
-
-                    paragraph.getparent().text = match.group('before')
-                    paragraph.getparent().insert(0, xref)
-
-
-                    self.debug.print_debug(self, u'Inline reference handler detected and replaced '
-                                                 u'{0}'.format(u'({0})'.format(match.group('author'))))
-
-        self.save_tree(tree)
-
     def reflist_indent_method(self, tree):
         # tag the last item as a reference list
         indentmethod = tree.xpath('(//sec[title][disp-quote] | //sec[title][list])[last()]')
