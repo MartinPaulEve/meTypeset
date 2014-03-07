@@ -84,12 +84,17 @@ class TeiManipulate(Manipulate):
                     Manipulate.append_safe(new_element, list_item, self)
                     list_item.tag = '{http://www.tei-c.org/ns/1.0}ref'
                     list_item.attrib['target'] = 'None'
+            else:
+                self.debug.print_debug(self, u'Last element in document was {0}. Not treating as '
+                                             u'bibliography.'.format(xpath[0].tag))
         return found
 
     def find_reference_list_in_word_list(self, tree):
 
+        self.debug.print_debug(self, u'Ascertaining if last element is a bibliographic list')
+
         # determine if the last element in the document is a list
-        select = u'//tei:div[last()]/*[last()]'
+        select = u'(//tei:div/*[not(self::tei:div)])[last()]'
 
         found = False
 
