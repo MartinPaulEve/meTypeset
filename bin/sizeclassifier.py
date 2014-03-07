@@ -384,8 +384,14 @@ class SizeClassifier(Debuggable):
                 key = u'heading {0}'.format(count + 1)
                 headings[key] = sorted_list[count]
 
+                key = u'Heading {0}'.format(count + 1)
+                headings[key] = sorted_list[count]
+
             for count in range(len(sorted_list) - 1, 8):
                 key = u'heading {0}'.format(count + 1)
+                headings[key] = 100 - 10 * count
+
+                key = u'Heading {0}'.format(count + 1)
                 headings[key] = 100 - 10 * count
         else:
             headings = {'heading 1': 100, 'heading 2': 90, 'heading 3': 80, 'heading 4': 70, 'heading 5': 60,
