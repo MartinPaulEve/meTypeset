@@ -279,7 +279,7 @@ class ReferenceLinker(Debuggable):
             matches = reference_test.finditer(text)
 
             # exclude any square brackets with numbers inside
-            sub_match = re.compile('\[(?P<square>\d*[,;\d\s]*)\]')
+            sub_match = re.compile('\[(?P<square>\d*[,\-;\d\s]*)\]')
             smatch = sub_match.search(text)
 
             if smatch:
@@ -288,8 +288,51 @@ class ReferenceLinker(Debuggable):
                     self.debug.print_debug(self, u'Handling references in square '
                                                  u'brackets: [{0}] '.format(smatch.group('square')))
                     for item in re.split(';|,', smatch.group('square')):
-                        to_stub.append(ReplaceStub(self.gv, p, item.strip(), tree, manipulate, 'TO_LINK_NUMBER',
-                                                   length_ignore=True))
+                        if '-' in item:
+                            parent, tail = manipulate.find_text(p, item)
+
+                            if parent is not None:
+                                new_string = ''
+
+                                try:
+                                    split_range = item.strip().split('-')
+                                    for no in range(int(split_range[0]), int(split_range[1])):
+                                        new_string += str(no) + ','
+                                except:
+                                    self.debug.print_debug(self, u'Unable to parse reference '
+                                                                 u'number in range {0}'.format(item))
+                                    break
+
+                                if new_string.endswith(',') and not item.endswith(','):
+                                    new_string = new_string[0:len(new_string) - 1]
+
+                                if tail and new_string != '':
+                                    parent.tail = parent.tail.replace(item, new_string)
+                                elif not tail and new_string != '':
+                                    parent.text = parent.text.replace(item, new_string)
+
+                                try:
+                                    split_range = item.strip().split('-')
+                                    for no in range(int(split_range[0]), int(split_range[1]) + 1):
+                                        self.debug.print_debug(self, u'Parsing reference '
+                                                                     u'number in range {0}'.format(str(no)))
+
+                                        to_stub.append(ReplaceStub(self.gv, p, str(no), tree, manipulate,
+                                                                   'TO_LINK_NUMBER', length_ignore=True))
+                                except:
+                                    self.debug.print_debug(self, u'Unable to parse reference '
+                                                                 u'number in range {0}'.format(item))
+                                    break
+
+                            else:
+                                # just replace the components
+                                split_range = item.strip().split('-')
+                                for link in split_range:
+                                    to_stub.append(ReplaceStub(self.gv, p, link, tree, manipulate,
+                                                               'TO_LINK_NUMBER', length_ignore=True))
+                        else:
+                            to_stub.append(ReplaceStub(self.gv, p, item.strip(), tree, manipulate, 'TO_LINK_NUMBER',
+                                                       length_ignore=True))
 
                         square_bracket_count[item.strip()] = 1
             else:

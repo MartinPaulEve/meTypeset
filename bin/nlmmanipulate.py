@@ -221,6 +221,22 @@ class NlmManipulate(Manipulate):
         tree.write(self.dom_temp_file, pretty_print=True)
         tree.write(self.dom_to_load, pretty_print=True)
 
+    def find_text(self, paragraph, text):
+        if paragraph.text and text in paragraph.text:
+            return paragraph, False
+
+        if paragraph.tail and text in paragraph.tail:
+            return paragraph, True
+
+        for sub_element in paragraph:
+            ret, tail = self.find_text(sub_element, text)
+
+            if ret is not None:
+                return ret, tail
+
+        return None, False
+
+
     def insert_break(self, search_xpath, tag_name):
         """
         Opens and closes an XML tag within a document. This is primarily useful when we have a marker such as
