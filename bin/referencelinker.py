@@ -183,9 +183,7 @@ class ReplaceStub(Debuggable):
 
         if not linked:
             if not in_xref:
-                self.debug.print_debug(self, u'Did not link {0} stub '
-                                             u'(context: {1})'.format(self.replace_text,
-                                                                      etree.tostring(self.paragraph)))
+                self.debug.print_debug(self, u'Did not link {0} stub'.format(self.replace_text))
 
 
 class ReferenceLinker(Debuggable):
