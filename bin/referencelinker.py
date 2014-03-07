@@ -296,7 +296,7 @@ class ReferenceLinker(Debuggable):
 
                                 try:
                                     split_range = item.strip().split('-')
-                                    for no in range(int(split_range[0]), int(split_range[1])):
+                                    for no in range(int(split_range[0]), int(split_range[1]) + 1):
                                         new_string += str(no) + ','
                                 except:
                                     self.debug.print_debug(self, u'Unable to parse reference '
