@@ -435,9 +435,21 @@ class TeiManipulate(Manipulate):
             self.debug.print_debug(self, u'Enclosing and changing size: {0} to {1}'.format(child.tag, change_tag))
             new_element = etree.Element(tag)
             child.attrib[u'meTypesetSize'] = size_attribute
-            child.tag = change_tag
+            if child.tag == '{http://www.tei-c.org/ns/1.0}' + change_tag:
+                child.tag = 'REMOVE'
+            else:
+                for sub_element in child:
+                    if sub_element.tag == '{http://www.tei-c.org/ns/1.0}' + change_tag:
+                        child.tag = 'REMOVE'
+
+            if child.tag != 'REMOVE':
+                child.tag = change_tag
+
             child.addnext(new_element)
             Manipulate.append_safe(new_element, child, self)
+
+            if child.tag == 'REMOVE':
+                etree.strip_tags(child.getparent(), 'REMOVE')
 
             if not (child.attrib['rend'] is None):
                 if u'bold' in child.attrib[u'rend']:

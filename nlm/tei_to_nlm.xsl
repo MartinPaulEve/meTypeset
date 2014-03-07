@@ -370,7 +370,7 @@
     </xsl:element>
   </xsl:template>
   
-  <xsl:template match="div/head">
+  <xsl:template match="div/head | div/p/head">
     <xsl:element name="title">
       <xsl:if test="@rend='ref-list-parent' or @rend='ref-list-before'">
         <xsl:attribute name="meTypesetRender">
