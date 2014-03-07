@@ -127,6 +127,8 @@ class ReplaceStub(Debuggable):
     def link(self, object_list=None):
         # this procedure is more complex than desirable because the content can appear between tags (like italic)
         # otherwise it would be a straight replace
+        linked = False
+        in_xref = False
 
         if self.replace_text is not None and self.replace_text == '':
             self.debug.print_debug(self, u'Replace text is empty: bailing')
@@ -142,6 +144,7 @@ class ReplaceStub(Debuggable):
             self.manipulate.save_tree(self.tree)
 
             self.debug.print_debug(self, u'Successfully linked {0} stub with sub elements'.format(self.replace_text))
+            linked = True
 
             self.tree = self.manipulate.load_dom_tree()
 
@@ -152,6 +155,7 @@ class ReplaceStub(Debuggable):
             self.manipulate.save_tree(self.tree)
 
             self.debug.print_debug(self, u'Successfully linked {0} stub'.format(self.replace_text))
+            linked = True
 
             self.tree = self.manipulate.load_dom_tree()
 
@@ -164,6 +168,9 @@ class ReplaceStub(Debuggable):
 
                     self.debug.print_debug(self,
                                            u'Successfully linked {0} stub from sub element'.format(self.replace_text))
+                    linked = True
+            else:
+                in_xref = True
 
             if sub_element.tail is not None and self.replace_text in sub_element.tail:
                 new_element = self.replace_in_tail(sub_element, self.link_text)
@@ -172,9 +179,13 @@ class ReplaceStub(Debuggable):
 
                 self.debug.print_debug(self,
                                        u'Successfully linked {0} stub from sub element tail'.format(self.replace_text))
+                linked = True
 
-
-        self.debug.print_debug(self, u'Failed to link {0} stub'.format(self.replace_text))
+        if not linked:
+            if not in_xref:
+                self.debug.print_debug(self, u'Did not link {0} stub '
+                                             u'(context: {1})'.format(self.replace_text,
+                                                                      etree.tostring(self.paragraph)))
 
 
 class ReferenceLinker(Debuggable):
