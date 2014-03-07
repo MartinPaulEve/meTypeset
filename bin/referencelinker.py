@@ -270,7 +270,7 @@ class ReferenceLinker(Debuggable):
 
         square_bracket_count = {}
 
-        for p in tree.xpath('//sec/p[not(mml:math)]',
+        for p in tree.xpath('//sec//p[not(mml:math)] | //td',
                             namespaces={'mml': 'http://www.w3.org/1998/Math/MathML'}):
 
             text = manipulate.get_stripped_text(p)
