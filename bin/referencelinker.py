@@ -259,6 +259,8 @@ class ReferenceLinker(Debuggable):
         to_link = []
         to_stub = []
 
+        square_bracket_count = {}
+
         for p in tree.xpath('//sec/p[not(mml:math)]',
                             namespaces={'mml': 'http://www.w3.org/1998/Math/MathML'}):
 
@@ -276,11 +278,11 @@ class ReferenceLinker(Debuggable):
                 for smatch in smatches:
                     self.debug.print_debug(self, u'Handling references in square '
                                                  u'brackets: [{0}] '.format(smatch.group('square')))
-
                     for item in re.split(';|,', smatch.group('square')):
-                        if item in references_and_numbers:
-                            to_stub.append(ReplaceStub(self.gv, p, item.strip(), tree, manipulate, 'TO_LINK_NUMBER',
-                                                       length_ignore=True))
+                        to_stub.append(ReplaceStub(self.gv, p, item.strip(), tree, manipulate, 'TO_LINK_NUMBER',
+                                                   length_ignore=True))
+
+                        square_bracket_count[item.strip()] = 1
             else:
                 for match in matches:
                     for item in match.group('text').split(u';'):
@@ -289,6 +291,14 @@ class ReferenceLinker(Debuggable):
         for link in to_stub:
             link.link(to_stub)
             #pass
+
+        use_index_method = False
+
+        if len(square_bracket_count) != len(references_and_numbers):
+            # we found more than 3 [1], [2] style references but no reference elements beginning with numbers
+            # so, we will simply try to use the /index/ of the reference item (-1 for zero-based compensation)
+            self.debug.print_debug(self, u'Using indexical method for square bracket correlation')
+            use_index_method = True
 
         if len(ref_items) == 0:
             self.debug.print_debug(self, u'Found no references to link')
@@ -300,10 +310,19 @@ class ReferenceLinker(Debuggable):
         for p in tree.xpath('//xref[@rid="TO_LINK_NUMBER"]'):
             text = manipulate.get_stripped_text(p)
 
-            if text in references_and_numbers:
-                ReplaceObject(self.gv, p, references_and_numbers[text]).link()
+            if not use_index_method:
+                if text in references_and_numbers:
+                    ReplaceObject(self.gv, p, references_and_numbers[text]).link()
+                else:
+                    p.attrib['rid'] = 'TO_LINK'
             else:
-                p.attrib['rid'] = 'TO_LINK'
+                try:
+                    ReplaceObject(self.gv, p, ref_items[int(text) - 1]).link()
+                except:
+                    self.debug.print_debug(self, u'Failed to link to reference {0} + 1 using '
+                                                 u'indexical method'.format(text))
+                    p.attrib['rid'] = 'TO_LINK'
+
 
         for p in tree.xpath('//xref[@rid="TO_LINK"]'):
             text = manipulate.get_stripped_text(p)
