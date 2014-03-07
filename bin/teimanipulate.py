@@ -451,8 +451,22 @@ class TeiManipulate(Manipulate):
         source_node = tree.xpath(u'//tei:head[@meTypesetHeadingID=\'{0}\']/..'.format(str(heading_id)),
                                  namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
 
+        while source_node.tag != '{http://www.tei-c.org/ns/1.0}div':
+            source_node = source_node.getparent()
+
+            if source_node is None:
+                self.debug.print_debug(self, u'Encountered no div traversing up tree. Bailing.')
+                return
+
         destination_node = tree.xpath(u'//tei:head[@meTypesetHeadingID=\'{0}\']/..'.format(str(sibling_id)),
                                       namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
+
+        while destination_node.tag != '{http://www.tei-c.org/ns/1.0}div':
+            destination_node = destination_node.getparent()
+
+            if destination_node is None:
+                self.debug.print_debug(self, u'Encountered no div traversing up tree. Bailing.')
+                return
 
         destination_node.addnext(source_node)
 
