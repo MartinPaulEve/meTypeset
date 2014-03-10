@@ -93,6 +93,8 @@ class TeiToNlm (Debuggable):
         if self.gv.nlm_temp_file_path != self.gv.nlm_file_path:
             shutil.copy2(self.gv.nlm_temp_file_path, self.gv.nlm_file_path)
 
-    def run(self, process_ref_lists):
-        self.run_transform()
+    def run(self, process_ref_lists, transform=True):
+        if transform:
+            self.run_transform()
+
         self.run_quirks(process_ref_lists)
