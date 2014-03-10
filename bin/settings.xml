@@ -75,7 +75,7 @@
     </mt:xml-files>
 
     <mt:languages>
-        <mt:reference-languages>en</mt:reference-languages>
+        <mt:reference-languages>en,de,du,fr,gr,it,sp,sw</mt:reference-languages>
     </mt:languages>
 
     <mt:bibliographicdatabase>

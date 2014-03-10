@@ -228,3 +228,17 @@ Library           Collections
     Should Be Equal As Strings    ${title.text}    REFERENCES
     Should Be Equal As Strings    ${p.text}    Not a real reference
     [Teardown]    Remove Directory    016    recursive=True
+
+017 Removal of stranded titles in French
+    [Tags]    formatting    nlm    017
+    ${mkdir} =    Run Process    mkdir ./017    shell=True
+    ${cp} =    Run Process    cp StrandedTitleFrench.xml ./017/    shell=True
+    ${result} =    Run Process    python ../bin/nlmprocessor.py process ./017/StrandedTitleFrench.xml -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./017/StrandedTitleFrench.xml
+    ${title}=    Get Element    ${xml}    body/sec/title
+    ${p}=    Get Element    ${xml}    body/sec/p
+    Should Be Equal As Strings    ${title.text}    Bibliographie
+    Should Be Equal As Strings    ${p.text}    Not a real reference
+    [Teardown]    Remove Directory    017    recursive=True
