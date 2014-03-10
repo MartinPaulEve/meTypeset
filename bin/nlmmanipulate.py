@@ -408,6 +408,43 @@ class NlmManipulate(Manipulate):
 
         self.save_tree(tree)
 
+    def handle_stranded_reference_titles_from_cues(self):
+        # this method looks for paragraphs with one title element and nothing else whose text is in our
+        # linguistic cues documents. It then removed them as superfluous.
+
+        self.debug.print_debug(self, u'Checking for any stranded titles as a result of reference parsing')
+
+        tree = self.load_dom_tree()
+
+        xpath = '//sec[(count(p) = 0) and (count(title) = 1)]'
+
+        language_list = self.gv.settings.get_setting('reference-languages', self).split(',')
+
+        reference_terms = []
+
+        for language in language_list:
+            with open ('{0}/language/ref_marker_{1}.txt'.format(self.gv.script_dir, language), 'r') as lang_file:
+                lines = lang_file.read().split('\n')
+
+                for line in lines:
+                    reference_terms.append(line.lower())
+
+        for sections in tree.xpath(xpath):
+            process = True
+            for item in sections:
+                if item.tag != 'title':
+                    process = False
+
+            if process:
+                for item in sections:
+                    text = self.get_stripped_text(item)
+
+                    if text.lower() in reference_terms:
+                        sections.getparent().remove(sections)
+                        self.save_tree(tree)
+                        self.debug.print_debug(self, u'Removed a stranded title: {0}'.format(text))
+
+
     def tag_bibliography_refs(self):
         tree = self.load_dom_tree()
 

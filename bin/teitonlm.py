@@ -46,6 +46,8 @@ class TeiToNlm (Debuggable):
             manipulate.find_reference_list()
             manipulate.tag_bibliography_refs()
 
+        manipulate.handle_stranded_reference_titles_from_cues()
+
         manipulate.remove_empty_elements('//sec/list')
         manipulate.remove_empty_elements('//sec/disp-quote')
 
