@@ -207,10 +207,24 @@ Library           Collections
     [Tags]    formatting    nlm    015
     ${mkdir} =    Run Process    mkdir ./015    shell=True
     ${cp} =    Run Process    cp LoneImage.xml ./015/    shell=True
-    ${result} =    Run Process    python ../bin/nlmprocess.py process ./015/LoneImage.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/nlmprocessor.py process ./015/LoneImage.xml -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./015/LoneImage.xml
     ${graphic}=    Get Element    ${xml}    body/sec/p/graphic
     Should Be Equal As Strings    ${graphic.tail}    Figure 5. An Image.
     [Teardown]    Remove Directory    015    recursive=True
+
+016 Removal of stranded titles
+    [Tags]    formatting    nlm    016
+    ${mkdir} =    Run Process    mkdir ./016    shell=True
+    ${cp} =    Run Process    cp StrandedTitle.xml ./016/    shell=True
+    ${result} =    Run Process    python ../bin/nlmprocessor.py process ./016/StrandedTitle.xml -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./016/StrandedTitle.xml
+    ${title}=    Get Element    ${xml}    body/sec/title
+    ${p}=    Get Element    ${xml}    body/sec/p
+    Should Be Equal As Strings    ${title.text}    REFERENCES
+    Should Be Equal As Strings    ${p.text}    Not a real reference
+    [Teardown]    Remove Directory    016    recursive=True

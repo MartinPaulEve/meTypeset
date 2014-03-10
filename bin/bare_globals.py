@@ -28,6 +28,8 @@ class GV (Debuggable):
         Settings.setup_settings_file(self.args)
         self.settings = Settings(Settings.get_settings_file(self, self.settings_file_path), self.args)
 
+        self.script_dir = os.environ['METYPESET']
+
         self.input_file_path = self.settings.args['<input>'].strip()
 
         self.nlm_file_path = self.input_file_path
