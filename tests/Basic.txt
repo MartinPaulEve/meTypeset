@@ -202,3 +202,15 @@ Library           Collections
     Should Be Equal As Strings    ${title.text}    Figure 1
     Should Be Equal As Strings    ${caption.text}    Martin Eve at the pub
     [Teardown]    Remove Directory    014    recursive=True
+
+015 Ensure graphics not removed by empty link remover
+    [Tags]    formatting    nlm    015
+    ${mkdir} =    Run Process    mkdir ./015    shell=True
+    ${cp} =    Run Process    cp LoneImage.xml ./015/    shell=True
+    ${result} =    Run Process    python ../bin/nlmprocess.py process ./015/LoneImage.xml -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./015/LoneImage.xml
+    ${graphic}=    Get Element    ${xml}    body/sec/p/graphic
+    Should Be Equal As Strings    ${graphic.tail}    Figure 5. An Image.
+    [Teardown]    Remove Directory    015    recursive=True
