@@ -35,7 +35,7 @@ class NlmManipulate(Manipulate):
             found = False
             if not paragraph.text and paragraph.text != '':
                 for item in paragraph:
-                    if self.get_stripped_text(item) != '':
+                    if self.get_stripped_text(item) != '' or item.tag == 'graphic':
                         found = True
                         break
             else:
@@ -43,6 +43,8 @@ class NlmManipulate(Manipulate):
 
             if not found:
                 paragraph.getparent().remove(paragraph)
+                self.save_tree(tree)
+                self.debug.print_debug(self, u'Removed an empty element')
 
         self.save_tree(tree)
 
