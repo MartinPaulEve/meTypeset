@@ -33,7 +33,9 @@ class NlmManipulate(Manipulate):
 
         for paragraph in tree.xpath(element):
             found = False
-            if not paragraph.text and paragraph.text != '':
+            text = self.get_stripped_text(paragraph)
+
+            if text == '':
                 for item in paragraph:
                     if self.get_stripped_text(item) != '' or item.tag == 'graphic':
                         found = True
