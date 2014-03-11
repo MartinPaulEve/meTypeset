@@ -207,7 +207,8 @@ class TeiManipulate(Manipulate):
 
         for child in tree.xpath('//tei:p | //tei:head', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             stripped_text = self.get_stripped_text(child)
-            if stripped_text.lower() == cue.lower():
+
+            if stripped_text.lower().strip() == cue.lower().strip():
                 found_element = child
 
         if found_element is not None:
@@ -232,7 +233,11 @@ class TeiManipulate(Manipulate):
 
             found_element.getparent().remove(found_element)
 
-        self.save_tree(tree)
+            self.save_tree(tree)
+
+            return True
+
+        return False
 
     def tag_bibliography(self, xpath, start_text, caller, parent_tag=u'{http://www.tei-c.org/ns/1.0}sec',
                          classify_siblings=False, sibling_tag=u'{http://www.tei-c.org/ns/1.0}cit',

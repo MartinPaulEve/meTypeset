@@ -35,6 +35,7 @@ class BibliographyClassifier(Debuggable):
         Debuggable.__init__(self, 'Bibliography Classifier')
 
     def linguistic_cues(self, manipulate, tree):
+        self.debug.print_debug(self, u'Using linguistic cue method to classify bibliography')
         language_list = self.gv.settings.get_setting('reference-languages', self).split(',')
 
         for language in language_list:
@@ -42,7 +43,8 @@ class BibliographyClassifier(Debuggable):
                 lines = lang_file.read().split('\n')
 
                 for line in lines:
-                    manipulate.find_references_from_cue(line, tree)
+                    if manipulate.find_references_from_cue(line, tree):
+                        return
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('bibliographyclassifier', self,
