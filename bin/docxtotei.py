@@ -148,6 +148,17 @@ class DocxToTei(Debuggable):
             pass
             #self.gv.tei_file_path = self.gv.tei_file_path + 'tei.xml'
 
+        # fix dud LibreOffice conversion
+        doc_prop = open(os.path.join(self.gv.docx_temp_folder_path, 'docProps', 'core.xml'), 'r+')
+        contents = doc_prop.read()
+
+        contents = re.sub('\&\s', '\&amp;\s', contents)
+
+        doc_prop.seek(0)
+        doc_prop.write(contents)
+        doc_prop.truncate()
+
+
         if run_proprietary:
             # run a transform on the copied docx to generate a new version of the Word XML that includes MML
             java_command = self.saxon_omml_to_mml()
