@@ -217,7 +217,44 @@ class ReferenceLinker(Debuggable):
 
                 except:
                     pass
+
+            elif ref.text is not None and ref.text.startswith('_'):
+                ref.text = ref.text.strip('_')
+
+                try:
+                    current = ref
+
+                    while True:
+                        previous = current
+                        current = current.getprevious()
+
+                        if current is None:
+                            break
+
+                        if current.text is not None and ord(current.text[0]) != 8212 or current.text[0] != '_':
+                            authorname = current.text.split('.')[0]
+
+                            ref.text = authorname + ref.text
+                            parsed += 1
+                            break
+
+                except:
+                    pass
+
         return parsed
+
+    def clean_ref_items(self, tree, ref_items, manipulate):
+        allowed_tags = ['italic', 'bold', 'sup', 'sub']
+
+        for ref in ref_items:
+            for item in ref:
+                if not item.tag in allowed_tags:
+                    item.tag = 'REMOVE'
+
+        etree.strip_tags(tree, 'REMOVE')
+
+        manipulate.save_tree(tree)
+        self.debug.print_debug(self, u'Stripped disallowed tags from reference tree')
 
     def run(self, interactive):
         if interactive:
@@ -245,6 +282,8 @@ class ReferenceLinker(Debuggable):
             self.debug.print_debug(self, u'Removed {0} blank ext-link tags'.format(count))
 
         ref_items = tree.xpath('//back/ref-list/ref')
+
+        self.clean_ref_items(tree, ref_items, manipulate)
 
         # handle numbered reference items
         references_and_numbers = {}
