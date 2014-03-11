@@ -205,6 +205,8 @@ class TeiManipulate(Manipulate):
 
         found_element = None
 
+        remove = ['cit', 'quote']
+
         for child in tree.xpath('//tei:p | //tei:head', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             stripped_text = self.get_stripped_text(child)
 
@@ -226,10 +228,24 @@ class TeiManipulate(Manipulate):
                     if len(match_inner) == 1:
                         self.debug.print_debug(self, u'Adding bibliography element from linguistic cue')
                         sibling.attrib['rend'] = 'Bibliography'
+                        sibling.tag = 'p'
+
+                        for tag in sibling:
+                            for remove_tag in remove:
+                                if tag.tag == '{http://www.tei-c.org/ns/1.0}' + remove_tag:
+                                    tag.tag = 'REMOVE'
                 elif len(match) >= 1:
                         # only do this if we find 1 match on the line; otherwise, it's a problem
                         self.debug.print_debug(self, u'Adding bibliography element from linguistic cue')
                         sibling.attrib['rend'] = 'Bibliography'
+                        sibling.tag = 'p'
+
+                        for tag in sibling:
+                            for remove_tag in remove:
+                                if tag.tag == '{http://www.tei-c.org/ns/1.0}' + remove_tag:
+                                    tag.tag = 'REMOVE'
+
+            etree.strip_tags(found_element.getparent(), 'REMOVE')
 
             found_element.getparent().remove(found_element)
 
