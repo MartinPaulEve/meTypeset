@@ -508,12 +508,14 @@ class ReferenceLinker(Debuggable):
 
         return results
 
-    def link_items(self, source_id, dest_id):
+    def link_items(self, source_id, dest_id, manipulate=None, tree=None):
         self.debug.print_debug(self, u'Attempting to link XREF {0} to REF {1}'.format(source_id, dest_id))
 
-        manipulate = NlmManipulate(self.gv)
+        if manipulate is None:
+            manipulate = NlmManipulate(self.gv)
 
-        tree = manipulate.load_dom_tree()
+        if tree is None:
+            tree = manipulate.load_dom_tree()
 
         source = tree.xpath('//xref[@id="{0}"]'.format(source_id))[0]
         dest = tree.xpath('//ref[@id="{0}"]'.format(dest_id))[0]
@@ -539,7 +541,7 @@ class ReferenceLinker(Debuggable):
 
         etree.strip_tags(p.getparent(), 'REMOVE')
 
-    def handle_input(self, manipulate, opts, p, prompt, ref_items, sel, candidates=None):
+    def handle_input(self, manipulate, opts, p, prompt, ref_items, sel, candidates=None, tree=None):
         if sel == 'r':
             prompt.print_(u"Leaving interactive mode on user command")
             return "abort"
@@ -559,7 +561,7 @@ class ReferenceLinker(Debuggable):
             else:
                 self.debug.print_debug(self, u'Linking to ibid ID {0}'.format(self.ibid))
 
-                self.link_items(p.attrib['id'], self.ibid)
+                self.link_items(p.attrib['id'], self.ibid, manipulate=manipulate, tree=tree)
         elif sel == 'l':
             # directly link the item
             ref_id = prompt.input_('Enter reference ID:')
@@ -623,7 +625,7 @@ class ReferenceLinker(Debuggable):
             else:
                 sel = prompt.input_options(opts)
 
-            result = self.handle_input(manipulate, opts, p, prompt, ref_items, sel)
+            result = self.handle_input(manipulate, opts, p, prompt, ref_items, sel, tree=tree)
 
             if result == 'abort':
                 manipulate.save_tree(tree)
