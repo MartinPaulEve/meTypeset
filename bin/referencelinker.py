@@ -545,6 +545,7 @@ class ReferenceLinker(Debuggable):
             selected.link()
 
     def run_prompt(self):
+        self.run(False)
         self.debug.print_debug(self, u'Entering interactive mode')
 
         prompt = Interactive(self.gv)
@@ -566,7 +567,7 @@ class ReferenceLinker(Debuggable):
             if 'rid' in p.attrib and p.attrib['rid'] == 'TO_LINK':
                 prompt.print_(u"Found an unhandled reference marker: {0}".format(text))
             elif 'rid' in p.attrib:
-                remote = next((x for x in ref_items if x.attrib['id'] == p.attrib['rid']), None)
+                remote = next((x for x in ref_items if 'id' in x.attrib and (x.attrib['id'] == p.attrib['rid'])), None)
                 remote_text = manipulate.get_stripped_text(remote)
                 prompt.print_(u"Found a handled reference marker: \"{0}\" which links to \"{1}\"".format(text,
                                                                                                          remote_text))
@@ -612,10 +613,7 @@ def main():
     rl_instance = ReferenceLinker(bare_gv)
 
     if args['scan']:
-        if args['--interactive'] is True:
-            rl_instance.run(False)
-
-        rl_instance.run(args['--interactive'])
+        rl_instance.run_prompt()
 
     elif args['link']:
         rl_instance.link_items(args["<source_id>"], args["<dest_id>"])
