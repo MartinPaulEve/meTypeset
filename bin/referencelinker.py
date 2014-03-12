@@ -190,6 +190,7 @@ class ReferenceLinker(Debuggable):
     def __init__(self, global_variables):
         self.gv = global_variables
         self.debug = self.gv.debug
+        self.ibid = None
         Debuggable.__init__(self, 'Reference Linker')
 
     def process_ibid_authors(self, ref_items):
@@ -539,30 +540,42 @@ class ReferenceLinker(Debuggable):
         etree.strip_tags(p.getparent(), 'REMOVE')
 
     def handle_input(self, manipulate, opts, p, prompt, ref_items, sel, candidates=None):
-        if sel == 'a':
+        if sel == 'r':
             prompt.print_(u"Leaving interactive mode on user command")
             return "abort"
         elif sel == 'd':
             # delete the surrounding xref
             self.debug.print_debug(self, u'Deleting reference {0}'.format(p.attrib['id']))
             self.extract_contents(p)
-            pass
+            self.ibid = None
         elif sel == 'e':
             # let the user search references
             self.handle_search(manipulate, opts, p, prompt, ref_items)
+        elif sel == 'i':
+            if self.ibid is None:
+                self.debug.print_debug(self, u'Cannot ibid')
+                sel = prompt.input_options(opts)
+                self.handle_input(manipulate, opts, p, prompt, ref_items, sel)
+            else:
+                self.debug.print_debug(self, u'Linking to ibid ID {0}'.format(self.ibid))
+
+                self.link_items(p.attrib['id'], self.ibid)
         elif sel == 'l':
             # directly link the item
             ref_id = prompt.input_('Enter reference ID:')
             self.link_items(p.attrib['id'], ref_id)
+            self.ibid = ref_id
             pass
         elif sel == 's':
             # skip this item
             prompt.print_(u'Skipping this item')
+            self.ibid = None
             pass
         elif sel == 't':
             # delete all
             self.debug.print_debug(self, u'Deleting reference {0}'.format(p.attrib['id']))
             self.extract_contents(p)
+            self.ibid = None
             return "delall"
         else:
             # numerical input
@@ -570,6 +583,8 @@ class ReferenceLinker(Debuggable):
 
             # do link
             selected.link()
+
+            self.ibid = selected.reference_to_link.attrib['id']
 
     def run_prompt(self):
         self.run(False)
@@ -599,7 +614,7 @@ class ReferenceLinker(Debuggable):
                 prompt.print_(u"Found a handled reference marker: \"{0}\" which links to \"{1}\"".format(text,
                                                                                                          remote_text))
 
-            opts = ('Skip', 'Delete', 'deleTe all', 'Enter search', 'enter Link id', 'Abort')
+            opts = ('Skip', 'Delete', 'deleTe all', 'Enter search', 'Ibid', 'enter Link id', 'skip Rest')
 
             sel = ''
 
@@ -611,11 +626,12 @@ class ReferenceLinker(Debuggable):
             result = self.handle_input(manipulate, opts, p, prompt, ref_items, sel)
 
             if result == 'abort':
+                manipulate.save_tree(tree)
                 return
             elif result == 'delall':
                 delete_all = True
 
-        manipulate.save_tree(tree)
+            manipulate.save_tree(tree)
 
     def prune(self):
         self.debug.print_debug(self, u'Deleting all stubs from article')
