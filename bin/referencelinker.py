@@ -370,8 +370,9 @@ class ReferenceLinker(Debuggable):
                                     to_stub.append(ReplaceStub(self.gv, p, link, tree, manipulate,
                                                                'TO_LINK_NUMBER', length_ignore=True))
                         else:
-                            to_stub.append(ReplaceStub(self.gv, p, item.strip(), tree, manipulate, 'TO_LINK_NUMBER',
-                                                       length_ignore=True))
+                            if len(item.strip) < 25:
+                                to_stub.append(ReplaceStub(self.gv, p, item.strip(), tree, manipulate, 'TO_LINK_NUMBER',
+                                                           length_ignore=True))
 
                         square_bracket_count[item.strip()] = 1
             else:
@@ -413,7 +414,6 @@ class ReferenceLinker(Debuggable):
                     self.debug.print_debug(self, u'Failed to link to reference {0} + 1 using '
                                                  u'indexical method'.format(text))
                     p.attrib['rid'] = 'TO_LINK'
-
 
         for p in tree.xpath('//xref[@rid="TO_LINK"]'):
             text = manipulate.get_stripped_text(p)
