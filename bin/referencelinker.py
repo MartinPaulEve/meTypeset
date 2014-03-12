@@ -430,12 +430,12 @@ class ReferenceLinker(Debuggable):
 
                 bare_refs = bare_ref.split(' ')
 
-                replace_chars = ',.<>\(\);:@\'\#~}{[]"'
+                replace_chars = '[,\.\<\>\(\)\;\:\@\'\#\~\}\{\[\]\"]'
 
                 for sub_item in bare_items:
                     found_ref = False
                     for sub_ref in bare_refs:
-                        if sub_item.strip(replace_chars) == sub_ref.strip(replace_chars):
+                        if re.sub(replace_chars, '', sub_item.strip()).strip() == sub_ref.strip(replace_chars):
                             found_ref = True
                             break
 
@@ -444,6 +444,32 @@ class ReferenceLinker(Debuggable):
 
                 if len(bare_items) > 0 and found:
                     to_link.append(ReplaceObject(self.gv, p, ref))
+
+                elif len(bare_items) > 0:
+                    replace_chars = '[,\.\<\>\(\)\;\:\@\'\#\~\}\{\[\]\"\d]'
+                    found = True
+
+                    for sub_item in bare_items:
+                        found_ref = False
+                        subbed_text = re.sub(replace_chars, '', sub_item.strip()).strip()
+                        for sub_ref in bare_refs:
+                            sub_ref = re.sub(replace_chars, '', sub_ref.strip()).strip()
+
+                            if subbed_text == '' and len(bare_items) > 1:
+                                found_ref = True
+                                break
+
+                            if subbed_text == sub_ref and subbed_text != '' and sub_ref != '':
+                                found_ref = True
+                                break
+
+                        if not found_ref:
+                            found = False
+
+                    # we don't allow linking to the last item here because it is almost universally wrong
+                    if len(bare_items) > 0 and found and ref_items.index(ref) != len(ref_items) - 1:
+                        to_link.append(ReplaceObject(self.gv, p, ref))
+
 
         if len(to_link) == 0:
             self.debug.print_debug(self, u'Found no references to link')
