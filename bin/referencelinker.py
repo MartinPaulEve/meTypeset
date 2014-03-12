@@ -310,6 +310,7 @@ class ReferenceLinker(Debuggable):
 
         square_bracket_count = {}
 
+
         for p in tree.xpath('//sec//p[not(mml:math)] | //td',
                             namespaces={'mml': 'http://www.w3.org/1998/Math/MathML'}):
 
@@ -371,7 +372,7 @@ class ReferenceLinker(Debuggable):
                                     to_stub.append(ReplaceStub(self.gv, p, link, tree, manipulate,
                                                                'TO_LINK_NUMBER', length_ignore=True))
                         else:
-                            if len(item.strip()) < 25:
+                            if len(item.strip()) < 60:
                                 to_stub.append(ReplaceStub(self.gv, p, item.strip(), tree, manipulate, 'TO_LINK_NUMBER',
                                                            length_ignore=True))
 
@@ -379,7 +380,7 @@ class ReferenceLinker(Debuggable):
             else:
                 for match in matches:
                     for item in match.group('text').split(u';'):
-                        if len(item.strip()) < 25:
+                        if len(item.strip()) < 60:
                             to_stub.append(ReplaceStub(self.gv, p, item.strip(), tree, manipulate))
 
         for link in to_stub:
