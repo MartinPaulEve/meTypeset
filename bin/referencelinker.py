@@ -658,7 +658,7 @@ def main():
     rl_instance = ReferenceLinker(bare_gv)
 
     if args['scan']:
-        rl_instance.run_prompt()
+        rl_instance.run(args['--interactive'])
 
     elif args['link']:
         rl_instance.link_items(args["<source_id>"], args["<dest_id>"])
