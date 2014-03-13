@@ -309,7 +309,7 @@ class TeiManipulate(Manipulate):
                     for child in sibling.itersiblings():
                         for element in child.xpath(sub_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
                             text = self.get_stripped_text(element)
-                            
+
                             element.attrib['rend'] = 'Bibliography'
                 else:
                     self.debug.print_debug(self, u'Failed to find sibling in bibliographic addin classification')
