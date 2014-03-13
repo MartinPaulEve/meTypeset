@@ -183,7 +183,8 @@ class TeiManipulate(Manipulate):
                                   namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
                 ref.tag = 'p'
                 ref.attrib['rend'] = 'Bibliography'
-                del ref.attrib['target']
+                if  'target' in ref.attrib:
+                    del ref.attrib['target']
 
                 ref_parent = ref.getparent()
 
@@ -257,22 +258,30 @@ class TeiManipulate(Manipulate):
 
     def tag_bibliography(self, xpath, start_text, caller, parent_tag=u'{http://www.tei-c.org/ns/1.0}sec',
                          classify_siblings=False, sibling_tag=u'{http://www.tei-c.org/ns/1.0}cit',
-                         sub_xpath='//tei:quote/tei:p'):
+                         sub_xpath='//tei:quote/tei:p | //tei:quote/tei:head'):
         # load the DOM
         tree = self.load_dom_tree()
+
+        found = False
 
         for child in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             if not type(child) is etree._Element:
                 if child.text.startswith(start_text):
                     child.text = child.text.replace(start_text, '')
+                    found = True
             elif child.text and child.text.startswith(start_text):
+                found = True
                 child.text = child.text.replace(start_text, '')
             else:
                 if not len(child.getchildren()) == 0:
                     if child.getchildren()[0].tag == "{http://www.tei-c.org/ns/1.0}hi":
                         if not child.getchildren()[0].text is None:
                             if child.getchildren()[0].text.startswith(start_text):
+                                found = True
                                 child.getchildren()[0].text = child.getchildren()[0].text.replace(start_text, '')
+
+            if not found:
+                return
 
             parent = child.getparent()
 
@@ -299,6 +308,8 @@ class TeiManipulate(Manipulate):
                 if sibling is not None:
                     for child in sibling.itersiblings():
                         for element in child.xpath(sub_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+                            text = self.get_stripped_text(element)
+                            
                             element.attrib['rend'] = 'Bibliography'
                 else:
                     self.debug.print_debug(self, u'Failed to find sibling in bibliographic addin classification')

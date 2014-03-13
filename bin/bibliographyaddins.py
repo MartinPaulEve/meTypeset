@@ -77,6 +77,7 @@ class MendeleyHandler(Debuggable):
 
         @param tei_manipulator: a TEI Manipulator object to handle the XML
         """
+
         tei_manipulator.tag_bibliography('//tei:cit/tei:quote/tei:p//tei:ref',
                                          'ADDIN Mendeley Bibliography CSL_BIBLIOGRAPHY ',
                                          self, u'{http://www.tei-c.org/ns/1.0}p', True)
@@ -84,6 +85,7 @@ class MendeleyHandler(Debuggable):
         # create a back/div[@type='bibliogr'] section
         tei_manipulator.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]',
                                                   'back', 'div', 'type', 'bibliogr')
+
 
     def run(self):
         """
@@ -154,6 +156,7 @@ class BibliographyAddins(Debuggable):
             return
 
         self.zotero_items = self.zotero_handler.run()
+
         self.mendeley_items = self.mendeley_handler.run()
         self.other_items = self.other_handler.run()
 
