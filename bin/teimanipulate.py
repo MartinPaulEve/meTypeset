@@ -89,6 +89,48 @@ class TeiManipulate(Manipulate):
                                              u'bibliography.'.format(xpath[0].tag))
         return found
 
+    def do_cit_bibliography(self, xpath):
+        found = False
+
+        for last_list in xpath:
+
+            if last_list.tag == '{http://www.tei-c.org/ns/1.0}cit':
+                # it is a list, so change to reference list
+                self.debug.print_debug(self, u'Found a cit as last element. Treating as bibliography.')
+                found = True
+
+                sibling_tag = last_list.tag
+
+                sibling = last_list.getprevious()
+
+                while sibling.tag == sibling_tag:
+                    next_sibling = sibling.getprevious()
+
+                    new_element = etree.Element('p')
+                    new_element.attrib['rend'] = u'Bibliography'
+
+                    sibling.addnext(new_element)
+                    Manipulate.append_safe(new_element, sibling, self)
+                    sibling.tag = '{http://www.tei-c.org/ns/1.0}ref'
+                    sibling.attrib['target'] = 'None'
+
+                    sibling = next_sibling
+
+
+                new_element = etree.Element('p')
+                new_element.attrib['rend'] = u'Bibliography'
+
+                last_list.addnext(new_element)
+                Manipulate.append_safe(new_element, last_list, self)
+                last_list.tag = '{http://www.tei-c.org/ns/1.0}ref'
+                last_list.attrib['target'] = 'None'
+
+
+            else:
+                self.debug.print_debug(self, u'Last element in document was {0}. Not treating as '
+                                             u'bibliography.'.format(xpath[0].tag))
+        return found
+
     def find_reference_list_in_word_list(self, tree):
 
         self.debug.print_debug(self, u'Ascertaining if last element is a bibliographic list')
@@ -113,6 +155,9 @@ class TeiManipulate(Manipulate):
 
             except:
                 pass
+
+        if not found:
+            self.do_cit_bibliography(xpath)
 
         self.save_tree(tree)
 
