@@ -135,8 +135,12 @@ class ReplaceStub(Debuggable):
             return
 
         if not self.length_ignore and len(self.replace_text) < 3:
-            self.debug.print_debug(self, u'Replace text is too short: bailing')
-            return
+            try:
+                print self.replace_text
+                attempt = int(self.replace_text)
+            except:
+                self.debug.print_debug(self, u'Replace text is too short: bailing')
+                return
 
         if self.paragraph.text and self.replace_text in self.paragraph.text and len(self.paragraph) > 0:
             self.replace_in_text_and_update_others(object_list, self.link_text)
