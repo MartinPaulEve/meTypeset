@@ -209,7 +209,7 @@ class TeiManipulate(Manipulate):
         remove = ['cit', 'quote']
 
         for child in tree.xpath('//tei:p | //tei:head', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            stripped_text = self.get_stripped_text(child)
+            stripped_text = self.get_stripped_text(child).strip(':.')
 
             if stripped_text.lower().strip() == cue.lower().strip():
                 found_element = child
