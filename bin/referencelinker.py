@@ -203,8 +203,8 @@ class ReplaceStub(Debuggable):
 
                 regex += u')\)'
 
-                xref_before = u'<xref id="{0}" rid="{1}">'.format(u'ID{0}'.format(unicode(uuid.uuid4())),
-                                                                  self.link_text)
+                xref_before = u'<xref ref-type="bibr" ' \
+                              u'id="{0}" rid="{1}">'.format(u'ID{0}'.format(unicode(uuid.uuid4())), self.link_text)
                 xref_after = u'</xref>'
 
                 new_text = re.sub(regex, u'{0}\g<text>{1}'.format(xref_before, xref_after), in_string)
