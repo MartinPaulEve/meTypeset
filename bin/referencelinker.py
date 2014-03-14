@@ -207,7 +207,7 @@ class ReplaceStub(Debuggable):
                               u'id="{0}" rid="{1}">'.format(u'ID{0}'.format(unicode(uuid.uuid4())), self.link_text)
                 xref_after = u'</xref>'
 
-                new_text = re.sub(regex, u'({0}\g<text>{1})'.format(xref_before, xref_after), in_string)
+                new_text = re.sub(regex, u'({0}\g<text>{1})'.format(xref_before, xref_after), in_string, 1)
 
                 new_element = etree.fromstring(new_text)
 
