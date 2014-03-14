@@ -219,7 +219,6 @@ class ReplaceStub(Debuggable):
                     self.paragraph.tag = 'REMOVE'
                     self.debug.print_debug(self, u'Linked {0} stub using regex method'.format(self.replace_text))
 
-                    etree.strip_elements(self.tree, 'REMOVE')
                     self.manipulate.save_tree(self.tree)
 
 
@@ -423,6 +422,8 @@ class ReferenceLinker(Debuggable):
         for link in to_stub:
             link.link(to_stub)
             #pass
+
+        etree.strip_elements(tree, 'REMOVE')
 
         use_index_method = False
 
