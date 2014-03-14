@@ -573,6 +573,12 @@ class ReferenceLinker(Debuggable):
             self.link_items(p.attrib['id'], ref_id)
             self.ibid = ref_id
             pass
+        elif sel == 'c':
+            text = manipulate.get_stripped_text(p.getparent())
+            prompt.print_(text)
+            sel = prompt.input_options(opts)
+            result = self.handle_input(manipulate, opts, p, prompt, ref_items, sel, tree=tree)
+            return result
         elif sel == 's':
             # skip this item
             prompt.print_(u'Skipping this item')
@@ -621,7 +627,8 @@ class ReferenceLinker(Debuggable):
                 prompt.print_(u"Found a handled reference marker: \"{0}\" which links to \"{1}\"".format(text,
                                                                                                          remote_text))
 
-            opts = ('Skip', 'Delete', 'deleTe all', 'Enter search', 'Ibid', 'enter Link id', 'skip Rest')
+            opts = ('Skip', 'Delete', 'deleTe all', 'Enter search', 'Ibid', 'enter Link id',
+                    'skip Rest', 'show Context')
 
             sel = ''
 
