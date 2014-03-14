@@ -187,7 +187,42 @@ class ReplaceStub(Debuggable):
 
         if not linked:
             if not in_xref:
-                self.debug.print_debug(self, u'Did not link {0} stub'.format(self.replace_text))
+                # likelihood here is that we have something like this:
+                # (<italic>Text Name</italic> 354)
+                # or
+                # (text <italic>something</italic>)
+                # this requires a more complex approach: we will fallback to the less safe method of using tostring
+                # doing a regex replace and then re-encapsulating with fromstring
+
+                in_string = etree.tostring(self.paragraph)
+
+                regex = u'\((?P<text>.*?'
+
+                # add each word and allow for tags in between. Do not allow the term "xref" to appear.
+                for sub_string in self.replace_text.split(' '):
+                    regex += u'[^(xref)]*?'
+
+                regex += u')\)'
+
+                xref_before = u'<xref id="{0}" rid="{1}">'.format(u'ID{0}'.format(unicode(uuid.uuid4())),
+                                                                  self.link_text)
+                xref_after = u'</xref>'
+
+                new_text = re.sub(regex, u'{0}\g<text>{1}'.format(xref_before, xref_after), in_string)
+                print new_text
+
+                new_element = etree.fromstring(new_text)
+
+                if etree.tostring(new_element) == in_string:
+                    self.debug.print_debug(self, u'Did not link {0} stub'.format(self.replace_text))
+                else:
+                    # a change has been made
+                    self.paragraph.addnext(new_element)
+                    self.paragraph.tag = 'REMOVE'
+                    self.debug.print_debug(self, u'Linked {0} stub using regex method'.format(self.replace_text))
+
+                    etree.strip_elements(self.tree, 'REMOVE')
+                    self.manipulate.save_tree(self.tree)
 
 
 class ReferenceLinker(Debuggable):
