@@ -81,7 +81,7 @@ class TeiToNlm (Debuggable):
 
         if count > 0:
             etree.strip_tags(tree, 'REMOVE')
-            tree.write(self.gv.tei_file_path)
+            manipulate.save_tree(tree)
             self.debug.print_debug(self, u'Extracted {0} headings from inside invalid elements'.format(count))
 
     def run_transform(self):

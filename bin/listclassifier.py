@@ -195,7 +195,7 @@ class ListClassifier(Debuggable):
 
             back.remove(list_element)
 
-        tree.write(self.gv.tei_file_path)
+        manipulate.save_tree(tree)
 
     def process_dash_list(self, tree, manipulate, treestring):
 
@@ -246,7 +246,7 @@ class ListClassifier(Debuggable):
                         self.debug.print_debug(self, u'Appending final list element: {0}'.format(to_append.text))
                         Manipulate.append_safe(list_element, to_append, self)
 
-        tree.write(self.gv.tei_file_path)
+        manipulate.save_tree(tree)
 
     def process_superscript_footnotes(self, tree, manipulate):
 
@@ -329,7 +329,7 @@ class ListClassifier(Debuggable):
             self.debug.print_debug(self, u'Found {0} superscripted footnote entries but could not correlate this with'
                                          ' {1} paragraph entries'.format(len(footnote_list), len(found)))
 
-        tree.write(self.gv.tei_file_path)
+        manipulate.save_tree(tree)
 
     def process_curly_list(self, tree, manipulate, treestring):
 
@@ -391,7 +391,7 @@ class ListClassifier(Debuggable):
                         self.debug.print_debug(self, u'Appending final list element: {0}'.format(to_append.text))
                         Manipulate.append_safe(list_element, to_append, self)
 
-        tree.write(self.gv.tei_file_path)
+        manipulate.save_tree(tree)
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('listclassifier',
@@ -434,7 +434,7 @@ class ListClassifier(Debuggable):
             except:
                 self.debug.print_debug(self, u'Error processing footnote or reference list. Reverting to backup tree')
                 tree = backup_tree
-                tree.write(self.gv.tei_file_path)
+                manipulate.save_tree(tree)
 
         if superscripted_footnotes:
             self.process_superscript_footnotes(tree, manipulate)
