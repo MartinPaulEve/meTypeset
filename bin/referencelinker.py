@@ -609,6 +609,10 @@ class ReferenceLinker(Debuggable):
             pass
         elif sel == 'c':
             text = manipulate.get_stripped_text(p.getparent())
+            replace_text = manipulate.get_stripped_text(p)
+
+            text = text.replace(replace_text, prompt.colorize('green', replace_text))
+
             prompt.print_(text)
             sel = prompt.input_options(opts)
             result = self.handle_input(manipulate, opts, p, prompt, ref_items, sel, tree=tree)
