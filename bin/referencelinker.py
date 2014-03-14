@@ -209,7 +209,6 @@ class ReplaceStub(Debuggable):
                 xref_after = u'</xref>'
 
                 new_text = re.sub(regex, u'{0}\g<text>{1}'.format(xref_before, xref_after), in_string)
-                print new_text
 
                 new_element = etree.fromstring(new_text)
 
