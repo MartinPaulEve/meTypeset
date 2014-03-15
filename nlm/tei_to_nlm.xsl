@@ -492,7 +492,7 @@ to simplify a bit. -->
     <xsl:if test="quote">
       
       <!-- if quote or the paragraph inside quote is empty, do not add -->
-      <xsl:if test="not(empty(quote/p/text())) or not(empty(quote/text()))">
+
         
         <xsl:element name="disp-quote">
           <xsl:if test="@rend">
@@ -518,7 +518,7 @@ to simplify a bit. -->
           </xsl:if>
         </xsl:element>
         
-      </xsl:if>
+      
       
       
     </xsl:if>
