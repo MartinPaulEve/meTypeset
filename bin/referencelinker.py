@@ -209,17 +209,21 @@ class ReplaceStub(Debuggable):
 
                 new_text = re.sub(regex, u'({0}\g<text>{1})'.format(xref_before, xref_after), in_string, 1)
 
-                new_element = etree.fromstring(new_text)
+                try:
+                    new_element = etree.fromstring(new_text)
 
-                if etree.tostring(new_element) == in_string:
-                    self.debug.print_debug(self, u'Did not link {0} stub'.format(self.replace_text))
-                else:
-                    # a change has been made
-                    self.paragraph.addnext(new_element)
-                    self.paragraph.tag = 'REMOVE'
-                    self.debug.print_debug(self, u'Linked {0} stub using regex method'.format(self.replace_text))
+                    if etree.tostring(new_element) == in_string:
+                        self.debug.print_debug(self, u'Did not link {0} stub'.format(self.replace_text))
+                    else:
+                        # a change has been made
+                        self.paragraph.addnext(new_element)
+                        self.paragraph.tag = 'REMOVE'
+                        self.debug.print_debug(self, u'Linked {0} stub using regex method'.format(self.replace_text))
 
-                    self.manipulate.save_tree(self.tree)
+                        self.manipulate.save_tree(self.tree)
+                except:
+                    self.debug.print_debug(self, u'Did not link {0} stub as '
+                                                 u'had overlapping tags'.format(self.replace_text))
 
 
 class ReferenceLinker(Debuggable):
