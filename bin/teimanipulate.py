@@ -226,16 +226,19 @@ class TeiManipulate(Manipulate):
         if len(tree.xpath(xpath + u'/tei:ref', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})) > 0:
             for ref in tree.xpath(xpath + u'/tei:ref',
                                   namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-                ref.tag = 'p'
-                ref.attrib['rend'] = 'Bibliography'
-                if  'target' in ref.attrib:
-                    del ref.attrib['target']
 
-                ref_parent = ref.getparent()
+                # ensure that the ref is just a dud and not a valid link to a protocol schema
+                if 'target' in ref.attrib and not ':' in ref.attrib['target']:
+                    ref.tag = 'p'
+                    ref.attrib['rend'] = 'Bibliography'
+                    if 'target' in ref.attrib:
+                        del ref.attrib['target']
 
-                ref_parent.addnext(ref)
+                    ref_parent = ref.getparent()
 
-                ref_parent.getparent().remove(ref_parent)
+                    ref_parent.addnext(ref)
+
+                    ref_parent.getparent().remove(ref_parent)
         else:
             for ref in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
                 ref.tag = 'p'
