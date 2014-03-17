@@ -50,6 +50,7 @@ class TeiToNlm (Debuggable):
 
         manipulate.remove_empty_elements('//sec/list')
         manipulate.remove_empty_elements('//sec/disp-quote')
+        manipulate.remove_empty_elements('//back/ref-list/ref')
 
     def pre_cleanup(self):
         manipulate = TeiManipulate(self.gv)

@@ -34,7 +34,7 @@ class NlmManipulate(Manipulate):
 
         for paragraph in tree.xpath(element):
             found = False
-            text = self.get_stripped_text(paragraph)
+            text = self.get_stripped_text(paragraph).strip()
 
             if text == '':
                 for item in paragraph:

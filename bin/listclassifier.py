@@ -187,6 +187,10 @@ class ListClassifier(Debuggable):
         if acted:
             manipulate.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]', 'back', 'div', 'type', 'bibliogr')
 
+            manipulate.save_tree(tree)
+
+            self.debug.print_debug(self, u'Enclosing bibliography')
+
         if is_footnote:
             back = manipulate.find_or_create_element(tree, 'back', '//tei:body', True)
 
