@@ -26,6 +26,14 @@ class ComplianceEnforcer(Debuggable):
         manipulate.save_tree(tree)
         self.debug.print_debug(self, u'Removing {0} meTypesetRender attributes'.format(len(render_attributes)))
 
+        reflist_attributes = tree.xpath('//*[@reflist]')
+
+        for attribute in  reflist_attributes:
+            del attribute.attrib['reflist']
+
+        manipulate.save_tree(tree)
+        self.debug.print_debug(self, u'Removing {0} reflist attributes'.format(len(reflist_attributes)))
+
         unlinked_xrefs = tree.xpath('//xref')
 
         for xref in unlinked_xrefs:
