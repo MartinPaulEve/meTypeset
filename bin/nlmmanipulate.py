@@ -113,7 +113,7 @@ class NlmManipulate(Manipulate):
             node_parent.addnext(new_element)
             node_parent.tail = ''
             nested_sibling = new_element
-        else:
+        else:if replace_text
             nested_sibling.addnext(new_element)
             nested_sibling = new_element
 
@@ -131,6 +131,10 @@ class NlmManipulate(Manipulate):
         new_element = etree.Element(tag_name)
         new_element.text = ''
         nodes_to_copy = node.xpath('//{0}/following-sibling::node()'.format(search_xpath))
+
+        if len(nodes_to_copy) == 0:
+            return
+
         self.debug.print_debug(self, u'Found {0} nodes to copy: {1}'.format(len(nodes_to_copy),
                                                                            nodes_to_copy))
         #for element in nodes_to_copy:
