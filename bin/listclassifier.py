@@ -21,6 +21,7 @@ class ListClassifier(Debuggable):
     def __init__(self, global_variables):
         self.gv = global_variables
         self.debug = self.gv.debug
+        self.skiplist = []
         Debuggable.__init__(self, 'List Classifier')
 
     @staticmethod
@@ -30,8 +31,13 @@ class ListClassifier(Debuggable):
         return etree.parse(filename, p)
 
     def handle_reference_item(self, element, elements, in_list_run, iteration, list_element, offset, to_append):
+        if element in self.skiplist:
+            return iteration
+
+        manipulate = TeiManipulate(self.gv)
         iteration += 1
         # treat as ref list
+        next_text = manipulate.get_stripped_text(element.getnext())
         self.debug.print_debug(self, u'Handling reference element {0}'.format(element.text))
         if not in_list_run:
             list_element = etree.Element('ref')
@@ -39,19 +45,26 @@ class ListClassifier(Debuggable):
             to_append = None
             in_list_run = True
             element.addprevious(list_element)
-        if not element.getnext().text is None:
-            if element.getnext().text.startswith(u'[') and not element.getnext() in elements:
+        if not element.getnext() is None or next_text == '':
+            if next_text.startswith(u'[') and not element.getnext() in elements:
                 # this element is the last in this list
                 in_list_run = False
                 to_append = element.getnext()
-            elif not element.getnext().text.startswith(u'['):
-                # anomalous ref
-                self.debug.print_debug(self, u'Ref missing marker {0}'.format(element.getnext().text))
-                element.text = element.text + element.getnext().text
-                element.getnext().text = ''
+            elif not next_text.startswith(u'['):
+
+                while not next_text.startswith(u'['):
+                    # anomalous ref
+                    if next_text != '':
+                        self.debug.print_debug(self, u'Ref missing marker {0}'.format(next_text))
+                    self.skiplist.append(element.getnext())
+                    element.getnext().tag = 'hi'
+                    Manipulate.append_safe(element, element.getnext(), self)
+
+                    next_text = manipulate.get_stripped_text(element.getnext())
+
         else:
             # this can happen with italics
-            self.debug.print_debug(self, u'Ref run/anomaly on {0}'.format(element.getnext()))
+            self.debug.print_debug(self, u'Ref run/anomaly on {0}'.format(next_text))
             for sub_element in element.getnext():
                 Manipulate.append_safe(element, sub_element, self)
             in_list_run = False
