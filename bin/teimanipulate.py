@@ -262,24 +262,34 @@ class TeiManipulate(Manipulate):
             if stripped_text.lower().strip() == cue.lower().strip():
                 found_element = child
 
+        # the endgame switch is set when we're handling the last two lines (which are sometimes acknowledgements etc)
+        endgame = False
+        last = None
+
         if found_element is not None:
             found_element.attrib['rend'] = 'REMOVE'
 
             for sibling in found_element.itersiblings():
+
+                if len(sibling.getparent()) - sibling.getparent().index(sibling) < 2:
+                    endgame = True
+
                 text = self.get_stripped_text(sibling)
 
-                numeric_start_test = re.compile('^(?P<start>[\[{(]*?[\d\.\s]+[\]})]*?\s*?).+')
+                numeric_start_test = re.compile('^(?P<start>[\[{(]*?[\d\.]+[\]})]*?\s*?).+')
                 numeric_start = numeric_start_test.findall(text)
 
                 if numeric_start:
                     self.debug.print_debug(self, u'Exiting linguistic cue handler so as not to encroach on '
-                                                 u'list handler')
+                                                 u'list handler (triggered by {0})'.format(text))
 
                     return False
 
 
                 year_test = re.compile('((19|20)\d{2}[a-z]?)|(n\.d\.)')
                 match = year_test.findall(text)
+
+                try_join = False
 
                 if not match:
                     blank_text = re.compile('XXXX')
@@ -288,21 +298,31 @@ class TeiManipulate(Manipulate):
                         self.debug.print_debug(self, u'Adding bibliography element from linguistic cue')
                         sibling.attrib['rend'] = 'Bibliography'
                         sibling.tag = 'p'
+                        last = sibling
 
                         for tag in sibling:
                             for remove_tag in remove:
                                 if tag.tag == '{http://www.tei-c.org/ns/1.0}' + remove_tag:
                                     tag.tag = 'REMOVE'
+                    else:
+                        try_join = True
                 elif len(match) >= 1:
-                        # only do this if we find 1 match on the line; otherwise, it's a problem
-                        self.debug.print_debug(self, u'Adding bibliography element from linguistic cue')
-                        sibling.attrib['rend'] = 'Bibliography'
-                        sibling.tag = 'p'
+                    # only do this if we find 1 match on the line; otherwise, it's a problem
+                    self.debug.print_debug(self, u'Adding bibliography element from linguistic cue')
+                    sibling.attrib['rend'] = 'Bibliography'
+                    sibling.tag = 'p'
+                    last = sibling
 
-                        for tag in sibling:
-                            for remove_tag in remove:
-                                if tag.tag == '{http://www.tei-c.org/ns/1.0}' + remove_tag:
-                                    tag.tag = 'REMOVE'
+                    for tag in sibling:
+                        for remove_tag in remove:
+                            if tag.tag == '{http://www.tei-c.org/ns/1.0}' + remove_tag:
+                                tag.tag = 'REMOVE'
+                else:
+                    try_join = True
+
+                if try_join and not endgame and last is not None:
+                    sibling.tag = 'hi'
+                    last.append(sibling)
 
             etree.strip_tags(found_element.getparent(), 'REMOVE')
 
