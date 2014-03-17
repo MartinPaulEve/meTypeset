@@ -113,7 +113,7 @@ class NlmManipulate(Manipulate):
             node_parent.addnext(new_element)
             node_parent.tail = ''
             nested_sibling = new_element
-        else:if replace_text
+        else:
             nested_sibling.addnext(new_element)
             nested_sibling = new_element
 

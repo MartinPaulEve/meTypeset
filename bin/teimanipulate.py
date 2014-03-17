@@ -84,6 +84,25 @@ class TeiManipulate(Manipulate):
                     Manipulate.append_safe(new_element, list_item, self)
                     list_item.tag = '{http://www.tei-c.org/ns/1.0}ref'
                     list_item.attrib['target'] = 'None'
+            elif last_list.tag == '{http://www.tei-c.org/ns/1.0}item':
+                # it is a list, so change to reference list
+                self.debug.print_debug(self, u'Found a list as last element via item. Treating as bibliography.')
+                last_list = last_list.getparent()
+                found = True
+                last_list.tag = '{http://www.tei-c.org/ns/1.0}div'
+                last_list.attrib['rend'] = u'Bibliography'
+
+                parent_element = None
+
+                # now convert each line
+                for list_item in last_list:
+                    new_element = etree.Element('p')
+                    new_element.attrib['rend'] = u'Bibliography'
+
+                    list_item.addnext(new_element)
+                    Manipulate.append_safe(new_element, list_item, self)
+                    list_item.tag = '{http://www.tei-c.org/ns/1.0}ref'
+                    list_item.attrib['target'] = 'None'
             else:
                 self.debug.print_debug(self, u'Last element in document was {0}. Not treating as '
                                              u'bibliography.'.format(xpath[0].tag))
