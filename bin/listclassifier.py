@@ -287,6 +287,8 @@ class ListClassifier(Debuggable):
         # if it doesn't work, this is an expensive operation
         # however, once we've found all we can stop, so it's worth doing
 
+        print footnote_text
+
         whole_document = reversed(tree.xpath('//tei:p', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}))
 
         current = 0
@@ -295,31 +297,29 @@ class ListClassifier(Debuggable):
         found = []
 
         for item in whole_document:
-            if 'rend' in item.attrib:
-                if item.attrib['rend'] != 'Bibliography':
-                    text = manipulate.get_stripped_text(item).strip()
+            text = manipulate.get_stripped_text(item).strip()
 
-                    if text.startswith(current_value):
-                        found.append(item)
+            if text.startswith(current_value):
+                found.append(item)
 
-                        current += 1
+                current += 1
 
-                        if current > len(footnote_text) - 1:
-                            break
+                if current > len(footnote_text) - 1:
+                    break
 
-                        current_value = footnote_text[current]
+                current_value = footnote_text[current]
 
         # note: all lists are reversed by this point (ie go from the back of the document upwards)
 
         if len(found) == len(footnote_list):
-            self.debug.print_debug(self, u'Found superscripted footnote entries')
+            self.debug.print_debug(self, u'Found {0} superscripted footnote entries'.format(len(found)))
 
             current = 0
             for footnote in footnote_list:
-                self.debug.print_debug(self, u'Processing footnote {0}'.format(current + 1))
-
                 # null the text (this will be generated automatically)
                 if Manipulate.append_safe(footnote, found[current], self):
+                    print manipulate.get_stripped_text(found[current])
+                    print str(len(found) - current)
                     footnote.text = ''
 
                     footnote.tag = 'note'
@@ -327,15 +327,18 @@ class ListClassifier(Debuggable):
 
                     replace_regex = '^({0}[\.\s\)]*)'.format(len(found) - current)
 
-                    if found[current].text and not found[current].text.startswith(str(len(found) - current)):
+                    if found[current].text and not found[current].text.strip().startswith(str(len(found) - current)):
                         # in this case the footnote text is inside a sub-element
                         for sub_element in found:
-                            if sub_element.text and sub_element.text.startswith(str(len(found) - current)):
+                            if sub_element.text and sub_element.text.strip().startswith(str(len(found) - current)):
                                 sub_element.text = re.sub(replace_regex, '', sub_element.text)
                                 break
                         pass
                     elif found[current].text:
                         found[current].text = re.sub(replace_regex, '', found[current].text)
+
+                    manipulate.save_tree(tree)
+                    self.debug.print_debug(self, u'Processing footnote {0}'.format(current + 1))
                 else:
                     # failed to add a footnote
                     self.debug.print_debug(self, u'Footnote failure. Aborting process.')
