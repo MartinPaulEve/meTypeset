@@ -443,32 +443,3 @@ class NlmManipulate(Manipulate):
                         sections.getparent().remove(sections)
                         self.save_tree(tree)
                         self.debug.print_debug(self, u'Removed a stranded title: {0}'.format(text))
-
-
-    def tag_bibliography_refs(self):
-        tree = self.load_dom_tree()
-
-        rid = 1
-
-        self.find_or_create_element(tree, 'back', '//body', True)
-        ref_list = self.find_or_create_element(tree, 'ref-list', '//back', False)
-
-        # change this to find <ref-list> elements after we're more certain of how to identify them
-        for refs in tree.xpath('//sec[@reflist="yes"]/p[@rend="ref"] | //sec[@reflist="yes"]/title '
-                               '| //sec[@reflist="yes"]/*/list-item/p[@rend="ref"] | '
-                               '//sec[@reflist="yes"]/*/p[@rend="ref"]'):
-
-            if refs.tag == 'title':
-                self.debug.print_debug(self, u'Removing title element from reference item')
-                refs.getparent().remove(refs)
-            else:
-                self.debug.print_debug(self, u'Tagging element "{0}" as reference item'.format(refs.tag))
-                refs.tag = 'ref'
-                refs.attrib['id'] = str(rid)
-                rid += 1
-                if 'rend' in refs.attrib:
-                        del refs.attrib['rend']
-
-                Manipulate.append_safe(ref_list, refs, self)
-
-        self.save_tree(tree)

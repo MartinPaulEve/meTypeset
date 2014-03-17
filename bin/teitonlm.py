@@ -44,7 +44,6 @@ class TeiToNlm (Debuggable):
         if process_ref_lists:
             self.debug.print_debug(self, u'Finding potential reference lists')
             manipulate.find_reference_list()
-            manipulate.tag_bibliography_refs()
 
         manipulate.handle_stranded_reference_titles_from_cues()
 
