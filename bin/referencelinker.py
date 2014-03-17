@@ -289,7 +289,7 @@ class ReferenceLinker(Debuggable):
 
         for ref in ref_items:
             for item in ref:
-                if not item.tag in allowed_tags:
+                if not item.tag in allowed_tags and type(item) is not lxml.etree._Comment:
                     item.tag = 'REMOVE'
 
         etree.strip_tags(tree, 'REMOVE')

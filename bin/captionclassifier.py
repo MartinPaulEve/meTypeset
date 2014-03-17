@@ -63,7 +63,7 @@ class CaptionClassifier(Debuggable):
             for replace_text in replace_texts:
                 table_id = table_ids[replace_texts.index(replace_text)]
 
-                if replace_text in paragraph.text:
+                if paragraph.text is not None and replace_text in paragraph.text:
                     self.replace_in_text(table_id, paragraph, replace_text, ref_type)
 
                     self.debug.print_debug(self, u'Successfully linked {0} to {1}'.format(replace_text, table_id))

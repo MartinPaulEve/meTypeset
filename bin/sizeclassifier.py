@@ -213,7 +213,11 @@ class SizeClassifier(Debuggable):
         next_size = sizes_ordered[iteration + 1]
         plusint = 1
         while float(next_size) < float(self.size_cutoff):
-            next_size = sizes_ordered[iteration + plusint + 1]
+            try:
+                next_size = sizes_ordered[iteration + plusint + 1]
+            except:
+                return None, 0
+
             plusint += 1
 
         return next_size, iteration + plusint
@@ -232,32 +236,36 @@ class SizeClassifier(Debuggable):
             if not last:
                 next_size, next_id = self.get_next_size(iteration, sizes_ordered)
 
-                if float(size) == float(next_size):
-                    self.enclose_same_size_heading(iteration, manipulate, size, next_id)
+                if next_size is None:
+                    # whoops. Last marked-up heading was a normalized element. Process as such.
+                    self.enclose_last_heading(iteration, manipulate, section_ids, section_stack, size)
+                else:
+                    if float(size) == float(next_size):
+                        self.enclose_same_size_heading(iteration, manipulate, size, next_id)
 
-                if float(size) > float(next_size):
-                    self.enclose_smaller_heading(iteration, manipulate, next_size, size)
+                    if float(size) > float(next_size):
+                        self.enclose_smaller_heading(iteration, manipulate, next_size, size)
 
-                elif float(size) < float(next_size):
-                    self.enclose_larger_heading(iteration, manipulate, next_size, section_ids, section_stack,
-                                                size, next_id)
+                    elif float(size) < float(next_size):
+                        self.enclose_larger_heading(iteration, manipulate, next_size, section_ids, section_stack,
+                                                    size, next_id)
 
-                    self.debug.print_debug(self, u'Previous section stack: {0}'.format(section_stack))
+                        self.debug.print_debug(self, u'Previous section stack: {0}'.format(section_stack))
 
-                    # create a slice of the stack so that we can modify the original while iterating
-                    temp_stack = section_stack[:]
-                    pointer = len(section_stack)
+                        # create a slice of the stack so that we can modify the original while iterating
+                        temp_stack = section_stack[:]
+                        pointer = len(section_stack)
 
-                    # pop the stack until the current level
-                    while temp_stack[pointer - 1] > size and (pointer - 1) != 0:
-                        section_stack.pop()
-                        section_ids.pop()
-                        pointer -= 1
+                        # pop the stack until the current level
+                        while temp_stack[pointer - 1] > size and (pointer - 1) != 0:
+                            section_stack.pop()
+                            section_ids.pop()
+                            pointer -= 1
 
-                    self.debug.print_debug(self, u'New section stack: {0}'.format(section_stack))
+                        self.debug.print_debug(self, u'New section stack: {0}'.format(section_stack))
 
-                    # set the processed flag so that the next enclosure isn't handled
-                    processed_flag = True
+                        # set the processed flag so that the next enclosure isn't handled
+                        processed_flag = True
             else:
             # this is the last heading so there is no future comparator
                 self.enclose_last_heading(iteration, manipulate, section_ids, section_stack, size)
