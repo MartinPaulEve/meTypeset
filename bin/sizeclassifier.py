@@ -224,7 +224,7 @@ class SizeClassifier(Debuggable):
             last = True
 
             # determine if is last
-            for index in range(iteration + 1, len(sizes_ordered) - 1):
+            for index in range(iteration, len(sizes_ordered) - 1):
                 if float(sizes_ordered[index]) >= float(self.size_cutoff):
                     last = False
 

@@ -268,6 +268,16 @@ class TeiManipulate(Manipulate):
             for sibling in found_element.itersiblings():
                 text = self.get_stripped_text(sibling)
 
+                numeric_start_test = re.compile('^(?P<start>[\[{(]*?[\d\.\s]+[\]})]*?\s*?).+')
+                numeric_start = numeric_start_test.findall(text)
+
+                if numeric_start:
+                    self.debug.print_debug(self, u'Exiting linguistic cue handler so as not to encroach on '
+                                                 u'list handler')
+
+                    return False
+
+
                 year_test = re.compile('((19|20)\d{2}[a-z]?)|(n\.d\.)')
                 match = year_test.findall(text)
 
