@@ -287,30 +287,27 @@ class ListClassifier(Debuggable):
         # if it doesn't work, this is an expensive operation
         # however, once we've found all we can stop, so it's worth doing
 
-        print footnote_text
+        try:
+            footnote = int(footnote_text[0].strip())
+        except:
+            self.debug.print_debug(self, u'Unable to parse last footnote as number. Leaving footnote classifier.')
 
         whole_document = reversed(tree.xpath('//tei:p', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}))
-
-        current = 0
-        current_value = footnote_text[current]
 
         found = []
 
         for item in whole_document:
             text = manipulate.get_stripped_text(item).strip()
 
-            if text.startswith(current_value):
+            if text.startswith(str(footnote)):
                 found.append(item)
 
-                current += 1
+                footnote -= 1
 
-                if current > len(footnote_text) - 1:
+                if len(found) == len(footnote_list):
                     break
 
-                current_value = footnote_text[current]
-
         # note: all lists are reversed by this point (ie go from the back of the document upwards)
-
         if len(found) == len(footnote_list):
             self.debug.print_debug(self, u'Found {0} superscripted footnote entries'.format(len(found)))
 
@@ -318,8 +315,6 @@ class ListClassifier(Debuggable):
             for footnote in footnote_list:
                 # null the text (this will be generated automatically)
                 if Manipulate.append_safe(footnote, found[current], self):
-                    print manipulate.get_stripped_text(found[current])
-                    print str(len(found) - current)
                     footnote.text = ''
 
                     footnote.tag = 'note'
