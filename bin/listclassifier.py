@@ -302,7 +302,7 @@ class ListClassifier(Debuggable):
         except:
             self.debug.print_debug(self, u'Unable to parse last footnote as number. Leaving footnote classifier.')
 
-        whole_document = reversed(tree.xpath('//tei:p', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}))
+        whole_document = reversed(tree.xpath('//tei:p[not(@rend)]', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}))
 
         found = []
 
