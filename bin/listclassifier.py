@@ -130,7 +130,10 @@ class ListClassifier(Debuggable):
 
     def process_enclosed_ref_list(self, tree, manipulate, treestring):
 
-        if not u'>[' in treestring:
+        print "HERE"
+
+        if not u'>[' in treestring and not u'> [' in treestring:
+            self.debug.print_debug(self, u'Leaving enclosed reference processing')
             return
 
         # find it we have a list of enclosed references
@@ -152,12 +155,21 @@ class ListClassifier(Debuggable):
         footnotes = tree.xpath(footnote_test, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
         is_footnote = len(footnotes) > 1
 
+        if not is_footnote:
+            footnote_test = '//text()[contains(self::text(), "[1,")]'
+            footnotes = tree.xpath(footnote_test, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+            is_footnote = len(footnotes) > 1
+
         # append an attribute to the preceding element to signal a return point for references if they were wrongly
         # classified
 
+        if is_footnote:
+            self.debug.print_debug(self, u'Enclosed footnotes detected')
+        else:
+            self.debug.print_debug(self, u'No enclosed footnotes detected')
+
         if not is_footnote and len(elements) > 0:
             prev = elements[0].getprevious()
-            print prev
 
             if prev is not None:
                 prev.attrib['rend'] = 'ref-list-before'
