@@ -130,8 +130,6 @@ class ListClassifier(Debuggable):
 
     def process_enclosed_ref_list(self, tree, manipulate, treestring):
 
-        print "HERE"
-
         if not u'>[' in treestring and not u'> [' in treestring:
             self.debug.print_debug(self, u'Leaving enclosed reference processing')
             return
