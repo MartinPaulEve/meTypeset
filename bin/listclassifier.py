@@ -365,9 +365,12 @@ class ListClassifier(Debuggable):
 
             count -= 1
 
-        whole_document = reversed(tree.xpath('//tei:p[not(@rend)]', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}))
+        whole_document = reversed(tree.xpath('//tei:p[@rend="Normal" or not(@rend)]',
+                                             namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}))
 
         found = []
+
+        footnote = int(footnote_text[0].strip())
 
         for item in whole_document:
             text = manipulate.get_stripped_text(item).strip()
