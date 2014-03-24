@@ -298,9 +298,28 @@ class ListClassifier(Debuggable):
         # however, once we've found all we can stop, so it's worth doing
 
         try:
-            footnote = int(footnote_text[0].strip())
+            footnote = int(footnote_text[len(footnote_text) - 1].strip())
         except:
             self.debug.print_debug(self, u'Unable to parse last footnote as number. Leaving footnote classifier.')
+            return
+
+        count = len(footnote_text) - 1
+        offset = footnote
+        failures = 0
+
+        for number in range(int(footnote_text[len(footnote_text) - 1].strip()), int(footnote_text[0].strip())):
+            if int(footnote_text[count]) != int(number + (offset - 1)):
+                self.debug.print_debug(self, u'Expected footnote {0}. Found {1}.'.format(int(number + (offset - 1)),
+                                                                                         footnote_text[count]))
+                failures += 1
+
+                if failures > 1:
+                    self.debug.print_debug(self, u'Found more than 1 misaligned footnote. Bailing.')
+                    return
+                else:
+                    pass
+
+            count -= 1
 
         whole_document = reversed(tree.xpath('//tei:p[not(@rend)]', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}))
 
