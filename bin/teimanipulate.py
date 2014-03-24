@@ -64,45 +64,57 @@ class TeiManipulate(Manipulate):
 
     def do_list_bibliography(self, xpath):
         found = False
+        year_test = re.compile('((19|20)\d{2}[a-z]?)|(n\.d\.)')
 
         for last_list in xpath:
             if last_list.tag == '{http://www.tei-c.org/ns/1.0}list':
-                # it is a list, so change to reference list
-                self.debug.print_debug(self, u'Found a list as last element. Treating as bibliography.')
-                found = True
-                last_list.tag = '{http://www.tei-c.org/ns/1.0}div'
-                last_list.attrib['rend'] = u'Bibliography'
+                if len(last_list) > 0:
 
-                parent_element = None
+                    text = self.get_stripped_text(last_list[0])
+                    match = year_test.findall(text)
 
-                # now convert each line
-                for list_item in last_list:
-                    new_element = etree.Element('p')
-                    new_element.attrib['rend'] = u'Bibliography'
+                    if match:
+                        # it is a list, so change to reference list
+                        self.debug.print_debug(self, u'Found a list as last element. Treating as bibliography.')
+                        found = True
+                        last_list.tag = '{http://www.tei-c.org/ns/1.0}div'
+                        last_list.attrib['rend'] = u'Bibliography'
 
-                    list_item.addnext(new_element)
-                    Manipulate.append_safe(new_element, list_item, self)
-                    list_item.tag = '{http://www.tei-c.org/ns/1.0}ref'
-                    list_item.attrib['target'] = 'None'
+                        parent_element = None
+
+                        # now convert each line
+                        for list_item in last_list:
+                            new_element = etree.Element('p')
+                            new_element.attrib['rend'] = u'Bibliography'
+
+                            list_item.addnext(new_element)
+                            Manipulate.append_safe(new_element, list_item, self)
+                            list_item.tag = '{http://www.tei-c.org/ns/1.0}ref'
+                            list_item.attrib['target'] = 'None'
             elif last_list.tag == '{http://www.tei-c.org/ns/1.0}item':
-                # it is a list, so change to reference list
-                self.debug.print_debug(self, u'Found a list as last element via item. Treating as bibliography.')
-                last_list = last_list.getparent()
-                found = True
-                last_list.tag = '{http://www.tei-c.org/ns/1.0}div'
-                last_list.attrib['rend'] = u'Bibliography'
 
-                parent_element = None
+                text = self.get_stripped_text(last_list)
+                match = year_test.findall(text)
 
-                # now convert each line
-                for list_item in last_list:
-                    new_element = etree.Element('p')
-                    new_element.attrib['rend'] = u'Bibliography'
+                if match:
+                    # it is a list, so change to reference list
+                    self.debug.print_debug(self, u'Found a list as last element via item. Treating as bibliography.')
+                    last_list = last_list.getparent()
+                    found = True
+                    last_list.tag = '{http://www.tei-c.org/ns/1.0}div'
+                    last_list.attrib['rend'] = u'Bibliography'
 
-                    list_item.addnext(new_element)
-                    Manipulate.append_safe(new_element, list_item, self)
-                    list_item.tag = '{http://www.tei-c.org/ns/1.0}ref'
-                    list_item.attrib['target'] = 'None'
+                    parent_element = None
+
+                    # now convert each line
+                    for list_item in last_list:
+                        new_element = etree.Element('p')
+                        new_element.attrib['rend'] = u'Bibliography'
+
+                        list_item.addnext(new_element)
+                        Manipulate.append_safe(new_element, list_item, self)
+                        list_item.tag = '{http://www.tei-c.org/ns/1.0}ref'
+                        list_item.attrib['target'] = 'None'
             else:
                 self.debug.print_debug(self, u'Last element in document was {0}. Not treating as '
                                              u'bibliography.'.format(xpath[0].tag))
@@ -303,7 +315,6 @@ class TeiManipulate(Manipulate):
                                                  u'list handler (triggered by {0})'.format(text))
 
                     return False
-
 
                 year_test = re.compile('((19|20)\d{2}[a-z]?)|(n\.d\.)')
                 match = year_test.findall(text)
