@@ -308,6 +308,7 @@ class ListClassifier(Debuggable):
         failures = 0
 
         for number in range(int(footnote_text[len(footnote_text) - 1].strip()), int(footnote_text[0].strip())):
+
             if int(footnote_text[count]) != int(number + (offset - 1)):
                 self.debug.print_debug(self, u'Expected footnote {0}. Found {1}.'.format(int(number + (offset - 1)),
                                                                                          footnote_text[count]))
@@ -317,6 +318,49 @@ class ListClassifier(Debuggable):
                     self.debug.print_debug(self, u'Found more than 1 misaligned footnote. Bailing.')
                     return
                 else:
+                    # we need to try and find the number in some text, somewhere, then re-superscript it
+                    # it should occur twice only: once for the number itself and once for the paragraph that will be
+                    # made into a footnote. However, if the method is a list at the end of the document it will be
+                    # only a single occurrence
+
+                    text_blocks = tree.xpath('//text()[contains(self::text()'
+                                             ', "{0}")]'.format(int(number + (offset - 1))))
+
+                    if len(text_blocks) >= 1:
+                        parsed = False
+                        for block_to_change in text_blocks:
+                            # (1)[^\d]
+                            ref_match = re.compile('^.*(?P<number>{0})[^\d].*'.format(str(int(number + (offset - 1)))))
+                            result = ref_match.match(block_to_change.getparent().text)
+
+                            if result:
+                                self.debug.print_debug(self, u'Found potential point for footnote #{0}.'
+                                                             u' Superscripting'.format(int(number + (offset - 1))))
+
+                                parent = block_to_change.getparent()
+
+                                before_after = parent.text.split(str(int(number + (offset - 1))))
+
+                                parent.text = before_after[0]
+
+                                encapsulate = etree.Element('sup')
+                                encapsulate.text = str(int(number + (offset - 1)))
+                                encapsulate.tail = ''.join(before_after[1:])
+
+                                Manipulate.append_safe(parent, encapsulate, self)
+
+                                footnote_list.insert(count, encapsulate)
+                                footnote_text.insert(count, str(int(number + (offset - 1))))
+                                offset += 1
+                                parsed = True
+                                break
+
+                        if not parsed:
+                            self.debug.print_debug(self, u'Unable to find footnote #{0}'.format(int(number + (offset - 1))))
+                            return
+                    else:
+                        self.debug.print_debug(self, u'Unable to find footnote #{0}'.format(int(number + (offset - 1))))
+                        return
                     pass
 
             count -= 1
