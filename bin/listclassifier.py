@@ -317,6 +317,25 @@ class ListClassifier(Debuggable):
                 if len(found) == len(footnote_list):
                     break
 
+        if len(found) == 0:
+            # last ditch: see if there is an ordered list near the end of the document that has the same number of
+            # elements as the footnote list
+            self.debug.print_debug(self, u'No luck locating footnote text. Attempting list method.')
+            lists = reversed(tree.xpath('//tei:list[@type="ordered"]',
+                                        namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}))
+            first = True
+            for list in lists:
+                if not first:
+                    break
+                else:
+                    first = True
+                    
+                for item in list:
+                    found.append(item)
+
+                    if len(found) == len(footnote_list):
+                        break
+
         # note: all lists are reversed by this point (ie go from the back of the document upwards)
         if len(found) == len(footnote_list):
             self.debug.print_debug(self, u'Found {0} superscripted footnote entries'.format(len(found)))
