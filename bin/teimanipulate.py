@@ -353,6 +353,18 @@ class TeiManipulate(Manipulate):
                 if try_join and not endgame and last is not None:
                     sibling.tag = 'hi'
                     last.append(sibling)
+                elif try_join:
+                    if sibling.text is None or sibling.text == '':
+                        for item in sibling:
+                            print item.tag
+                            if item.tag == '{http://www.tei-c.org/ns/1.0}ref':
+                                sibling.tag = 'hi'
+                                last.append(sibling)
+
+                                self.debug.print_debug(self, u'Overriding endgame escape in linguistic cue parser '
+                                                             u'as last entry was solely a link.')
+                                break
+
 
             etree.strip_tags(found_element.getparent(), 'REMOVE')
 
