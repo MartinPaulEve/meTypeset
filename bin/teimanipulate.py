@@ -712,8 +712,25 @@ class TeiManipulate(Manipulate):
             # TODO: this is unsafe and trashes vast portions of documents; needs investigation
             count += 1
 
-        self.debug.print_debug(self, u'Removed {0} nodes during cleanup'.format(count))
         self.save_tree(tree)
+        self.debug.print_debug(self, u'Removed {0} nodes during cleanup'.format(count))
+
+        count = 0
+        # normalize dud lists at end of document
+        for element in tree.xpath('//tei:back/tei:div[@type="bibliogr"]/'
+                                  'tei:p[@type="ordered" and @rend="Bibliography"]/tei:item',
+                                  namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            element.tag = 'p'
+            element.attrib['rend'] = 'Bibliography'
+            element.getparent().tag = 'REMOVE'
+            count += 1
+
+        etree.strip_tags(tree, 'REMOVE')
+
+        self.save_tree(tree)
+        self.debug.print_debug(self, u'Cleaned {0} nested item bibliographic tags during cleanup'.format(count))
+
+
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) > int(self.gv.settings.get_setting('wmfimagereplace', self,
