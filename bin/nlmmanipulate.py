@@ -44,10 +44,21 @@ class NlmManipulate(Manipulate):
             else:
                 found = True
 
-            if not found:
+            if not found and (paragraph.tail is None or paragraph.tail == ''):
                 paragraph.getparent().remove(paragraph)
                 self.save_tree(tree)
                 self.debug.print_debug(self, u'Removed an empty element')
+            elif not found and paragraph.tail != '':
+                sibling = paragraph.getprevious()
+
+                if sibling is None:
+                    paragraph.getparent().text += paragraph.tail
+                else:
+                    sibling.tail = paragraph.tail
+
+                paragraph.getparent().remove(paragraph)
+                self.save_tree(tree)
+                self.debug.print_debug(self, u'Removed an empty element but preserved tail')
 
         self.save_tree(tree)
 
