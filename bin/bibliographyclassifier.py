@@ -44,7 +44,7 @@ class BibliographyClassifier(Debuggable):
 
                 for line in lines:
                     if manipulate.find_references_from_cue(line, tree):
-                        return
+                        return True
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('bibliographyclassifier', self,
@@ -59,7 +59,7 @@ class BibliographyClassifier(Debuggable):
         found = tei_manipulator.find_reference_list_in_word_list(tree)
 
         if not found:
-            self.linguistic_cues(tei_manipulator, tree)
+            found = self.linguistic_cues(tei_manipulator, tree)
 
         tei_manipulator.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]', 'back', 'div', 'type', 'bibliogr')
 
