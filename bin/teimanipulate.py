@@ -356,8 +356,8 @@ class TeiManipulate(Manipulate):
                 elif try_join:
                     if sibling.text is None or sibling.text == '':
                         for item in sibling:
-                            print item.tag
-                            if item.tag == '{http://www.tei-c.org/ns/1.0}ref':
+                            if item.tag == '{http://www.tei-c.org/ns/1.0}ref' and (
+                                        item.tail == '' or item.tail is None):
                                 sibling.tag = 'hi'
                                 last.append(sibling)
 
