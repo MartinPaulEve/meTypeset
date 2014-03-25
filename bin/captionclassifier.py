@@ -136,10 +136,11 @@ class CaptionClassifier(Debuggable):
                     NlmManipulate.append_safe(caption_element, new_p, self)
                     NlmManipulate.append_safe(graphic, caption_element, self)
 
-                    p.text = p.text.replace(': ', '')
-                    p.text = p.text.replace(':', '')
-                    p.text = p.text.replace(title, '')
-                    p.text = p.text.replace(caption, '')
+                    if p.text is not None:
+                        p.text = p.text.replace(': ', '')
+                        p.text = p.text.replace(':', '')
+                        p.text = p.text.replace(title, '')
+                        p.text = p.text.replace(caption, '')
 
                     if graphic.tail:
                         graphic.tail = graphic.tail.replace(': ', '')
@@ -203,9 +204,10 @@ class CaptionClassifier(Debuggable):
                     NlmManipulate.append_safe(caption_element, p, self)
                     table.insert(1, caption_element)
 
-                    p.text = p.text.replace(': ', '')
-                    p.text = p.text.replace(':', '')
-                    p.text = p.text.replace(title, '')
+                    if p.text is not None:
+                        p.text = p.text.replace(': ', '')
+                        p.text = p.text.replace(':', '')
+                        p.text = p.text.replace(title, '')
 
                     if not 'id' in table.attrib:
                         table.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
