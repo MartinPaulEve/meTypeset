@@ -320,6 +320,17 @@ class SizeClassifier(Debuggable):
             self.debug.print_debug(self, u'Shutting down module')
             return
 
+        tree = self.set_dom_tree(self.gv.tei_file_path)
+
+        for normalize in tree.xpath('//tei:cit/tei:quote/tei:head',
+                                    namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            normalize.getparent().tag = 'REMOVE'
+            normalize.getparent().getparent().tag = 'REMOVE'
+
+        etree.strip_tags(tree, 'REMOVE')
+        manipulate.save_tree(tree)
+        self.debug.print_debug(self, u'Normalizing nested headings inside cit/quote blocks')
+
         for size in sizes_ordered:
             if float(size) >= float(self.size_cutoff):
                 if not size in section_count:
@@ -438,6 +449,18 @@ class SizeClassifier(Debuggable):
                     # will be transformed to
                     # <title><hi meTypesetSize="18">some text</hi></title>
                     manipulate.change_outer('//tei:hi[@meTypesetSize=\'{0}\']'.format(size), 'head', size)
+
+                    tree = self.set_dom_tree(self.gv.tei_file_path)
+
+                    for normalize in tree.xpath('//tei:cit/tei:quote/tei:head',
+                                                namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+                        normalize.getparent().tag = 'REMOVE'
+                        normalize.getparent().getparent().tag = 'REMOVE'
+
+                    etree.strip_tags(tree, 'REMOVE')
+                    manipulate.save_tree(tree)
+                    self.debug.print_debug(self, u'Normalizing nested headings inside cit/quote blocks')
+
 
                     # assign IDs to every single heading tag for easy manipulation
                     heading_count = manipulate.tag_headings()
