@@ -103,56 +103,60 @@ class CaptionClassifier(Debuggable):
 
         for graphic in graphics:
 
-            # get the next sibling
-            p = graphic.getparent().getnext()
+            has_caption = graphic.getnext()
 
-            if p is not None and p.tag == 'p':
-                text = manipulate.get_stripped_text(p)
+            if has_caption is None or (has_caption is not None and has_caption.tag != 'title'):
 
-                if len(text) < 140 and u':' in text:
-                    # likely this is a caption identifier
-                    split_title = text.split(':')
+                # get the next sibling
+                p = graphic.getparent().getnext()
 
-                    title = split_title[0]
-                    caption = (''.join(split_title[1:])).strip()
+                if p is not None and p.tag == 'p':
+                    text = manipulate.get_stripped_text(p)
 
-                    self.debug.print_debug(self, u'Handling title and caption for "{0}"'.format(title))
+                    if len(text) < 140 and u':' in text:
+                        # likely this is a caption identifier
+                        split_title = text.split(':')
 
-                    title_element = None
+                        title = split_title[0]
+                        caption = (''.join(split_title[1:])).strip()
 
-                    # use an existing title element if one exists
-                    try:
-                        title_element = graphic.xpath('title')[0]
-                    except:
-                        title_element = etree.Element('title')
-                        graphic.insert(0, title_element)
+                        self.debug.print_debug(self, u'Handling title and caption for "{0}"'.format(title))
 
-                    title_element.text = title
+                        title_element = None
 
-                    caption_element = etree.Element('caption')
-                    new_p = etree.Element('p')
-                    new_p.text = caption
+                        # use an existing title element if one exists
+                        try:
+                            title_element = graphic.xpath('title')[0]
+                        except:
+                            title_element = etree.Element('title')
+                            graphic.insert(0, title_element)
 
-                    NlmManipulate.append_safe(caption_element, new_p, self)
-                    NlmManipulate.append_safe(graphic, caption_element, self)
+                        title_element.text = title
 
-                    if p.text is not None:
-                        p.text = p.text.replace(': ', '')
-                        p.text = p.text.replace(':', '')
-                        p.text = p.text.replace(title, '')
-                        p.text = p.text.replace(caption, '')
+                        caption_element = etree.Element('caption')
+                        new_p = etree.Element('p')
+                        new_p.text = caption
 
-                    if graphic.tail:
-                        graphic.tail = graphic.tail.replace(': ', '')
-                        graphic.tail = graphic.tail.replace(':', '')
-                        graphic.tail = graphic.tail.replace(title, '')
-                        graphic.tail = graphic.tail.replace(caption, '')
+                        NlmManipulate.append_safe(caption_element, new_p, self)
+                        NlmManipulate.append_safe(graphic, caption_element, self)
 
-                    if not 'id' in graphic.attrib:
-                        graphic.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+                        if p.text is not None:
+                            p.text = p.text.replace(': ', '')
+                            p.text = p.text.replace(':', '')
+                            p.text = p.text.replace(title, '')
+                            p.text = p.text.replace(caption, '')
 
-                    graphic_titles.append(title)
-                    graphic_ids.append(graphic.attrib['id'])
+                        if graphic.tail:
+                            graphic.tail = graphic.tail.replace(': ', '')
+                            graphic.tail = graphic.tail.replace(':', '')
+                            graphic.tail = graphic.tail.replace(title, '')
+                            graphic.tail = graphic.tail.replace(caption, '')
+
+                        if not 'id' in graphic.attrib:
+                            graphic.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+
+                        graphic_titles.append(title)
+                        graphic_ids.append(graphic.attrib['id'])
 
         paragraphs = tree.xpath('//p')
 
