@@ -156,4 +156,4 @@ Additional contributions were made, in alphabetical order) by:
 
 * [Rodrigo DLG](https://github.com/josille) (josille@gmail.com)
 * [Alex Garnett](https://github.com/axfelix) (axfelix@gmail.com)
-* [Dulip Withnage](https://github.com/withanage) (dulip.withanage@gmail.com)
+* [Dulip Withanage](https://github.com/withanage) (dulip.withanage@gmail.com)
