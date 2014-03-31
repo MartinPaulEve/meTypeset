@@ -420,6 +420,9 @@ class SizeClassifier(Debuggable):
                                                 'Heading 4': 70, 'Heading 5': 60, 'Heading 6': 50, 'Heading 7': 40,
                                                 'Heading 8': 30, 'Heading 9': 20}.items())
 
+            headings = dict(headings.items() + {'H1': 100, 'H2': 90, 'H3': 80, 'H4': 70, 'H5': 60, 'H6': 50, 'H7': 40,
+                                                'H8': 30, 'H9': 20}.items())
+
         for key, value in headings.iteritems():
             self.debug.print_debug(self, u'Changing {0} to size {1}'.format(key, value))
             self.handle_heading(manipulate, key, float(value))
