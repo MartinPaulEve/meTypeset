@@ -11,6 +11,7 @@ from lxml import objectify
 import re
 from debug import Debuggable
 
+
 class Manipulate(Debuggable):
     def __init__(self, gv):
         self.gv = gv

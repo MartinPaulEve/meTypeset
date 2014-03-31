@@ -126,6 +126,9 @@ class MeTypeset (Debuggable):
                 self.debug.print_debug(self, u'Skipping docx extraction')
                 DocxToTei(self.gv).run(False, self.args['--proprietary'])
 
+            metadata = Metadata(self.gv)
+            metadata.pre_clean()
+
             # run size classifier
             # aggression 5
             SizeClassifier(self.gv).run()
@@ -168,7 +171,7 @@ class MeTypeset (Debuggable):
                 cc.run_graphics()
 
             # run metadata merge
-            Metadata(self.gv).run()
+            metadata.run()
 
             if self.args['--interactive']:
                 bibliography_classifier.run_prompt(True)
