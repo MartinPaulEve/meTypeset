@@ -130,6 +130,9 @@ class Metadata(Manipulate):
                           '{http://www.tei-c.org/ns/1.0}cit']
 
         count = 0
+
+        matched_authors = []
+
         for item in section:
             if count > 3:
                 break
@@ -141,20 +144,22 @@ class Metadata(Manipulate):
                 processed = False
 
                 for author in self.authors:
-                    has_all = True
-                    for component in author:
-                        if not component in text:
-                            has_all = False
-                            break
+                    if not author in matched_authors:
+                        has_all = True
+                        for component in author:
+                            if not component in text:
+                                has_all = False
+                                break
 
-                    if has_all:
-                        # found a metadata line
-                        count -= 1
-                        item.getparent().remove(item)
-                        self.debug.print_debug(self, u'Removed line "{0}" '
-                                                     u'because it appears to be author metadata'.format(text))
-                        processed = True
-                        break
+                        if has_all:
+                            # found a metadata line
+                            matched_authors.append(author)
+                            count -= 1
+                            item.getparent().remove(item)
+                            self.debug.print_debug(self, u'Removed line "{0}" '
+                                                         u'because it appears to be author metadata'.format(text))
+                            processed = True
+                            break
 
                 if not processed:
                     for metadata in self.metadata:
