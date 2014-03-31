@@ -47,8 +47,11 @@ class Metadata(Manipulate):
         ids = tree.xpath('//article-id | //tei:article-id', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
         for id in ids:
-            self.metadata_items['ID{0}'.format(count)] = self.get_stripped_text(id)
+            text = self.get_stripped_text(id)
+            self.metadata_items['ID{0}'.format(count)] = text
             count += 1
+
+            self.debug.print_debug(self, u'Extracted an article ID: {0} from metadata'.format(text))
 
         self.metadata_items['IDs_count'] = count
 
@@ -57,8 +60,11 @@ class Metadata(Manipulate):
         titles = tree.xpath('//article-title | //tei:article-title', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
         for title in titles:
-            self.metadata_items['title{0}'.format(count)] = self.get_stripped_text(title)
+            text = self.get_stripped_text(title)
+            self.metadata_items['title{0}'.format(count)] = text
             count += 1
+
+            self.debug.print_debug(self, u'Extracted an article title: "{0}" from metadata'.format(text))
 
         self.metadata_items['titles_count'] = count
 
@@ -67,7 +73,10 @@ class Metadata(Manipulate):
         titles = tree.xpath('//journal-title | //tei:journal-title', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
         for title in titles:
-            self.metadata_items['journal_title{0}'.format(count)] = self.get_stripped_text(title)
+            text = self.get_stripped_text(title)
+            self.metadata_items['journal_title{0}'.format(count)] = text
             count += 1
+
+            self.debug.print_debug(self, u'Extracted a journal title: "{0}" from metadata'.format(text))
 
         self.metadata_items['journal_titles_count'] = count
