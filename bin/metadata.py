@@ -47,7 +47,7 @@ class Metadata(Manipulate):
         ids = tree.xpath('//article-id | //tei:article-id', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
         for id in ids:
-            text = self.get_stripped_text(id)
+            text = self.get_stripped_text(id).strip()
             self.metadata_items['ID{0}'.format(count)] = text
             count += 1
 
@@ -60,7 +60,7 @@ class Metadata(Manipulate):
         titles = tree.xpath('//article-title | //tei:article-title', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
         for title in titles:
-            text = self.get_stripped_text(title)
+            text = self.get_stripped_text(title).strip()
             self.metadata_items['title{0}'.format(count)] = text
             count += 1
 
@@ -73,7 +73,7 @@ class Metadata(Manipulate):
         titles = tree.xpath('//journal-title | //tei:journal-title', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
         for title in titles:
-            text = self.get_stripped_text(title)
+            text = self.get_stripped_text(title).strip()
             self.metadata_items['journal_title{0}'.format(count)] = text
             count += 1
 
@@ -89,7 +89,7 @@ class Metadata(Manipulate):
         for title in titles:
             components = []
             for component in title:
-                text = self.get_stripped_text(component)
+                text = self.get_stripped_text(component).strip()
                 self.debug.print_debug(self, u'Extracted a name component: "{0}" from metadata'.format(text))
                 components.append(text)
 
@@ -104,7 +104,7 @@ class Metadata(Manipulate):
         titles = tree.xpath('//aff | //tei:aff', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
         for title in titles:
-            text = self.get_stripped_text(title)
+            text = self.get_stripped_text(title).strip()
             self.metadata_items['aff{0}'.format(count)] = text
             count += 1
 
