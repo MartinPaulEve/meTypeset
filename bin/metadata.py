@@ -80,3 +80,20 @@ class Metadata(Manipulate):
             self.debug.print_debug(self, u'Extracted a journal title: "{0}" from metadata'.format(text))
 
         self.metadata_items['journal_titles_count'] = count
+
+        # attempt to find authors
+        count = 0
+        titles = tree.xpath('//contrib/name | //tei:contrib/tei:name',
+                            namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+
+        for title in titles:
+            components = []
+            for component in title:
+                text = self.get_stripped_text(component)
+                self.debug.print_debug(self, u'Extracted a name component: "{0}" from metadata'.format(text))
+                components.append(text)
+
+            self.metadata_items['contrib_name{0}'.format(count)] = components
+            count += 1
+
+            self.metadata_items['contrib_names_count'] = count
