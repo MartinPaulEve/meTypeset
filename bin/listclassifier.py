@@ -460,7 +460,7 @@ class ListClassifier(Debuggable):
             self.debug.print_debug(self, u'Handling list element {0}'.format(element.text))
 
             if iteration == 0:
-                if not elements[0].text.startswith(u'(1) '):
+                if not elements[0].text or not elements[0].text.startswith(u'(1) '):
                     self.debug.print_debug(self, u'Reference list PANIC: {0}'.format(element.text))
                     break
                 else:
@@ -523,7 +523,7 @@ class ListClassifier(Debuggable):
             self.debug.print_debug(self, u'Handling list element {0}'.format(element.text))
 
             if iteration == 0:
-                if not elements[0].text.startswith(u'1. '):
+                if not elements[0].text or not elements[0].text.startswith(u'1. '):
                     self.debug.print_debug(self, u'Reference list PANIC: {0}'.format(element.text))
                     break
                 else:
