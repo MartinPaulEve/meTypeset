@@ -170,6 +170,5 @@ class Metadata(Manipulate):
                             self.debug.print_debug(self, u'Removed line "{0}" '
                                                          u'because it appears to be duplicated metadata'.format(text))
 
-
         manipulate.save_tree(tree)
 
