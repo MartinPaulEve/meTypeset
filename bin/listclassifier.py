@@ -503,6 +503,71 @@ class ListClassifier(Debuggable):
 
         manipulate.save_tree(tree)
 
+    def process_number_list(self, tree, manipulate, treestring):
+
+        if not u'>1.' in treestring:
+            return
+
+        # select all p elements followed by another p element
+        expression = u'//tei:p[contains("0123456789", substring(., 1, 1))][following-sibling::' \
+                     u'tei:p[contains("0123456789", substring(., 1, 1))]]'
+
+        elements = tree.xpath(expression, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+
+        in_list_run = False
+        list_element = None
+        to_append = None
+        iteration = 0
+
+        for element in elements:
+            self.debug.print_debug(self, u'Handling list element {0}'.format(element.text))
+
+            if iteration == 0:
+                if not elements[0].text.startswith(u'1. '):
+                    self.debug.print_debug(self, u'Reference list PANIC: {0}'.format(element.text))
+                    break
+                else:
+                    offset = 3
+
+            iteration += 1
+
+            if not in_list_run:
+                list_element = etree.Element('list')
+                list_element.attrib[u'type'] = u'ordered'
+                to_append = None
+                in_list_run = True
+                element.addprevious(list_element)
+
+            number_match = re.compile('^\d+\.')
+
+            if not element.getnext().text is None:
+                if number_match.match(element.getnext().text) and not element.getnext() in elements:
+                    # this element is the last in this list
+                    in_list_run = False
+                    to_append = element.getnext()
+                elif not number_match.match(element.getnext().text) and not element.getnext() in elements:
+                    in_list_run = False
+                    to_append = None
+            else:
+                # this element is the last in this list
+                self.debug.print_debug(self, u'Ending list run on {0}'.format(element.getnext()))
+                in_list_run = False
+                to_append = element.getnext()
+
+            element.tag = 'item'
+            element.text = element.text[(int(offset) + int(math.floor(int(iteration/10)))):]
+            Manipulate.append_safe(list_element, element, self)
+
+            if not in_list_run:
+                if not to_append is None:
+                    if not to_append.text is None:
+                        to_append.tag = 'item'
+                        to_append.text = to_append.text[(int(offset) + int(math.floor(int(iteration/10)))):]
+                        self.debug.print_debug(self, u'Appending final list element: {0}'.format(to_append.text))
+                        Manipulate.append_safe(list_element, to_append, self)
+
+        manipulate.save_tree(tree)
+
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('listclassifier',
                                                                                          self, domain='aggression')):
@@ -535,6 +600,8 @@ class ListClassifier(Debuggable):
         # (2) Item 2
         if bracket_lists:
             self.process_curly_list(tree, manipulate, string_version)
+
+        self.process_number_list(tree, manipulate, string_version)
 
         if int(self.gv.settings.args['--aggression']) >= 10 and bracket_refs:
             backup_tree = copy(tree)
