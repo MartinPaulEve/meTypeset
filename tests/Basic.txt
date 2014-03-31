@@ -242,3 +242,16 @@ Library           Collections
     Should Be Equal As Strings    ${title.text}    Bibliographie
     Should Be Equal As Strings    ${p.text}    Not a real reference
     [Teardown]    Remove Directory    017    recursive=True
+
+018 Removal of duplicated metadata in document
+    [Tags]    formatting    metadata    018
+    ${result} =    Run Process    python ../bin/meTypeset.py docx MetadataRemoval.docx ./018 -s testsettings.xml -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./018/nlm/out.xml
+    ${title}=    Get Element    ${xml}    body/sec/title
+    ${p}=    Get Elements    ${xml}    body/sec/p
+    ${pone}=    Get From List    ${p}    2
+    Should Be Equal As Strings    ${title.text}    A Heading
+    Should Be Equal As Strings    ${pone.text}    Some article content. As Martin Paul Eve has noted, blah blah.
+    [Teardown]    Remove Directory    018    recursive=True
