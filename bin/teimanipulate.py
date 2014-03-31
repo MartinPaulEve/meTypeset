@@ -538,7 +538,7 @@ class TeiManipulate(Manipulate):
         # changes the parent element of the outer_xpath expression to the new_value
         tree = self.load_dom_tree()
 
-        allowed_elements = ['bold', 'italic', 'p', 'hi']
+        allowed_elements = ['bold', 'italic', 'p', 'hi', 'seg', 'lb']
 
         # search the tree and grab the parent
         for child in tree.xpath(outer_xpath + "/..", namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
