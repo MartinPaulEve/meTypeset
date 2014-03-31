@@ -413,12 +413,12 @@ class SizeClassifier(Debuggable):
                 key = u'Heading {0}'.format(count + 1)
                 headings[key] = 100 - 10 * count
         else:
-            headings = {'heading 1': 100, 'heading 2': 90, 'heading 3': 80, 'heading 4': 70, 'heading 5': 60,
-                        'heading 6': 50, 'heading 7': 40, 'heading 8': 30, 'heading 9': 20}
+            headings = {'title': 100, 'heading 1': 100, 'heading 2': 90, 'heading 3': 80, 'heading 4': 70,
+                        'heading 5': 60, 'heading 6': 50, 'heading 7': 40, 'heading 8': 30, 'heading 9': 20}
 
-            headings = dict(headings.items() + {'Heading 1': 100, 'Heading 2': 90, 'Heading 3': 80, 'Heading 4': 70,
-                                              'Heading 5': 60, 'Heading 6': 50, 'Heading 7': 40, 'Heading 8': 30,
-                                              'Heading 9': 20}.items())
+            headings = dict(headings.items() + {'Title': 100, 'Heading 1': 100, 'Heading 2': 90, 'Heading 3': 80,
+                                                'Heading 4': 70, 'Heading 5': 60, 'Heading 6': 50, 'Heading 7': 40,
+                                                'Heading 8': 30, 'Heading 9': 20}.items())
 
         for key, value in headings.iteritems():
             self.debug.print_debug(self, u'Changing {0} to size {1}'.format(key, value))
