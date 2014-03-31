@@ -134,7 +134,7 @@ class Metadata(Manipulate):
         matched_authors = []
 
         for item in section:
-            if count > 3:
+            if count > 2:
                 break
 
             if item.tag in items_to_match:
