@@ -50,4 +50,14 @@ class Metadata(Manipulate):
             self.metadata_items['ID{0}'.format(count)] = self.get_stripped_text(id)
             count += 1
 
-        self.metadata_items['IDs_Count'] = count
+        self.metadata_items['IDs_count'] = count
+
+        # attempt to find article titles
+        count = 0
+        titles = tree.xpath('//article-title | //tei:article-title', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+
+        for title in titles:
+            self.metadata_items['title{0}'.format(count)] = self.get_stripped_text(title)
+            count += 1
+
+        self.metadata_items['titles_count'] = count
