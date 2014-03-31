@@ -51,7 +51,7 @@ class Metadata(Manipulate):
             self.metadata_items['ID{0}'.format(count)] = text
             count += 1
 
-            self.debug.print_debug(self, u'Extracted an article ID: {0} from metadata'.format(text))
+            self.debug.print_debug(self, u'Extracted an article ID: "{0}" from metadata'.format(text))
 
         self.metadata_items['IDs_count'] = count
 
@@ -97,3 +97,17 @@ class Metadata(Manipulate):
             count += 1
 
             self.metadata_items['contrib_names_count'] = count
+
+
+        # attempt to find affiliations
+        count = 0
+        titles = tree.xpath('//aff | //tei:aff', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+
+        for title in titles:
+            text = self.get_stripped_text(title)
+            self.metadata_items['aff{0}'.format(count)] = text
+            count += 1
+
+            self.debug.print_debug(self, u'Extracted an affiliation: "{0}" from metadata'.format(text))
+
+        self.metadata_items['affs_count'] = count
