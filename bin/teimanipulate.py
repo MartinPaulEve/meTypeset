@@ -163,9 +163,6 @@ class TeiManipulate(Manipulate):
         return found
 
     def find_reference_list_in_word_list(self, tree):
-
-        self.debug.print_debug(self, u'Ascertaining if last element is a bibliographic list')
-
         # determine if the last element in the document is a list
         select = u'(//tei:div/*[not(self::tei:div)])[last()]'
 
@@ -191,6 +188,8 @@ class TeiManipulate(Manipulate):
             self.do_cit_bibliography(xpath)
 
         self.save_tree(tree)
+
+        self.debug.print_debug(self, u'Ascertaining if last element is a bibliographic list')
 
         return found
 
@@ -287,7 +286,8 @@ class TeiManipulate(Manipulate):
 
         remove = ['cit', 'quote']
 
-        for child in tree.xpath('//tei:p | //tei:head', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+        for child in tree.xpath('//tei:p[not(//tei:graphic)] | //tei:head[not(//tei:graphic)]',
+                                namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             stripped_text = self.get_stripped_text(child).strip(':.')
 
             if stripped_text.lower().strip() == cue.lower().strip():
