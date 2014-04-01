@@ -15,6 +15,7 @@ Options:
     --interactive                                   Enable step-by-step interactive mode
     -h, --help                                      Show this screen.
     -m, --metadata <metadata_file>                  Metadata file
+    --puretei                                       Die after performing TEI XSLT step
     --prettytei                                     Indent and format intermediary TEI
     -p, --proprietary                               Enables proprietary math parsing. Requires omml2mml.xsl
     -s, --settings <settings_file>                  Settings file
@@ -125,6 +126,10 @@ class MeTypeset (Debuggable):
             else:
                 self.debug.print_debug(self, u'Skipping docx extraction')
                 DocxToTei(self.gv).run(False, self.args['--proprietary'])
+
+            if self.args['--puretei']:
+                self.debug.print_debug(self, u'Exiting as TEI transform complete')
+                return
 
             metadata = Metadata(self.gv)
             metadata.pre_clean()
