@@ -601,8 +601,6 @@ class ListClassifier(Debuggable):
         if bracket_lists:
             self.process_curly_list(tree, manipulate, string_version)
 
-        self.process_number_list(tree, manipulate, string_version)
-
         if int(self.gv.settings.args['--aggression']) >= 10 and bracket_refs:
             backup_tree = copy(tree)
             try:
@@ -615,3 +613,5 @@ class ListClassifier(Debuggable):
 
         if superscripted_footnotes:
             self.process_superscript_footnotes(tree, manipulate)
+
+        self.process_number_list(tree, manipulate, string_version)
