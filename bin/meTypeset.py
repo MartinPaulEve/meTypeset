@@ -184,6 +184,10 @@ class MeTypeset (Debuggable):
             # process any bibliography entries that are possible
             BibliographyDatabase(self.gv).run()
 
+            # remove stranded titles
+            manipulate = NlmManipulate(self.gv)
+            manipulate.handle_stranded_reference_titles_from_cues()
+
             if self.args['--identifiers']:
                 IdGenerator(self.gv).run()
 

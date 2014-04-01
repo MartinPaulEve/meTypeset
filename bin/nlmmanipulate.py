@@ -453,7 +453,7 @@ class NlmManipulate(Manipulate):
 
             if process:
                 for item in sections:
-                    text = self.get_stripped_text(item)
+                    text = self.get_stripped_text(item).strip()
 
                     if text.lower() in reference_terms:
                         sections.getparent().remove(sections)
