@@ -88,7 +88,8 @@ of this software, even if advised of the possibility of such damage.
     <xsl:template match="text()" mode="pass2">
 	  <xsl:value-of select="."/>
     </xsl:template>
-    
+  
+      
     <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
       <desc>
          <p>     Zap empty p and item </p>
@@ -97,6 +98,7 @@ of this software, even if advised of the possibility of such damage.
  
    <xsl:template match="tei:p[not(*) and string-length(.)=0]"
 		 mode="pass2" priority="99"/>
+ 
     
     <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
       <desc>
@@ -383,38 +385,6 @@ of this software, even if advised of the possibility of such damage.
    </xsl:template>
 
 
-  <!-- this block was supposed to detect bolded elements and move them into a <head> section. Will be better handled in TEI->NLM phase, so reworking -->  
-
-  <!--
-  <xsl:template match="tei:p[tei:hi[@rend='bold']]" mode="pass2">
-    <xsl:choose>
-
-      <xsl:when test="count(*[not[@rend='bold']]) = 0">
-        <head>
-          <xsl:for-each select=".">
-            <xsl:choose>
-              <xsl:when test="@rend='italic'">
-                <emph>
-                  <xsl:value-of select="."></xsl:value-of>
-                </emph>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="."></xsl:value-of>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:for-each>
-          
-        </head>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:copy-of select="."></xsl:copy-of>
-        <xsl:apply-templates />
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
- -->
-
    <xsl:template name="nextHi">
       <xsl:param name="r"/>
       <xsl:for-each select="following-sibling::node()[1]">
@@ -510,7 +480,6 @@ of this software, even if advised of the possibility of such damage.
       <xsl:value-of select="substring(.,9)"/>
     </xsl:template>
 
-    <xsl:template match="tei:p[normalize-space(.)='']" mode="pass2"/>
-
+  <xsl:template match="tei:p[normalize-space(.)='' and not(//tei:graphic)]" mode="pass2"/>
 
 </xsl:stylesheet>

@@ -379,7 +379,7 @@ of this software, even if advised of the possibility of such damage.
       </desc>
    </doc>
     <xsl:template name="figureSection">
-      <figure>
+      <figure>    	
 	<xsl:for-each select="current-group()">
 	  <xsl:apply-templates select="." mode="paragraph"/>
 	</xsl:for-each>

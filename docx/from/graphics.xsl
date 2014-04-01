@@ -87,7 +87,7 @@ of this software, even if advised of the possibility of such damage.
             <xsl:when test="$convert-graphics='true'">
                 <xsl:choose>
                     <xsl:when test="descendant::a:blip[1]/@r:embed">
-                        <graphic>
+                        <xsl:element name="graphic">
 			    <xsl:variable name="c">
 			      <xsl:choose>
 			      <xsl:when test="ancestor::w:tbl">
@@ -145,7 +145,7 @@ of this software, even if advised of the possibility of such damage.
 				<xsl:value-of select=".//wp:docPr/@descr"/>
 			      </xsl:element>
 			    </xsl:if>                            
-                        </graphic>
+                        </xsl:element>
                     </xsl:when>
                     <xsl:otherwise>
                         <figure>
