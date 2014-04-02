@@ -27,6 +27,7 @@ from bibliographydatabase import BibliographyDatabase
 from idgenerator import IdGenerator
 from xslchainer import XslChain
 from complianceenforcer import ComplianceEnforcer
+from nlmmanipulate import NlmManipulate
 
 __author__ = "Martin Paul Eve"
 __email__ = "martin@martineve.com"
@@ -70,6 +71,10 @@ def main():
 
             # process any bibliography entries that are possible
             BibliographyDatabase(bare_gv).run()
+
+            # remove stranded titles
+            manipulate = NlmManipulate(bare_gv)
+            manipulate.handle_stranded_reference_titles_from_cues()
 
             if args['--identifiers']:
                 IdGenerator(bare_gv).run()
