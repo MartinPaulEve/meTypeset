@@ -15,6 +15,7 @@ Options:
     --interactive                                   Enable step-by-step interactive mode
     -h, --help                                      Show this screen.
     -m, --metadata <metadata_file>                  Metadata file
+    --purenlm                                       Die after performing NLM XSLT step
     --puretei                                       Die after performing TEI XSLT step
     --prettytei                                     Indent and format intermediary TEI
     -p, --proprietary                               Enables proprietary math parsing. Requires omml2mml.xsl
@@ -159,6 +160,10 @@ class MeTypeset (Debuggable):
 
             # run tei to nlm conversion
             TeiToNlm(self.gv).run(not found_bibliography)
+
+            if self.gv.settings.args['--purenlm']:
+                self.debug.print_debug(self, u'Exiting as NLM transform complete')
+                return
 
             # run reference linker
             rl = ReferenceLinker(self.gv)

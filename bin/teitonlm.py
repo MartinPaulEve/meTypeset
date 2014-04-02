@@ -99,4 +99,7 @@ class TeiToNlm (Debuggable):
         if transform:
             self.run_transform()
 
+        if self.gv.settings.args['--purenlm']:
+            return
+
         self.run_quirks(process_ref_lists)
