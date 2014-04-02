@@ -34,6 +34,7 @@ class TeiToNlm (Debuggable):
         if self.gv.settings.get_setting('linebreaks-as-comments', self) == 'False':
             # we need to convert every instance of <!--meTypeset:br--> to a new paragraph
             manipulate.close_and_open_tag('comment()[. = "meTypeset:br"]', 'p')
+            manipulate.close_and_open_tag_not_styled('comment()[. = "meTypeset:br"]', 'title')
 
         # we will replace inside table cells and titles regardless because these are real JATS break tags
         manipulate.insert_break('comment()[. = "meTypeset:br"]', 'td')

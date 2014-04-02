@@ -199,6 +199,52 @@ class NlmManipulate(Manipulate):
 
         node.attrib[u'rend'] = rend
 
+    def close_and_open_tag_not_styled(self, search_xpath, tag_name):
+        """
+        Opens and closes an XML tag within a document. This is primarily useful when we have a marker such as
+        meTypeset:br in comments which corresponds to no JATS/NLM equivalent. We use this function in certain
+        behavioural modes to close the preceding paragraph and open the next.
+
+        This variant only performs this action when the subsequent text does not look like a heading.
+
+        @param search_xpath: the node that serves as a marker
+        @param tag_name: the tag name that will be open and closed
+        """
+        tree = self.load_dom_tree()
+
+        initial_nodes = tree.xpath('//{0}//{1}'.format(tag_name, search_xpath))
+        self.debug.print_debug(self, u'Found {0} {1} nodes on which to close and open tag {2}'.format(
+            len(initial_nodes), search_xpath, tag_name))
+
+        nested_sibling = None
+        bail = False
+
+        if len(initial_nodes) > 80 and int(self.gv.settings.args["--aggression"]) < 11:
+            self.debug.print_debug(self, u'Bailing from replacement of tag {0} [limit exceeded]'.format(search_xpath))
+            self.debug.write_error(self,
+                                   'Bailing from replacement of tag {0} [limit exceeded]'.format(search_xpath),
+                                   '001')
+            bail = True
+
+        if not bail:
+            for node in initial_nodes:
+                sibling = node
+
+                while sibling.getnext():
+                    if sibling.tag.endswith('bold'):
+                        bail = True
+
+                if not bail:
+                    self.process_node_for_tags(nested_sibling, node, search_xpath, tag_name)
+        else:
+            # add an error tag to p elements where there are more than 3 comments within
+            children = tree.xpath('//*[count(comment()[.="meTypeset:br"]) > 3]'.format(search_xpath))
+
+            for child in children:
+                self.add_error_tag(child, u'001')
+
+        self.save_tree(tree)
+
     def close_and_open_tag(self, search_xpath, tag_name):
         """
         Opens and closes an XML tag within a document. This is primarily useful when we have a marker such as
@@ -255,7 +301,6 @@ class NlmManipulate(Manipulate):
                 return ret, tail
 
         return None, False
-
 
     def insert_break(self, search_xpath, tag_name):
         """
