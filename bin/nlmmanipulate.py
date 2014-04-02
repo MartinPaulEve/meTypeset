@@ -474,6 +474,10 @@ class NlmManipulate(Manipulate):
 
         return ret
 
+    def final_clean(self):
+        self.handle_stranded_reference_titles_from_cues()
+        self.re_nest()
+
     def find_reference_list(self):
         tree = self.load_dom_tree()
 

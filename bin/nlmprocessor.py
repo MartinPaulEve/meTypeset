@@ -74,7 +74,7 @@ def main():
 
             # remove stranded titles
             manipulate = NlmManipulate(bare_gv)
-            manipulate.handle_stranded_reference_titles_from_cues()
+            manipulate.final_clean()
 
             if args['--identifiers']:
                 IdGenerator(bare_gv).run()
