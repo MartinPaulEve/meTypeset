@@ -29,6 +29,9 @@ class NlmManipulate(Manipulate):
 
         self.save_tree(tree)
 
+    def re_nest(self):
+        pass
+
     def remove_empty_elements(self, element):
         tree = self.load_dom_tree()
 
@@ -137,9 +140,12 @@ class NlmManipulate(Manipulate):
             last_node = None
         return last_node
 
-    def process_node_for_tags(self, nested_sibling, node, search_xpath, tag_name):
+    def process_node_for_tags(self, nested_sibling, node, search_xpath, tag_name, new_tag='SAME'):
+        if new_tag == 'SAME':
+            new_tag = tag_name
+
         last_node = node
-        new_element = etree.Element(tag_name)
+        new_element = etree.Element(new_tag)
         new_element.text = ''
         nodes_to_copy = node.xpath('//{0}/following-sibling::node()'.format(search_xpath))
 
@@ -235,7 +241,7 @@ class NlmManipulate(Manipulate):
                         bail = True
 
                 if not bail:
-                    self.process_node_for_tags(nested_sibling, node, search_xpath, tag_name)
+                    self.process_node_for_tags(nested_sibling, node, search_xpath, tag_name, 'p')
         else:
             # add an error tag to p elements where there are more than 3 comments within
             children = tree.xpath('//*[count(comment()[.="meTypeset:br"]) > 3]'.format(search_xpath))
