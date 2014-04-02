@@ -525,8 +525,9 @@ class TeiManipulate(Manipulate):
 
         return iterator
 
-    def check_for_disallowed_elements(self, allowed_elements, sub_element):
+    def check_for_disallowed_elements(self, allowed_elements, sub_element, exception_elements):
         add = True
+
         if sub_element.tag \
             and not sub_element.tag.replace('{http://www.tei-c.org/ns/1.0}', '') in allowed_elements:
             add = False
@@ -538,20 +539,21 @@ class TeiManipulate(Manipulate):
         # changes the parent element of the outer_xpath expression to the new_value
         tree = self.load_dom_tree()
 
-        allowed_elements = ['bold', 'italic', 'p', 'hi', 'seg', 'lb']
+        allowed_elements = ['bold', 'italic', 'p', 'hi', 'seg', 'lb', 'ref']
+        exception_elements = ['lb']
 
         # search the tree and grab the parent
         for child in tree.xpath(outer_xpath + "/..", namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             add = True
 
             for sub_element in child:
-                add = self.check_for_disallowed_elements(allowed_elements, sub_element)
+                add = self.check_for_disallowed_elements(allowed_elements, sub_element, exception_elements)
 
                 if not add:
                     break
 
                 for sub_child in sub_element:
-                    add = self.check_for_disallowed_elements(allowed_elements, sub_child)
+                    add = self.check_for_disallowed_elements(allowed_elements, sub_child, exception_elements)
 
                     if not add:
                         break
