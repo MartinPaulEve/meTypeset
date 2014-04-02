@@ -474,9 +474,22 @@ class NlmManipulate(Manipulate):
 
         return ret
 
+    def clean_refs(self):
+        tree = self.load_dom_tree()
+
+        ref_regex = re.compile('^(?P<prelim>\s*\d+\.?\s+)(.+)')
+
+        for ref in tree.xpath('//back/ref-list/ref'):
+            if ref.text:
+                print ref.text
+                ref.text = ref_regex.sub('\\1\\2', ref.text)
+
+        self.save_tree(tree)
+
     def final_clean(self):
         self.handle_stranded_reference_titles_from_cues()
         self.re_nest()
+        self.clean_refs()
 
     def find_reference_list(self):
         tree = self.load_dom_tree()
