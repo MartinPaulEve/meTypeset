@@ -474,6 +474,21 @@ class NlmManipulate(Manipulate):
 
         return ret
 
+    def delete_special_lines(self):
+        tree = self.load_dom_tree()
+
+        special_regex = re.compile('^[\-\.\,\+\#\'\;\:]+$')
+
+        to_remove = []
+
+        for ref in tree.xpath('//p'):
+            text = self.get_stripped_text(ref)
+
+            if special_regex.match(text):
+                ref.getparent().remove(ref)
+
+        self.save_tree(tree)
+
     def clean_refs(self):
         tree = self.load_dom_tree()
 
@@ -486,6 +501,7 @@ class NlmManipulate(Manipulate):
         self.save_tree(tree)
 
     def final_clean(self):
+        self.delete_special_lines()
         self.handle_stranded_reference_titles_from_cues()
         self.re_nest()
         self.clean_refs()
