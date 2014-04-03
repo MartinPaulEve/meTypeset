@@ -309,7 +309,8 @@ class ListClassifier(Debuggable):
 
         for number in range(int(footnote_text[len(footnote_text) - 1].strip()), int(footnote_text[0].strip())):
 
-            if int(footnote_text[count]) != int(number + (offset - 1)):
+            if not str(int(number + (offset - 1))) in footnote_text and \
+                    (int(footnote_text[count]) != int(number + (offset - 1))):
                 self.debug.print_debug(self, u'Expected footnote {0}. Found {1}.'.format(int(number + (offset - 1)),
                                                                                          footnote_text[count]))
                 failures += 1
