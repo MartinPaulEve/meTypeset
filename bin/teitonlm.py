@@ -86,14 +86,18 @@ class TeiToNlm (Debuggable):
 
         # split any p tags with @rend=Bibliography and sub-tags hi rend="Indent" into new elements
 
-        biblio_elements = tree.xpath('//tei:p[@rend="Bibliography"][tei:hi[contains(@rend, "Indent") or '
-                                     'contains(@rend, "Default Style")]]',
+        biblio_elements = tree.xpath('//tei:div[@type="bibliogr"]//tei:p[@rend="Bibliography"]'
+                                     '[tei:hi[contains(@rend, "Indent") or contains(@rend, "Default Style") or '
+                                     'contains(@rend, "Text Body")]]',
                                      namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
         for parent in biblio_elements:
             add_position = parent
-            for element in parent.xpath('//tei:hi[contains(@rend, "Indent") or contains(@rend, "Default Style")]',
+
+            for element in parent.xpath('tei:hi[contains(@rend, "Indent") or contains(@rend, "Default Style") or '
+                                        'contains(@rend, "Text Body")]',
                                         namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+
                 new_p = etree.Element('p')
                 new_p.attrib['rend'] = 'Bibliography'
 
@@ -101,7 +105,8 @@ class TeiToNlm (Debuggable):
                 new_p.append(element)
                 add_position = new_p
 
-                manipulate.save_tree(tree)
+            manipulate.save_tree(tree)
+            self.debug.print_debug(self, u'Separated out reference {0}'.format(manipulate.get_stripped_text(parent)))
 
     def run_transform(self):
         self.pre_cleanup()
