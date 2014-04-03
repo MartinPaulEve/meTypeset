@@ -92,10 +92,15 @@ class NlmManipulate(Manipulate):
     @staticmethod
     def handle_nested_elements(iter_node, move_node, node, node_parent, outer_node, tag_name, tail_stack,
                                tail_stack_objects):
+        if iter_node is None:
+            return None, None, None
+
         while iter_node.tag != tag_name:
             tail_stack.append(iter_node.tag)
             tail_stack_objects.append(iter_node)
             iter_node = iter_node.getparent()
+            if iter_node is None:
+                return None, None, None
 
         # get the tail (of the comment) and style it
         append_location = None
@@ -260,9 +265,13 @@ class NlmManipulate(Manipulate):
             for node in initial_nodes:
                 sibling = node
 
-                while sibling.getnext():
-                    if sibling.tag.endswith('bold'):
+                while sibling.getnext() is not None:
+                    try:
+                        if sibling.tag.endswith('bold'):
+                            bail = True
+                    except:
                         bail = True
+                        break
 
                 if not bail:
                     self.process_node_for_tags(nested_sibling, node, search_xpath, tag_name, 'p')
