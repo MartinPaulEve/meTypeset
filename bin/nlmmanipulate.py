@@ -486,8 +486,8 @@ class NlmManipulate(Manipulate):
 
             if special_regex.match(text):
                 ref.getparent().remove(ref)
-
-        self.save_tree(tree)
+                self.save_tree(tree)
+                self.debug.print_debug(self, u'Removing special character line: {0}'.format(text))
 
     def clean_refs(self):
         tree = self.load_dom_tree()
@@ -497,8 +497,9 @@ class NlmManipulate(Manipulate):
         for ref in tree.xpath('//back/ref-list/ref'):
             if ref.text:
                 ref.text = ref_regex.sub('\\g<reference>', ref.text)
-
-        self.save_tree(tree)
+                self.save_tree(tree)
+                self.debug.print_debug(self,
+                                       u'Removing number/whitespace from start of reference: {0}'.format(ref.text))
 
     def final_clean(self):
         self.delete_special_lines()
