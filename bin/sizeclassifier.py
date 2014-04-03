@@ -80,20 +80,6 @@ class SizeClassifier(Debuggable):
 
         manipulate.enclose_and_change_self_size(expression, str(root_size), 'p', 'hi')
 
-    def handle_misstacked(self, next_size, section_ids, section_stack):
-
-        if float(next_size) > float(self.size_cutoff):
-            # normalize the size
-            next_size = self.size_cutoff
-
-        sibling_size = 0
-        for x in section_stack:
-            if x > next_size:
-                sibling_size = x
-        self.debug.print_debug(self, u'Mis-stacked element ordering, using {0} as sibling size'.format(sibling_size))
-        sibling_id = section_ids[section_stack.index(sibling_size)]
-        return sibling_id
-
     def enclose_larger_heading(self, iteration, manipulate, next_size, section_ids, section_stack, size, next_id):
         self.debug.print_debug(self,
                                u'Encountered larger block as following (size: {0}, next size: {1}) '
@@ -103,7 +89,8 @@ class SizeClassifier(Debuggable):
         if next_size in section_stack:
             sibling_id = section_ids[section_stack.index(next_size)]
         else:
-            sibling_id = self.handle_misstacked(next_size, section_ids, section_stack)
+            self.debug.print_debug(self, u'Mis-stacked element ordering, using {0} as sibling ID'.format(iteration))
+            sibling_id = iteration
 
 
         # enclose the REST OF THE DOCUMENT underneath this /next heading/
