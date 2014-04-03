@@ -495,7 +495,7 @@ class NlmManipulate(Manipulate):
         ref_regex = re.compile('^(?P<prelim>\s*\d+[\.\,]?\s+)(?P<reference>.+)')
 
         for ref in tree.xpath('//back/ref-list/ref'):
-            if ref.text:
+            if ref.text and ref_regex.match(ref.text):
                 ref.text = ref_regex.sub('\\g<reference>', ref.text)
                 self.save_tree(tree)
                 self.debug.print_debug(self,
