@@ -477,12 +477,11 @@ class NlmManipulate(Manipulate):
     def clean_refs(self):
         tree = self.load_dom_tree()
 
-        ref_regex = re.compile('^(?P<prelim>\s*\d+\.?\s+)(.+)')
+        ref_regex = re.compile('^(?P<prelim>\s*\d+[\.\,]?\s+)(.+)')
 
         for ref in tree.xpath('//back/ref-list/ref'):
             if ref.text:
-                print ref.text
-                ref.text = ref_regex.sub('\\1\\2', ref.text)
+                ref.text = ref_regex.sub('\\2', ref.text)
 
         self.save_tree(tree)
 
