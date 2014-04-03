@@ -492,33 +492,6 @@ class SizeClassifier(Debuggable):
                                      u'@meTypesetHeadingID="{0}"]]'.format(u"1")
                         manipulate.enclose_all(expression, 'div', 1)
 
-    def post_clean(self):
-        manipulate = TeiManipulate(self.gv)
-
-        tree = manipulate.load_dom_tree()
-
-        # split any p tags with sub-tags hi rend="Indent" into new elements
-
-        biblio_elements = tree.xpath('//tei:p'
-                                     '[tei:hi[contains(@rend, "Indent") or contains(@rend, "Default Style") or '
-                                     'contains(@rend, "Text Body")]]',
-                                     namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
-
-        for parent in biblio_elements:
-            add_position = parent
-
-            for element in parent.xpath('tei:hi[contains(@rend, "Indent") or contains(@rend, "Default Style") or '
-                                        'contains(@rend, "Text Body")]',
-                                        namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-
-                new_p = etree.Element('p')
-
-                add_position.addnext(new_p)
-                new_p.append(element)
-                add_position = new_p
-
-            manipulate.save_tree(tree)
-            self.debug.print_debug(self, u'Separated out p {0}'.format(manipulate.get_stripped_text(parent)))
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('sizeclassifier', self,
@@ -542,5 +515,3 @@ class SizeClassifier(Debuggable):
 
         elif len(sizes) > 1:
             self.create_sections(manipulate, sizes)
-
-        self.post_clean()
