@@ -332,6 +332,21 @@ class SizeClassifier(Debuggable):
 
         return True
 
+    def remove_empty_headings(self, manipulate, tree):
+        count = 0
+        for title in tree.xpath('//tei:head[not(tei:graphic)]', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            text = manipulate.get_stripped_text(title).strip()
+
+            if text == '':
+                title.tag = 'REMOVE'
+                count += 1
+
+        etree.strip_elements(tree, 'REMOVE')
+
+        if count > 0:
+            manipulate.save_tree(tree)
+            self.debug.print_debug(self, u'Removed {0} empty titles'.format(count))
+
     def downgrade_oversize_headings(self, manipulate, tree):
         for title in tree.xpath('//tei:head', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
 
@@ -367,6 +382,7 @@ class SizeClassifier(Debuggable):
         tree = manipulate.load_dom_tree()
 
         self.downgrade_oversize_headings(manipulate, tree)
+        self.remove_empty_headings(manipulate, tree)
 
         tree = manipulate.load_dom_tree()
 
