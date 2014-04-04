@@ -29,33 +29,6 @@ class NlmManipulate(Manipulate):
 
         self.save_tree(tree)
 
-    def re_nest(self):
-        # select title tags not directly below a section (ie has a preceding sibling)
-        tree = self.load_dom_tree()
-
-        titles = tree.xpath('//title[preceding-sibling::node()]')
-
-        for title in titles:
-            existing_section = title.getparent()
-
-            new_section = etree.Element('sec')
-
-            sibling = title
-            to_move = []
-
-            while sibling is not None:
-                to_move.append(sibling)
-                sibling = sibling.getnext()
-
-            for sibling in to_move:
-                new_section.append(sibling)
-
-            existing_section.addnext(new_section)
-            self.save_tree(tree)
-
-            self.debug.print_debug(self, u'Handling unnested title: {0}'.format(self.get_stripped_text(title)))
-        pass
-
     def remove_empty_elements(self, element):
         tree = self.load_dom_tree()
 
@@ -513,7 +486,6 @@ class NlmManipulate(Manipulate):
     def final_clean(self):
         self.delete_special_lines()
         self.handle_stranded_reference_titles_from_cues()
-        self.re_nest()
         self.clean_refs()
 
     def find_reference_list(self):

@@ -143,6 +143,60 @@ class SizeClassifier(Debuggable):
         return tree
 
 
+    def convert_to_headings(self, manipulate, sizes, tree):
+        for size in sizes:
+
+            if float(size) >= float(self.size_cutoff):
+                # if the size is greater than or equal to 16, treat it as a heading
+                self.debug.print_debug(self,
+                                       u'Size ({0}) greater '
+                                       u'than or equal to {1}. '
+                                       u'Treating as a heading.'.format(str(size),
+                                                                        str(self.size_cutoff)))
+
+                # instruct the manipulator to change the parent tag of every tag it finds containing
+                # a "hi" tag with meTypesetSize set to the value found to "title"
+                # so, for example <p><hi meTypesetSize="18">some text</hi></p>
+                # will be transformed to
+                # <title><hi meTypesetSize="18">some text</hi></title>
+                manipulate.change_outer('//tei:hi[@meTypesetSize=\'{0}\']'.format(size), 'head', size)
+
+                tree = self.set_dom_tree(self.gv.tei_file_path)
+
+                for normalize in tree.xpath('//tei:cit/tei:quote/tei:head',
+                                            namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+                    normalize.getparent().tag = 'REMOVE'
+                    normalize.getparent().getparent().tag = 'REMOVE'
+
+                etree.strip_tags(tree, 'REMOVE')
+                manipulate.save_tree(tree)
+                self.debug.print_debug(self, u'Normalizing nested headings inside cit/quote blocks')
+
+        return tree
+
+    def encapsulate_headings(self, manipulate, tree):
+        titles = tree.xpath('//tei:head[preceding-sibling::node()]', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+        for title in titles:
+            existing_section = title.getparent()
+
+            new_section = etree.Element('div')
+
+            sibling = title
+            to_move = []
+
+            while sibling is not None:
+                to_move.append(sibling)
+                sibling = sibling.getnext()
+
+            for sibling in to_move:
+                new_section.append(sibling)
+
+            existing_section.addnext(new_section)
+            manipulate.save_tree(tree)
+
+            self.debug.print_debug(self, u'Handling unnested title: '
+                                         u'{0}'.format(manipulate.get_stripped_text(title).strip()))
+        manipulate.save_tree(tree)
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('sizeclassifier', self,
@@ -161,38 +215,11 @@ class SizeClassifier(Debuggable):
         # refresh the size list
         sizes = self.get_sizes(tree)
 
-        handled = False
+        tree = self.convert_to_headings(manipulate, sizes, tree)
 
-        for size in sizes:
+        # assign IDs to every single heading tag for easy manipulation
+        heading_count = manipulate.tag_headings()
 
-                if float(size) >= float(self.size_cutoff):
-                    # if the size is greater than or equal to 16, treat it as a heading
-                    self.debug.print_debug(self,
-                                           u'Size ({0}) greater '
-                                           u'than or equal to {1}. '
-                                           u'Treating as a heading.'.format(str(size),
-                                                                            str(self.size_cutoff)))
-
-                    # instruct the manipulator to change the parent tag of every tag it finds containing
-                    # a "hi" tag with meTypesetSize set to the value found to "title"
-                    # so, for example <p><hi meTypesetSize="18">some text</hi></p>
-                    # will be transformed to
-                    # <title><hi meTypesetSize="18">some text</hi></title>
-                    manipulate.change_outer('//tei:hi[@meTypesetSize=\'{0}\']'.format(size), 'head', size)
-
-                    tree = self.set_dom_tree(self.gv.tei_file_path)
-
-                    for normalize in tree.xpath('//tei:cit/tei:quote/tei:head',
-                                                namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-                        normalize.getparent().tag = 'REMOVE'
-                        normalize.getparent().getparent().tag = 'REMOVE'
-
-                    etree.strip_tags(tree, 'REMOVE')
-                    manipulate.save_tree(tree)
-                    self.debug.print_debug(self, u'Normalizing nested headings inside cit/quote blocks')
+        self.encapsulate_headings(manipulate, tree)
 
 
-                    # assign IDs to every single heading tag for easy manipulation
-                    heading_count = manipulate.tag_headings()
-
-                    manipulate.save_tree(tree)

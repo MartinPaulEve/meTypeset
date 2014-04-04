@@ -31,6 +31,7 @@ class TeiToNlm (Debuggable):
 
     def run_quirks(self, process_ref_lists):
         manipulate = NlmManipulate(self.gv)
+
         if self.gv.settings.get_setting('linebreaks-as-comments', self) == 'False':
             # we need to convert every instance of <!--meTypeset:br--> to a new paragraph
             manipulate.close_and_open_tag('comment()[. = "meTypeset:br"]', 'p')
