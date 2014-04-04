@@ -304,7 +304,6 @@ class SizeClassifier(Debuggable):
 
                     previous_div.addnext(div)
 
-
                     manipulate.save_tree(tree)
                     self.debug.print_debug(self, u'Moved div into previous because it is bigger')
 

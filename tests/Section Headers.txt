@@ -319,7 +319,7 @@ Library           Collections
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./506/nlm/out.xml
     ${body}=    Get Element    ${xml}    body
-    Elements Should Match    ${body}    <body xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> <sec> <title>Heading 1</title> <sec> <title>Heading 2</title> <sec> <title>Just bold text that should be heading 1</title> </sec> </sec> <sec> <title>Heading 3</title> </sec> </sec> <sec> <title>Misplaced Heading 2</title> </sec> </body>    normalize_whitespace=yes
+    Elements Should Match    ${body}    <body xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><sec> <title>Heading 1</title> <sec> <title>Heading 2</title> </sec> </sec> <sec> <title>Just bold text that should be heading 1</title> <sec> <title>Heading 3</title> </sec> <sec> <title>Misplaced Heading 2</title> </sec> </sec> </body>    normalize_whitespace=yes
     [Teardown]    Remove Directory    506    recursive=True
 
 507 Properly styled word headings
@@ -339,7 +339,7 @@ Library           Collections
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./508/nlm/out.xml
     ${body}=    Get Element    ${xml}    body
-    Elements Should Match    ${body}    <body><sec><title>A heading below the size cutoff</title></sec><sec><title>A heading that is larger than the root</title></sec></body>    normalize_whitespace=yes
+    Elements Should Match    ${body}    <body><sec><title>A heading below the size cutoff</title><sec><title>A heading that is larger than the root</title></sec></sec></body>    normalize_whitespace=yes
     [Teardown]    Remove Directory    508    recursive=True
 
 509 Size normalization
