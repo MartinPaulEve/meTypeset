@@ -240,7 +240,7 @@ class SizeClassifier(Debuggable):
         position = 0
         root_size = None
         root_div = None
-        traverse_threshold = 0
+        dict_thresholds = {}
 
         for element in stack:
             if first:
@@ -258,16 +258,25 @@ class SizeClassifier(Debuggable):
                 # handle an element that is the root size
                 if float(size) == float(root_size):
                     root_div = div
-                    traverse_threshold = position
-                    self.debug.print_debug(self, u'Element was same size as root. Resetting stack.')
+                    dict_thresholds[float(root_size)] = position
+
+                    for item in dict_thresholds.iterkeys():
+                        dict_thresholds[item] = position
+
+                    self.debug.print_debug(self, u'Heading {0} ("{1}") was same size as root. '
+                                                 u'Resetting stack.'.format(position + 1,
+                                                                            manipulate.get_stripped_text(div).strip()))
 
                 # handle an element that is smaller than its predecessor
                 elif float(size) < float(previous):
                     addnext = False
                     # traverse up the tree to see if there is an equal size element
-                    iteration = position - 2
+                    iteration = position - 1
 
-                    while iteration > traverse_threshold:
+                    if not float(size) in dict_thresholds.keys():
+                        dict_thresholds[float(size)] = position
+
+                    while iteration >= dict_thresholds[float(size)]:
                         iterpos, iterdiv = stack[iteration]
 
                         if float(iterpos) == float(size):
@@ -282,36 +291,65 @@ class SizeClassifier(Debuggable):
                     else:
                         previous_div.append(div)
 
+                    dict_thresholds[float(size)] = position
+
                     manipulate.save_tree(tree)
-                    self.debug.print_debug(self, u'Moved div into previous because it is smaller')
+                    self.debug.print_debug(self, u'Moved heading {0} ("{1}") into previous because '
+                                                 u'it is smaller'.format(position + 1,
+                                                                         manipulate.get_stripped_text(div).strip()))
 
                 # handle an element that is bigger than its predecessor
                 elif float(size) > float(previous):
                     # traverse up the tree to see if there is an equal size element
-                    iteration = position - 2
+                    iteration = position - 1
 
                     found = False
 
-                    while iteration > traverse_threshold:
+                    if not float(size) in dict_thresholds.keys():
+                        dict_thresholds[float(size)] = position
+
+                    while iteration >= dict_thresholds[float(size)]:
                         iterpos, iterdiv = stack[iteration]
 
                         if float(iterpos) == float(size):
                             previous_div = iterdiv
-                            found = True
                             break
                         else:
                             iteration -=1
 
                     previous_div.addnext(div)
 
+                    dict_thresholds[float(size)] = position
+                    for item in dict_thresholds.iterkeys():
+                        if float(dict_thresholds[item]) < float(size):
+                            dict_thresholds[item] = position
+
+
                     manipulate.save_tree(tree)
-                    self.debug.print_debug(self, u'Moved div into previous because it is bigger')
+                    self.debug.print_debug(self, u'Moved heading {0} ("{1}") into previous '
+                                                 u'because it is bigger'.format(position + 1,
+                                                                                manipulate.get_stripped_text(div).strip()))
 
                 # handle an element that is the same size as its predecessor
                 elif float(size) == float(previous):
                     previous_div.addnext(div)
-                    self.debug.print_debug(self, u'Added div adjacent to previous because it is the same size')
+                    self.debug.print_debug(self, u'Added heading {0} ("{1}") adjacent to previous because '
+                                                 u'it is the same size'.format(position + 1,
+                                                                               manipulate.get_stripped_text(div).strip()))
 
             position += 1
+
+
+        # verify that the stack has not been disordered
+        position = 0
+        for div in tree.xpath('//tei:div', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            size, verify = stack[position]
+
+            if verify != div:
+                self.debug.write_error(self, u'Size elements were disordered', '002')
+                self.debug.print_debug(self, u'WARNING: size elements were disordered')
+                break
+
+            position +=1
 
 
