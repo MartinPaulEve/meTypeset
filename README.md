@@ -64,6 +64,7 @@ Furthermore, the parser will attempt to append an attribute named "rend" to the 
 ###List of Error Codes and Tagging Behaviour
 
 * 001 - the number of linebreaks found in the document exceeded 80. The parser will mark up elements containing more than 3 comments with rend="error-001"
+* 002 - a serious problem occurred in the size classifier that would disorder the document. The parser will revert to single-level headings.
 
 ##Other tools
 
