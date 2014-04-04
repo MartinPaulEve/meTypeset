@@ -208,7 +208,7 @@ class SizeClassifier(Debuggable):
 
         # transform bolded paragraphs into size-attributes with an extremely high threshold (so will be thought of as
         # root nodes)
-        self.handle_bold_only_paragraph(manipulate, self.size_cutoff)
+        self.handle_bold_only_paragraph(manipulate, 100)
 
         tree = self.correlate_styled_headings(manipulate)
 
@@ -240,6 +240,7 @@ class SizeClassifier(Debuggable):
         position = 0
         root_size = None
         root_div = None
+        traverse_threshold = 0
 
         for element in stack:
             if first:
@@ -251,13 +252,22 @@ class SizeClassifier(Debuggable):
 
                 previous, previous_div = stack[position - 1]
 
+                if float(size) > float(root_size):
+                    size = float(root_size)
+
+                # handle an element that is the root size
+                if float(size) == float(root_size):
+                    root_div = div
+                    traverse_threshold = position
+                    self.debug.print_debug(self, u'Element was same size as root. Resetting stack.')
+
                 # handle an element that is smaller than its predecessor
-                if float(size) < float(previous):
+                elif float(size) < float(previous):
                     addnext = False
                     # traverse up the tree to see if there is an equal size element
                     iteration = position - 2
 
-                    while iteration > 0:
+                    while iteration > traverse_threshold:
                         iterpos, iterdiv = stack[iteration]
 
                         if float(iterpos) == float(size):
@@ -265,7 +275,7 @@ class SizeClassifier(Debuggable):
                             addnext = True
                             break
                         else:
-                            iterpos -=1
+                            iteration -=1
 
                     if addnext:
                         previous_div.addnext(div)
@@ -276,30 +286,30 @@ class SizeClassifier(Debuggable):
                     self.debug.print_debug(self, u'Moved div into previous because it is smaller')
 
                 # handle an element that is bigger than its predecessor
-                if float(size) > float(previous):
+                elif float(size) > float(previous):
+                    # traverse up the tree to see if there is an equal size element
+                    iteration = position - 2
 
-                    if float(size) == float(root_size):
-                        pass
-                    else:
-                        # traverse up the tree to see if there is an equal size element
-                        iteration = position - 2
+                    found = False
 
-                        while iteration > 0:
-                            iterpos, iterdiv = stack[iteration]
+                    while iteration > traverse_threshold:
+                        iterpos, iterdiv = stack[iteration]
 
-                            if float(iterpos) == float(size):
-                                previous_div = iterdiv
-                                break
-                            else:
-                                iterpos -=1
+                        if float(iterpos) == float(size):
+                            previous_div = iterdiv
+                            found = True
+                            break
+                        else:
+                            iteration -=1
 
-                        previous_div.addnext(div)
+                    previous_div.addnext(div)
 
-                        manipulate.save_tree(tree)
-                        self.debug.print_debug(self, u'Moved div into previous because it is bigger')
+
+                    manipulate.save_tree(tree)
+                    self.debug.print_debug(self, u'Moved div into previous because it is bigger')
 
                 # handle an element that is the same size as its predecessor
-                if float(size) == float(previous):
+                elif float(size) == float(previous):
                     previous_div.addnext(div)
                     self.debug.print_debug(self, u'Added div adjacent to previous because it is the same size')
 
