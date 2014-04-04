@@ -577,6 +577,24 @@ class NlmManipulate(Manipulate):
                         self.save_tree(tree)
                         self.debug.print_debug(self, u'Removed a stranded title: {0}'.format(text))
 
+    def fuse_references(self):
+        tree = self.load_dom_tree()
+
+        for ref in tree.xpath('//back/ref-list/ref'):
+            text = self.get_stripped_text(ref)
+
+            year_test = re.compile('((19|20)\d{2}[a-z]?)|(n\.d\.)')
+            match = year_test.findall(text)
+
+            if not match and ref.getprevious() is not None:
+                ref.tag = 'REMOVE'
+                ref.getprevious().append(ref)
+
+                etree.strip_tags(tree, 'REMOVE')
+
+                self.save_tree(tree)
+                self.debug.print_debug(self, u'Appending {0} to previous ref'.format(text))
+
     def tag_bibliography_refs(self):
 
         tree = self.load_dom_tree()

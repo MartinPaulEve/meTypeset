@@ -165,6 +165,10 @@ class MeTypeset (Debuggable):
                 self.debug.print_debug(self, u'Exiting as NLM transform complete')
                 return
 
+            manipulate = NlmManipulate(self.gv)
+
+            manipulate.fuse_references()
+
             # run reference linker
             rl = ReferenceLinker(self.gv)
             rl.run(self.args['--interactive'])
@@ -190,7 +194,7 @@ class MeTypeset (Debuggable):
             BibliographyDatabase(self.gv).run()
 
             # remove stranded titles and cleanup
-            manipulate = NlmManipulate(self.gv).final_clean()
+            manipulate.final_clean()
 
             if self.args['--identifiers']:
                 IdGenerator(self.gv).run()
