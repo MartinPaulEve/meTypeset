@@ -201,13 +201,17 @@ class SizeClassifier(Debuggable):
     def nest_headings(self, manipulate, tree):
         tree = manipulate.load_dom_tree()
         stack = []
+        message = {}
+
         for div in tree.xpath('//tei:div', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             title = div.xpath('tei:head', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
             if len(title) == 0:
                 size = 100
+                message[div] = 'No title found in this block'
             else:
                 size = title[0].attrib['meTypesetSize']
+                message[div] = manipulate.get_stripped_text(title[0]).strip()
 
             stack.append((size, div))
         first = True
@@ -238,7 +242,7 @@ class SizeClassifier(Debuggable):
 
                     self.debug.print_debug(self, u'Heading {0} ("{1}") was same size as root. '
                                                  u'Resetting stack.'.format(position + 1,
-                                                                            manipulate.get_stripped_text(div).strip()))
+                                                                            message[div]))
 
                 # handle an element that is smaller than its predecessor
                 elif float(size) < float(previous):
@@ -269,7 +273,7 @@ class SizeClassifier(Debuggable):
                     manipulate.save_tree(tree)
                     self.debug.print_debug(self, u'Moved heading {0} ("{1}") into previous because '
                                                  u'it is smaller'.format(position + 1,
-                                                                         manipulate.get_stripped_text(div).strip()))
+                                                                         message[div]))
 
                 # handle an element that is bigger than its predecessor
                 elif float(size) > float(previous):
@@ -300,16 +304,14 @@ class SizeClassifier(Debuggable):
                     manipulate.save_tree(tree)
                     self.debug.print_debug(self, u'Moved heading {0} ("{1}") into previous '
                                                  u'because it is bigger'.format(position + 1,
-                                                                                manipulate.get_stripped_text(
-                                                                                    div).strip()))
+                                                                                message[div]))
 
                 # handle an element that is the same size as its predecessor
                 elif float(size) == float(previous):
                     previous_div.addnext(div)
                     self.debug.print_debug(self, u'Added heading {0} ("{1}") adjacent to previous because '
                                                  u'it is the same size'.format(position + 1,
-                                                                               manipulate.get_stripped_text(
-                                                                                   div).strip()))
+                                                                               message[div]))
 
             position += 1
 
