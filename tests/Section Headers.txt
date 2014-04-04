@@ -349,8 +349,18 @@ Library           Collections
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./509/nlm/out.xml
     ${body}=    Get Element    ${xml}    body
-    Elements Should Match    ${body}    <body xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> <sec> <title>A small heading</title> </sec><sec> <title>A big heading</title> </sec> <sec> <title>A small heading</title> </sec> <sec> <title>A small heading</title> </sec> <sec> <title>A small heading</title> </sec> </body>    normalize_whitespace=yes
+    Elements Should Match    ${body}    <body xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> <sec> <title>A small heading</title> <sec> <title>A big heading</title> </sec> </sec> <sec> <title>A small heading</title> </sec> <sec> <title>A small heading</title> </sec> <sec> <title>A small heading</title> </sec> </body>    normalize_whitespace=yes
     [Teardown]    Remove Directory    509    recursive=True
+
+510 Complex headings
+    [Tags]    sectionheaders    sizeclassifier    510
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ComplexHeadings.docx ./510 -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./510/nlm/out.xml
+    ${body}=    Get Element    ${xml}    body
+    Elements Should Match    ${body}    <body xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> <sec> <title>1</title> <sec> <title>2</title> <sec> <title>3</title> </sec> </sec> <sec> <title>2</title> <sec> <title>3</title> <sec> <title>4</title> </sec> </sec> </sec> <sec> <title>2</title> <sec> <title>6</title> </sec> <sec> <title>5</title> </sec> <sec> <title>2</title> <sec> <title>3</title> </sec> </sec> </sec> </sec> <sec> <title>1</title> <sec> <title>3</title> </sec> <sec> <title>2</title> </sec> </sec> <sec> <title>1</title> </sec> </body>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    510    recursive=True
 
 556 Test line breaks
     [Tags]    linebreaks    556    formatting
