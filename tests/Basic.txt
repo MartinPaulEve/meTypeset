@@ -143,7 +143,7 @@ Library           Collections
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./010/nlm/out.xml
     ${p}=    Get Element    ${xml}    back/ref-list
-    Elements Should Match    ${p}    <ref-list><ref>Reference 1</ref><ref>Reference 2</ref></ref-list>    normalize_whitespace=yes
+    Elements Should Match    ${p}    <ref-list><ref>Reference 1 2013</ref><ref>Reference 2 2014</ref></ref-list>    normalize_whitespace=yes
     [Teardown]    Remove Directory    010    recursive=True
 
 011 Footnote list classifier
