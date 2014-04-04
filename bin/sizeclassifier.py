@@ -222,4 +222,87 @@ class SizeClassifier(Debuggable):
 
         self.encapsulate_headings(manipulate, tree)
 
+        tree = manipulate.load_dom_tree()
+
+        stack = []
+
+        for div in tree.xpath('//tei:div', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            title = div.xpath('tei:head', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+
+            if len(title) == 0:
+                size = 100
+            else:
+                size = title[0].attrib['meTypesetSize']
+
+            stack.append((size, div))
+
+        first = True
+        position = 0
+        root_size = None
+        root_div = None
+
+        for element in stack:
+            if first:
+                first = False
+                root_size, root_div = element
+                self.debug.print_debug(self, u'Set root size as {0}'.format(root_size))
+            else:
+                size, div = element
+
+                previous, previous_div = stack[position - 1]
+
+                # handle an element that is smaller than its predecessor
+                if float(size) < float(previous):
+                    addnext = False
+                    # traverse up the tree to see if there is an equal size element
+                    iteration = position - 2
+
+                    while iteration > 0:
+                        iterpos, iterdiv = stack[iteration]
+
+                        if float(iterpos) == float(size):
+                            previous_div = iterdiv
+                            addnext = True
+                            break
+                        else:
+                            iterpos -=1
+
+                    if addnext:
+                        previous_div.addnext(div)
+                    else:
+                        previous_div.append(div)
+
+                    manipulate.save_tree(tree)
+                    self.debug.print_debug(self, u'Moved div into previous because it is smaller')
+
+                # handle an element that is bigger than its predecessor
+                if float(size) > float(previous):
+
+                    if float(size) == float(root_size):
+                        pass
+                    else:
+                        # traverse up the tree to see if there is an equal size element
+                        iteration = position - 2
+
+                        while iteration > 0:
+                            iterpos, iterdiv = stack[iteration]
+
+                            if float(iterpos) == float(size):
+                                previous_div = iterdiv
+                                break
+                            else:
+                                iterpos -=1
+
+                        previous_div.addnext(div)
+
+                        manipulate.save_tree(tree)
+                        self.debug.print_debug(self, u'Moved div into previous because it is bigger')
+
+                # handle an element that is the same size as its predecessor
+                if float(size) == float(previous):
+                    previous_div.addnext(div)
+                    self.debug.print_debug(self, u'Added div adjacent to previous because it is the same size')
+
+            position += 1
+
 
