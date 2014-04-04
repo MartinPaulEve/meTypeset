@@ -198,34 +198,9 @@ class SizeClassifier(Debuggable):
                                          u'{0}'.format(manipulate.get_stripped_text(title).strip()))
         manipulate.save_tree(tree)
 
-    def run(self):
-        if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('sizeclassifier', self,
-                                                                                         domain='aggression')):
-            self.debug.print_debug(self, u'Aggression level too low: exiting module.')
-            return
-
-        manipulate = TeiManipulate(self.gv)
-
-        # transform bolded paragraphs into size-attributes with an extremely high threshold (so will be thought of as
-        # root nodes)
-        self.handle_bold_only_paragraph(manipulate, 100)
-
-        tree = self.correlate_styled_headings(manipulate)
-
-        # refresh the size list
-        sizes = self.get_sizes(tree)
-
-        tree = self.convert_to_headings(manipulate, sizes, tree)
-
-        # assign IDs to every single heading tag for easy manipulation
-        heading_count = manipulate.tag_headings()
-
-        self.encapsulate_headings(manipulate, tree)
-
+    def nest_headings(self, manipulate, tree):
         tree = manipulate.load_dom_tree()
-
         stack = []
-
         for div in tree.xpath('//tei:div', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             title = div.xpath('tei:head', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
@@ -235,13 +210,11 @@ class SizeClassifier(Debuggable):
                 size = title[0].attrib['meTypesetSize']
 
             stack.append((size, div))
-
         first = True
         position = 0
         root_size = None
         root_div = None
         dict_thresholds = {}
-
         for element in stack:
             if first:
                 first = False
@@ -284,7 +257,7 @@ class SizeClassifier(Debuggable):
                             addnext = True
                             break
                         else:
-                            iteration -=1
+                            iteration -= 1
 
                     if addnext:
                         previous_div.addnext(div)
@@ -315,7 +288,7 @@ class SizeClassifier(Debuggable):
                             previous_div = iterdiv
                             break
                         else:
-                            iteration -=1
+                            iteration -= 1
 
                     previous_div.addnext(div)
 
@@ -324,22 +297,25 @@ class SizeClassifier(Debuggable):
                         if float(dict_thresholds[item]) < float(size):
                             dict_thresholds[item] = position
 
-
                     manipulate.save_tree(tree)
                     self.debug.print_debug(self, u'Moved heading {0} ("{1}") into previous '
                                                  u'because it is bigger'.format(position + 1,
-                                                                                manipulate.get_stripped_text(div).strip()))
+                                                                                manipulate.get_stripped_text(
+                                                                                    div).strip()))
 
                 # handle an element that is the same size as its predecessor
                 elif float(size) == float(previous):
                     previous_div.addnext(div)
                     self.debug.print_debug(self, u'Added heading {0} ("{1}") adjacent to previous because '
                                                  u'it is the same size'.format(position + 1,
-                                                                               manipulate.get_stripped_text(div).strip()))
+                                                                               manipulate.get_stripped_text(
+                                                                                   div).strip()))
 
             position += 1
 
+        return stack, tree
 
+    def verify_headings(self, stack, tree):
         # verify that the stack has not been disordered
         position = 0
         for div in tree.xpath('//tei:div', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
@@ -348,8 +324,45 @@ class SizeClassifier(Debuggable):
             if verify != div:
                 self.debug.write_error(self, u'Size elements were disordered', '002')
                 self.debug.print_debug(self, u'WARNING: size elements were disordered')
-                break
+                return False
 
-            position +=1
+            position += 1
+
+        return True
+
+    def run(self):
+        if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('sizeclassifier', self,
+                                                                                         domain='aggression')):
+            self.debug.print_debug(self, u'Aggression level too low: exiting module.')
+            return
+
+        manipulate = TeiManipulate(self.gv)
+
+        # transform bolded paragraphs into size-attributes with an extremely high threshold (so will be thought of as
+        # root nodes)
+        self.handle_bold_only_paragraph(manipulate, 100)
+
+        tree = self.correlate_styled_headings(manipulate)
+
+        # refresh the size list
+        sizes = self.get_sizes(tree)
+
+        tree = self.convert_to_headings(manipulate, sizes, tree)
+
+        # assign IDs to every single heading tag for easy manipulation
+        heading_count = manipulate.tag_headings()
+
+        self.encapsulate_headings(manipulate, tree)
+
+        backup_tree = etree.tostring(tree)
+
+        stack, tree = self.nest_headings(manipulate, tree)
+
+        if not self.verify_headings(stack, tree):
+            # something went very wrong in the stacking of elements
+            # revert to the backup tree
+            self.debug.print_debug(self, u'Reverting to backup tree as size classification failed')
+            tree = etree.fromstring(backup_tree)
+            manipulate.save_tree(tree)
 
 
