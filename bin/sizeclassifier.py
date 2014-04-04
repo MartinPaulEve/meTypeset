@@ -332,6 +332,16 @@ class SizeClassifier(Debuggable):
 
         return True
 
+    def downgrade_oversize_headings(self, manipulate, tree):
+        for title in tree.xpath('//tei:head', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+
+            text = manipulate.get_stripped_text(title)
+
+            if len(text) > 200:
+                title.tag = 'p'
+                manipulate.save_tree(tree)
+                self.debug.print_debug(self, u'Over-length heading downgraded')
+
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('sizeclassifier', self,
                                                                                          domain='aggression')):
@@ -353,6 +363,12 @@ class SizeClassifier(Debuggable):
 
         # assign IDs to every single heading tag for easy manipulation
         heading_count = manipulate.tag_headings()
+
+        tree = manipulate.load_dom_tree()
+
+        self.downgrade_oversize_headings(manipulate, tree)
+
+        tree = manipulate.load_dom_tree()
 
         self.encapsulate_headings(manipulate, tree)
 
