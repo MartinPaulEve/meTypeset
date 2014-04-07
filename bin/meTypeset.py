@@ -167,7 +167,8 @@ class MeTypeset (Debuggable):
 
             manipulate = NlmManipulate(self.gv)
 
-            manipulate.fuse_references()
+            if not self.gv.used_list_method:
+                manipulate.fuse_references()
 
             # run reference linker
             rl = ReferenceLinker(self.gv)

@@ -76,6 +76,7 @@ class TeiManipulate(Manipulate):
                     if match:
                         # it is a list, so change to reference list
                         self.debug.print_debug(self, u'Found a list as last element. Treating as bibliography.')
+                        self.gv.used_list_method = True
                         found = True
                         last_list.tag = '{http://www.tei-c.org/ns/1.0}div'
                         last_list.attrib['rend'] = u'Bibliography'
@@ -99,6 +100,7 @@ class TeiManipulate(Manipulate):
                 if match:
                     # it is a list, so change to reference list
                     self.debug.print_debug(self, u'Found a list as last element via item. Treating as bibliography.')
+                    self.gv.used_list_method = True
                     last_list = last_list.getparent()
                     found = True
                     last_list.tag = '{http://www.tei-c.org/ns/1.0}div'
