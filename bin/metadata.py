@@ -41,6 +41,8 @@ class Metadata(Manipulate):
         # copy back to the temp file for debug purposes
         Manipulate.update_tmp_file(self.gv.nlm_file_path, self.gv.nlm_temp_file_path)
 
+        self.debug.print_debug(self, u'Running metadata transform')
+
     def extract_metadata_fields(self):
         # load the metadata file for reading
         tree = self.load_dom_read()

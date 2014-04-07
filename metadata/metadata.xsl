@@ -20,48 +20,25 @@
     <xsl:param name="metadata" select="document($metadataFile)" />
     
     <xsl:output method="xml" doctype-public="-//NLM//DTD Journal Publishing DTD v3.0 20080202//EN" doctype-system="http://dtd.nlm.nih.gov/publishing/3.0/journalpublishing3.dtd" xpath-default-namespace="" indent="yes"></xsl:output>
-    
-    <xsl:param name="verbose">False</xsl:param>
-    
-   
+       
     <xsl:template match="/">
-        <xsl:if test="$verbose='true'">
-            <xsl:message>Beginning metadata process</xsl:message>
-        </xsl:if>
-        
         <xsl:element name="article">
-            <xsl:attribute name="article-type">other</xsl:attribute>
-            <xsl:call-template name="header"/>
-            
-            <xsl:if test="$verbose='true'">
-                <xsl:message>Copying other elements</xsl:message>
-            </xsl:if>
-            
-            <xsl:apply-templates select="/*"/>
-            
+            <xsl:apply-templates />
         </xsl:element>
     </xsl:template>
-    
-    <!--
-        Here we re-write the header in its entirety from the metadata values.
-        -->
-    <xsl:template name="header">
-        <xsl:if test="$verbose='true'">
-            <xsl:message>Beginning metadata transform</xsl:message>
-        </xsl:if>
         
-        <xsl:element name="front">
-            <xsl:copy-of select="$metadata/*/*"/>
-        </xsl:element>
+    <xsl:template match="/*/*">
+        <xsl:choose>
+            <xsl:when test="not(local-name() = 'front')">
+                <xsl:copy-of select="." copy-namespaces="no"/>                
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:element name="front">
+                    <xsl:copy-of select="$metadata/*/*" copy-namespaces="no"/>
+                </xsl:element>
+            </xsl:otherwise>
+        </xsl:choose>
+
     </xsl:template>
-    
-    <xsl:template name="copy-all" match="/*">
-        <xsl:for-each select="/*/*[not(name()='front')]">
-            <xsl:if test="$verbose='true'">
-                <xsl:message>Copying element <xsl:value-of select="name()"/></xsl:message>
-            </xsl:if>
-            <xsl:copy-of select="self::node()[not(/*/front/*[name()=name(current())])]"/>
-        </xsl:for-each>
-    </xsl:template>
-    
+      
 </xsl:stylesheet>
