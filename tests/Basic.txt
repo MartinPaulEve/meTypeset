@@ -50,7 +50,7 @@ Library           Collections
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./004/nlm/out.xml
     ${journalid}=    Get Element    ${xml}    front/journal-meta/journal-id
-    Elements Should Match    ${journalid}    <journal-id journal-id-type="publisher-id">The Journal Name</journal-id>
+    Elements Should Match    ${journalid}    <journal-id journal-id-type="publisher-id">The Journal Title</journal-id>
     ${issn}=    Get Element    ${xml}    front/journal-meta/issn
     Elements Should Match    ${issn}    <issn pub-type="epub">0000-000X</issn>
     ${doi}=    Get Element    ${xml}    front/article-meta/article-id[@pub-id-type="doi"]

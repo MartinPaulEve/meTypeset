@@ -75,7 +75,7 @@ class Metadata(Manipulate):
 
         # attempt to find journal titles
         count = 0
-        titles = tree.xpath('//journal-title | //tei:journal-title', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+        titles = tree.xpath('//journal-id | //tei:journal-title', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
         for title in titles:
             text = self.get_stripped_text(title).strip()
             self.metadata_items['journal_title{0}'.format(count)] = text
