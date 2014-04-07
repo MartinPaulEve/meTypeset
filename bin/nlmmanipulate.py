@@ -501,6 +501,8 @@ class NlmManipulate(Manipulate):
         self.delete_special_lines()
         self.handle_stranded_reference_titles_from_cues()
         self.clean_refs()
+        self.remove_empty_elements('//fn-group')
+        self.remove_empty_elements('//ref-list')
 
     def find_reference_list(self):
         if self.gv.used_list_method:
