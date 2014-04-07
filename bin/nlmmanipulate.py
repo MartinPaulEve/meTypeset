@@ -489,10 +489,10 @@ class NlmManipulate(Manipulate):
         self.clean_refs()
 
     def find_reference_list(self):
-        tree = self.load_dom_tree()
+        if self.gv.used_list_method:
+            return
 
-        # look for indents
-        #self.reflist_indent_method(tree)
+        tree = self.load_dom_tree()
 
         # look for sections where very paragraph contains a year; likely to be a reference
         tags = ['//sec', '//sec/list']
