@@ -483,6 +483,20 @@ class NlmManipulate(Manipulate):
                 self.debug.print_debug(self,
                                        u'Removing number/whitespace from start of reference: {0}'.format(ref.text))
 
+        for ref in tree.xpath('//back/ref-list/ref[not(element-citation)]'):
+            new_ref = etree.Element('ref')
+            ref.addnext(new_ref)
+
+            ref.tag = 'mixed-citation'
+            new_ref.append(ref)
+
+            if 'id' in ref.attrib:
+                new_ref.attrib['id'] = ref.attrib['id']
+                del ref.attrib['id']
+
+        self.save_tree(tree)
+        self.debug.print_debug(self, u'Encapsulated any loose refs inside mixed-citation blocks')
+
     def final_clean(self):
         self.delete_special_lines()
         self.handle_stranded_reference_titles_from_cues()
