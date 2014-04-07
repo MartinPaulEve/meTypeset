@@ -41,7 +41,7 @@ Z03 Zotero JSON Inline Field and Bibliography
     ${xrefone}=    Get From List    ${xref}    0
     Should Be Equal As Strings    ${xrefone.text}    Herman
     Should Be Equal As Strings    ${xrefone.tail}    )
-    ${refs}=    Get Elements    ${xml}    back/ref-list/ref
+    ${refs}=    Get Elements    ${xml}    back/ref-list/ref/mixed-citation
     ${refone}=    Get From List    ${refs}    0
     ${refonestyle}=    Get Element    ${refone}    italic
     ${reftwo}=    Get From List    ${refs}    1
