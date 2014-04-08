@@ -203,9 +203,9 @@ class CaptionClassifier(Debuggable):
 
                     # use an existing title element if one exists
                     try:
-                        title_element = graphic.xpath('title')[0]
+                        title_element = graphic.xpath('label')[0]
                     except:
-                        title_element = etree.Element('title')
+                        title_element = etree.Element('label')
                         graphic.insert(0, title_element)
 
                     title_element.text = title
