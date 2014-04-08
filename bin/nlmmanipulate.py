@@ -505,7 +505,7 @@ class NlmManipulate(Manipulate):
         self.remove_empty_elements('//ref-list')
 
     def find_reference_list(self):
-        if self.gv.used_list_method:
+        if self.gv.used_list_method or self.gv.used_square_reference_method:
             return
 
         tree = self.load_dom_tree()

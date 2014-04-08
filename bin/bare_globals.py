@@ -22,8 +22,11 @@ class GV (Debuggable):
         self.debug = Debug()
         Debuggable.__init__(self, 'Globals')
 
-        # read the configuration
         self.used_list_method = False
+        self.used_square_reference_method = False
+
+
+        # read the configuration
         self.settings_file_path = 'default'
         self.tei_file_path = None
         Settings.setup_settings_file(self.args)

@@ -195,6 +195,7 @@ class ListClassifier(Debuggable):
                 iteration = self.handle_reference_item(element, elements, in_list_run, iteration, list_element, offset,
                                                        to_append)
         if acted:
+            self.gv.used_square_reference_method = True
             manipulate.enclose_bibliography_tags('//tei:p[@rend="Bibliography"]', 'back', 'div', 'type', 'bibliogr')
 
             manipulate.save_tree(tree)

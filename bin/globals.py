@@ -26,6 +26,7 @@ class GV (Debuggable):
 
         self.script_dir = os.environ['METYPESET']
         self.used_list_method = False
+        self.used_square_reference_method = False
 
         if not settings.args['bibscan']:
 
