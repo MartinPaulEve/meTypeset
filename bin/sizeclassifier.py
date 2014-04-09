@@ -357,6 +357,20 @@ class SizeClassifier(Debuggable):
                 manipulate.save_tree(tree)
                 self.debug.print_debug(self, u'Over-length heading downgraded')
 
+    def handle_capital_only_paragraph(self, manipulate, new_size):
+        tree = manipulate.load_dom_tree()
+
+        for child in tree.xpath('//tei:p', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            text = manipulate.get_stripped_text(child).strip()
+
+            regex = re.compile('^[A-Z]+\:$')
+
+            if regex.match(text):
+                child.attrib['meTypesetSize'] = str(new_size)
+                manipulate.save_tree(tree)
+                self.debug.print_debug(self, u'Changed item {0} to a heading size {1}'.format(text, new_size))
+
+
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('sizeclassifier', self,
                                                                                          domain='aggression')):
@@ -368,6 +382,9 @@ class SizeClassifier(Debuggable):
         # transform bolded paragraphs into size-attributes with an extremely high threshold (so will be thought of as
         # root nodes)
         self.handle_bold_only_paragraph(manipulate, 100)
+
+        # if a paragraph only contains capitals followed by a colon, make it a heading (root node size)
+        self.handle_capital_only_paragraph(manipulate, 100)
 
         tree = self.correlate_styled_headings(manipulate)
 
