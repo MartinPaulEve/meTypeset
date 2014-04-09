@@ -52,7 +52,10 @@ class NlmManipulate(Manipulate):
                 sibling = paragraph.getprevious()
 
                 if sibling is None:
-                    paragraph.getparent().text += paragraph.tail
+                    if paragraph.getparent().text is not None:
+                        paragraph.getparent().text += paragraph.tail
+                    else:
+                        paragraph.getparent().text = paragraph.tail
                 else:
                     sibling.tail = paragraph.tail
 
