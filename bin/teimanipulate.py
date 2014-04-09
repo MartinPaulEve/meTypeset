@@ -205,7 +205,7 @@ class TeiManipulate(Manipulate):
             self.debug.print_debug(self, u'Unable to find an existing {0} element.'.format(element_tag))
 
         if ret is None:
-            self.debug.print_debug(self, u'Creating new {0} element.'.format(element_tag))
+            self.debug.print_debug(self, u'Creating new U{0} element.'.format(element_tag))
             ret = tree.xpath(add_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
             new_element = etree.Element(element_tag)
 
@@ -288,12 +288,22 @@ class TeiManipulate(Manipulate):
 
         remove = ['cit', 'quote']
 
-        for child in tree.xpath('//tei:p[not(//tei:graphic)] | //tei:head[not(//tei:graphic)]',
+        for child in tree.xpath('//tei:p | //tei:head',
                                 namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            stripped_text = self.get_stripped_text(child).strip(':.')
 
-            if stripped_text.lower().strip() == cue.lower().strip():
-                found_element = child
+            skip = False
+
+            for item in child:
+                if item.tag.endswith('graphic'):
+                    skip = True
+
+            if not skip:
+                stripped_text = self.get_stripped_text(child).strip(':.')
+
+                if stripped_text.lower().strip() == cue.lower().strip():
+                    found_element = child
+                    self.debug.print_debug(self, u'Found linguistic cue: {0}'.format(stripped_text.lower().strip()))
+                    break
 
         # the endgame switch is set when we're handling the last two lines (which are sometimes acknowledgements etc)
         endgame = False
