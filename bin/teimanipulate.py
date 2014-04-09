@@ -394,6 +394,11 @@ class TeiManipulate(Manipulate):
                                                              u'as last entry was solely a link.')
                                 break
 
+            # right, now it gets a bit tricky
+            # we could, here, to look inside the next div in case there is a title and paragraphs that are clearly
+            # references there. this is because the SizeClassifier is run earlier in the process. The SizeClassifier
+            # can get it wrong, especially if the user has done something weird with font sizes.
+            # TODO
 
             etree.strip_tags(found_element.getparent(), 'REMOVE')
 
