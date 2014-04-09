@@ -43,6 +43,7 @@
 
     <mt:sizeclassifier>
         <mt:minimum-heading-size>16</mt:minimum-heading-size>
+        <mt:maximum-headings>41</mt:maximum-headings>
     </mt:sizeclassifier>
 
     <mt:display>

@@ -20,7 +20,7 @@ class SizeClassifier(Debuggable):
         self.gv = global_variables
         self.debug = self.gv.debug
         self.size_cutoff = int(self.gv.settings.get_setting('minimum-heading-size', self))
-        self.max_headings = 41
+        self.max_headings = int(self.gv.settings.get_setting('maximum-headings', self))
         self.root = 0
         self.tree = None
         Debuggable.__init__(self, 'Size Classifier')
