@@ -281,6 +281,18 @@ class TeiManipulate(Manipulate):
         self.debug.print_debug(self, u'Processed bibliography')
         return True
 
+    def contains_graphic(self, element):
+        for item in element:
+            if item.tag.endswith('graphic'):
+                return True
+
+            sub = self.contains_graphic(item)
+
+            if sub is True:
+                return True
+
+        return False
+
     def find_references_from_cue(self, cue, tree):
         # load the DOM
 
@@ -291,11 +303,7 @@ class TeiManipulate(Manipulate):
         for child in tree.xpath('//tei:p | //tei:head',
                                 namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
 
-            skip = False
-
-            for item in child:
-                if item.tag.endswith('graphic'):
-                    skip = True
+            skip = self.contains_graphic(child)
 
             if not skip:
                 stripped_text = self.get_stripped_text(child).strip(':.')
@@ -704,10 +712,15 @@ class TeiManipulate(Manipulate):
 
     def change_wmf_image_links(self):
         tree = self.load_dom_tree()
+        count = 0
+
         for image_link in tree.xpath('//tei:graphic', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            count += 1
             converted_image_link = re.sub(r'\.wmf', '.png', image_link.xpath('@url')[0])
             image_link.attrib['url'] = converted_image_link
+
         self.save_tree(tree)
+        self.debug.print_debug(self, u'Replaced {0} WMF images with open equivalents'.format(count))
 
     def cleanup(self):
         tree = self.load_dom_tree()
@@ -716,15 +729,18 @@ class TeiManipulate(Manipulate):
 
         for element in tree.xpath('//tei:ref[@target="None"] | //tei:p[not(node())]',
                                   namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            element.getparent().remove(element)
-            count += 1
+            if len(element) == 0:
+                self.debug.print_debug(self, u'Removing element {0} in cleanup'.format(element.tag))
+                element.getparent().remove(element)
+                count += 1
 
         # find and remove sections where there is a single title and it is the /only/ element therein
         for element in tree.xpath('//tei:div[not(node())]',
                                   namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
-            element.getparent().remove(element)
-            # TODO: this is unsafe and trashes vast portions of documents; needs investigation
-            count += 1
+            if len(element) == 0:
+                self.debug.print_debug(self, u'Removing element {0} in cleanup'.format(element.tag))
+                element.getparent().remove(element)
+                count += 1
 
         self.save_tree(tree)
         self.debug.print_debug(self, u'Removed {0} nodes during cleanup'.format(count))

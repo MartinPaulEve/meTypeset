@@ -43,8 +43,9 @@ class BibliographyClassifier(Debuggable):
                 lines = lang_file.read().split('\n')
 
                 for line in lines:
-                    if manipulate.find_references_from_cue(line, tree):
-                        return True
+                    if line.strip() != '':
+                        if manipulate.find_references_from_cue(line, tree):
+                            return True
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('bibliographyclassifier', self,
