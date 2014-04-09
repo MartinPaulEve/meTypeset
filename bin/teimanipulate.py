@@ -67,7 +67,7 @@ class TeiManipulate(Manipulate):
         year_test = re.compile('((19|20)\d{2}[a-z]?)|(n\.d\.)')
 
         for last_list in xpath:
-            if last_list.tag == '{http://www.tei-c.org/ns/1.0}list':
+            if last_list.tag.endswith('list'):
                 if len(last_list) > 0:
 
                     text = self.get_stripped_text(last_list[0])
@@ -92,7 +92,7 @@ class TeiManipulate(Manipulate):
                             Manipulate.append_safe(new_element, list_item, self)
                             list_item.tag = '{http://www.tei-c.org/ns/1.0}ref'
                             list_item.attrib['target'] = 'None'
-            elif last_list.tag == '{http://www.tei-c.org/ns/1.0}item':
+            elif last_list.tag.endswith('item'):
 
                 text = self.get_stripped_text(last_list)
                 match = year_test.findall(text)
@@ -169,6 +169,15 @@ class TeiManipulate(Manipulate):
         select = u'(//tei:div/*[not(self::tei:div)])[last()]'
 
         found = False
+
+        # remove any empty lists
+        tree = self.load_dom_tree()
+
+        for item in tree.xpath('//tei:list', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            if len(item) == 0:
+                item.tag = 'REMOVE'
+
+        etree.strip_elements(tree, 'REMOVE')
 
         xpath = tree.xpath(select, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
