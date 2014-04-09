@@ -135,6 +135,10 @@ class MeTypeset (Debuggable):
             metadata = Metadata(self.gv)
             metadata.pre_clean()
 
+            # run size classifier
+            # aggression 5
+            SizeClassifier(self.gv).run()
+
             # run bibliographic addins handler
             # aggression 4
             found_bibliography = BibliographyAddins(self.gv).run()
@@ -153,10 +157,6 @@ class MeTypeset (Debuggable):
             # tei
             # aggression 3
             TeiManipulate(self.gv).run()
-
-            # run size classifier
-            # aggression 5
-            SizeClassifier(self.gv).run()
 
             # run tei to nlm conversion
             TeiToNlm(self.gv).run(not found_bibliography)
