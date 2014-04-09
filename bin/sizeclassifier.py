@@ -332,10 +332,24 @@ class SizeClassifier(Debuggable):
 
         return True
 
+    def contains_graphic(self, element):
+        for item in element:
+            if item.tag.endswith('graphic'):
+                return True
+
+            sub = self.contains_graphic(item)
+
+            if sub is True:
+                return True
+
+        return False
+
     def remove_empty_headings(self, manipulate, tree):
         count = 0
-        for title in tree.xpath('//tei:head[not(tei:graphic)]', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+        for title in tree.xpath('//tei:head', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             text = manipulate.get_stripped_text(title).strip()
+
+            skip = self.contains_graphic(title)
 
             if text == '':
                 title.tag = 'REMOVE'
