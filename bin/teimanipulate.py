@@ -415,7 +415,7 @@ class TeiManipulate(Manipulate):
             break_index = count - 1
 
             self.check_for_continued_references(found_element, numeric_start_test, count, elements_to_parse, year_test,
-                                            blank_text)
+                                                blank_text)
 
             # at this point we have a list with all potential reference elements in it
             # we also have an index to that list after which references have spanned section breaks
@@ -431,6 +431,7 @@ class TeiManipulate(Manipulate):
                 inner_match = blank_text.findall(text)
 
                 if match or inner_match:
+                    # this is straightforward: the reference looks like a reference
                     self.debug.print_debug(self, u'[REF{0}] Adding bibliography element from linguistic '
                                                  u'cue'.format(count))
                     item.attrib['rend'] = 'Bibliography'
@@ -441,7 +442,22 @@ class TeiManipulate(Manipulate):
                         for remove_tag in remove:
                             if child.tag is not None and child.tag.endswith(remove_tag):
                                 child.tag = 'REMOVE'
-                else:
+
+                elif elements_to_parse.index(item) > (len(elements_to_parse) - 3) and last is not None:
+                    # this is the last two lines of a reference block when it doesn't look like a reference
+                    # it could easily be some stranded acknowledgements, so we leave it unless it's just a link
+                    if item.text is None or item.text == '':
+                        for child in item:
+                            if child.tag is not None and child.tag.endswith('ref') \
+                                    and (child.tail == '' or child.tail is None):
+                                sibling.tag = 'hi'
+                                last.append(sibling)
+
+                                self.debug.print_debug(self, u'[REF{0}] Appending to previous element '
+                                                             u'despite endgame condition'.format(count))
+
+                elif last is not None:
+                    # otherwise, we will add this reference to the last block used
                     self.debug.print_debug(self, u'[REF{0}] Appending to previous element'.format(count))
                     sibling.tag = 'hi'
                     last.append(sibling)
@@ -455,8 +471,6 @@ class TeiManipulate(Manipulate):
             return True
 
         return False
-
-
 
     def tag_bibliography(self, xpath, start_text, caller, parent_tag=u'{http://www.tei-c.org/ns/1.0}sec',
                          classify_siblings=False, sibling_tag=u'{http://www.tei-c.org/ns/1.0}cit',
@@ -821,8 +835,6 @@ class TeiManipulate(Manipulate):
 
         self.save_tree(tree)
         self.debug.print_debug(self, u'Cleaned {0} nested item bibliographic tags during cleanup'.format(count))
-
-
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) > int(self.gv.settings.get_setting('wmfimagereplace', self,
