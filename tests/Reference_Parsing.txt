@@ -73,3 +73,15 @@ R06 Multiblock Reference Parser at arbitrary depth
     ${paragraph}=    Get Element    ${xml}    back/ref-list
     Elements Should Match    ${paragraph}    <ref-list> <ref> <mixed-citation>An Author, <italic>A Reference</italic> (London: Publisher, 2014)</mixed-citation> </ref> <ref> <mixed-citation>Another Author, <italic>A Reference</italic> (London: Publisher, 2014)</mixed-citation> </ref> <ref> <mixed-citation>A Third Author, A Reference (London: Publisher, 2014)</mixed-citation> </ref> <ref> <mixed-citation>A Fourth Author, <italic>A Reference</italic> (London: Publisher, 2014)</mixed-citation> </ref> <ref> <mixed-citation>A Fifth Author, A Reference (London: Publisher, 2014)</mixed-citation> </ref> <ref> <mixed-citation>A Sixth Author, <italic>A Reference</italic> (London: Publisher, 2014)</mixed-citation> </ref> </ref-list>    normalize_whitespace=yes
     [Teardown]    Remove Directory    R06    recursive=True
+
+R07 Reference block with trailing acknowledgements
+    [Tags]    references    ref-list    R07
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ReferenceWithTrailingAcknowledgement.docx -s testsettings.xml ./R07 -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./R07/nlm/out.xml
+    ${paragraph}=    Get Element    ${xml}    back/ref-list
+    ${body}=    Get Element    ${xml}    body
+    Elements Should Match    ${body}    <body> <sec> <title>A Document</title> <p>Some text</p> </sec> <sec> <title/> <p>The author would like to thank Helen Eve for her eternal patience with the development of this typesetter.</p> </sec> </body>    normalize_whitespace=yes
+    Elements Should Match    ${paragraph}    <ref-list> <ref> <mixed-citation>An author reference 2014</mixed-citation> </ref> <ref> <mixed-citation>Another reference 2014</mixed-citation> </ref> <ref> <mixed-citation>A final reference 2014</mixed-citation> </ref> </ref-list>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    R07    recursive=True
