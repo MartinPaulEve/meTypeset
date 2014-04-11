@@ -422,6 +422,7 @@ class TeiManipulate(Manipulate):
             # after this point, we want to be more cautious in joining references together
 
             count = 0
+            failcount = 0
 
             for item in elements_to_parse:
                 count += 1
@@ -437,6 +438,8 @@ class TeiManipulate(Manipulate):
                     item.attrib['rend'] = 'Bibliography'
                     item.tag = 'p'
                     last = item
+
+                    failcount = 0
 
                     for child in item:
                         for remove_tag in remove:
@@ -455,6 +458,19 @@ class TeiManipulate(Manipulate):
 
                                 self.debug.print_debug(self, u'[REF{0}] Appending to previous element '
                                                              u'despite endgame condition'.format(count))
+
+                elif count - 1 > break_index and last is not None:
+                    # we treat this portion more sensitively because it is spanning sections and bail if more than
+                    # two references in a row do not match
+                    failcount += 1
+
+                    if failcount > 2:
+                        self.debug.print_debug(self, u'Bailing from linguistic cue parsing on fail count condition')
+                        break
+                    else:
+                        self.debug.print_debug(self, u'[REF{0}] Appending to previous element'.format(count))
+                        sibling.tag = 'hi'
+                        last.append(sibling)
 
                 elif last is not None:
                     # otherwise, we will add this reference to the last block used
