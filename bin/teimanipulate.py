@@ -479,7 +479,7 @@ class TeiManipulate(Manipulate):
                 elif last is not None:
                     # otherwise, we will add this reference to the last block used
                     self.debug.print_debug(self, u'[REF{0}] Appending to previous element'.format(count))
-                    sibling.tag = 'hi'
+                    item.tag = 'hi'
                     last.append(item)
 
                 else:
