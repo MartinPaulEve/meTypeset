@@ -53,3 +53,13 @@ R04 Multiblock Reference Parser
     ${paragraph}=    Get Element    ${xml}    back/ref-list
     Elements Should Match    ${paragraph}    <ref-list><ref><mixed-citation>An Author, <italic>A Reference</italic> (London: Publisher, 2014)</mixed-citation></ref><ref><mixed-citation>Another Author, <italic>A Reference</italic> (London: Publisher, 2014)</mixed-citation></ref><ref><mixed-citation>A Third Author, A Reference (London: Publisher, 2014)</mixed-citation></ref><ref><mixed-citation>A Fourth Author, <italic>A Reference</italic> (London: Publisher, 2014)</mixed-citation></ref></ref-list>    normalize_whitespace=yes
     [Teardown]    Remove Directory    R04    recursive=True
+
+R05 Multiblock Reference Parser With Split Line
+    [Tags]    references    ref-list    R05    multiblock
+    ${result} =    Run Process    python ../bin/meTypeset.py docx HeadingInReferencesSplitLine.docx -s testsettings.xml ./R05 -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./R05/nlm/out.xml
+    ${paragraph}=    Get Element    ${xml}    back/ref-list
+    Elements Should Match    ${paragraph}    <ref-list> <ref> <mixed-citation>An Author, <italic>A Reference</italic> (London: Publisher, 2014)</mixed-citation> </ref> <ref> <mixed-citation>Another Author, <italic>A Reference</italic> (London: Publisher, 2014)http://www.martineve.com</mixed-citation> </ref> <ref> <mixed-citation>A Third Author, A Reference (London: Publisher, 2014)</mixed-citation> </ref> <ref> <mixed-citation>A Fourth Author, <italic>A Reference</italic> (London: Publisher, 2014)</mixed-citation> </ref> </ref-list>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    R05    recursive=True
