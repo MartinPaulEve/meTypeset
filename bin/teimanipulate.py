@@ -413,6 +413,7 @@ class TeiManipulate(Manipulate):
                         self.debug.print_debug(self, u'Adding bibliography element from linguistic cue after break')
                         child.attrib['rend'] = 'Bibliography'
                         child.tag = 'p'
+                        last = child
 
                         for tag in sibling:
                             for remove_tag in remove:
