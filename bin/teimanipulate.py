@@ -342,8 +342,6 @@ class TeiManipulate(Manipulate):
                                                      u' (triggered by {0})'.format(text))
                         return False
 
-                    print sibling
-
                     count += 1
                     elements_to_parse.append(sibling)
                     self.debug.print_debug(self, u'[REF{0}] Adding {1} from next section'.format(count, text))
