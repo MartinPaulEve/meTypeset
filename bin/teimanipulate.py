@@ -447,15 +447,21 @@ class TeiManipulate(Manipulate):
                 elif elements_to_parse.index(item) > (len(elements_to_parse) - 3) and last is not None:
                     # this is the last two lines of a reference block when it doesn't look like a reference
                     # it could easily be some stranded acknowledgements, so we leave it unless it's just a link
+                    parsed = False
+
                     if item.text is None or item.text == '':
                         for child in item:
                             if child.tag is not None and child.tag.endswith('ref') \
                                     and (child.tail == '' or child.tail is None):
                                 sibling.tag = 'hi'
                                 last.append(sibling)
+                                parsed = True
 
                                 self.debug.print_debug(self, u'[REF{0}] Appending to previous element '
                                                              u'despite endgame condition'.format(count))
+
+                    if not parsed:
+                        self.debug.print_debug(self, u'[REF{0}] Left item in situ'.format(count))
 
                 elif count - 1 > break_index and last is not None:
                     # we treat this portion more sensitively because it is spanning sections and bail if more than
@@ -475,6 +481,9 @@ class TeiManipulate(Manipulate):
                     self.debug.print_debug(self, u'[REF{0}] Appending to previous element'.format(count))
                     sibling.tag = 'hi'
                     last.append(sibling)
+
+                else:
+                    self.debug.print_debug(self, u'[REF{0}] Left item in situ'.format(count))
 
             etree.strip_tags(found_element.getparent(), 'REMOVE')
 
