@@ -302,6 +302,64 @@ class TeiManipulate(Manipulate):
 
         return False
 
+    def check_for_continued_references(self, found_element, numeric_start_test, count, elements_to_parse, year_test,
+                                       blank_text):
+        self.debug.print_debug(self, u'Enumerating next section for references')
+        next_div = found_element.getparent().getnext()
+
+        a_child = None
+        stop = False
+
+        if next_div is not None and len(next_div) > 0:
+
+            child = next_div[0]
+            a_child = child
+            text = self.get_stripped_text(child)
+
+            numeric_start = numeric_start_test.findall(text)
+
+            if numeric_start:
+                self.debug.print_debug(self, u'Halting parsing of references after break as numeric start found '
+                                             u'(triggered by {0})'.format(text))
+                return False
+
+            match = year_test.findall(text)
+            inner_match = blank_text.findall(text)
+
+            if match or inner_match:
+                count += 1
+                elements_to_parse.append(child)
+                self.debug.print_debug(self, u'[REF{0}] Adding {1} from next section'.format(count, text))
+
+                for sibling in child.itersiblings():
+                    # once we've got a definite section that is references, we will add all of it
+
+                    text = self.get_stripped_text(sibling)
+                    numeric_start = numeric_start_test.findall(text)
+
+                    if numeric_start:
+                        self.debug.print_debug(self, u'Halting parsing of references after break as numeric start found'
+                                                     u' (triggered by {0})'.format(text))
+                        return False
+
+                    print sibling
+
+                    count += 1
+                    elements_to_parse.append(sibling)
+                    self.debug.print_debug(self, u'[REF{0}] Adding {1} from next section'.format(count, text))
+            else:
+                return False
+
+        if a_child is not None:
+            should_fail = self.check_for_continued_references(a_child, numeric_start_test, count, elements_to_parse,
+                                                              year_test, blank_text)
+
+            if not should_fail:
+                return False
+
+        return True
+
+
     def find_references_from_cue(self, cue, tree):
         # load the DOM
 
@@ -326,20 +384,22 @@ class TeiManipulate(Manipulate):
         endgame = False
         last = None
 
+        # pre-compile all needed regular expressions
         year_test = re.compile('((19|20)\d{2}[a-z]?)|(n\.d\.)')
         blank_text = re.compile('XXXX')
+        numeric_start_test = re.compile('^(?P<start>[\[{(]*?[\d\.]+[\]})]*?\s*?).+')
+        break_index = 0
+
+        elements_to_parse = []
 
         if found_element is not None:
             found_element.attrib['rend'] = 'REMOVE'
+            count = 0
 
             for sibling in found_element.itersiblings():
 
-                if len(sibling.getparent()) - sibling.getparent().index(sibling) < 2:
-                    endgame = True
-
                 text = self.get_stripped_text(sibling)
 
-                numeric_start_test = re.compile('^(?P<start>[\[{(]*?[\d\.]+[\]})]*?\s*?).+')
                 numeric_start = numeric_start_test.findall(text)
 
                 if numeric_start:
@@ -348,133 +408,43 @@ class TeiManipulate(Manipulate):
 
                     return False
 
+                count += 1
+                elements_to_parse.append(sibling)
+                self.debug.print_debug(self, u'[REF{0}] Adding {1}'.format(count, text))
+
+            break_index = count - 1
+
+            self.check_for_continued_references(found_element, numeric_start_test, count, elements_to_parse, year_test,
+                                            blank_text)
+
+            # at this point we have a list with all potential reference elements in it
+            # we also have an index to that list after which references have spanned section breaks
+            # after this point, we want to be more cautious in joining references together
+
+            count = 0
+
+            for item in elements_to_parse:
+                count += 1
+
+                text = self.get_stripped_text(item)
                 match = year_test.findall(text)
+                inner_match = blank_text.findall(text)
 
-                try_join = False
+                if match or inner_match:
+                    self.debug.print_debug(self, u'[REF{0}] Adding bibliography element from linguistic '
+                                                 u'cue'.format(count))
+                    item.attrib['rend'] = 'Bibliography'
+                    item.tag = 'p'
+                    last = item
 
-                if not match:
-                    match_inner = blank_text.findall(text)
-                    if len(match_inner) == 1:
-                        self.debug.print_debug(self, u'Adding bibliography element from linguistic cue')
-                        sibling.attrib['rend'] = 'Bibliography'
-                        sibling.tag = 'p'
-                        last = sibling
-
-                        for tag in sibling:
-                            for remove_tag in remove:
-                                if tag.tag == '{http://www.tei-c.org/ns/1.0}' + remove_tag:
-                                    tag.tag = 'REMOVE'
-                    else:
-                        try_join = True
-                elif len(match) >= 1:
-                    # only do this if we find 1 match on the line; otherwise, it's a problem
-                    self.debug.print_debug(self, u'Adding bibliography element from linguistic cue')
-                    sibling.attrib['rend'] = 'Bibliography'
-                    sibling.tag = 'p'
-                    last = sibling
-
-                    for tag in sibling:
+                    for child in item:
                         for remove_tag in remove:
-                            if tag.tag == '{http://www.tei-c.org/ns/1.0}' + remove_tag:
-                                tag.tag = 'REMOVE'
+                            if child.tag is not None and child.tag.endswith(remove_tag):
+                                child.tag = 'REMOVE'
                 else:
-                    try_join = True
-
-                if try_join and not endgame and last is not None:
+                    self.debug.print_debug(self, u'[REF{0}] Appending to previous element'.format(count))
                     sibling.tag = 'hi'
                     last.append(sibling)
-                elif try_join:
-                    if sibling.text is None or sibling.text == '':
-                        for item in sibling:
-                            if item.tag == '{http://www.tei-c.org/ns/1.0}ref' and (
-                                        item.tail == '' or item.tail is None):
-                                sibling.tag = 'hi'
-                                last.append(sibling)
-
-                                self.debug.print_debug(self, u'Overriding endgame escape in linguistic cue parser '
-                                                             u'as last entry was solely a link.')
-                                break
-
-            # right, now it gets a bit tricky
-            # we could, here, to look inside the next div in case there is a title and paragraphs that are clearly
-            # references there. this is because the SizeClassifier is run earlier in the process. The SizeClassifier
-            # can get it wrong, especially if the user has done something weird with font sizes.
-
-            next_div = found_element.getparent().getnext()
-
-            if not next_div is None:
-                for child in next_div:
-                    text = self.get_stripped_text(child)
-
-                    match = year_test.findall(text)
-                    inner_match = blank_text.findall(text)
-
-                    if match or inner_match:
-                        self.debug.print_debug(self, u'Adding bibliography element from linguistic cue after break')
-                        child.attrib['rend'] = 'Bibliography'
-                        child.tag = 'p'
-                        last = child
-
-                        for tag in sibling:
-                            for remove_tag in remove:
-                                if tag.tag == '{http://www.tei-c.org/ns/1.0}' + remove_tag:
-                                    tag.tag = 'REMOVE'
-
-                        for sibling in child.itersiblings():
-                            if len(sibling.getparent()) - sibling.getparent().index(sibling) < 2:
-                                endgame = True
-
-                            text = self.get_stripped_text(sibling)
-
-                            match = year_test.findall(text)
-
-                            try_join = False
-
-                            if not match:
-                                match_inner = blank_text.findall(text)
-                                if len(match_inner) == 1:
-                                    self.debug.print_debug(self, u'Adding bibliography element from linguistic cue '
-                                                                 u'after break')
-                                    sibling.attrib['rend'] = 'Bibliography'
-                                    sibling.tag = 'p'
-                                    last = sibling
-
-                                    for tag in sibling:
-                                        for remove_tag in remove:
-                                            if tag.tag == '{http://www.tei-c.org/ns/1.0}' + remove_tag:
-                                                tag.tag = 'REMOVE'
-                                else:
-                                    try_join = True
-                            elif len(match) >= 1:
-                                # only do this if we find 1 match on the line; otherwise, it's a problem
-                                self.debug.print_debug(self, u'Adding bibliography element from linguistic cue after '
-                                                             u'break')
-                                sibling.attrib['rend'] = 'Bibliography'
-                                sibling.tag = 'p'
-                                last = sibling
-
-                                for tag in sibling:
-                                    for remove_tag in remove:
-                                        if tag.tag == '{http://www.tei-c.org/ns/1.0}' + remove_tag:
-                                            tag.tag = 'REMOVE'
-                            else:
-                                try_join = True
-
-                            if try_join and not endgame and last is not None:
-                                sibling.tag = 'hi'
-                                last.append(sibling)
-                            elif try_join:
-                                if sibling.text is None or sibling.text == '':
-                                    for item in sibling:
-                                        if item.tag == '{http://www.tei-c.org/ns/1.0}ref' and (
-                                                    item.tail == '' or item.tail is None):
-                                            sibling.tag = 'hi'
-                                            last.append(sibling)
-
-                                            self.debug.print_debug(self, u'Overriding endgame escape in linguistic '
-                                                                         u'cue parser as last entry was solely a link.')
-                                            break
-
 
             etree.strip_tags(found_element.getparent(), 'REMOVE')
 
@@ -485,6 +455,8 @@ class TeiManipulate(Manipulate):
             return True
 
         return False
+
+
 
     def tag_bibliography(self, xpath, start_text, caller, parent_tag=u'{http://www.tei-c.org/ns/1.0}sec',
                          classify_siblings=False, sibling_tag=u'{http://www.tei-c.org/ns/1.0}cit',
