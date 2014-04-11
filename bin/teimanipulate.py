@@ -453,8 +453,8 @@ class TeiManipulate(Manipulate):
                         for child in item:
                             if child.tag is not None and child.tag.endswith('ref') \
                                     and (child.tail == '' or child.tail is None):
-                                sibling.tag = 'hi'
-                                last.append(sibling)
+                                item.tag = 'hi'
+                                last.append(item)
                                 parsed = True
 
                                 self.debug.print_debug(self, u'[REF{0}] Appending to previous element '
@@ -473,14 +473,14 @@ class TeiManipulate(Manipulate):
                         break
                     else:
                         self.debug.print_debug(self, u'[REF{0}] Appending to previous element'.format(count))
-                        sibling.tag = 'hi'
-                        last.append(sibling)
+                        item.tag = 'hi'
+                        last.append(item)
 
                 elif last is not None:
                     # otherwise, we will add this reference to the last block used
                     self.debug.print_debug(self, u'[REF{0}] Appending to previous element'.format(count))
                     sibling.tag = 'hi'
-                    last.append(sibling)
+                    last.append(item)
 
                 else:
                     self.debug.print_debug(self, u'[REF{0}] Left item in situ'.format(count))
