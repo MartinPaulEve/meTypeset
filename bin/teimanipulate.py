@@ -214,7 +214,7 @@ class TeiManipulate(Manipulate):
             self.debug.print_debug(self, u'Unable to find an existing {0} element.'.format(element_tag))
 
         if ret is None:
-            self.debug.print_debug(self, u'Creating new U{0} element.'.format(element_tag))
+            self.debug.print_debug(self, u'Creating new {0} element.'.format(element_tag))
             ret = tree.xpath(add_xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})[0]
             new_element = etree.Element(element_tag)
 
@@ -326,6 +326,9 @@ class TeiManipulate(Manipulate):
         endgame = False
         last = None
 
+        year_test = re.compile('((19|20)\d{2}[a-z]?)|(n\.d\.)')
+        blank_text = re.compile('XXXX')
+
         if found_element is not None:
             found_element.attrib['rend'] = 'REMOVE'
 
@@ -345,13 +348,11 @@ class TeiManipulate(Manipulate):
 
                     return False
 
-                year_test = re.compile('((19|20)\d{2}[a-z]?)|(n\.d\.)')
                 match = year_test.findall(text)
 
                 try_join = False
 
                 if not match:
-                    blank_text = re.compile('XXXX')
                     match_inner = blank_text.findall(text)
                     if len(match_inner) == 1:
                         self.debug.print_debug(self, u'Adding bibliography element from linguistic cue')
@@ -398,7 +399,81 @@ class TeiManipulate(Manipulate):
             # we could, here, to look inside the next div in case there is a title and paragraphs that are clearly
             # references there. this is because the SizeClassifier is run earlier in the process. The SizeClassifier
             # can get it wrong, especially if the user has done something weird with font sizes.
-            # TODO
+
+            next_div = found_element.getparent().getnext()
+
+            if not next_div is None:
+                for child in next_div:
+                    text = self.get_stripped_text(child)
+
+                    match = year_test.findall(text)
+                    inner_match = blank_text.findall(text)
+
+                    if match or inner_match:
+                        self.debug.print_debug(self, u'Adding bibliography element from linguistic cue after break')
+                        child.attrib['rend'] = 'Bibliography'
+                        child.tag = 'p'
+
+                        for tag in sibling:
+                            for remove_tag in remove:
+                                if tag.tag == '{http://www.tei-c.org/ns/1.0}' + remove_tag:
+                                    tag.tag = 'REMOVE'
+
+                        for sibling in child.itersiblings():
+                            if len(sibling.getparent()) - sibling.getparent().index(sibling) < 2:
+                                endgame = True
+
+                            text = self.get_stripped_text(sibling)
+
+                            match = year_test.findall(text)
+
+                            try_join = False
+
+                            if not match:
+                                match_inner = blank_text.findall(text)
+                                if len(match_inner) == 1:
+                                    self.debug.print_debug(self, u'Adding bibliography element from linguistic cue '
+                                                                 u'after break')
+                                    sibling.attrib['rend'] = 'Bibliography'
+                                    sibling.tag = 'p'
+                                    last = sibling
+
+                                    for tag in sibling:
+                                        for remove_tag in remove:
+                                            if tag.tag == '{http://www.tei-c.org/ns/1.0}' + remove_tag:
+                                                tag.tag = 'REMOVE'
+                                else:
+                                    try_join = True
+                            elif len(match) >= 1:
+                                # only do this if we find 1 match on the line; otherwise, it's a problem
+                                self.debug.print_debug(self, u'Adding bibliography element from linguistic cue after '
+                                                             u'break')
+                                sibling.attrib['rend'] = 'Bibliography'
+                                sibling.tag = 'p'
+                                last = sibling
+
+                                for tag in sibling:
+                                    for remove_tag in remove:
+                                        if tag.tag == '{http://www.tei-c.org/ns/1.0}' + remove_tag:
+                                            tag.tag = 'REMOVE'
+                            else:
+                                try_join = True
+
+                            if try_join and not endgame and last is not None:
+                                sibling.tag = 'hi'
+                                last.append(sibling)
+                            elif try_join:
+                                if sibling.text is None or sibling.text == '':
+                                    for item in sibling:
+                                        if item.tag == '{http://www.tei-c.org/ns/1.0}ref' and (
+                                                    item.tail == '' or item.tail is None):
+                                            sibling.tag = 'hi'
+                                            last.append(sibling)
+
+                                            self.debug.print_debug(self, u'Overriding endgame escape in linguistic '
+                                                                         u'cue parser as last entry was solely a link.')
+                                            break
+
 
             etree.strip_tags(found_element.getparent(), 'REMOVE')
 
