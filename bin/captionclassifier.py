@@ -19,6 +19,7 @@ from debug import Debuggable
 from nlmmanipulate import NlmManipulate
 from lxml import etree
 import uuid
+import re
 
 
 class CaptionClassifier(Debuggable):
@@ -255,48 +256,81 @@ class CaptionClassifier(Debuggable):
 
         table_titles = []
         table_ids = []
+        table_regex_dot = re.compile('^.+?\s*\d+\..+')
+        table_regex_colon = re.compile('^.+?\s*\d+\:.+')
+
+        use_next = False
+        use_previous = False
+
+        separator = ':'
 
         for table in tables:
             # get the next sibling
             p = table.getnext()
+            pprev = table.getprevious()
 
             if p is not None and p.tag == 'p':
                 text = manipulate.get_stripped_text(p)
 
-                if len(text) < 140 and u':' in text:
-                    # likely this is a table identifier
-                    split_title = text.split(':')
+                if table_regex_colon.match(text):
+                    use_next = True
+                    separator = ':'
+                elif table_regex_dot.match(text):
+                    use_next = True
+                    separator = '.'
 
-                    title = split_title[0]
-                    caption = (''.join(split_title[1:])).strip()
+            if not use_next:
+                if pprev is not None and pprev.tag == 'p':
+                    text = manipulate.get_stripped_text(pprev)
 
-                    self.debug.print_debug(self, u'Handling title and caption for "{0}"'.format(title))
+                    if table_regex_colon.match(text):
+                        use_previous = True
+                        separator = ':'
+                    elif table_regex_dot.match(text):
+                        use_previous = True
+                        separator = '.'
 
-                    title_element = None
+            if use_next or use_previous:
 
-                    # use an existing title element if one exists
-                    try:
-                        title_element = table.xpath('title')[0]
-                    except:
-                        title_element = etree.Element('title')
-                        table.insert(0, title_element)
+                if use_next:
+                    text = manipulate.get_stripped_text(p)
+                else:
+                    text = manipulate.get_stripped_text(pprev)
+                    p = pprev
 
-                    title_element.text = title
+                # likely this is a table identifier
+                split_title = text.split(':')
 
-                    caption_element = etree.Element('caption')
-                    NlmManipulate.append_safe(caption_element, p, self)
-                    table.insert(1, caption_element)
+                title = split_title[0]
+                caption = (''.join(split_title[1:])).strip()
 
-                    if p.text is not None:
-                        p.text = p.text.replace(': ', '')
-                        p.text = p.text.replace(':', '')
-                        p.text = p.text.replace(title, '')
+                self.debug.print_debug(self, u'Handling title and caption for "{0}"'.format(title))
 
-                    if not 'id' in table.attrib:
-                        table.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+                title_element = None
 
-                    table_titles.append(title)
-                    table_ids.append(table.attrib['id'])
+                # use an existing title element if one exists
+                try:
+                    title_element = table.xpath('title')[0]
+                except:
+                    title_element = etree.Element('title')
+                    table.insert(0, title_element)
+
+                title_element.text = title
+
+                caption_element = etree.Element('caption')
+                NlmManipulate.append_safe(caption_element, p, self)
+                table.insert(1, caption_element)
+
+                if p.text is not None:
+                    p.text = p.text.replace(': ', '')
+                    p.text = p.text.replace(':', '')
+                    p.text = p.text.replace(title, '')
+
+                if not 'id' in table.attrib:
+                    table.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+
+                table_titles.append(title)
+                table_ids.append(table.attrib['id'])
 
         paragraphs = tree.xpath('//p')
 
