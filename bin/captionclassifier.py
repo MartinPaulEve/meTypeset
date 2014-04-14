@@ -104,12 +104,12 @@ class CaptionClassifier(Debuggable):
         graphic_regex_dot = re.compile('^.+?\s*\d+\..+')
         graphic_regex_colon = re.compile('^.+?\s*\d+\:.+')
 
-        use_next = False
-        use_previous = False
-
         separator = ':'
 
         for graphic in graphics:
+            use_next = False
+            use_previous = False
+
             # get the next sibling
             p = graphic.getparent().getnext()
             pprev = graphic.getparent().getprevious()
@@ -213,11 +213,11 @@ class CaptionClassifier(Debuggable):
         graphic_regex_dot = re.compile('^.+?\s*\d+\..+')
         graphic_regex_colon = re.compile('^.+?\s*\d+\:.+')
 
-        use_next = False
-
         separator = ':'
 
         for graphic in graphics:
+            use_next = False
+
             # get the next sibling
             p = graphic.getparent()
 
@@ -301,12 +301,12 @@ class CaptionClassifier(Debuggable):
         table_regex_dot = re.compile('^.+?\s*\d+\..+')
         table_regex_colon = re.compile('^.+?\s*\d+\:.+')
 
-        use_next = False
-        use_previous = False
-
         separator = ':'
 
         for table in tables:
+            use_next = False
+            use_previous = False
+
             # get the next sibling
             p = table.getnext()
             pprev = table.getprevious()
