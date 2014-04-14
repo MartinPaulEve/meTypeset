@@ -172,7 +172,7 @@ Library           Collections
     [Teardown]    Remove Directory    012    recursive=True
 
 013 Table parsing
-    [Tags]    formatting    listclassifier    013
+    [Tags]    formatting    013    captions
     ${result} =    Run Process    python ../bin/meTypeset.py docx TableClassifier1.docx ./013 -s testsettings.xml -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
