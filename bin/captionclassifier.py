@@ -101,63 +101,91 @@ class CaptionClassifier(Debuggable):
 
         graphic_titles = []
         graphic_ids = []
+        graphic_regex_dot = re.compile('^.+?\s*\d+\..+')
+        graphic_regex_colon = re.compile('^.+?\s*\d+\:.+')
+
+        use_next = False
+        use_previous = False
+
+        separator = ':'
 
         for graphic in graphics:
+            # get the next sibling
+            p = graphic.getparent().getnext()
+            pprev = graphic.getparent().getprevious()
 
-            has_caption = graphic.getnext()
+            if p is not None and p.tag == 'p':
+                text = manipulate.get_stripped_text(p)
 
-            if has_caption is None or (has_caption is not None and has_caption.tag != 'title'):
+                if graphic_regex_colon.match(text):
+                    use_next = True
+                    separator = ':'
+                elif graphic_regex_dot.match(text):
+                    use_next = True
+                    separator = '.'
 
-                # get the next sibling
-                p = graphic.getparent().getnext()
+            if not use_next:
+                if pprev is not None and pprev.tag == 'p':
+                    text = manipulate.get_stripped_text(pprev)
 
-                if p is not None and p.tag == 'p':
+                    if graphic_regex_colon.match(text):
+                        use_previous = True
+                        separator = ':'
+                    elif graphic_regex_dot.match(text):
+                        use_previous = True
+                        separator = '.'
+
+            if use_next or use_previous:
+
+                if use_next:
                     text = manipulate.get_stripped_text(p)
+                else:
+                    text = manipulate.get_stripped_text(pprev)
+                    p = pprev
 
-                    if len(text) < 140 and u':' in text:
-                        # likely this is a caption identifier
-                        split_title = text.split(':')
+                # likely this is a table identifier
+                split_title = text.split(separator)
 
-                        title = split_title[0]
-                        caption = (''.join(split_title[1:])).strip()
+                title = split_title[0]
+                caption = (''.join(split_title[1:])).strip()
 
-                        self.debug.print_debug(self, u'Handling title and caption for "{0}"'.format(title))
+                self.debug.print_debug(self, u'Handling title and caption for "{0}"'.format(title))
 
-                        title_element = None
+                title_element = None
 
-                        # use an existing title element if one exists
-                        try:
-                            title_element = graphic.xpath('label')[0]
-                        except:
-                            title_element = etree.Element('label')
-                            graphic.insert(0, title_element)
+                # use an existing title element if one exists
+                try:
+                    title_element = graphic.xpath('label')[0]
+                except:
+                    title_element = etree.Element('label')
+                    graphic.insert(0, title_element)
 
-                        title_element.text = title
+                title_element.text = title
 
-                        caption_element = etree.Element('caption')
-                        new_p = etree.Element('p')
-                        new_p.text = caption
+                caption_element = etree.Element('caption')
+                new_p = etree.Element('p')
+                new_p.text = caption
 
-                        NlmManipulate.append_safe(caption_element, new_p, self)
-                        NlmManipulate.append_safe(graphic, caption_element, self)
+                NlmManipulate.append_safe(caption_element, new_p, self)
+                NlmManipulate.append_safe(graphic, caption_element, self)
 
-                        if p.text is not None:
-                            p.text = p.text.replace(': ', '')
-                            p.text = p.text.replace(':', '')
-                            p.text = p.text.replace(title, '')
-                            p.text = p.text.replace(caption, '')
+                if p.text is not None:
+                    p.text = p.text.replace(': ', '')
+                    p.text = p.text.replace(':', '')
+                    p.text = p.text.replace(title, '')
+                    p.text = p.text.replace(caption, '')
 
-                        if graphic.tail:
-                            graphic.tail = graphic.tail.replace(': ', '')
-                            graphic.tail = graphic.tail.replace(':', '')
-                            graphic.tail = graphic.tail.replace(title, '')
-                            graphic.tail = graphic.tail.replace(caption, '')
+                if graphic.tail:
+                    graphic.tail = graphic.tail.replace(': ', '')
+                    graphic.tail = graphic.tail.replace(':', '')
+                    graphic.tail = graphic.tail.replace(title, '')
+                    graphic.tail = graphic.tail.replace(caption, '')
 
-                        if not 'id' in graphic.attrib:
-                            graphic.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+                if not 'id' in graphic.attrib:
+                    graphic.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
 
-                        graphic_titles.append(title)
-                        graphic_ids.append(graphic.attrib['id'])
+                graphic_titles.append(title)
+                graphic_ids.append(graphic.attrib['id'])
 
         paragraphs = tree.xpath('//p')
 
