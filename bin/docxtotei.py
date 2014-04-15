@@ -69,8 +69,8 @@ class DocxToTei(Debuggable):
             return False
 
         for image in image_filenames:
-            if re.match(r'.+?\.wmf', image) is not None:
-                image_name = re.sub(r'\.wmf', '', image)
+            if re.match(r'.+?\.(w|e)mf', image) is not None:
+                image_name = re.sub(r'\.(w|e)mf', '', image)
                 imagemagick_command = '{3}*DELIMITER*-d*DELIMITER*graphics*DELIMITER*-f*DELIMITER*png*DELIMITER*-o' \
                                       '*DELIMITER*{0}/{1}.png*DELIMITER*' \
                                       '{0}/{2}'.format(self.gv.output_media_path, image_name, image,
