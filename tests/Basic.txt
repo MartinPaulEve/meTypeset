@@ -211,8 +211,10 @@ Library           Collections
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./015/LoneImage.xml
-    ${graphic}=    Get Element    ${xml}    body/sec/p/graphic
-    Should Be Equal As Strings    ${graphic.tail}    Figure 5. An Image.
+    ${graphiclabel}=    Get Element    ${xml}    body/sec/p/graphic/label
+    ${graphiccaption}=    Get Element    ${xml}    body/sec/p/graphic/caption
+    Elements Should Match    ${graphiclabel}    <label>Figure 5</label>    normalize_whitespace=yes
+    Elements Should Match    ${graphiccaption}    <caption><p>An Image</p></caption>    normalize_whitespace=yes
     [Teardown]    Remove Directory    015    recursive=True
 
 016 Removal of stranded titles
