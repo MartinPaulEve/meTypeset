@@ -398,14 +398,6 @@ class TeiManipulate(Manipulate):
 
                 text = self.get_stripped_text(sibling)
 
-                numeric_start = numeric_start_test.findall(text)
-
-                if numeric_start:
-                    self.debug.print_debug(self, u'Exiting linguistic cue handler so as not to encroach on '
-                                                 u'list handler (triggered by {0})'.format(text))
-
-                    return False
-
                 count += 1
                 elements_to_parse.append(sibling)
                 self.debug.print_debug(self, u'[REF{0}] Adding {1}'.format(count, text))
