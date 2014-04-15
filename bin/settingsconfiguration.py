@@ -28,7 +28,7 @@ class Settings:
 
     @staticmethod
     def concat_path(parent, child):
-        return parent + os.sep + '/' + child
+        return os.path.join(parent, child)
 
     def get_setting(self, tag_name, caller, domain=None):
         settings = self
@@ -63,7 +63,7 @@ class Settings:
             # noinspection PyBroadException
             try:
                 mod_path = os.path.dirname(docxtotei.__file__)
-                script_dir = os.path.dirname(mod_path + '/../')
+                script_dir = os.path.abspath(os.path.join(mod_path, os.pardir))
                 os.environ['METYPESET'] = script_dir
 
             except:
@@ -74,7 +74,7 @@ class Settings:
 
         if settings_file_path == 'default' or settings_file_path is None:
             if script_dir != '':
-                set_file = '{0}/bin/settings.xml'.format(script_dir)
+                set_file = os.path.join(script_dir, 'bin', 'settings.xml')
                 Settings.check_settings_file_exists(caller, set_file)
             else:
                     set_file = 'NOFILE'

@@ -54,8 +54,8 @@ class GV (Debuggable):
             self.docx_word_temp_folder_path = settings.clean_path(
                 settings.concat_path(self.docx_temp_folder_path, settings.get_setting('word', self)))
 
-            self.word_document_xml = settings.clean_path(
-                self.docx_temp_folder_path + '/' + settings.get_setting('word-document-xml', self))
+            self.word_document_xml = settings.clean_path(os.path.join(
+                self.docx_temp_folder_path, settings.get_setting('word-document-xml', self)))
 
             self.docx_style_sheet_dir = settings.concat_path(self.script_dir,
                                                              settings.get_setting('docs-style-sheet-path',
@@ -65,7 +65,7 @@ class GV (Debuggable):
                                                                                        self))
 
             self.docx_to_tei_stylesheet = settings.clean_path(
-                self.docx_temp_folder_path + '/' + settings.get_setting('doc-to-tei-stylesheet', self))
+                os.path.join(self.docx_temp_folder_path, settings.get_setting('doc-to-tei-stylesheet', self)))
 
             self.docx_media_path = settings.clean_path(
                 settings.concat_path(self.docx_word_temp_folder_path, settings.get_setting('media', self)))
@@ -81,8 +81,7 @@ class GV (Debuggable):
                 self.file_name = fileName + os.path.extsep + 'xml'
 
             #TEI paths
-            self.tei_folder_path = settings.clean_path(self.output_folder_path + '/' + settings.get_setting('tei',
-                                                                                                              self))
+            self.tei_folder_path = settings.clean_path(os.path.join(self.output_folder_path,settings.get_setting('tei', self)))
             self.tei_file_path = settings.concat_path(self.tei_folder_path, self.file_name)
             self.tei_temp_file_path = settings.clean_path(settings.concat_path(self.tei_folder_path, "out.xml"))
 
@@ -90,9 +89,7 @@ class GV (Debuggable):
             self.nlm_folder_path = self.generate_path(settings, nlm, self.output_folder_path)
             self.nlm_file_path = settings.clean_path(settings.concat_path(self.nlm_folder_path, self.file_name))
             self.nlm_temp_file_path = settings.clean_path(settings.concat_path(self.nlm_folder_path, "out.xml"))
-            self.nlm_style_sheet_dir = settings.clean_path(settings.concat_path(settings.script_dir,
-                                                                        settings.get_setting('tei-to-nlm-stylesheet',
-                                                                                           self)))
+            self.nlm_style_sheet_dir = settings.clean_path(settings.concat_path(settings.script_dir, settings.get_setting('tei-to-nlm-stylesheet', self)))
 
             # XSL chain paths
             self.xsl_folder_path = self.generate_path(settings, chain, self.output_folder_path)

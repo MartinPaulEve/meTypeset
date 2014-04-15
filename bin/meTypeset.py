@@ -75,8 +75,7 @@ class MeTypeset (Debuggable):
         self.settings_file_path = 'default'
         self.tei_file_path = None
         self.settings_file_path = Settings.setup_settings_file(self.args)
-        self.settings = Settings(Settings.get_settings_file(self, self.settings_file_path),
-                                              self.args)
+        self.settings = Settings(Settings.get_settings_file(self, self.settings_file_path), self.args)
         self.gv = GV(self.settings, self.debug)
 
         self.debug.enable_prompt(Interactive(self.gv))
