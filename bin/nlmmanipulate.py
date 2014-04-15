@@ -596,7 +596,7 @@ class NlmManipulate(Manipulate):
             return
 
         self.find_or_create_element(tree, 'back', '//body', True)
-        ref_list = self.find_or_create_element(tree, 'reflist', '//back', False)
+        ref_list = self.find_or_create_element(tree, 'ref-list', '//back', False)
 
         # change this to find <reflist> elements after we're more certain of how to identify them
         for refs in tree.xpath('//sec[@reflist="yes"]/p[@rend="ref"] | //sec[@reflist="yes"]/title '
