@@ -267,3 +267,15 @@ Library           Collections
     Should Be Equal As Strings    ${title.text}    Table 1
     Should Be Equal As Strings    ${caption.text}    A table you know.
     [Teardown]    Remove Directory    019    recursive=True
+
+020 Table caption parsing dot separator above
+    [Tags]    formatting    020    captions    tables
+    ${result} =    Run Process    python ../bin/meTypeset.py docx TableDotBelowCaption.docx ./020 -s testsettings.xml -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./020/nlm/out.xml
+    ${title}=    Get Element    ${xml}    body/sec/table-wrap/title
+    ${caption}=    Get Element    ${xml}    body/sec/table-wrap/caption/p
+    Should Be Equal As Strings    ${title.text}    Table 1
+    Should Be Equal As Strings    ${caption.text}    A table you know.
+    [Teardown]    Remove Directory    020    recursive=True
