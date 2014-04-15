@@ -364,9 +364,7 @@ class CaptionClassifier(Debuggable):
                 table.insert(1, caption_element)
 
                 if p.text is not None:
-                    p.text = p.text.replace(': ', '')
-                    p.text = p.text.replace(':', '')
-                    p.text = p.text.replace(title, '')
+                    p.text = p.text.replace(title + separator, '').strip()
 
                 if not 'id' in table.attrib:
                     table.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
