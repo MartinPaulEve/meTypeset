@@ -807,7 +807,7 @@ class TeiManipulate(Manipulate):
 
         for image_link in tree.xpath('//tei:graphic', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
             count += 1
-            converted_image_link = re.sub(r'\.wmf', '.png', image_link.xpath('@url')[0])
+            converted_image_link = re.sub(r'\.(w|e)mf', '.png', image_link.xpath('@url')[0])
             image_link.attrib['url'] = converted_image_link
 
         self.save_tree(tree)
