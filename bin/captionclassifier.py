@@ -146,7 +146,7 @@ class CaptionClassifier(Debuggable):
                 # likely this is a table identifier
                 split_title = text.split(separator)
 
-                title = split_title[0]
+                title = split_title[0].strip()
                 caption = (''.join(split_title[1:])).strip()
 
                 self.debug.print_debug(self, u'Handling title and caption for "{0}"'.format(title))
@@ -170,15 +170,11 @@ class CaptionClassifier(Debuggable):
                 NlmManipulate.append_safe(graphic, caption_element, self)
 
                 if p.text is not None:
-                    p.text = p.text.replace(': ', '')
-                    p.text = p.text.replace(':', '')
-                    p.text = p.text.replace(title, '')
-                    p.text = p.text.replace(caption, '')
+                    p.text = p.text.replace(title + separator, '').strip()
 
                 if graphic.tail:
-                    graphic.tail = graphic.tail.replace(': ', '')
-                    graphic.tail = graphic.tail.replace(':', '')
-                    graphic.tail = graphic.tail.replace(title, '')
+                    graphic.tail = graphic.tail.replace(title + separator, '')
+                    graphic.tail = graphic.tail.replace(caption + separator, '')
                     graphic.tail = graphic.tail.replace(caption, '')
 
                 if not 'id' in graphic.attrib:
@@ -237,7 +233,7 @@ class CaptionClassifier(Debuggable):
                 # likely this is a table identifier
                 split_title = text.split(separator)
 
-                title = split_title[0]
+                title = split_title[0].strip()
                 caption = (''.join(split_title[1:])).strip()
 
                 self.debug.print_debug(self, u'Handling title and caption for "{0}"'.format(title))
@@ -261,15 +257,11 @@ class CaptionClassifier(Debuggable):
                 NlmManipulate.append_safe(graphic, caption_element, self)
 
                 if p.text is not None:
-                    p.text = p.text.replace(': ', '')
-                    p.text = p.text.replace(':', '')
-                    p.text = p.text.replace(title, '')
-                    p.text = p.text.replace(caption, '')
+                    p.text = p.text.replace(title + separator, '').strip()
 
                 if graphic.tail:
-                    graphic.tail = graphic.tail.replace(': ', '')
-                    graphic.tail = graphic.tail.replace(':', '')
-                    graphic.tail = graphic.tail.replace(title, '')
+                    graphic.tail = graphic.tail.replace(title + separator, '')
+                    graphic.tail = graphic.tail.replace(caption + separator, '')
                     graphic.tail = graphic.tail.replace(caption, '')
 
                 if not 'id' in graphic.attrib:
