@@ -255,3 +255,15 @@ Library           Collections
     Should Be Equal As Strings    ${title.text}    A Heading
     Should Be Equal As Strings    ${pone.text}    Some article content. As Martin Paul Eve has noted, blah blah.
     [Teardown]    Remove Directory    018    recursive=True
+
+019 Table caption parsing dot separator above
+    [Tags]    formatting    019    captions    tables
+    ${result} =    Run Process    python ../bin/meTypeset.py docx TableDotAboveCaption.docx ./019 -s testsettings.xml -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./019/nlm/out.xml
+    ${title}=    Get Element    ${xml}    body/sec/table-wrap/title
+    ${caption}=    Get Element    ${xml}    body/sec/table-wrap/caption/p
+    Should Be Equal As Strings    ${title.text}    Table 1
+    Should Be Equal As Strings    ${caption.text}    A table you know.
+    [Teardown]    Remove Directory    019    recursive=True
