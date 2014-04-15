@@ -178,7 +178,7 @@ Library           Collections
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./013/nlm/out.xml
     ${secs}=    Get Elements    ${xml}    body/sec/p
-    ${title}=    Get Element    ${xml}    body/sec/table-wrap/title
+    ${title}=    Get Element    ${xml}    body/sec/table-wrap/label
     ${caption}=    Get Element    ${xml}    body/sec/table-wrap/caption/p
     ${pone}=    Get From List    ${secs}    0
     ${ptwo}=    Get From List    ${secs}    1
