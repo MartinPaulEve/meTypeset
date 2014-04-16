@@ -139,6 +139,9 @@ class CaptionClassifier(Debuggable):
                 # see if the title in this section potentially contains text we can match
                 parent = graphic.getparent()
 
+                while parent is not None and not parent.tag.endswith('sec'):
+                    parent = parent.getparent()
+
                 titles = parent.xpath('title')
 
                 if len(titles) > 0:
