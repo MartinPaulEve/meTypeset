@@ -320,6 +320,24 @@ class CaptionClassifier(Debuggable):
                         use_previous = True
                         separator = '.'
 
+            if not use_next or use_previous:
+                # see if the title in this section potentially contains text we can match
+                parent = table.getparent()
+
+                titles = parent.xpath('title')
+
+                if len(titles) > 0:
+                    p = titles[0]
+
+                    text = manipulate.get_stripped_text(p)
+
+                    if table_regex_colon.match(text):
+                        use_next = True
+                        separator = ':'
+                    elif table_regex_dot.match(text):
+                        use_next = True
+                        separator = '.'
+
             if use_next or use_previous:
 
                 if use_next:
@@ -339,7 +357,15 @@ class CaptionClassifier(Debuggable):
                 new_p = etree.Element('p')
                 new_p.text = caption
 
-                p.getparent().remove(p)
+                if p.tag.endswith('title'):
+                    new_title = etree.Element('title')
+                    new_title.text = ''
+                    p.addnext(new_title)
+                    p.getparent().remove(p)
+                else:
+                    p.getparent().remove(p)
+
+
                 p = new_p
 
                 self.debug.print_debug(self, u'Handling title and caption for "{0}"'.format(title))
