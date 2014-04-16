@@ -331,3 +331,17 @@ Library           Collections
     Should Be Equal As Strings    ${title.text}    Figure 1
     Should Be Equal As Strings    ${caption.text}    A mugshot
     [Teardown]    Remove Directory    024    recursive=True
+
+025 Table caption parsing with label from title
+    [Tags]    formatting    025    captions    tables
+    ${result} =    Run Process    python ../bin/meTypeset.py docx TableCaptionInTitle.docx ./025 -s testsettings.xml -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./025/nlm/out.xml
+    ${title}=    Get Element    ${xml}    body/sec/table-wrap/label
+    ${caption}=    Get Element    ${xml}    body/sec/table-wrap/caption/p
+    ${p}=    Get Element    ${xml}    body/sec/p
+    Should Be Equal As Strings    ${title.text}    Table-1
+    Should Be Equal As Strings    ${caption.text}    A table
+    Should Be Equal As Strings    ${p.text}    Some intermediate text
+    [Teardown]    Remove Directory    025    recursive=True
