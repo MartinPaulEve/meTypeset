@@ -596,7 +596,7 @@ class ListClassifier(Debuggable):
         list_element = None
         iteration = 0
 
-        number_match = re.compile('^(?P<rn>M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\)*\s*).+',
+        number_match = re.compile('^(?P<rn>M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})[\.\s\)]+).+',
                                   re.IGNORECASE)
 
         for element in elements:
@@ -618,7 +618,7 @@ class ListClassifier(Debuggable):
                         roman = self.int_to_roman(iteration)
 
                         if not text.startswith(roman) and not text.startswith(roman.lower()):
-                            self.debug.print_debug(self, u'List element was misodered and did not start new list. '
+                            self.debug.print_debug(self, u'List element was misordered and did not start new list. '
                                                          u'Expected {0}'.format(roman))
 
                             iteration = old_it - 1
