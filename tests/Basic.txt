@@ -375,3 +375,13 @@ Library           Collections
     ${secs}=    Get Element    ${xml}    body/sec
     Elements Should Match    ${secs}    <sec> <title>Heading</title> <disp-quote> <p> <list list-type="order"> <list-item> <p>List</p> </list-item> <list-item> <p>List 2</p> </list-item> <list-item> <p>List 3</p> </list-item> </list> </p> </disp-quote> <p>A pararaph.</p> <p>Another pararaph.</p> <p>A final paragraph.</p> </sec>    normalize_whitespace=yes
     [Teardown]    Remove Directory    028    recursive=True
+
+029 Numeric Multiple List Parsing
+    [Tags]    formatting    listclassifier    029    numerals
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ListDispQuotesMultipleNumeric.docx ./029 -s testsettings.xml -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./029/nlm/out.xml
+    ${secs}=    Get Element    ${xml}    body/sec
+    Elements Should Match    ${secs}    <sec> <title>Heading</title> <disp-quote> <p> <list list-type="order"> <list-item> <p>List</p> </list-item> <list-item> <p>List 2</p> </list-item> <list-item> <p>List 3</p> </list-item> </list> </p> </disp-quote> <p>A paragraph.</p> <p>Another paragraph.</p> <p>A final paragraph.</p> <disp-quote> <p> <list list-type="order"> <list-item> <p>List</p> </list-item> <list-item> <p>List 2</p> </list-item> <list-item> <p>List 3</p> </list-item> </list> </p> </disp-quote> <p>A paragraph.</p> <p>Another paragraph.</p> <p>A final paragraph.</p> </sec>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    029    recursive=True
