@@ -255,8 +255,6 @@ class CaptionClassifier(Debuggable):
                 NlmManipulate.append_safe(caption_element, new_p, self)
                 NlmManipulate.append_safe(graphic, caption_element, self)
 
-                p.getparent().remove(p)
-
                 if graphic.tail:
                     graphic.tail = graphic.tail.replace(title + separator, '')
                     graphic.tail = graphic.tail.replace(caption + separator, '')
@@ -336,6 +334,14 @@ class CaptionClassifier(Debuggable):
                 title = split_title[0]
                 caption = (''.join(split_title[1:])).strip()
 
+                # strip all formatting from caption for ease of parsing
+                # TODO: preserve formatting (far harder)
+                new_p = etree.Element('p')
+                new_p.text = caption
+
+                p.getparent().remove(p)
+                p = new_p
+
                 self.debug.print_debug(self, u'Handling title and caption for "{0}"'.format(title))
 
                 title_element = None
@@ -352,8 +358,6 @@ class CaptionClassifier(Debuggable):
                 caption_element = etree.Element('caption')
                 NlmManipulate.append_safe(caption_element, p, self)
                 table.insert(1, caption_element)
-
-                p.getparent().remove(p)
 
                 if not 'id' in table.attrib:
                     table.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
