@@ -615,6 +615,7 @@ class ListClassifier(Debuggable):
                     self.debug.print_debug(self, u'List element looks misordered. Expected {0}'.format(roman))
 
                     if iteration > 1:
+                        old_it = iteration
                         iteration = 1
 
                         roman = self.int_to_roman(iteration)
@@ -622,6 +623,8 @@ class ListClassifier(Debuggable):
                         if not text.startswith(roman) and not text.startswith(roman.lower()):
                             self.debug.print_debug(self, u'List element did not start new list. '
                                                          u'Expected {0}'.format(roman))
+
+                            iteration = old_it - 1
                         else:
                             cont = True
                 else:
