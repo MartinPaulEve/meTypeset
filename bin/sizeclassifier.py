@@ -369,9 +369,23 @@ class SizeClassifier(Debuggable):
 
             if regex.match(text):
                 child.attrib['meTypesetSize'] = str(new_size)
+                child.tag = 'head'
                 manipulate.save_tree(tree)
                 self.debug.print_debug(self, u'Changed item {0} to a heading size {1}'.format(text, new_size))
 
+    def handle_single_item_list(self, manipulate, new_size):
+        tree = manipulate.load_dom_tree()
+
+        for child in tree.xpath('//tei:list[count(tei:item)=1]', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
+            child.tag = 'REMOVE'
+
+            for item in child:
+                text = manipulate.get_stripped_text(item)
+                item.attrib['meTypesetSize'] = str(new_size)
+                item.tag = 'head'
+                etree.strip_tags(tree, 'REMOVE')
+                manipulate.save_tree(tree)
+                self.debug.print_debug(self, u'Changed item {0} to a heading size {1}'.format(text, new_size))
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('sizeclassifier', self,
@@ -387,6 +401,9 @@ class SizeClassifier(Debuggable):
 
         # if a paragraph only contains capitals followed by a colon, make it a heading (root node size)
         self.handle_capital_only_paragraph(manipulate, 100)
+
+        # if a list contains only a single item, make it a heading (root node size)
+        self.handle_single_item_list(manipulate, 100)
 
         tree = self.correlate_styled_headings(manipulate)
 
