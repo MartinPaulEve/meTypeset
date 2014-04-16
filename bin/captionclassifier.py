@@ -135,6 +135,24 @@ class CaptionClassifier(Debuggable):
                         use_previous = True
                         separator = '.'
 
+            if not use_next or use_previous:
+                # see if the title in this section potentially contains text we can match
+                parent = graphic.getparent()
+
+                titles = parent.xpath('title')
+
+                if len(titles) > 0:
+                    p = titles[0]
+
+                    text = manipulate.get_stripped_text(p)
+
+                    if graphic_regex_colon.match(text):
+                        use_next = True
+                        separator = ':'
+                    elif graphic_regex_dot.match(text):
+                        use_next = True
+                        separator = '.'
+
             if use_next or use_previous:
 
                 if use_next:
@@ -169,7 +187,13 @@ class CaptionClassifier(Debuggable):
                 NlmManipulate.append_safe(caption_element, new_p, self)
                 NlmManipulate.append_safe(graphic, caption_element, self)
 
-                p.getparent().remove(p)
+                if p.tag.endswith('title'):
+                    new_title = etree.Element('title')
+                    new_title.text = ''
+                    p.addnext(new_title)
+                    p.getparent().remove(p)
+                else:
+                    p.getparent().remove(p)
 
                 if graphic.tail:
                     graphic.tail = graphic.tail.replace(title + separator, '')
@@ -364,7 +388,6 @@ class CaptionClassifier(Debuggable):
                     p.getparent().remove(p)
                 else:
                     p.getparent().remove(p)
-
 
                 p = new_p
 
