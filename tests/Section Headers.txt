@@ -362,6 +362,16 @@ Library           Collections
     Elements Should Match    ${body}    <body xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> <sec> <title>1</title> <sec> <title>2</title> <sec> <title>3</title> </sec> </sec> <sec> <title>2</title> <sec> <title>3</title> <sec> <title>4</title> </sec> </sec> </sec> <sec> <title>2</title> <sec> <title>6</title> </sec> <sec> <title>5</title> </sec> <sec> <title>2</title> <sec> <title>3</title> </sec> </sec> </sec> </sec> <sec> <title>1</title> <sec> <title>3</title> </sec> <sec> <title>2</title> </sec> </sec> <sec> <title>1</title> </sec> </body>    normalize_whitespace=yes
     [Teardown]    Remove Directory    510    recursive=True
 
+511 List normalization
+    [Tags]    sectionheaders    sizeclassifier    511
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ListsAsHeadings.docx ./511 -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./511/nlm/out.xml
+    ${body}=    Get Element    ${xml}    body
+    Elements Should Match    ${body}    <body><sec><title>A Heading that is Actually a List</title><p>Once more, Users prevail in providing sane data!</p></sec></body>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    511    recursive=True
+
 556 Test line breaks
     [Tags]    linebreaks    556    formatting
     ${result} =    Run Process    python ../bin/meTypeset.py docx LineBreak.docx ./556 -s ./linebreakson.xml -d    shell=True
