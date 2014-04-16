@@ -319,3 +319,15 @@ Library           Collections
     Should Be Equal As Strings    ${caption.text}    A Guinea Pig Called Jane
     Should Be Equal As Strings    ${p.text}    The paragraph that should remain
     [Teardown]    Remove Directory    023    recursive=True
+
+024 Graphic caption parsing with label from title
+    [Tags]    formatting    024    captions    graphics
+    ${result} =    Run Process    python ../bin/meTypeset.py docx GraphicCaptionInTitle.docx ./024 -s testsettings.xml -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./024/nlm/out.xml
+    ${title}=    Get Element    ${xml}    body/sec/p/graphic/label
+    ${caption}=    Get Element    ${xml}    body/sec/p/graphic/caption/p
+    Should Be Equal As Strings    ${title.text}    Figure 1
+    Should Be Equal As Strings    ${caption.text}    A mugshot
+    [Teardown]    Remove Directory    024    recursive=True
