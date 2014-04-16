@@ -607,13 +607,10 @@ class ListClassifier(Debuggable):
             if match:
                 offset = len(match.groups('rn')[0])
                 iteration += 1
-                self.debug.print_debug(self, u'Handling list element {0}'.format(text))
 
                 roman = self.int_to_roman(iteration)
 
                 if not text.startswith(roman) and not text.startswith(roman.lower()):
-                    self.debug.print_debug(self, u'List element looks misordered. Expected {0}'.format(roman))
-
                     if iteration > 1:
                         old_it = iteration
                         iteration = 1
@@ -621,13 +618,15 @@ class ListClassifier(Debuggable):
                         roman = self.int_to_roman(iteration)
 
                         if not text.startswith(roman) and not text.startswith(roman.lower()):
-                            self.debug.print_debug(self, u'List element did not start new list. '
+                            self.debug.print_debug(self, u'List element was misodered and did not start new list. '
                                                          u'Expected {0}'.format(roman))
 
                             iteration = old_it - 1
                         else:
+                            self.debug.print_debug(self, u'Starting new roman numeral list from cue: {0}'.format(text))
                             cont = True
                 else:
+                    self.debug.print_debug(self, u'Handling list element {0}'.format(text))
                     cont = True
 
                 if cont:
