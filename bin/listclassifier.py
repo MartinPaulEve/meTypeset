@@ -443,82 +443,20 @@ class ListClassifier(Debuggable):
 
         manipulate.save_tree(tree)
 
-    def process_curly_list(self, tree, manipulate, treestring):
-
-        if not u'>(' in treestring:
-            return
-
-        # select all p elements followed by another p element
-        expression = u'//tei:p[starts-with(.,"(")][following-sibling::tei:p[starts-with(.,"(")]]'
-
-        elements = tree.xpath(expression, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
-
-        in_list_run = False
-        list_element = None
-        to_append = None
-        iteration = 0
-
-        for element in elements:
-            self.debug.print_debug(self, u'Handling list element {0}'.format(element.text))
-
-            if iteration == 0:
-                if not elements[0].text or not elements[0].text.startswith(u'(1) '):
-                    self.debug.print_debug(self, u'Reference list PANIC: {0}'.format(element.text))
-                    break
-                else:
-                    offset = 4
-
-            iteration += 1
-
-            if not in_list_run:
-                list_element = etree.Element('list')
-                list_element.attrib[u'type'] = u'ordered'
-                to_append = None
-                in_list_run = True
-                element.addprevious(list_element)
-
-            if not element.getnext().text is None:
-                if element.getnext().text.startswith(u'(') and not element.getnext() in elements:
-                    # this element is the last in this list
-                    in_list_run = False
-                    to_append = element.getnext()
-                elif not element.getnext().text.startswith(u'(') and not element.getnext() in elements:
-                    in_list_run = False
-                    to_append = None
-            else:
-                # this element is the last in this list
-                self.debug.print_debug(self, u'Ending list run on {0}'.format(element.getnext()))
-                in_list_run = False
-                to_append = element.getnext()
-
-            element.tag = 'item'
-            element.text = element.text[(int(offset) + int(math.floor(int(iteration/10)))):]
-            Manipulate.append_safe(list_element, element, self)
-
-            if not in_list_run:
-                if not to_append is None:
-                    if not to_append.text is None:
-                        to_append.tag = 'item'
-                        to_append.text = to_append.text[(int(offset) + int(math.floor(int(iteration/10)))):]
-                        self.debug.print_debug(self, u'Appending final list element: {0}'.format(to_append.text))
-                        Manipulate.append_safe(list_element, to_append, self)
-
-        manipulate.save_tree(tree)
-
     def process_number_list(self, tree, manipulate, treestring):
 
-        if not u'>1' in treestring:
+        if not u'>1' and not u'>(' in treestring:
             return
 
         # select all p elements followed by another p element
-        expression = u'//tei:p[contains("0123456789", substring(., 1, 1))]'
+        expression = u'//tei:p[contains("(0123456789", substring(., 1, 1))]'
 
         elements = tree.xpath(expression, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
         list_element = None
         iteration = 0
 
-        number_match = re.compile('^(?P<rn>\d+[\.\s\)]+).+')
+        number_match = re.compile('^(?P<rn>\(?(?P<number>\d+)[\.\s\)]+).+')
 
         for element in elements:
             text = manipulate.get_stripped_text(element)
@@ -527,14 +465,15 @@ class ListClassifier(Debuggable):
 
             if match:
                 offset = len(match.groups('rn')[0])
+                number = match.groups('rn')[1]
                 iteration += 1
 
-                if not text.startswith(str(iteration)):
+                if not number == str(iteration):
                     if iteration > 1:
                         old_it = iteration
                         iteration = 1
 
-                        if not text.startswith(str(iteration)):
+                        if not number == str(iteration):
                             self.debug.print_debug(self, u'List element was misordered and did not start new list. '
                                                          u'Expected {0}'.format(iteration))
 
@@ -667,11 +606,10 @@ class ListClassifier(Debuggable):
             return
 
         dash_lists = self.gv.settings.get_setting('dash-lists', self) == "True"
-        bracket_lists = self.gv.settings.get_setting('bracket-lists', self) == "True"
         bracket_refs = self.gv.settings.get_setting('bracket-references-and-footnotes', self) == "True"
         superscripted_footnotes = self.gv.settings.get_setting('superscripted-footnotes', self) == "True"
 
-        if not dash_lists and not bracket_lists and not bracket_refs and not superscripted_footnotes:
+        if not dash_lists and not bracket_refs and not superscripted_footnotes:
             return
 
         # load the DOM
@@ -686,12 +624,6 @@ class ListClassifier(Debuggable):
         # - Item 2
         if dash_lists:
             self.process_dash_list(tree, manipulate, string_version)
-
-        # look for curly bracket separated list
-        # (1) Item 1
-        # (2) Item 2
-        if bracket_lists:
-            self.process_curly_list(tree, manipulate, string_version)
 
         if int(self.gv.settings.args['--aggression']) >= 10 and bracket_refs:
             backup_tree = copy(tree)
