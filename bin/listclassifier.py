@@ -602,7 +602,7 @@ class ListClassifier(Debuggable):
         for element in elements:
             text = manipulate.get_stripped_text(element)
             match = number_match.match(text)
-            cont = True
+            cont = False
 
             if match:
                 offset = len(match.groups('rn')[0])
@@ -637,12 +637,18 @@ class ListClassifier(Debuggable):
                         element.addprevious(list_element)
 
                         element.tag = 'item'
-                        element.text = element.text[(int(offset) + int(math.floor(int(iteration/10)))):]
+                        if element.text:
+                            element.text = element.text[(int(offset) + int(math.floor(int(iteration/10)))):]
+                        else:
+                            element.text = text[(int(offset) + int(math.floor(int(iteration/10)))):]
                         Manipulate.append_safe(list_element, element, self)
 
                     elif list_element is not None:
                         element.tag = 'item'
-                        element.text = element.text[(int(offset) + int(math.floor(int(iteration/10)))):]
+                        if element.text:
+                            element.text = element.text[(int(offset) + int(math.floor(int(iteration/10)))):]
+                        else:
+                            element.text = text[(int(offset) + int(math.floor(int(iteration/10)))):]
                         Manipulate.append_safe(list_element, element, self)
                     else:
                         self.debug.print_debug(self, u'Reference list PANIC: {0}'.format(text))

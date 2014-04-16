@@ -347,7 +347,7 @@ Library           Collections
     [Teardown]    Remove Directory    025    recursive=True
 
 026 Roman Numeral List Parsing
-    [Tags]    formatting    listclassifier    026
+    [Tags]    formatting    listclassifier    026    numerals
     ${result} =    Run Process    python ../bin/meTypeset.py docx ListDispQuotesRomanNumerals.docx ./026 -s testsettings.xml -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
@@ -357,7 +357,7 @@ Library           Collections
     [Teardown]    Remove Directory    026    recursive=True
 
 027 Roman Numeral Multiple List Parsing
-    [Tags]    formatting    listclassifier    027
+    [Tags]    formatting    listclassifier    027    numerals
     ${result} =    Run Process    python ../bin/meTypeset.py docx ListDispQuotesMultipleRomanNumerals.docx ./027 -s testsettings.xml -d    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
