@@ -456,7 +456,7 @@ class ListClassifier(Debuggable):
         list_element = None
         iteration = 0
 
-        number_match = re.compile('^(?P<rn>\(?(?P<number>\d+)[\.\s\)]+).+')
+        number_match = re.compile('^\s*(?P<rn>\(?\s*(?P<number>\d+)[\.\s\)]+).+')
 
         for element in elements:
             text = manipulate.get_stripped_text(element)
