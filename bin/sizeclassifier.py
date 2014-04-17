@@ -390,13 +390,11 @@ class SizeClassifier(Debuggable):
     def clean_introduction_headings(self, manipulate):
         tree = manipulate.load_dom_tree()
 
-        titles = tree.xpath('//tei:p[following-sibling::*[1][self::tei:cit]]/tei:hi[@meTypesetSize '
-                            '> {0}]'.format(self.size_cutoff),
+        titles = tree.xpath('//tei:p[following-sibling::*[1][self::tei:cit]]/tei:hi[@meTypesetSize]',
                             namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
         for element in titles:
             text = manipulate.get_stripped_text(element.getparent()).strip()
-            print text
             if text.endswith(':'):
                 del element.attrib['meTypesetSize']
 
