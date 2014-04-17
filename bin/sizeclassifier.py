@@ -387,6 +387,26 @@ class SizeClassifier(Debuggable):
                 manipulate.save_tree(tree)
                 self.debug.print_debug(self, u'Changed item {0} to a heading size {1}'.format(text, new_size))
 
+    def clean_introduction_headings(self, manipulate):
+        tree = manipulate.load_dom_tree()
+
+        titles = tree.xpath('//tei:p[following-sibling::*[1][self::tei:cit]]/tei:hi[@meTypesetSize '
+                            '> {0}]'.format(self.size_cutoff),
+                            namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+
+        for element in titles:
+            text = manipulate.get_stripped_text(element.getparent()).strip()
+            print text
+            if text.endswith(':'):
+                del element.attrib['meTypesetSize']
+
+                manipulate.save_tree(tree)
+
+                self.debug.print_debug(self, u'Removed heading attribute from {0} as it looks '
+                                             u'like a quote introduction'.format(text))
+
+        return tree
+
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('sizeclassifier', self,
                                                                                          domain='aggression')):
@@ -406,6 +426,10 @@ class SizeClassifier(Debuggable):
         self.handle_single_item_list(manipulate, 100)
 
         tree = self.correlate_styled_headings(manipulate)
+
+        # this deals with cases where the user has given a styled heading ending with a colon
+        # immediately before a disp-quote
+        tree = self.clean_introduction_headings(manipulate)
 
         # refresh the size list
         sizes = self.get_sizes(tree)
