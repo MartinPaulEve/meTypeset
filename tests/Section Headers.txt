@@ -372,6 +372,16 @@ Library           Collections
     Elements Should Match    ${body}    <body><sec><title>A Heading that is Actually a List</title><p>Once more, Users prevail in providing sane data!</p></sec></body>    normalize_whitespace=yes
     [Teardown]    Remove Directory    511    recursive=True
 
+512 Miscategorised quotation introduction
+    [Tags]    sectionheaders    sizeclassifier    512
+    ${result} =    Run Process    python ../bin/meTypeset.py docx MiscategorisedHeading.docx ./512 -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./512/nlm/out.xml
+    ${body}=    Get Element    ${xml}    body
+    Elements Should Match    ${body}    <body> <sec> <title>Heading</title> <p>Some text</p> <p>Author has miscategorised this text:</p> <disp-quote> <p>A quotation that is really rather important</p> </disp-quote> <p>Not a quotation</p> </sec> <sec> <title>Final heading</title> <p>The end</p> </sec> </body>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    512    recursive=True
+
 556 Test line breaks
     [Tags]    linebreaks    556    formatting
     ${result} =    Run Process    python ../bin/meTypeset.py docx LineBreak.docx ./556 -s ./linebreakson.xml -d    shell=True
