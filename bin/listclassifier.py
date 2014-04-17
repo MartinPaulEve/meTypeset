@@ -449,31 +449,44 @@ class ListClassifier(Debuggable):
             return
 
         # select all p elements followed by another p element
-        expression = u'//tei:p[contains("(0123456789", substring(., 1, 1))]'
+        expression = u'//tei:p[contains("(0123456789ivxlcmdIVXLCMD", substring(., 1, 1))]'
 
         elements = tree.xpath(expression, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
         list_element = None
         iteration = 0
+        number = None
 
         number_match = re.compile('^\s*(?P<rn>\(?\s*(?P<number>\d+)[\.\s\)]+).+')
+        roman_match = re.compile('^(?P<rn>M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})[\.\s\)]+).+',
+                                 re.IGNORECASE)
 
         for element in elements:
             text = manipulate.get_stripped_text(element)
             match = number_match.match(text)
+            roman_result = roman_match.match(text)
             cont = False
 
-            if match:
-                offset = len(match.groups('rn')[0])
-                number = match.groups('rn')[1]
+            if match or roman_result:
+                if match:
+                    number = match.groups('rn')[1]
+                    offset = len(match.groups('rn')[0])
+                else:
+                    offset = len(roman_result.groups('rn')[0])
                 iteration += 1
 
-                if not number == str(iteration):
+                roman = self.int_to_roman(iteration)
+
+                if not number == str(iteration) and not text.startswith(roman) and not text.startswith(roman.lower()):
                     if iteration > 1:
                         old_it = iteration
                         iteration = 1
 
-                        if not number == str(iteration):
+                        roman = self.int_to_roman(iteration)
+
+                        if not number == str(iteration) and not text.startswith(roman) \
+                            and not text.startswith(roman.lower()):
+
                             self.debug.print_debug(self, u'List element was misordered and did not start new list. '
                                                          u'Expected {0}'.format(iteration))
 
@@ -531,74 +544,6 @@ class ListClassifier(Debuggable):
             input -= ints[i] * count
         return result
 
-    def process_roman_numeral_list(self, tree, manipulate, treestring):
-        # select all p elements with roman numeral potential
-        expression = u'//tei:p[contains("ivxlcmdIVXLCMD", substring(., 1, 1))]'
-
-        elements = tree.xpath(expression, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
-
-        list_element = None
-        iteration = 0
-
-        number_match = re.compile('^(?P<rn>M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})[\.\s\)]+).+',
-                                  re.IGNORECASE)
-
-        for element in elements:
-            text = manipulate.get_stripped_text(element)
-            match = number_match.match(text)
-            cont = False
-
-            if match:
-                offset = len(match.groups('rn')[0])
-                iteration += 1
-
-                roman = self.int_to_roman(iteration)
-
-                if not text.startswith(roman) and not text.startswith(roman.lower()):
-                    if iteration > 1:
-                        old_it = iteration
-                        iteration = 1
-
-                        roman = self.int_to_roman(iteration)
-
-                        if not text.startswith(roman) and not text.startswith(roman.lower()):
-                            self.debug.print_debug(self, u'List element was misordered and did not start new list. '
-                                                         u'Expected {0}'.format(roman))
-
-                            iteration = old_it - 1
-                        else:
-                            self.debug.print_debug(self, u'Starting new roman numeral list from cue: {0}'.format(text))
-                            cont = True
-                else:
-                    self.debug.print_debug(self, u'Handling list element {0}'.format(text))
-                    cont = True
-
-                if cont:
-                    if iteration == 1:
-                        # start new list
-                        list_element = etree.Element('list')
-                        list_element.attrib[u'type'] = u'ordered'
-                        element.addprevious(list_element)
-
-                        element.tag = 'item'
-                        if element.text:
-                            element.text = element.text[(int(offset) + int(math.floor(int(iteration/10)))):]
-                        else:
-                            element.text = text[(int(offset) + int(math.floor(int(iteration/10)))):]
-                        Manipulate.append_safe(list_element, element, self)
-
-                    elif list_element is not None:
-                        element.tag = 'item'
-                        if element.text:
-                            element.text = element.text[(int(offset) + int(math.floor(int(iteration/10)))):]
-                        else:
-                            element.text = text[(int(offset) + int(math.floor(int(iteration/10)))):]
-                        Manipulate.append_safe(list_element, element, self)
-                    else:
-                        self.debug.print_debug(self, u'Reference list PANIC: {0}'.format(text))
-
-        manipulate.save_tree(tree)
-
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('listclassifier',
                                                                                          self, domain='aggression')):
@@ -639,5 +584,3 @@ class ListClassifier(Debuggable):
             self.process_superscript_footnotes(tree, manipulate)
 
         self.process_number_list(tree, manipulate, string_version)
-
-        self.process_roman_numeral_list(tree, manipulate, string_version)
