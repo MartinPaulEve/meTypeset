@@ -321,10 +321,12 @@ class CaptionClassifier(Debuggable):
         for table in tables:
             use_next = False
             use_previous = False
+            used_title = False
 
             # get the next sibling
             p = table.getnext()
             pprev = table.getprevious()
+            old_title = None
 
             if p is not None and p.tag == 'p':
                 text = manipulate.get_stripped_text(p)
@@ -361,9 +363,11 @@ class CaptionClassifier(Debuggable):
                     if table_regex_colon.match(text):
                         use_next = True
                         separator = ':'
+                        used_title = True
                     elif table_regex_dot.match(text):
                         use_next = True
                         separator = '.'
+                        used_title = True
 
             if use_next or use_previous:
 
@@ -387,6 +391,7 @@ class CaptionClassifier(Debuggable):
                 if p.tag.endswith('title'):
                     new_title = etree.Element('title')
                     new_title.text = ''
+                    old_title = new_title
                     p.addnext(new_title)
                     p.getparent().remove(p)
                 else:
@@ -416,6 +421,35 @@ class CaptionClassifier(Debuggable):
 
                 table_titles.append(title)
                 table_ids.append(table.attrib['id'])
+
+                if used_title:
+                    # if we took the title out, then we should move the parent into its previous sibling and then
+                    # strip tags
+                    old_title.tag = 'REMOVE'
+
+                    etree.strip_elements(tree, 'REMOVE')
+
+                    section = table.getparent()
+
+                    previous = section.getprevious()
+
+                    if previous is not None:
+                        previous.append(section)
+                        section.tag = 'REMOVE'
+
+                        etree.strip_tags(tree, 'REMOVE')
+
+                        self.debug.print_debug(self, u'Moved table and siblings to previous section')
+                    else:
+                        previous = section.getparent()
+
+                        if previous is not None and previous.tag.endswith('sec'):
+                            previous.append(section)
+                            section.tag = 'REMOVE'
+
+                            etree.strip_tags(tree, 'REMOVE')
+
+                            self.debug.print_debug(self, u'Moved table and siblings to parent section')
 
         paragraphs = tree.xpath('//p')
 
