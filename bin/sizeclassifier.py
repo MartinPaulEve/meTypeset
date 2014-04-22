@@ -408,7 +408,7 @@ class SizeClassifier(Debuggable):
     def clean_line_breaks(self, manipulate):
         tree = manipulate.load_dom_tree()
 
-        titles = tree.xpath('//tei:head/tei:hi[@meTypesetSize][tei:lb]',
+        titles = tree.xpath('//tei:head/tei:hi[@meTypesetSize][tei:lb] | //tei:head[tei:lb]',
                             namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
         for element in titles:
