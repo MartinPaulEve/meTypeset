@@ -367,7 +367,7 @@ class SizeClassifier(Debuggable):
 
             regex = re.compile('^[A-Z]+\:$')
 
-            if regex.match(text) or ('rend' in child.attrib and child.attrib['rend'].contains('capsall')):
+            if regex.match(text) or ('rend' in child.attrib and 'capsall' in child.attrib['rend']):
                 child.attrib['meTypesetSize'] = str(new_size)
                 child.tag = 'head'
                 manipulate.save_tree(tree)
@@ -405,6 +405,45 @@ class SizeClassifier(Debuggable):
 
         return tree
 
+    def clean_line_breaks(self, manipulate):
+        tree = manipulate.load_dom_tree()
+
+        titles = tree.xpath('//tei:head/tei:hi[@meTypesetSize][tei:lb]',
+                            namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+
+        for element in titles:
+            total_text = manipulate.get_stripped_text(element)
+            text = element.text
+
+            if text is None:
+                text = ''
+
+            last_element = None
+
+            for item in element:
+                if item.tag.endswith('lb') and text.strip() == '':
+                    prev = item.getprevious()
+
+                    if prev is not None:
+                        prev.text = item.tail
+                    else:
+                        element.text = item.tail
+
+                    item.getparent().remove(item)
+                    manipulate.save_tree(tree)
+
+                    self.debug.print_debug(self, u'Removed unneeded lb from {0}'.format(total_text))
+
+                if item.text is not None:
+                    text += item.text
+
+                if last_element is not None and last_element.tail is not None:
+                    text = text + last_element.tail
+
+                last_element = item
+
+        return tree
+
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('sizeclassifier', self,
                                                                                          domain='aggression')):
@@ -436,6 +475,9 @@ class SizeClassifier(Debuggable):
 
         # assign IDs to every single heading tag for easy manipulation
         heading_count = manipulate.tag_headings()
+
+        # this deals with cases where line breaks exist within <head> tags but there is no text before; we remove them
+        tree = self.clean_line_breaks(manipulate)
 
         tree = manipulate.load_dom_tree()
 

@@ -634,6 +634,8 @@ class TeiManipulate(Manipulate):
 
         self.save_tree(tree)
 
+        self.debug.print_debug(self, u'Assigned IDs to all headings')
+
         return iterator
 
     def check_for_disallowed_elements(self, allowed_elements, sub_element, exception_elements):
