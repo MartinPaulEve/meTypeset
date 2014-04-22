@@ -367,7 +367,7 @@ class SizeClassifier(Debuggable):
 
             regex = re.compile('^[A-Z]+\:$')
 
-            if regex.match(text):
+            if regex.match(text) or ('rend' in child.attrib and child.attrib['rend'].contains('capsall')):
                 child.attrib['meTypesetSize'] = str(new_size)
                 child.tag = 'head'
                 manipulate.save_tree(tree)
