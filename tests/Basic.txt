@@ -411,3 +411,13 @@ Library           Collections
     Elements Should Match    ${label}    <label>Table 1</label>    normalize_whitespace=yes
     Elements Should Match    ${caption}    <p>A table</p>    normalize_whitespace=yes
     [Teardown]    Remove Directory    031    recursive=True
+
+032 Roman numeral false positive evasion
+    [Tags]    formatting    listclassifier    032    numerals
+    ${result} =    Run Process    python ../bin/meTypeset.py docx FalsePositiveRomanNumeral.docx ./032 -s testsettings.xml -d    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./032/nlm/out.xml
+    ${secs}=    Get Element    ${xml}    body/sec
+    Elements Should Match    ${secs}    <sec> <title>This is a heading</title> <p>I am a writer. I have written some stuff.</p> <p>It takes the form of two paragraphs.</p> </sec>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    032    recursive=True
