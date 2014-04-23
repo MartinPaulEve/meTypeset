@@ -148,7 +148,7 @@ class GV (Debuggable):
             self.check_file_exists(self.settings.concat_path(self.runtime_folder_path, lib))
             java_class_path += self.settings.concat_path(self.runtime_folder_path, lib)
             java_class_path += ":"
-        return '"' + java_class_path.rstrip(':') + '"'
+        return '"' + java_class_path.rstrip(';') + '"'
 
     @staticmethod
     def is_number(s):
