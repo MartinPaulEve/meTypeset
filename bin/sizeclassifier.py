@@ -447,8 +447,6 @@ class SizeClassifier(Debuggable):
     def renest_headings(self, manipulate, tree):
         titles = tree.xpath('//tei:div[count(*) = 1][tei:head]', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
-        stack = []
-
         for element in titles:
             next_element = element.getnext()
 
