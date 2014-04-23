@@ -444,6 +444,25 @@ class SizeClassifier(Debuggable):
 
         return tree
 
+    def renest_headings(self, manipulate, tree):
+        titles = tree.xpath('//tei:div[count(*) = 1][tei:head]', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+
+        stack = []
+
+        for element in titles:
+            next_element = element.getnext()
+
+            while next_element is not None and not next_element in titles:
+                next_to_add_element = next_element.getnext()
+                element.append(next_element)
+
+                next_element = next_to_add_element
+
+                manipulate.save_tree(tree)
+                self.debug.print_debug(self, u'Re-nested element')
+
+        return tree
+
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('sizeclassifier', self,
                                                                                          domain='aggression')):
@@ -499,4 +518,14 @@ class SizeClassifier(Debuggable):
             tree = etree.fromstring(backup_tree)
             manipulate.save_tree(tree)
 
+        # re-nest headings where a single heading and nothing else is found within a section
+        backup_tree = etree.tostring(tree)
 
+        tree = self.renest_headings(manipulate, tree)
+
+        if not self.verify_headings(stack, tree):
+            # something went very wrong in the stacking of elements
+            # revert to the backup tree
+            self.debug.print_debug(self, u'Reverting to backup tree as size classification failed')
+            tree = etree.fromstring(backup_tree)
+            manipulate.save_tree(tree)
