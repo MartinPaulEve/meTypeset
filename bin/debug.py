@@ -5,7 +5,6 @@ __email__ = "martin@martineve.com"
 
 import sys
 import os
-from git import *
 
 class Debug(object):
     def __init__(self):
@@ -41,6 +40,7 @@ class Debug(object):
             
             if self.debug:
                 self.print_(self, u'Initializing git repo at {0}'.format(path))
+                from git import *
                 repo = Git(path)
                 repo.init()
                 self.git_objects.append(repo)

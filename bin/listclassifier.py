@@ -530,7 +530,6 @@ class ListClassifier(Debuggable):
                         else:
                             self.debug.print_debug(self, u'Cannot start list on last element: {0}'.format(text))
 
-
                 if cont:
                     if iteration == 1:
                         # start new list
