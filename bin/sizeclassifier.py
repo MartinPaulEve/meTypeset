@@ -448,6 +448,7 @@ class SizeClassifier(Debuggable):
         titles = tree.xpath('//tei:div[count(*) = 1][tei:head]', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
         for element in titles:
+            text = manipulate.get_stripped_text(element)
             next_element = element.getnext()
 
             while next_element is not None and not next_element in titles:
@@ -457,7 +458,7 @@ class SizeClassifier(Debuggable):
                 next_element = next_to_add_element
 
                 manipulate.save_tree(tree)
-                self.debug.print_debug(self, u'Re-nested element')
+                self.debug.print_debug(self, u'Re-nested element under {0}'.format(text))
 
         return tree
 

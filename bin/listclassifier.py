@@ -495,11 +495,44 @@ class ListClassifier(Debuggable):
                             self.debug.print_debug(self, u'Starting new numeric list from cue: {0}'.format(text))
                             cont = True
                 else:
+                    cont = True
+
                     if iteration > 1:
                         self.debug.print_debug(self, u'Handling list element {0}'.format(text))
                     else:
-                        self.debug.print_debug(self, u'Starting new numeric list from cue: {0}'.format(text))
-                    cont = True
+                        next_start = iteration + 1
+                        next_element_index = elements.index(element) + 1
+
+                        if next_element_index > len(elements):
+                            cont = False
+                        else:
+                            next_element = elements[next_element_index]
+
+                            next_text = manipulate.get_stripped_text(next_element)
+                            next_match = number_match.match(next_text)
+                            next_roman_result = roman_match.match(next_text)
+                            next_number = None
+
+                            if next_match or next_roman_result:
+                                if next_match:
+                                    next_number = next_match.groups('rn')[1]
+                                    next_offset = len(next_match.groups('rn')[0])
+                                else:
+                                    next_offset = len(next_roman_result.groups('rn')[0])
+
+                                next_roman = self.int_to_roman(iteration)
+
+                                if not next_number == str(iteration + 1) and not next_text.startswith(next_roman)\
+                                    and not next_text.startswith(next_roman.lower()):
+                                    cont = False
+                            else:
+                                cont = False
+
+                        if cont:
+                            self.debug.print_debug(self, u'Starting new numeric list from cue: {0}'.format(text))
+                        else:
+                            self.debug.print_debug(self, u'Cannot start list on last element: {0}'.format(text))
+
 
                 if cont:
                     if iteration == 1:
