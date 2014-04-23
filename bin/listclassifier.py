@@ -516,9 +516,6 @@ class ListClassifier(Debuggable):
                             if next_match or next_roman_result:
                                 if next_match:
                                     next_number = next_match.groups('rn')[1]
-                                    next_offset = len(next_match.groups('rn')[0])
-                                else:
-                                    next_offset = len(next_roman_result.groups('rn')[0])
 
                                 next_roman = self.int_to_roman(iteration)
 
