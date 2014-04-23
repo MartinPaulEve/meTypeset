@@ -147,8 +147,8 @@ class GV (Debuggable):
         for lib in self.settings.get_setting('saxon-libs', self).strip().split(";"):
             self.check_file_exists(self.settings.concat_path(self.runtime_folder_path, lib))
             java_class_path += self.settings.concat_path(self.runtime_folder_path, lib)
-            java_class_path += ":"
-        return '"' + java_class_path.rstrip(';') + '"'
+            java_class_path += os.pathsep
+        return '"' + java_class_path.rstrip(':') + '"'
 
     @staticmethod
     def is_number(s):

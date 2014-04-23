@@ -37,6 +37,7 @@ class DocxToTei(Debuggable):
                self.gv.word_document_xml,
                self.gv.docx_to_tei_stylesheet
                ]
+        print ' '.join(cmd)
         return ' '.join(cmd)
 
     def saxon_omml_to_mml(self):
