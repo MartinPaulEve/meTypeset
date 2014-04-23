@@ -37,7 +37,6 @@ class DocxToTei(Debuggable):
                self.gv.word_document_xml,
                self.gv.docx_to_tei_stylesheet
                ]
-        print ' '.join(cmd)
         return ' '.join(cmd)
 
     def saxon_omml_to_mml(self):
@@ -158,7 +157,7 @@ class DocxToTei(Debuggable):
         doc_prop.seek(0)
         doc_prop.write(contents)
         doc_prop.truncate()
-
+        doc_prop.close()
 
         if run_proprietary:
             # run a transform on the copied docx to generate a new version of the Word XML that includes MML
