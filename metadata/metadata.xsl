@@ -17,7 +17,7 @@
     -->
     
     <xsl:param name="metadataFile">metadata.xml</xsl:param>
-    <xsl:param name="metadata" select="document($metadataFile)" />
+    <xsl:param name="metadata" select="document(concat('file:////', $metadataFile))" />
     
     <xsl:output method="xml" doctype-public="-//NLM//DTD Journal Publishing DTD v3.0 20080202//EN" doctype-system="http://dtd.nlm.nih.gov/publishing/3.0/journalpublishing3.dtd" xpath-default-namespace="" indent="yes"></xsl:output>
        

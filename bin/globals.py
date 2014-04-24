@@ -6,6 +6,7 @@ import os
 import shutil
 from debug import *
 import ntpath
+import platform
 
 # class Global Variables
 class GV (Debuggable):
@@ -108,6 +109,8 @@ class GV (Debuggable):
             #java classes for saxon
             self.java_class_path = self.set_java_classpath()
 
+            self.handle_platform()
+
         else:
             self.nlm_file_path = ''
             self.nlm_temp_file_path = ''
@@ -115,6 +118,10 @@ class GV (Debuggable):
         # database paths
         self.database_file_path = settings.clean_path(settings.concat_path(os.path.join(settings.script_dir, 'database'),
                                                                    settings.get_setting('databasefile', self)))
+
+    def handle_platform(self):
+        if 'windows' in platform.system().lower():
+            self.input_metadata_file_path = self.input_metadata_file_path.replace('\\', '//')
 
     def check_file_exists(self, file_path):
         if file_path is None:
