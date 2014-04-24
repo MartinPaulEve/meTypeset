@@ -433,6 +433,9 @@ class CaptionClassifier(Debuggable):
 
                     previous = section.getprevious()
 
+                    while previous is not None and not previous.tag.endswith('sec'):
+                        previous = previous.getprevious()
+
                     if previous is not None:
                         previous.append(section)
                         section.tag = 'REMOVE'

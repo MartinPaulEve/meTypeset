@@ -445,11 +445,14 @@ class SizeClassifier(Debuggable):
         return tree
 
     def renest_headings(self, manipulate, tree):
-        titles = tree.xpath('//tei:div[count(/*) = 1][tei:head]', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+        titles = tree.xpath('//tei:div[count(*) = 1][tei:head]', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
         for element in titles:
             text = manipulate.get_stripped_text(element).strip()
             next_element = element.getnext()
+
+            print text
+            print len(element)
 
             while next_element is not None and not next_element in titles:
                 next_to_add_element = next_element.getnext()
