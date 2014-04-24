@@ -171,7 +171,7 @@ class MeTypeset (Debuggable):
                 manipulate.fuse_references()
 
             # run reference linker
-            if not (self.args['--aggression']):
+            if not (self.args['--nolink']):
                 rl = ReferenceLinker(self.gv)
                 rl.run(self.args['--interactive'])
                 rl.cleanup()
