@@ -15,6 +15,7 @@ Options:
     --interactive                                   Enable step-by-step interactive mode
     -h, --help                                      Show this screen.
     -m, --metadata <metadata_file>                  Metadata file
+    --nolink                                        Do not run reference linker
     --purenlm                                       Die after performing NLM XSLT step
     --puretei                                       Die after performing TEI XSLT step
     --prettytei                                     Indent and format intermediary TEI
@@ -170,9 +171,10 @@ class MeTypeset (Debuggable):
                 manipulate.fuse_references()
 
             # run reference linker
-            rl = ReferenceLinker(self.gv)
-            rl.run(self.args['--interactive'])
-            rl.cleanup()
+            if not (self.args['--aggression']):
+                rl = ReferenceLinker(self.gv)
+                rl.run(self.args['--interactive'])
+                rl.cleanup()
 
             # run table classifier
             cc = CaptionClassifier(self.gv)
