@@ -30,7 +30,7 @@ class Metadata(Manipulate):
                "-o", self.gv.nlm_file_path,
                self.gv.nlm_temp_file_path,
                self.gv.metadata_style_sheet_path,
-               'metadataFile=' + self.gv.input_metadata_file_path
+               'metadataFile="' + self.gv.input_metadata_file_path + '"'
         ]
         return ' '.join(cmd)
 

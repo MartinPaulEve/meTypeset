@@ -103,7 +103,7 @@ class GV (Debuggable):
             #Metadata paths
             self.metadata_style_sheet_path = settings.clean_path(
                 settings.concat_path(settings.script_dir, settings.get_setting('metadata-stylesheet',
-                                                                                 self)))
+                                                                               self)))
 
             #java classes for saxon
             self.java_class_path = self.set_java_classpath()
