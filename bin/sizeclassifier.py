@@ -451,9 +451,6 @@ class SizeClassifier(Debuggable):
             text = manipulate.get_stripped_text(element).strip()
             next_element = element.getnext()
 
-            print text
-            print len(element)
-
             while next_element is not None and not next_element in titles:
                 next_to_add_element = next_element.getnext()
                 element.append(next_element)
