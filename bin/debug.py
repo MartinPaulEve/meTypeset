@@ -40,7 +40,8 @@ class Debug(object):
             
             if self.debug:
                 self.print_(self, u'Initializing git repo at {0}'.format(path))
-                from git import *
+                from git import repo
+                from git import Git
                 repo = Git(path)
                 repo.init()
                 self.git_objects.append(repo)
