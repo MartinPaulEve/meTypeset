@@ -481,6 +481,10 @@ class SizeClassifier(Debuggable):
 
                         for pelement in next_element:
 
+                            if pelement.tag.endswith('fig') or pelement.tag.endswith('graphic'):
+                                bolded = False
+                                break
+
                             text = manipulate.get_stripped_text(pelement).strip()
 
                             if (text != '' and 'rend' in pelement.attrib and not 'bold' in pelement.attrib['rend']) \
