@@ -462,6 +462,35 @@ class SizeClassifier(Debuggable):
 
         return tree
 
+    def final_headings(self, manipulate, tree):
+        sections = tree.xpath('//tei:div[not(tei:head)]', namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
+
+        for element in sections:
+            if len(element) > 0:
+                title = element[0]
+
+                if title is not None:
+                    next_element = title
+
+                    if next_element is not None:
+                        bolded = True
+
+                        if len(next_element) > 0:
+
+                            for pelement in next_element:
+                                text = manipulate.get_stripped_text(pelement).strip()
+
+                                if (pelement.text != '' and 'rend' in pelement.attrib and not 'bold' in pelement.attrib['rend']) \
+                                        or (pelement.text != '' and not 'rend' in pelement.attrib):
+
+                                    bolded = False
+
+                                if bolded:
+                                    next_element.tag = 'head'
+                                    self.debug.print_debug(self, u'Replaced empty title with bolded sibling')
+
+        manipulate.save_tree(tree)
+
     def run(self):
         if int(self.gv.settings.args['--aggression']) < int(self.gv.settings.get_setting('sizeclassifier', self,
                                                                                          domain='aggression')):
@@ -528,3 +557,5 @@ class SizeClassifier(Debuggable):
             self.debug.print_debug(self, u'Reverting to backup tree as size classification failed')
             tree = etree.fromstring(backup_tree)
             manipulate.save_tree(tree)
+
+        self.final_headings(manipulate, tree)
