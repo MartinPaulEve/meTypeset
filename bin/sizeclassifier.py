@@ -472,22 +472,26 @@ class SizeClassifier(Debuggable):
                 if title is not None:
                     next_element = title
 
-                    if next_element is not None:
-                        bolded = True
+                    bolded = True
 
-                        if len(next_element) > 0:
+                    if next_element.text != '' and 'rend' in next_element.attrib and not 'bold' in next_element.attrib['rend']:
+                        bolded = False
 
-                            for pelement in next_element:
-                                text = manipulate.get_stripped_text(pelement).strip()
+                    if len(next_element) > 0 and bolded:
 
-                                if (pelement.text != '' and 'rend' in pelement.attrib and not 'bold' in pelement.attrib['rend']) \
-                                        or (pelement.text != '' and not 'rend' in pelement.attrib):
+                        for pelement in next_element:
 
-                                    bolded = False
+                            text = manipulate.get_stripped_text(pelement).strip()
 
-                                if bolded:
-                                    next_element.tag = 'head'
-                                    self.debug.print_debug(self, u'Replaced empty title with bolded sibling')
+                            if (text != '' and 'rend' in pelement.attrib and not 'bold' in pelement.attrib['rend']) \
+                                    or (text != '' and not 'rend' in pelement.attrib):
+
+                                bolded = False
+                                break
+
+                        if bolded:
+                            next_element.tag = 'head'
+                            self.debug.print_debug(self, u'Replaced empty title with bolded sibling')
 
         manipulate.save_tree(tree)
 
