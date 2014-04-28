@@ -101,7 +101,7 @@ class DocxToTei(Debuggable):
 
         tree.write(self.gv.word_document_xml)
 
-    def run(self, extract, run_proprietary):
+    def run(self, extract, run_proprietary, tei=False):
         """
         This method converts from docx to TEI. It creates the necessary output folders, optionally extracts the file and
         runs the Saxon process necessary to conduct the transform
@@ -128,8 +128,10 @@ class DocxToTei(Debuggable):
 
             with zipfile.ZipFile(self.gv.input_file_path, "r") as z:
                 z.extractall(self.gv.docx_temp_folder_path)
-        else:
+        elif not tei:
             self.gv.copy_folder(self.gv.input_file_path, self.gv.docx_temp_folder_path)
+        else:
+            shutil.copy2(self.gv.input_file_path, self.gv.tei_file_path)
 
         self.debug.print_debug(self, u'Looking for presence of media directory {0}'.format(self.gv.docx_media_path))
 
@@ -148,30 +150,31 @@ class DocxToTei(Debuggable):
             pass
             #self.gv.tei_file_path = self.gv.tei_file_path + 'tei.xml'
 
-        # fix dud LibreOffice conversion
-        doc_prop = open(os.path.join(self.gv.docx_temp_folder_path, 'docProps', 'core.xml'), 'r+')
-        contents = doc_prop.read()
+        if not tei:
+            # fix dud LibreOffice conversion
+            doc_prop = open(os.path.join(self.gv.docx_temp_folder_path, 'docProps', 'core.xml'), 'r+')
+            contents = doc_prop.read()
 
-        contents = re.sub('\&\s', '\&amp;\s', contents)
+            contents = re.sub('\&\s', '\&amp;\s', contents)
 
-        doc_prop.seek(0)
-        doc_prop.write(contents)
-        doc_prop.truncate()
-        doc_prop.close()
+            doc_prop.seek(0)
+            doc_prop.write(contents)
+            doc_prop.truncate()
+            doc_prop.close()
 
-        if run_proprietary:
-            # run a transform on the copied docx to generate a new version of the Word XML that includes MML
-            java_command = self.saxon_omml_to_mml()
-            self.debug.print_debug(self, u'Running saxon transform (DOCX->MML DOCX) [proprietary]')
+            if run_proprietary:
+                # run a transform on the copied docx to generate a new version of the Word XML that includes MML
+                java_command = self.saxon_omml_to_mml()
+                self.debug.print_debug(self, u'Running saxon transform (DOCX->MML DOCX) [proprietary]')
+                subprocess.call(java_command, stdin=None, shell=True)
+                self.clean_proprietary()
+
+            # saxon converter
+            java_command = self.saxon_doc_to_tei()
+            self.debug.print_debug(self, u'Running saxon transform (DOCX->TEI)')
             subprocess.call(java_command, stdin=None, shell=True)
-            self.clean_proprietary()
 
-        # saxon converter
-        java_command = self.saxon_doc_to_tei()
-        self.debug.print_debug(self, u'Running saxon transform (DOCX->TEI)')
-        subprocess.call(java_command, stdin=None, shell=True)
-
-        # delete temp folders
-        if not self.gv.debug.debug:
-            shutil.rmtree(self.gv.docx_temp_folder_path)
-            shutil.rmtree(self.gv.common2_temp_folder_path)
+            # delete temp folders
+            if not self.gv.debug.debug:
+                shutil.rmtree(self.gv.docx_temp_folder_path)
+                shutil.rmtree(self.gv.common2_temp_folder_path)

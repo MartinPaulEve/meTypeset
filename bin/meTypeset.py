@@ -4,6 +4,7 @@
 Usage:
     meTypeset.py docx <input> <output_folder> [options]
     meTypeset.py docxextracted <input> <output_folder> [options]
+    meTypeset.py tei <input> <output_folder> [options]
     meTypeset.py bibscan <input> [options]
 
 Options:
@@ -125,9 +126,12 @@ class MeTypeset (Debuggable):
                 # run docx to tei conversion
                 # includes hooks for proprietary transforms if enabled
                 DocxToTei(self.gv).run(True, self.args['--proprietary'])
-            else:
+            elif self.args['docxextracted']:
                 self.debug.print_debug(self, u'Skipping docx extraction')
                 DocxToTei(self.gv).run(False, self.args['--proprietary'])
+            else:
+                self.debug.print_debug(self, u'Skipping docx extraction; processing TEI file')
+                DocxToTei(self.gv).run(False, self.args['--proprietary'], tei=True)
 
             if self.args['--puretei']:
                 self.debug.print_debug(self, u'Exiting as TEI transform complete')

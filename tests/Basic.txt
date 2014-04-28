@@ -34,7 +34,7 @@ Library           Collections
     [Teardown]    Remove Directory    002    recursive=True
 
 003 Basic paragraph with bold
-    [Tags]    bold    002    formatting
+    [Tags]    bold    formatting    003
     ${result} =    Run Process    python ../bin/meTypeset.py docx 003.docx ./003 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
