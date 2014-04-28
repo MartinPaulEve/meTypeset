@@ -63,7 +63,7 @@ Library           Collections
     Elements Should Match    ${surname}    <surname>Eve</surname>
     ${aff}=    Get Element    ${xml}    front/article-meta/contrib-group/aff
     Elements Should Match    ${aff}    <aff id="lincoln"><institution>University of Lincoln</institution></aff>    normalize_whitespace=yes
-    ${year}=    Get Element    ${xml}    front/article-meta/pub-d --nogitate/year
+    ${year}=    Get Element    ${xml}    front/article-meta/pub-date/year
     Elements Should Match    ${year}    <year>2013</year>
     ${volume}=    Get Element    ${xml}    front/article-meta/volume
     Elements Should Match    ${volume}    <volume>1</volume>
