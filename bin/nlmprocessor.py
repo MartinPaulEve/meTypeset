@@ -43,7 +43,7 @@ def main():
     bare_gv = GV(args)
 
     if args['--debug']:
-        bare_gv.debug.enable_debug()
+        bare_gv.debug.enable_debug(args['--nogit'])
 
     nlm_instance = TeiToNlm(bare_gv)
 
