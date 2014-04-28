@@ -9,9 +9,10 @@ Options:
     --chain <xslt>                                  Specify a subsequent XSL transform to pass the NLM to
     -c, --clean                                     Produce final XML, not intermediate markup with additional metadata
     -d, --debug                                     Enable debug output
+    -h, --help                                      Show this screen.
     -i, --identifiers                               Generate unique identifiers for all supported NLM elements
     --interactive                                   Enable step-by-step interactive mode
-    -h, --help                                      Show this screen.
+    --nogit                                         Disable git debug filesystem (only of use with --debug)
     -s, --settings <settings_file>                  Settings file
     -v, --version                                   Show version.
 """
