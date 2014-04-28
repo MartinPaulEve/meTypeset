@@ -10,6 +10,7 @@ Options:
     -d, --debug                                     Enable debug output
     --interactive                                   Prompt the user to assist in interactive tagging
     -h, --help                                      Show this screen.
+    --nogit                                         Disable git debug filesystem (only of use with --debug)
     -v, --version                                   Show version.
 """
 
@@ -707,7 +708,7 @@ def main():
     bare_gv = GV(args)
 
     if args['--debug']:
-        bare_gv.debug.enable_debug()
+        bare_gv.debug.enable_debug(args['--nogit'])
 
     rl_instance = ReferenceLinker(bare_gv)
 
