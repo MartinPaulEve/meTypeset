@@ -14,12 +14,14 @@ class Debug(object):
         """
         self.debug = False
         self.has_run = False
+        self.git = True
         self.prompt = None
 
         self.git_objects = []
 
-    def enable_debug(self):
+    def enable_debug(self, nogit):
         self.debug = True
+        self.git = not nogit
 
     def enable_prompt(self, prompt):
         self.prompt = prompt
@@ -38,7 +40,7 @@ class Debug(object):
         try:
             os.makedirs(path)
             
-            if self.debug:
+            if self.debug and self.git:
                 self.print_(self, u'Initializing git repo at {0}'.format(path))
                 from git import repo
                 from git import Git

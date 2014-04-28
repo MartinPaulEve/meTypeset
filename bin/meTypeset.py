@@ -15,6 +15,7 @@ Options:
     --interactive                                   Enable step-by-step interactive mode
     -h, --help                                      Show this screen.
     -m, --metadata <metadata_file>                  Metadata file
+    --nogit                                         Disable git debug filesystem (only of use with --debug)
     --nolink                                        Do not run reference linker
     --purenlm                                       Die after performing NLM XSLT step
     --puretei                                       Die after performing TEI XSLT step
@@ -70,7 +71,7 @@ class MeTypeset (Debuggable):
         Debuggable.__init__(self, 'Main')
 
         if self.args['--debug']:
-            self.debug.enable_debug()
+            self.debug.enable_debug(self.args['--nogit'])
 
         # read settings file
         self.settings_file_path = 'default'
