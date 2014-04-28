@@ -8,7 +8,7 @@ Library           Collections
 *** Test Cases ***
 R01 Simple Inline Reference
     [Tags]    references    inline    R01
-    ${result} =    Run Process    python ../bin/meTypeset.py docx SimpleInline.docx ./Inline -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx SimpleInline.docx ./Inline -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./Inline/nlm/out.xml
@@ -18,7 +18,7 @@ R01 Simple Inline Reference
 
 R02 Year detection method
     [Tags]    references    ref-list    R02
-    ${result} =    Run Process    python ../bin/meTypeset.py docx R02.docx -s testsettings.xml ./R02 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx R02.docx -s testsettings.xml ./R02 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./R02/nlm/out.xml
@@ -30,7 +30,7 @@ R03 Link parsing with external link (tests re-assembly order)
     [Tags]    formatting    referencelinker    R03
     ${mkdir} =    Run Process    mkdir ./R03    shell=True
     ${cp} =    Run Process    cp LinkSubElements.xml ./R03/    shell=True
-    ${result} =    Run Process    python ../bin/referencelinker.py scan ./R03/LinkSubElements.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/referencelinker.py scan ./R03/LinkSubElements.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./R03/LinkSubElements.xml
@@ -46,7 +46,7 @@ R03 Link parsing with external link (tests re-assembly order)
 
 R04 Multiblock Reference Parser
     [Tags]    references    ref-list    R04    multiblock
-    ${result} =    Run Process    python ../bin/meTypeset.py docx HeadingInReferences.docx -s testsettings.xml ./R04 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx HeadingInReferences.docx -s testsettings.xml ./R04 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./R04/nlm/out.xml
@@ -56,7 +56,7 @@ R04 Multiblock Reference Parser
 
 R05 Multiblock Reference Parser With Split Line
     [Tags]    references    ref-list    R05    multiblock
-    ${result} =    Run Process    python ../bin/meTypeset.py docx HeadingInReferencesSplitLine.docx -s testsettings.xml ./R05 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx HeadingInReferencesSplitLine.docx -s testsettings.xml ./R05 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./R05/nlm/out.xml
@@ -66,7 +66,7 @@ R05 Multiblock Reference Parser With Split Line
 
 R06 Multiblock Reference Parser at arbitrary depth
     [Tags]    references    ref-list    R06    multiblock
-    ${result} =    Run Process    python ../bin/meTypeset.py docx HeadingInReferencesArbitraryDepth.docx -s testsettings.xml ./R06 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx HeadingInReferencesArbitraryDepth.docx -s testsettings.xml ./R06 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./R06/nlm/out.xml
@@ -76,7 +76,7 @@ R06 Multiblock Reference Parser at arbitrary depth
 
 R07 Reference block with trailing acknowledgements
     [Tags]    references    ref-list    R07
-    ${result} =    Run Process    python ../bin/meTypeset.py docx ReferenceWithTrailingAcknowledgement.docx -s testsettings.xml ./R07 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ReferenceWithTrailingAcknowledgement.docx -s testsettings.xml ./R07 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./R07/nlm/out.xml
@@ -88,7 +88,7 @@ R07 Reference block with trailing acknowledgements
 
 R08 Multiblock reference handling with sequential non-reference items (graceful fail)
     [Tags]    references    ref-list    R08
-    ${result} =    Run Process    python ../bin/meTypeset.py docx HeadingInReferencesSplitLineBreakFail.docx -s testsettings.xml ./R08 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx HeadingInReferencesSplitLineBreakFail.docx -s testsettings.xml ./R08 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./R08/nlm/out.xml

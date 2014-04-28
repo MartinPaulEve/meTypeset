@@ -8,7 +8,7 @@ Library           Collections
 *** Test Cases ***
 Z01 Zotero XML Fields
     [Tags]    metadata    zotero    bibliographymanagers    Z01
-    ${result} =    Run Process    ../bin/meTypeset.py docxextracted ./Zotero ./Z01 -d    shell=True
+    ${result} =    Run Process    ../bin/meTypeset.py docxextracted ./Zotero ./Z01 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./Z01/nlm/out.xml
@@ -21,7 +21,7 @@ Z01 Zotero XML Fields
 
 Z02 Zotero JSON Footnote Fields
     [Tags]    metadata    zotero    bibliographymanagers    Z02
-    ${result} =    Run Process    ../bin/meTypeset.py docxextracted ./Zotero2 ./Z02 -d    shell=True
+    ${result} =    Run Process    ../bin/meTypeset.py docxextracted ./Zotero2 ./Z02 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./Z02/nlm/out.xml
@@ -31,7 +31,7 @@ Z02 Zotero JSON Footnote Fields
 
 Z03 Zotero JSON Inline Field and Bibliography
     [Tags]    metadata    zotero    bibliographymanagers    Z03
-    ${result} =    Run Process    ../bin/meTypeset.py docxextracted ./Zotero3 ./Z03 -d    shell=True
+    ${result} =    Run Process    ../bin/meTypeset.py docxextracted ./Zotero3 ./Z03 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./Z03/nlm/out.xml

@@ -7,7 +7,7 @@ Library           Collections
 
 *** Test Cases ***
 000 Environment
-    ${result} =    Run Process    python ../bin/meTypeset.py docx 001.docx ./000 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx 001.docx ./000 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     Should Not Contain    ${result.stderr}    cannot find or open
@@ -15,7 +15,7 @@ Library           Collections
     [Teardown]    Remove Directory    000    recursive=True
 
 001 Basic paragraph
-    ${result} =    Run Process    python ../bin/meTypeset.py docx 001.docx ./001 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx 001.docx ./001 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./001/nlm/out.xml
@@ -25,7 +25,7 @@ Library           Collections
 
 002 Basic paragraph with italics
     [Tags]    italic    002    formatting
-    ${result} =    Run Process    python ../bin/meTypeset.py docx 002.docx ./002 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx 002.docx ./002 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./002/nlm/out.xml
@@ -35,7 +35,7 @@ Library           Collections
 
 003 Basic paragraph with bold
     [Tags]    bold    002    formatting
-    ${result} =    Run Process    python ../bin/meTypeset.py docx 003.docx ./003 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx 003.docx ./003 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./003/nlm/out.xml
@@ -45,7 +45,7 @@ Library           Collections
 
 004 Metadata merge
     [Tags]    metadata    004
-    ${result} =    Run Process    python ../bin/meTypeset.py docx 002.docx ./004 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx 002.docx ./004 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./004/nlm/out.xml
@@ -63,7 +63,7 @@ Library           Collections
     Elements Should Match    ${surname}    <surname>Eve</surname>
     ${aff}=    Get Element    ${xml}    front/article-meta/contrib-group/aff
     Elements Should Match    ${aff}    <aff id="lincoln"><institution>University of Lincoln</institution></aff>    normalize_whitespace=yes
-    ${year}=    Get Element    ${xml}    front/article-meta/pub-date/year
+    ${year}=    Get Element    ${xml}    front/article-meta/pub-d --nogitate/year
     Elements Should Match    ${year}    <year>2013</year>
     ${volume}=    Get Element    ${xml}    front/article-meta/volume
     Elements Should Match    ${volume}    <volume>1</volume>
@@ -81,7 +81,7 @@ Library           Collections
 
 005 Title, non-title, title (from bolded text)
     [Tags]    formatting    bold    title    005
-    ${result} =    Run Process    python ../bin/meTypeset.py docx 005.docx ./005 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx 005.docx ./005 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./005/nlm/out.xml
@@ -91,7 +91,7 @@ Library           Collections
 
 006 Basic footnote test
     [Tags]    formatting    footnotes    006
-    ${result} =    Run Process    python ../bin/meTypeset.py docx Footnote.docx ./006 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx Footnote.docx ./006 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./006/nlm/out.xml
@@ -103,7 +103,7 @@ Library           Collections
 
 007 Complex link test
     [Tags]    formatting    complexlink    007
-    ${result} =    Run Process    python ../bin/meTypeset.py docxextracted ./ComplexLink ./007 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docxextracted ./ComplexLink ./007 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./007/nlm/out.xml
@@ -115,7 +115,7 @@ Library           Collections
 
 008 Non-Latin text
     [Tags]    formatting    arabic    008
-    ${result} =    Run Process    python ../bin/meTypeset.py docx Arabic.docx ./008 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx Arabic.docx ./008 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./008/nlm/out.xml
@@ -128,7 +128,7 @@ Library           Collections
 
 009 Dash list classifier
     [Tags]    formatting    listclassifier    009
-    ${result} =    Run Process    python ../bin/meTypeset.py docx 009.docx ./009 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx 009.docx ./009 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./009/nlm/out.xml
@@ -138,7 +138,7 @@ Library           Collections
 
 010 Reference list classifier
     [Tags]    formatting    listclassifier    010
-    ${result} =    Run Process    python ../bin/meTypeset.py docx ListReferences01.docx ./010 -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ListReferences01.docx ./010 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./010/nlm/out.xml
@@ -148,7 +148,7 @@ Library           Collections
 
 011 Footnote list classifier
     [Tags]    formatting    listclassifier    011
-    ${result} =    Run Process    python ../bin/meTypeset.py docx FootnotesFromText.docx ./011 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx FootnotesFromText.docx ./011 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./011/nlm/out.xml
@@ -160,7 +160,7 @@ Library           Collections
 
 012 Superscripted footnotes
     [Tags]    formatting    listclassifier    012
-    ${result} =    Run Process    python ../bin/meTypeset.py docx SuperscriptFootnotes.docx ./012 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx SuperscriptFootnotes.docx ./012 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./012/nlm/out.xml
@@ -173,7 +173,7 @@ Library           Collections
 
 013 Table parsing
     [Tags]    formatting    013    captions
-    ${result} =    Run Process    python ../bin/meTypeset.py docx TableClassifier1.docx ./013 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx TableClassifier1.docx ./013 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./013/nlm/out.xml
@@ -192,7 +192,7 @@ Library           Collections
 
 014 Graphic caption parsing
     [Tags]    formatting    captions    014
-    ${result} =    Run Process    python ../bin/meTypeset.py docx ImageCaption1.docx ./014 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ImageCaption1.docx ./014 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./014/nlm/out.xml
@@ -207,7 +207,7 @@ Library           Collections
     [Tags]    formatting    nlm    015
     ${mkdir} =    Run Process    mkdir ./015    shell=True
     ${cp} =    Run Process    cp LoneImage.xml ./015/    shell=True
-    ${result} =    Run Process    python ../bin/nlmprocessor.py process ./015/LoneImage.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/nlmprocessor.py process ./015/LoneImage.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./015/LoneImage.xml
@@ -221,7 +221,7 @@ Library           Collections
     [Tags]    formatting    nlm    016
     ${mkdir} =    Run Process    mkdir ./016    shell=True
     ${cp} =    Run Process    cp StrandedTitle.xml ./016/    shell=True
-    ${result} =    Run Process    python ../bin/nlmprocessor.py process ./016/StrandedTitle.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/nlmprocessor.py process ./016/StrandedTitle.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./016/StrandedTitle.xml
@@ -235,7 +235,7 @@ Library           Collections
     [Tags]    formatting    nlm    017
     ${mkdir} =    Run Process    mkdir ./017    shell=True
     ${cp} =    Run Process    cp StrandedTitleFrench.xml ./017/    shell=True
-    ${result} =    Run Process    python ../bin/nlmprocessor.py process ./017/StrandedTitleFrench.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/nlmprocessor.py process ./017/StrandedTitleFrench.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./017/StrandedTitleFrench.xml
@@ -247,7 +247,7 @@ Library           Collections
 
 018 Removal of duplicated metadata in document
     [Tags]    formatting    metadata    018
-    ${result} =    Run Process    python ../bin/meTypeset.py docx MetadataRemoval.docx ./018 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx MetadataRemoval.docx ./018 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./018/nlm/out.xml
@@ -260,7 +260,7 @@ Library           Collections
 
 019 Table caption parsing dot separator above
     [Tags]    formatting    019    captions    tables
-    ${result} =    Run Process    python ../bin/meTypeset.py docx TableDotAboveCaption.docx ./019 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx TableDotAboveCaption.docx ./019 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./019/nlm/out.xml
@@ -272,7 +272,7 @@ Library           Collections
 
 020 Table caption parsing dot separator below
     [Tags]    formatting    020    captions    tables
-    ${result} =    Run Process    python ../bin/meTypeset.py docx TableDotBelowCaption.docx ./020 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx TableDotBelowCaption.docx ./020 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./020/nlm/out.xml
@@ -284,7 +284,7 @@ Library           Collections
 
 021 Table caption parsing colon separator above
     [Tags]    formatting    021    captions    tables
-    ${result} =    Run Process    python ../bin/meTypeset.py docx TableColonAboveCaption.docx ./021 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx TableColonAboveCaption.docx ./021 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./021/nlm/out.xml
@@ -296,7 +296,7 @@ Library           Collections
 
 022 Table caption parsing colon separator below
     [Tags]    formatting    022    captions    tables
-    ${result} =    Run Process    python ../bin/meTypeset.py docx TableColonBelowCaption.docx ./022 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx TableColonBelowCaption.docx ./022 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./022/nlm/out.xml
@@ -308,7 +308,7 @@ Library           Collections
 
 023 Graphic caption parsing with formatted label
     [Tags]    formatting    023    captions    graphics
-    ${result} =    Run Process    python ../bin/meTypeset.py docx ImageCaptionInItalics.docx ./023 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ImageCaptionInItalics.docx ./023 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./023/nlm/out.xml
@@ -322,7 +322,7 @@ Library           Collections
 
 024 Graphic caption parsing with label from title
     [Tags]    formatting    024    captions    graphics
-    ${result} =    Run Process    python ../bin/meTypeset.py docx GraphicCaptionInTitle.docx ./024 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx GraphicCaptionInTitle.docx ./024 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./024/nlm/out.xml
@@ -334,7 +334,7 @@ Library           Collections
 
 025 Table caption parsing with label from title
     [Tags]    formatting    025    captions    tables
-    ${result} =    Run Process    python ../bin/meTypeset.py docx TableCaptionInTitle.docx ./025 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx TableCaptionInTitle.docx ./025 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./025/nlm/out.xml
@@ -348,7 +348,7 @@ Library           Collections
 
 026 Roman Numeral List Parsing
     [Tags]    formatting    listclassifier    026    numerals
-    ${result} =    Run Process    python ../bin/meTypeset.py docx ListDispQuotesRomanNumerals.docx ./026 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ListDispQuotesRomanNumerals.docx ./026 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./026/nlm/out.xml
@@ -358,7 +358,7 @@ Library           Collections
 
 027 Roman Numeral Multiple List Parsing
     [Tags]    formatting    listclassifier    027    numerals
-    ${result} =    Run Process    python ../bin/meTypeset.py docx ListDispQuotesMultipleRomanNumerals.docx ./027 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ListDispQuotesMultipleRomanNumerals.docx ./027 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./027/nlm/out.xml
@@ -368,7 +368,7 @@ Library           Collections
 
 028 Numeric List Parsing
     [Tags]    formatting    listclassifier    028    numerals
-    ${result} =    Run Process    python ../bin/meTypeset.py docx ListDispQuotesNumeric.docx ./028 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ListDispQuotesNumeric.docx ./028 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./028/nlm/out.xml
@@ -378,7 +378,7 @@ Library           Collections
 
 029 Numeric Multiple List Parsing
     [Tags]    formatting    listclassifier    029    numerals
-    ${result} =    Run Process    python ../bin/meTypeset.py docx ListDispQuotesMultipleNumeric.docx ./029 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ListDispQuotesMultipleNumeric.docx ./029 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./029/nlm/out.xml
@@ -388,7 +388,7 @@ Library           Collections
 
 030 Numeric Multiple List Parsing with brackets
     [Tags]    formatting    listclassifier    030    numerals
-    ${result} =    Run Process    python ../bin/meTypeset.py docx ListDispQuotesMultipleNumericWithBracketList.docx ./030 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ListDispQuotesMultipleNumericWithBracketList.docx ./030 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./030/nlm/out.xml
@@ -398,7 +398,7 @@ Library           Collections
 
 031 Table parsing and section merging
     [Tags]    formatting    captionclassifier    031    tables
-    ${result} =    Run Process    python ../bin/meTypeset.py docx TableCaptionInTitleForMerge.docx ./031 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx TableCaptionInTitleForMerge.docx ./031 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./031/nlm/out.xml
@@ -414,7 +414,7 @@ Library           Collections
 
 032 Roman numeral false positive evasion
     [Tags]    formatting    listclassifier    032    numerals
-    ${result} =    Run Process    python ../bin/meTypeset.py docx FalsePositiveRomanNumeral.docx ./032 -s testsettings.xml -d    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx FalsePositiveRomanNumeral.docx ./032 -s testsettings.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./032/nlm/out.xml
