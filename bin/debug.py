@@ -64,11 +64,12 @@ class Debug(object):
             self.print_(module, message)
 
             # optionally, if the calling module has a "gv" object within it, we will try to take a git snapshot
-            for repo in self.git_objects:
-                repo.add('.', with_exceptions=False)
+            if self.git:
+                for repo in self.git_objects:
+                    repo.add('.', with_exceptions=False)
 
-                # remove all characters above 128 as the git module does not handle unicode commits well
-                repo.commit(u'-m', u'{0}'.format("".join(i for i in message if ord(i)<128)), with_exceptions=False)
+                    # remove all characters above 128 as the git module does not handle unicode commits well
+                    repo.commit(u'-m', u'{0}'.format("".join(i for i in message if ord(i)<128)), with_exceptions=False)
 
     def write_error(self, module, message, error_number):
         """
