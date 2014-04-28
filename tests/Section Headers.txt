@@ -392,6 +392,16 @@ Library           Collections
     Elements Should Match    ${body}    <body> <sec> <title>This is a heading</title> <p>I am a writer. I have written some stuff.</p> <p>It takes the form of two paragraphs.</p> </sec> <sec> <title>This is another heading</title> <sec> <title>This heading should be nested beneath the one before</title> <p>And this text</p> <sec> <title>This heading should be nested also</title> <sec> <title>This one should be nested three deep</title> <p>Another paragraph</p> </sec> </sec> </sec> </sec> </body>    normalize_whitespace=yes
     [Teardown]    Remove Directory    513    recursive=True
 
+514 Split bold handling
+    [Tags]    sectionheaders    sizeclassifier    514
+    ${result} =    Run Process    python ../bin/meTypeset.py tei BrokenLineTEI.xml ./514 -d --nogit    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./514/nlm/out.xml
+    ${body}=    Get Element    ${xml}    body
+    Elements Should Match    ${body}    <body> <sec> <title> <bold>A LINE</bold> <bold>That should be treated as a heading</bold> </title> </sec> </body>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    514    recursive=True
+
 556 Test line breaks
     [Tags]    linebreaks    556    formatting
     ${result} =    Run Process    python ../bin/meTypeset.py docx LineBreak.docx ./556 -s ./linebreakson.xml -d --nogit    shell=True
