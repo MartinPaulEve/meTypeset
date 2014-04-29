@@ -29,6 +29,7 @@
 
     <mt:folders>
         <mt:docx>docx</mt:docx>
+        <mt:doc>doc</mt:doc>
         <mt:common2>common2</mt:common2>
         <mt:runtime>runtime</mt:runtime>
         <mt:binaries>bin</mt:binaries>
