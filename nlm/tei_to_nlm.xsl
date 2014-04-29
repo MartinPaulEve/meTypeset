@@ -669,6 +669,10 @@ $pattern = '\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?!["&\'<>])[[:graph:]])+)\b';
     <caption><title><xsl:apply-templates /></title></caption>
   </xsl:template>
   
+  <xsl:template match="figure/p/head">
+    <xsl:value-of select="."/>
+  </xsl:template>
+  
   <xsl:template match="graphic">
     <xsl:element name="graphic">
       <xsl:attribute name="xlink:href" select="tei:resolveURI(.,@url)" />
