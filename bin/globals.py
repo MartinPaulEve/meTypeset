@@ -17,6 +17,7 @@ class GV (Debuggable):
         # todo: clean this up -- it's a mess
 
         docx = 'docx'
+        doc = 'doc'
         common2 = 'common2'
         nlm = 'nlm'
         chain = 'xsl'
@@ -54,6 +55,8 @@ class GV (Debuggable):
 
             self.docx_word_temp_folder_path = settings.clean_path(
                 settings.concat_path(self.docx_temp_folder_path, settings.get_setting('word', self)))
+
+            self.doc_folder_path = self.generate_path(settings, doc, self.output_folder_path)
 
             self.word_document_xml = settings.clean_path(os.path.join(
                 self.docx_temp_folder_path, settings.get_setting('word-document-xml', self)))

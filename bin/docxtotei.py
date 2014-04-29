@@ -110,7 +110,6 @@ class DocxToTei(Debuggable):
         """
 
         # make output folders
-        self.gv.mk_dir(self.gv.output_folder_path)
         self.gv.mk_dir(self.gv.docx_temp_folder_path)
         self.gv.mk_dir(self.gv.common2_temp_folder_path)
         self.gv.mk_dir(self.gv.tei_folder_path)

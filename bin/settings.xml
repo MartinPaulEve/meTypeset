@@ -29,6 +29,7 @@
     </mt:aggression>
 
     <mt:folders>
+        <mt:doc>doc</mt:doc>
         <mt:docx>docx</mt:docx>
         <mt:common2>common2</mt:common2>
         <mt:runtime>runtime</mt:runtime>

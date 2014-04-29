@@ -2,6 +2,7 @@
 """meTypeset: text parsing library to convert word documents to the JATS XML format
 
 Usage:
+    meTypeset.py doc <input> <output_folder> [options]
     meTypeset.py docx <input> <output_folder> [options]
     meTypeset.py docxextracted <input> <output_folder> [options]
     meTypeset.py tei <input> <output_folder> [options]
@@ -52,6 +53,7 @@ from idgenerator import IdGenerator
 from captionclassifier import CaptionClassifier
 from complianceenforcer import ComplianceEnforcer
 from interactive import Interactive
+from doctodocx import DocToDocx
 
 
 # check whether lxml is installed
@@ -123,6 +125,13 @@ class MeTypeset (Debuggable):
             # metadata file
             gv.metadata_file = self.set_metadata_file()
 
+            self.gv.mk_dir(self.gv.output_folder_path)
+
+            if self.args['doc']:
+                # run doc to docx conversion
+                # then run docx to tei
+                DocToDocx(self.gv).run()
+                DocxToTei(self.gv).run(True, self.args['--proprietary'])
             if self.args['docx']:
                 # run docx to tei conversion
                 # includes hooks for proprietary transforms if enabled
@@ -130,7 +139,7 @@ class MeTypeset (Debuggable):
             elif self.args['docxextracted']:
                 self.debug.print_debug(self, u'Skipping docx extraction')
                 DocxToTei(self.gv).run(False, self.args['--proprietary'])
-            else:
+            elif self.args['tei']:
                 self.debug.print_debug(self, u'Skipping docx extraction; processing TEI file')
                 DocxToTei(self.gv).run(False, self.args['--proprietary'], tei=True)
 
