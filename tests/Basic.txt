@@ -421,3 +421,13 @@ Library           Collections
     ${secs}=    Get Element    ${xml}    body/sec
     Elements Should Match    ${secs}    <sec> <title>This is a heading</title> <p>I am a writer. I have written some stuff.</p> <p>It takes the form of two paragraphs.</p> </sec>    normalize_whitespace=yes
     [Teardown]    Remove Directory    032    recursive=True
+
+033 Nested xref compliance on
+    [Tags]    formatting    compliance    033
+    ${result} =    Run Process    python ../bin/meTypeset.py tei xrefnestedcompliance.xml ./033 -s testsettings.xml -c -d --nogit    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./033/nlm/out.xml
+    ${secs}=    Get Element    ${xml}    body/sec/p
+    Elements Should Match    ${secs}    <p><bold>Povidone iodine.</bold> This is some text that links to (<ext-link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple">"Table 1."</ext-link>). </p>    normalize_whitespace=yes
+    [Teardown]    Remove Directory    033    recursive=True
