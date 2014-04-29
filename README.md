@@ -46,6 +46,7 @@ Options:
     -h, --help                                      Show this screen.
     -m, --metadata <metadata_file>                  Metadata file
     --nogit                                         Disable git debug filesystem (only of use with --debug)
+    --noimageprocessing                             Disable unoconv image processing
     --nolink                                        Do not run reference linker
     --purenlm                                       Die after performing NLM XSLT step
     --puretei                                       Die after performing TEI XSLT step
@@ -84,7 +85,7 @@ If called with the "scan" option, the reference linker will attempt to match tex
 If called with the "link" option, the reference linker will change the "rid" attribute on the xref element with an "id" attribute equal to "source\_id" to the value of "dest\_id".
 
 ```
-"""referencelinker.py: a tool to link parenthetical references to ref-list elements in a JATS file
+referencelinker.py: a tool to link parenthetical references to ref-list elements in a JATS file
 
 Usage:
     referencelinker.py scan <input> [options]
@@ -96,7 +97,7 @@ Options:
     --interactive                                   Prompt the user to assist in interactive tagging
     -h, --help                                      Show this screen.
     -v, --version                                   Show version.
-"""
+
 ```
 ##Troubleshooting
 
