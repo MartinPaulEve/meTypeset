@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader><fileDesc><titleStmt><title type="main">A Title</title><author>An Author</author></titleStmt><editionStmt><edition><date>2013-08-29</date></edition></editionStmt><publicationStmt><p>unknown</p><date when="2014-04-29"/></publicationStmt><sourceDesc><p>Converted from a Word document</p></sourceDesc></fileDesc><encodingDesc><appInfo><application ident="TEI_fromDOCX" version="2.15.0"><label>DOCX to TEI</label></application></appInfo></encodingDesc><revisionDesc><change><date>$LastChangedDate: 2014-04-29T07:50:20Z$</date><name>Andrés Roldán</name></change></revisionDesc></teiHeader>
+    
+    <text>
+        <body>
+            <div>
+                <p rend="Default Style">
+                    <hi meTypesetSize="17.5" rend="color(000666)">A Title</hi></p>
+                <p><hi meTypesetSize="10" rend="bold">Povidone iodine.</hi><hi meTypesetSize="10"> This is some text that links to (</hi><ref rend="instr_n instr_n" target="http://www.medscape.com/content/2003/00/45/63/456300/456300_tab.html"> "Table 1." </ref><hi meTypesetSize="10">). </hi></p>
+                <table  xmlns:html="http://www.w3.org/1999/xhtml" rend="rules"><row><cell></cell></row></table>
+                <p>Table 1: A Table</p>
+            </div></body></text></TEI>
