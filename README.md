@@ -33,6 +33,7 @@ meTypeset: text parsing library to convert word documents to the JATS XML format
 Usage:
     meTypeset.py docx <input> <output_folder> [options]
     meTypeset.py docxextracted <input> <output_folder> [options]
+    meTypeset.py tei <input> <output_folder> [options]
     meTypeset.py bibscan <input> [options]
 
 Options:
@@ -44,6 +45,11 @@ Options:
     --interactive                                   Enable step-by-step interactive mode
     -h, --help                                      Show this screen.
     -m, --metadata <metadata_file>                  Metadata file
+    --nogit                                         Disable git debug filesystem (only of use with --debug)
+    --nolink                                        Do not run reference linker
+    --purenlm                                       Die after performing NLM XSLT step
+    --puretei                                       Die after performing TEI XSLT step
+    --prettytei                                     Indent and format intermediary TEI
     -p, --proprietary                               Enables proprietary math parsing. Requires omml2mml.xsl
     -s, --settings <settings_file>                  Settings file
     -v, --version                                   Show version.
