@@ -43,3 +43,12 @@ class ComplianceEnforcer(Debuggable):
 
         manipulate.save_tree(tree)
         self.debug.print_debug(self, u'Removing {0} unlinked xref elements'.format(len(unlinked_xrefs)))
+
+        mis_nested_xrefs = tree.xpath('//ext-link/xref')
+
+        for tag in mis_nested_xrefs:
+            tag.tag = 'REMOVE'
+
+        etree.strip_tags(tree, 'REMOVE')
+        manipulate.save_tree(tree)
+        self.debug.print_debug(self, u'Removing {0} mis-nested ext-link/xref tags'.format(len(mis_nested_xrefs)))
