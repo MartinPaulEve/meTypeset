@@ -148,21 +148,22 @@ of this software, even if advised of the possibility of such damage.
                         </xsl:element>
                     </xsl:when>
                     <xsl:otherwise>
-                        <figure>
-			  <desc>
 			    <xsl:choose>
 			      <xsl:when test="@r:link">
+			          <figure>
+			              <desc>
 				<xsl:text>Linked Graphic: </xsl:text>
 				<xsl:variable name="rid" select="@r:link"/>
 				<xsl:value-of
 				    select="document(concat($wordDirectory,'/word/_rels/document.xml.rels'))//rel:Relationship[@Id=$rid]/@Target"/>
+			              </desc>
+			          </figure>
 			      </xsl:when>
 			      <xsl:otherwise>
-				<xsl:text>unable to handle picture</xsl:text>
+			          <xsl:element name="head">
+			              <xsl:text>unable to handle picture</xsl:text></xsl:element>
 			      </xsl:otherwise>
 			    </xsl:choose>
-			  </desc>
-			</figure>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:when>

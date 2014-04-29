@@ -665,7 +665,7 @@ $pattern = '\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?!["&\'<>])[[:graph:]])+)\b';
     </xsl:element>  
   </xsl:template>
   
-  <xsl:template match="figure/head">
+  <xsl:template match="figure/head | figure/p[head]">
     <caption><title><xsl:apply-templates /></title></caption>
   </xsl:template>
   
