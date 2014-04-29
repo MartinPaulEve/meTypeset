@@ -13,6 +13,7 @@ Options:
     -i, --identifiers                               Generate unique identifiers for all supported NLM elements
     --interactive                                   Enable step-by-step interactive mode
     --nogit                                         Disable git debug filesystem (only of use with --debug)
+    --noimageprocessing                             Disable unoconv image processing
     -s, --settings <settings_file>                  Settings file
     -v, --version                                   Show version.
 """

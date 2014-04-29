@@ -17,6 +17,7 @@ Options:
     -h, --help                                      Show this screen.
     -m, --metadata <metadata_file>                  Metadata file
     --nogit                                         Disable git debug filesystem (only of use with --debug)
+    --noimageprocessing                             Disable unoconv image processing
     --nolink                                        Do not run reference linker
     --purenlm                                       Die after performing NLM XSLT step
     --puretei                                       Die after performing TEI XSLT step

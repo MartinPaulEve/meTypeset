@@ -857,7 +857,8 @@ class TeiManipulate(Manipulate):
         if int(self.gv.settings.args['--aggression']) > int(self.gv.settings.get_setting('wmfimagereplace', self,
                                                                                          domain='aggression')):
             # convert .wmf image links to png
-            self.change_wmf_image_links()
+            if not self.gv.settings.args['--noimageprocessing']:
+                self.change_wmf_image_links()
 
         if int(self.gv.settings.args['--aggression']) > int(self.gv.settings.get_setting('teicleanup', self,
                                                                                          domain='aggression')):
