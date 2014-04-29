@@ -37,7 +37,7 @@ class ComplianceEnforcer(Debuggable):
         unlinked_xrefs = tree.xpath('//xref')
 
         for xref in unlinked_xrefs:
-            if 'rid' in xref.attrib and xref.attrib['rid'] == 'TO_LINK':
+            if 'rid' in xref.attrib and (xref.attrib['rid'] == 'TO_LINK' or xref.attrib['rid'] == 'TO_LINK_NUMBER'):
                 xref.tag = 'REMOVE'
                 etree.strip_tags(xref.getparent(), 'REMOVE')
 
