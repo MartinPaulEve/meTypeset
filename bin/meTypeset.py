@@ -6,6 +6,7 @@ Usage:
     meTypeset.py docx <input> <output_folder> [options]
     meTypeset.py docxextracted <input> <output_folder> [options]
     meTypeset.py odt <input> <output_folder> [options]
+    meTypeset.py other <input> <output_folder> [options]
     meTypeset.py tei <input> <output_folder> [options]
     meTypeset.py bibscan <input> [options]
 
@@ -137,6 +138,11 @@ class MeTypeset (Debuggable):
                 # run odt to docx conversion
                 # then run docx to tei
                 UnoconvToDocx(self.gv).run('odt')
+                DocxToTei(self.gv).run(True, self.args['--proprietary'])
+            elif self.args['other']:
+                # run other unoconv-supported format to docx conversion
+                # then run docx to tei
+                UnoconvToDocx(self.gv).run('unoconv')
                 DocxToTei(self.gv).run(True, self.args['--proprietary'])
             elif self.args['docx']:
                 # run docx to tei conversion
