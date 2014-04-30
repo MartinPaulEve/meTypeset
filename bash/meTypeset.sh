@@ -116,6 +116,6 @@ _nlm()
     fi
 }
 
-complete -F _meTypesetpy meTypeset.py
+complete -F _meTypeset meTypeset.py
 complete -F _reLinker referencelinker.py
 complete -F _nlm nlmprocessor.py
