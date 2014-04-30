@@ -99,6 +99,30 @@ Options:
     -v, --version                                   Show version.
 
 ```
+
+###NLM processor
+The NLM processor will run the specific post-TEI stages of meTypeset. This is most useful for reference linking, table/graphic heading/caption classification and document cleanup.
+
+```
+nlmprocessor.py: a tool to run the NLM portions of meTypeset
+
+Usage:
+    nlmprocessor.py process <input> [options]
+
+Options:
+    -a, --aggression <aggression_level>             Parser aggression level 0-10 [default: 10]
+    --chain <xslt>                                  Specify a subsequent XSL transform to pass the NLM to
+    -c, --clean                                     Produce final XML, not intermediate markup with additional metadata
+    -d, --debug                                     Enable debug output
+    -h, --help                                      Show this screen.
+    -i, --identifiers                               Generate unique identifiers for all supported NLM elements
+    --interactive                                   Enable step-by-step interactive mode
+    --nogit                                         Disable git debug filesystem (only of use with --debug)
+    --noimageprocessing                             Disable unoconv image processing
+    -s, --settings <settings_file>                  Settings file
+    -v, --version                                   Show version.
+```
+
 ##Troubleshooting
 
 I am getting errors like "UnicodeEncodeError: 'ascii' codec can't encode character u'\xa0' in position 20: ordinal not in range(128)"
