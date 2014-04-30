@@ -31,6 +31,7 @@ First off, ensure you have the correct stack installed for your environment. meT
 meTypeset: text parsing library to convert word documents to the JATS XML format
 
 Usage:
+    meTypeset.py doc <input> <output_folder> [options]
     meTypeset.py docx <input> <output_folder> [options]
     meTypeset.py docxextracted <input> <output_folder> [options]
     meTypeset.py tei <input> <output_folder> [options]
