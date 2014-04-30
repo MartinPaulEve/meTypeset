@@ -34,7 +34,6 @@ Options:
 __author__ = "Martin Paul Eve, Dulip Withnage"
 __email__ = "martin@martineve.com"
 
-import docxtotei
 from docxtotei import *
 from teitonlm import *
 from sizeclassifier import *
