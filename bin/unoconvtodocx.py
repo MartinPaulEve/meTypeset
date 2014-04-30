@@ -16,40 +16,36 @@ from debug import Debuggable
 from teimanipulate import TeiManipulate
 from lxml import etree
 
-class DocToDocx(Debuggable):
+class UnoconvToDocx(Debuggable):
     def __init__(self, gv):
         self.gv = gv
         self.debug = gv.debug
-        Debuggable.__init__(self, 'DOC to DOCX')
+        Debuggable.__init__(self, 'UNOCONV to DOCX')
 
-    def doc_to_docx(self):
+    def unoconv_to_docx(self):
         """
         Creates the appropriate java command to run Saxon
         @return: a string to run on the command line
         """
         cmd = ["unoconv", "-f", "docx",
-               "-o", os.path.join(self.gv.doc_folder_path, 'new.docx'),
+               "-o", os.path.join(self.gv.unoconv_folder_path, 'new.docx'),
                self.gv.input_file_path
                ]
         return ' '.join(cmd)
 
-    def run(self):
+    def run(self, input_format):
         """
-        This method converts from docx to TEI. It creates the necessary output folders, optionally extracts the file and
-        runs the Saxon process necessary to conduct the transform
-        @param extract: whether or not to extract a docx file. True to extract, False to work on a pre-extracted folder
-        @param run_proprietary: whether or not to run proprietary math transforms
+        This method converts from an arbitrary input format into docx
         """
-
         # make output folders
-        self.gv.mk_dir(self.gv.doc_folder_path)
+        self.gv.mk_dir(self.gv.unoconv_folder_path)
 
-        unoconv_command = self.doc_to_docx()
+        unoconv_command = self.unoconv_to_docx()
 
-        self.debug.print_debug(self, u'Running unoconv transform (DOC->DOCX)')
+        self.debug.print_debug(self, u'Running unoconv transform ({0}->DOCX)'.format(input_format.upper()))
         subprocess.call(unoconv_command, stdin=None, shell=True)
 
-        self.gv.input_file_path = os.path.join(self.gv.doc_folder_path, 'new.docx')
+        self.gv.input_file_path = os.path.join(self.gv.unoconv_folder_path, 'new.docx')
 
         # delete temp folders
         if not self.gv.debug.debug:

@@ -5,6 +5,7 @@ Usage:
     meTypeset.py doc <input> <output_folder> [options]
     meTypeset.py docx <input> <output_folder> [options]
     meTypeset.py docxextracted <input> <output_folder> [options]
+    meTypeset.py odt <input> <output_folder> [options]
     meTypeset.py tei <input> <output_folder> [options]
     meTypeset.py bibscan <input> [options]
 
@@ -53,7 +54,7 @@ from idgenerator import IdGenerator
 from captionclassifier import CaptionClassifier
 from complianceenforcer import ComplianceEnforcer
 from interactive import Interactive
-from unoconvtodocx import DocToDocx
+from unoconvtodocx import UnoconvToDocx
 
 
 # check whether lxml is installed
@@ -130,9 +131,14 @@ class MeTypeset (Debuggable):
             if self.args['doc']:
                 # run doc to docx conversion
                 # then run docx to tei
-                DocToDocx(self.gv).run()
+                UnoconvToDocx(self.gv).run('doc')
                 DocxToTei(self.gv).run(True, self.args['--proprietary'])
-            if self.args['docx']:
+            elif self.args['odt']:
+                # run odt to docx conversion
+                # then run docx to tei
+                UnoconvToDocx(self.gv).run('odt')
+                DocxToTei(self.gv).run(True, self.args['--proprietary'])
+            elif self.args['docx']:
                 # run docx to tei conversion
                 # includes hooks for proprietary transforms if enabled
                 DocxToTei(self.gv).run(True, self.args['--proprietary'])
