@@ -63,6 +63,9 @@ When running with the docxextracted command, input should be a folder containing
 
 When running with the bibscan command, input should be an NLM XML file, from which bibliographic reference information will be extracted.
 
+###Bash Completion
+If you would like to enable bash completion for meTypeset, simply copy the bash/meTypeset.sh file into your /etc/bash_completion.d folder.
+
 ##Unparseable Elements
 
 Occasionally, meTypeset will encounter a document with a greater number of idiosyncracies than it can handle. In this event, an error log will be written to "errors.txt" in the path specified by the [mt:error configuration value](bin/settings.xml). This document consists of a list of errors, each line beginning with a \[ERROR_NUMBER\] text (eg \[001\]).
