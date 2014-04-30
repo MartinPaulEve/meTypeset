@@ -78,5 +78,44 @@ _reLinker()
     fi
 }
 
+_nlm()
+{
+    local cur prev
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    if [ $COMP_CWORD -eq 1 ]; then
+        COMPREPLY=( $( compgen -W ' process' -- $cur) )
+	else
+		case $prev in
+			--agression)
+			;;
+			-a)
+			;;
+			--chain)
+				COMPREPLY=( $(compgen -f ${cur}) )
+			;;
+			--metadata)
+				COMPREPLY=( $(compgen -f ${cur}) )
+			;;
+			-m)
+				COMPREPLY=( $(compgen -f ${cur}) )
+			;;
+			--settings)
+				COMPREPLY=( $(compgen -f ${cur}) )
+			;;
+			-s)
+				COMPREPLY=( $(compgen -f ${cur}) )
+			;;
+			*)
+				if [ $COMP_CWORD -ge 2 ]; then
+					COMPREPLY=( $(compgen -W '-a --aggression --chain -c --clean -d --debug -h --help -i --identifiers --nogit --noimageprocessing -s --settings -v --version' -- $cur) )
+				fi
+			;;
+		esac
+    fi
+}
+
 complete -F _meTypesetpy meTypeset.py
 complete -F _reLinker referencelinker.py
+complete -F _nlm nlmprocessor.py
