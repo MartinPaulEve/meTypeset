@@ -53,7 +53,7 @@ from idgenerator import IdGenerator
 from captionclassifier import CaptionClassifier
 from complianceenforcer import ComplianceEnforcer
 from interactive import Interactive
-from doctodocx import DocToDocx
+from unoconvtodocx import DocToDocx
 
 
 # check whether lxml is installed
