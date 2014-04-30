@@ -34,6 +34,8 @@ Usage:
     meTypeset.py doc <input> <output_folder> [options]
     meTypeset.py docx <input> <output_folder> [options]
     meTypeset.py docxextracted <input> <output_folder> [options]
+    meTypeset.py odt <input> <output_folder> [options]
+    meTypeset.py other <input> <output_folder> [options]
     meTypeset.py tei <input> <output_folder> [options]
     meTypeset.py bibscan <input> [options]
 
@@ -57,11 +59,19 @@ Options:
     -v, --version                                   Show version.
 ```
 
+When running with the doc command, input should be a Word DOC file.
+
 When running with the docx command, input should be a Word DOCX file.
 
 When running with the docxextracted command, input should be a folder containing the usually compressed contents of a Word DOCX file (unzip x.docx).
 
+When running with the odt command, input should be a OpenOffice/LibreOffice ODT file.
+
+When running with the other command, input should be any file that unoconv can covert to a word DOCX file.
+
 When running with the bibscan command, input should be an NLM XML file, from which bibliographic reference information will be extracted.
+
+Note well that best results come from Word DOCX file and the "doc", "ODT" and "other" commands are provided as helper methods but rely on unoconv to correctly convert the file.
 
 ###Bash Completion
 If you would like to enable bash completion for meTypeset, simply copy the bash/meTypeset.sh file into your /etc/bash_completion.d folder.
