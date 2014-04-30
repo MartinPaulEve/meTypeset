@@ -192,6 +192,11 @@ The [bibliographic database](bin/bibliographydatabase.py) inserts fully marked-u
 ###Chain
 Finally, an [optional additional XSL](bin/xslchainer.py) file can be specified to be transformed by passing the --chain option.
 
+#Getting the best results from the parser
+The parser works best with good input. If you use the provided styles for headings in Word/OpenOffice/LibreOffice then meTypeset will correctly nest these up to nine levels deep. The parser will also handle tables, graphics and other elements, although captions are best detected when placed immediately before or after the element in question. Bibliographies are best detected when placed at the end of the document, either in a section entitled "References" (or similar) or formatted properly with a single line per element with a date in each. Alternatively, you can use a bibliographic manager such as Zotero or Mendeley and these will be handled. The reference linker works best with paranthetical references (Eve 2014) that correlate to a unique bibliographic entry.
+
+The parser attempts to parse headings that are all capitals, all-bold or of a substantially different size to the body text. It may, however, have difficulty nesting these. The parser will not handle drawings or aligned formatting made in a Word document; the JATS/NLM spec simply doesn't provide for this. Don't, therefore, draw ascii art tables and expect them to parse! Likewise, including extensive front-matter in a document may cause problems and it is often best removed. meTypeset does not yet handle front-matter parsing, so this can cause problems for the size classifier/nesting mechanism.
+
 #Credits
 
 meTypeset is a fork of the [TEI Consortium's OxGarage stylesheets](https://github.com/TEIC/Stylesheets).
