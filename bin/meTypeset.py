@@ -94,7 +94,7 @@ class MeTypeset (Debuggable):
     def set_metadata_file(self):
         metadata_file_arg = self.settings.args['--metadata']
         if metadata_file_arg:
-            metadata_file = self.gv.settings.clean_path(self.gv.concat_path(self.settings.script_dir,
+            metadata_file = self.gv.settings.clean_path(self.gv.settings.concat_path(self.settings.script_dir,
                                                                             metadata_file_arg[0]))
         else:
             metadata_file = \
