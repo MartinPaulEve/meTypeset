@@ -178,3 +178,4 @@ class DocxToTei(Debuggable):
             if not self.gv.debug.debug:
                 shutil.rmtree(self.gv.docx_temp_folder_path)
                 shutil.rmtree(self.gv.common2_temp_folder_path)
+                shutil.rmtree(self.gv.unoconv_folder_path)

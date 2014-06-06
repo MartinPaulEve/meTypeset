@@ -47,6 +47,3 @@ class UnoconvToDocx(Debuggable):
 
         self.gv.input_file_path = os.path.join(self.gv.unoconv_folder_path, 'new.docx')
 
-        # delete temp folders
-        if not self.gv.debug.debug:
-            shutil.rmtree(self.gv.doc_folder_path)
