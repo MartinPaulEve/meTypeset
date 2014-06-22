@@ -24,7 +24,7 @@ import subprocess
 try:
 	import Levenshtein
 except:
-	print "libzotero._noteProvider.gnoteProvider: failed to import Levenshtein"
+	print "zotero._noteProvider.gnoteProvider: failed to import Levenshtein"
 
 class GnoteProvider(object):
 
