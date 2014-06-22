@@ -55,7 +55,7 @@ class LibZotero(object):
 		"""
 
     author_query = u"""
-		select items.itemID, creatorData.lastName
+		select items.itemID, creatorData.lastName, creatorData.firstName
 		from items, itemCreators, creators, creatorData, creatorTypes
 		where
 			items.itemID = itemCreators.itemID
@@ -235,10 +235,21 @@ class LibZotero(object):
             for item in self.cur.fetchall():
                 item_id = item[0]
                 if item_id not in deleted:
-                    item_author = item[1].capitalize()
-                    if item_id not in self.index:
-                        self.index[item_id] = zotero_item(item_id)
-                    self.index[item_id].authors.append(item_author)
+                    first = True
+                    author = ''
+                    for an_item in item:
+                        if not first:
+                            item_author = an_item.capitalize()
+                            if item_id not in self.index:
+                                self.index[item_id] = zotero_item(item_id)
+                            author += ', ' + an_item
+                        else:
+                            first = False
+
+                    if len(author) > 2:
+                        author = author[2:]
+
+                    self.index[item_id].authors.append(author)
             # Retrieve collection information
             self.cur.execute(self.collection_query)
             for item in self.cur.fetchall():
