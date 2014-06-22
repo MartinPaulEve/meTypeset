@@ -112,7 +112,7 @@ class GV (Debuggable):
             #java classes for saxon
             self.java_class_path = self.set_java_classpath()
 
-            self.use_zotero = settings.args['zotero']
+            self.use_zotero = settings.args['--zotero']
 
             self.handle_platform()
 

@@ -26,6 +26,7 @@ import sys
 import time
 from zotero_item import zoteroItem as zotero_item
 
+
 class LibZotero(object):
 
 	"""
@@ -89,7 +90,7 @@ class LibZotero(object):
 	def __init__(self, zotero_path, noteProvider=None):
 
 		"""
-		Intialize libzotero.
+		Intialize zotero.
 
 		Arguments:
 		zotero_path		--	A unicode string to the Zotero folder.
@@ -100,7 +101,7 @@ class LibZotero(object):
 
 		assert(isinstance(zotero_path, unicode))
 
-		print(u"libzotero.__init__(): zotero_path = %s" % zotero_path)
+		print(u"zotero.__init__(): zotero_path = %s" % zotero_path)
 		# Set paths
 		self.zotero_path = zotero_path
 		self.storage_path = os.path.join(self.zotero_path, u"storage")
@@ -113,7 +114,7 @@ class LibZotero(object):
 			home_folder = os.environ[u"HOME"].decode( \
 				sys.getfilesystemencoding())
 		else:
-			print(u"libzotero.__init__(): you appear to be running an unsupported OS")
+			print(u"zotero.__init__(): you appear to be running an unsupported OS")
 
 		self.gnotero_database = os.path.join(home_folder, u".gnotero.sqlite")
 		# Remember search results so results speed up over time
@@ -159,7 +160,7 @@ class LibZotero(object):
 		try:
 			stats = os.stat(self.zotero_database)
 		except Exception as e:
-			print(u"libzotero.update(): %s" % e)
+			print(u"zotero.update(): %s" % e)
 			return False
 
 		# Only update if necessary
@@ -288,7 +289,7 @@ class LibZotero(object):
 						else:
 							self.index[item_id].fulltext = att
 			self.cur.close()
-			print(u"libzotero.update(): indexing completed in %.3fs" \
+			print(u"zotero.update(): indexing completed in %.3fs" \
 				% (time.time() - t))
 		return True
 
@@ -337,7 +338,7 @@ class LibZotero(object):
 			return []
 		if query in self.search_cache:
 			print( \
-				u"libzotero.search(): retrieving results for '%s' from cache" \
+				u"zotero.search(): retrieving results for '%s' from cache" \
 				% query)
 			return self.search_cache[query]
 		t = time.time()
@@ -347,7 +348,7 @@ class LibZotero(object):
 			if item.match(terms):
 				results.append(item)
 		self.search_cache[query] = results
-		print(u"libzotero.search(): search for '%s' completed in %.3fs" % \
+		print(u"zotero.search(): search for '%s' completed in %.3fs" % \
 			(query, time.time() - t))
 		return results
 

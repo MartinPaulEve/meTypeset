@@ -444,8 +444,25 @@ class BibliographyDatabase(Debuggable):
                                 break
         return manipulate, master_tree
 
+    def process_zotero(self):
+        from zotero import libzotero
+        zotero = libzotero.LibZotero(unicode(self.gv.settings.get_setting(u'zotero', self)))
+
+        manipulate = NlmManipulate(self.gv)
+        master_tree = manipulate.load_dom_tree()
+        tree = master_tree.xpath('//back/ref-list/ref')
+
+        for element in tree:
+            term = manipulate.get_stripped_text(element)
+            results = zotero.search(term)
+
+            print "%d results for %s" % (len(results), term)
+
+            for item in results:
+                print item.simple_format()
+
     def run(self):
-        if int(self.gv.settings.args['--aggression']) >= self.aggression:
+        if int(self.gv.settings.args['--aggression']) >= self.aggression and not self.gv.use_zotero:
             self.debug.print_debug(self, u'Opening database: {0}'.format(self.gv.database_file_path))
             db = shelve.open(self.gv.database_file_path)
 
@@ -454,6 +471,8 @@ class BibliographyDatabase(Debuggable):
             manipulate.save_tree(master_tree)
 
             db.close()
+        elif self.gv.use_zotero:
+            self.process_zotero()
 
 
 def main():
