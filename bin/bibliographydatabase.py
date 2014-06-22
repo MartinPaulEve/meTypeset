@@ -3,9 +3,10 @@
 
 Usage:
     bibliographydatabase.py <input> [options]
+    bibliographydatabase.py zotero <query> [options]
 
 Options:
-    -d, --debug                                     Enable debug output
+    -d, --debug                                     Enable debug output.
     -h, --help                                      Show this screen.
     -v, --version                                   Show version.
 
@@ -453,7 +454,7 @@ class BibliographyDatabase(Debuggable):
         tree = master_tree.xpath('//back/ref-list/ref')
 
         for element in tree:
-            term = manipulate.get_stripped_text(element)
+            term = manipulate.get_stripped_text(element).split(' ')[0]
             results = zotero.search(term)
 
             print "%d results for %s" % (len(results), term)
@@ -477,7 +478,20 @@ class BibliographyDatabase(Debuggable):
 
 def main():
     args = docopt(__doc__, version='meTypeset 0.1')
+
     bare_gv = GV(args)
+
+    if args['zotero']:
+        from zotero import libzotero
+        zotero = libzotero.LibZotero(unicode(bare_gv.settings.get_setting(u'zotero', bare_gv)))
+        results = zotero.search(args['<query>'])
+
+        print "%d results for %s" % (len(results), args['<query>'])
+
+        for item in results:
+            print item.simple_format()
+
+        return
 
     if args['--debug']:
         bare_gv.debug.enable_debug()

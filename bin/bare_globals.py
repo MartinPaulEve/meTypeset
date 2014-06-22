@@ -25,7 +25,6 @@ class GV (Debuggable):
         self.used_list_method = False
         self.used_square_reference_method = False
 
-
         # read the configuration
         self.settings_file_path = 'default'
         self.tei_file_path = None
@@ -34,7 +33,10 @@ class GV (Debuggable):
 
         self.script_dir = os.environ['METYPESET']
 
-        self.input_file_path = self.settings.args['<input>'].strip()
+        if self.settings.args['<input>'] is not None:
+            self.input_file_path = self.settings.args['<input>'].strip()
+        else:
+            self.input_file_path = 'NONE'
 
         self.nlm_file_path = self.input_file_path
         self.nlm_temp_file_path = self.input_file_path + '.tmp'
