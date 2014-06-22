@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding=utf-8
 """bibliographydatabase: a tool to match plaintext values inside NLM ref tags against a known database
 
 Usage:
@@ -454,13 +455,27 @@ class BibliographyDatabase(Debuggable):
         tree = master_tree.xpath('//back/ref-list/ref')
 
         for element in tree:
-            term = manipulate.get_stripped_text(element).split(' ')[0]
-            results = zotero.search(term)
+            term = manipulate.get_stripped_text(element)
+
+            term = re.sub(r'(.+?)(\(.+?\))(.*)', r'\1\3', term)
+            term = re.sub(r'[\-,\.\<\>\(\)\;\:\@\'\#\~\}\{\[\]\"\d\!\\/]', '', term)
+            term = re.sub(u'[^\s]+?\s[Ee]dition', u' ', term)
+            term = term.replace(u'“', u'')
+            term = term.replace(u'\'s', u'')
+            term = term.replace(u'’s', u'')
+            term = term.replace(u'’', u'')
+            term = term.replace(u'”', u'')
+            term = re.sub(r'[Aa]ccessed', '', term)
+            term = re.sub(r'meTypesetbr', '', term)
+            term = re.sub(r'\s+', ' ', term)
+
+            results = zotero.search(term.strip())
 
             print "%d results for %s" % (len(results), term)
 
-            for item in results:
-                print item.simple_format()
+            if len(results) < 3:
+                for item in results:
+                    print item.simple_format()
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) >= self.aggression and not self.gv.use_zotero:
@@ -484,9 +499,24 @@ def main():
     if args['zotero']:
         from zotero import libzotero
         zotero = libzotero.LibZotero(unicode(bare_gv.settings.get_setting(u'zotero', bare_gv)))
-        results = zotero.search(args['<query>'])
 
-        print "%d results for %s" % (len(results), args['<query>'])
+        term = args['<query>']
+
+        term = re.sub(r'(.+?)(\(.+?\))(.*)', r'\1\3', term)
+        term = re.sub(r'[\-,\.\<\>\(\)\;\:\@\'\#\~\}\{\[\]\"\d\!\\/]', '', term)
+        term = term.replace(u'“', u'')
+        term = re.sub(u'[^\s]+?\s[Ee]dition', u' ', term)
+        term = term.replace(u'\'s', u'')
+        term = term.replace(u'’s', u'')
+        term = term.replace(u'’', u'')
+        term = term.replace(u'”', u'')
+        term = re.sub(r'[Aa]ccessed', '', term)
+        term = re.sub(r'meTypesetbr', '', term)
+        term = re.sub(r'\s+', ' ', term)
+
+        results = zotero.search(term.strip())
+
+        print "%d results for %s" % (len(results), term)
 
         for item in results:
             print item.simple_format()
