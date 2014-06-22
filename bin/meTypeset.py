@@ -28,6 +28,7 @@ Options:
     -p, --proprietary                               Enables proprietary math parsing. Requires omml2mml.xsl
     -s, --settings <settings_file>                  Settings file
     -v, --version                                   Show version.
+    -z, --zotero                                    Enable Zotero integration for references.
 
 """
 
