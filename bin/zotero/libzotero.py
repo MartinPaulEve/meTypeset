@@ -230,26 +230,17 @@ class LibZotero(object):
                         self.index[item_id].issue = item_value
                     elif item_name == u"title":
                         self.index[item_id].title = unicode(item_value)
+
             # Retrieve author information
             self.cur.execute(self.author_query)
             for item in self.cur.fetchall():
                 item_id = item[0]
                 if item_id not in deleted:
-                    first = True
-                    author = ''
-                    for an_item in item:
-                        if not first:
-                            item_author = an_item.capitalize()
-                            if item_id not in self.index:
-                                self.index[item_id] = zotero_item(item_id)
-                            author += ', ' + an_item
-                        else:
-                            first = False
+                    # slice tuple as first column is an integer index
+                    # next two columns represent lastname and firstname
+                    new_authors = item[1:]
+                    self.index[item_id].authors.append(new_authors)
 
-                    if len(author) > 2:
-                        author = author[2:]
-
-                    self.index[item_id].authors.append(author)
             # Retrieve collection information
             self.cur.execute(self.collection_query)
             for item in self.cur.fetchall():
