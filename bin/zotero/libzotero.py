@@ -59,7 +59,7 @@ class LibZotero(Debuggable):
 			and itemCreators.creatorID = creators.creatorID
 			and creators.creatorDataID = creatorData.creatorDataID
 			and itemCreators.creatorTypeID = creatorTypes.creatorTypeID
-			and creatorTypes.creatorType != "editor"
+			and creatorTypes.creatorType == "author"
 		order by itemCreators.orderIndex
 		"""
 
@@ -234,7 +234,7 @@ class LibZotero(Debuggable):
                         self.index[item_id].key = key
                         self.index[item_id].item_type = item[4]
 
-                    if item_name == u"publicationTitle":
+                    if item_name == u"publicationTitle" or item_name == u'bookTitle':
                         self.index[item_id].publication = unicode(item_value)
                     elif item_name == u"date":
                         self.index[item_id].date = item_value
@@ -249,6 +249,7 @@ class LibZotero(Debuggable):
                     elif item_name == u"pages":
                         self.index[item_id].pages = unicode(item_value)
                     elif item_name == u"place":
+                        print item_value
                         self.index[item_id].place = unicode(item_value)
                     elif item_name == u"publisher":
                         self.index[item_id].publisher = unicode(item_value)
