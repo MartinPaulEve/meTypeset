@@ -25,9 +25,10 @@ import shutil
 import sys
 import time
 from zotero_item import zoteroItem as zotero_item
+from debug import Debuggable
 
 
-class LibZotero(object):
+class LibZotero(Debuggable):
     """
     Libzotero provides access to the zotero database.
     This is an object oriented reimplementation of the
@@ -82,7 +83,10 @@ class LibZotero(object):
 
     deleted_query = u"select itemID from deletedItems"
 
-    def __init__(self, zotero_path, noteProvider=None):
+    def __init__(self, zotero_path, global_variables, noteProvider=None):
+        Debuggable.__init__(self, 'libZotero')
+        self.gv = global_variables
+        self.debug = self.gv.debug
 
         """
         Intialize zotero.
@@ -96,7 +100,8 @@ class LibZotero(object):
 
         assert (isinstance(zotero_path, unicode))
 
-        print(u"zotero.__init__(): zotero_path = %s" % zotero_path)
+        self.debug.print_debug(self, u"zotero.__init__(): zotero_path = %s" % zotero_path)
+
         # Set paths
         self.zotero_path = zotero_path
         self.storage_path = os.path.join(self.zotero_path, u"storage")
@@ -109,7 +114,7 @@ class LibZotero(object):
             home_folder = os.environ[u"HOME"].decode( \
                 sys.getfilesystemencoding())
         else:
-            print(u"zotero.__init__(): you appear to be running an unsupported OS")
+            self.debug.print_debug(self, u"zotero.__init__(): you appear to be running an unsupported OS")
 
         self.gnotero_database = os.path.join(home_folder, u".gnotero.sqlite")
         # Remember search results so results speed up over time
@@ -138,7 +143,7 @@ class LibZotero(object):
             self.search(u"dummy")
             self.error = False
         except Exception as e:
-            print e
+            self.debug.print_debug(self, e)
             self.error = True
 
     def update(self, force=False):
@@ -155,7 +160,7 @@ class LibZotero(object):
         try:
             stats = os.stat(self.zotero_database)
         except Exception as e:
-            print(u"zotero.update(): %s" % e)
+            self.debug.print_debug(self, u"zotero.update(): %s" % e)
             return False
 
         # Only update if necessary
@@ -295,8 +300,8 @@ class LibZotero(object):
                         else:
                             self.index[item_id].fulltext = att
             self.cur.close()
-            print(u"zotero.update(): indexing completed in %.3fs" \
-                  % (time.time() - t))
+            self.debug.print_debug(self, u"zotero.update(): indexing completed in %.3fs" % (time.time() - t))
+
         return True
 
     def parse_query(self, query):
@@ -344,9 +349,7 @@ class LibZotero(object):
         if not self.update():
             return []
         if query in self.search_cache:
-            print( \
-                u"zotero.search(): retrieving results for '%s' from cache" \
-                % query)
+            self.debug.print_debug(self, u"zotero.search(): retrieving results for '%s' from cache" % query)
             return self.search_cache[query]
         t = time.time()
         terms = self.parse_query(query)
@@ -355,8 +358,8 @@ class LibZotero(object):
             if item.match(terms):
                 results.append(item)
         self.search_cache[query] = results
-        print(u"zotero.search(): search for '%s' completed in %.3fs" % \
-              (query, time.time() - t))
+        self.debug.print_debug(self, u"zotero.search(): search for '%s' completed in %.3fs" % (query, time.time() - t))
+
         return results
 
 

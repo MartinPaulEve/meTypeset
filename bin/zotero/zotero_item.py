@@ -320,7 +320,19 @@ class zoteroItem(object):
         return self.simple_format_str
 
     def JATS_format(self):
-        pass
+        if self.item_type == 'journalArticle':
+            authors = []
+
+            for author in self.authors:
+                if len(author) > 1:
+                    p = Person(author[1], author[0])
+                else:
+                    p = Person('', author[0])
+                authors.append(p)
+
+            ja = JournalArticle(authors=authors)
+
+            return ja.get_citation()
 
     def hashKey(self):
 
