@@ -119,6 +119,16 @@ class zoteroItem(object):
             else:
                 self.pages = None
 
+            if u"place" in item:
+                self.place = item[u"place"]
+            else:
+                self.place = None
+
+            if u"publisher" in item:
+                self.publisher = item[u"publisher"]
+            else:
+                self.publisher = None
+
         else:
             self.title = None
             self.collections = []
@@ -133,6 +143,8 @@ class zoteroItem(object):
             self.item_type = None
             self.doi = None
             self.pages = None
+            self.publisher = None
+            self.place = None
             if isinstance(init, int):
                 self.id = init
             else:
@@ -164,24 +176,38 @@ class zoteroItem(object):
                     for tag in self.tags:
                         if term in tag.lower():
                             match = True
+
                 if term_type in term_collection:
                     for collection in self.collections:
                         if term in collection.lower():
                             match = True
+
                 if not match and term_type in term_author:
                     for author in self.authors:
                         for author_component in author:
                             if term in author_component.lower():
                                 match = True
+
                 if not match and self.date is not None and term_type in term_date:
                     if term in self.date:
                         match = True
+
                 if not match and self.title is not None and term_type in \
                         term_title and term in self.title.lower():
                     match = True
+
                 if not match and self.publication is not None and term_type in \
                         term_publication and term in self.publication.lower():
                     match = True
+
+                if not match and self.place is not None and term_type in \
+                        term_publication and term in self.place.lower():
+                    match = True
+
+                if not match and self.publisher is not None and term_type in \
+                        term_publication and term in self.publisher.lower():
+                    match = True
+
                 if not match:
                     match_all = False
                     break
@@ -248,10 +274,10 @@ class zoteroItem(object):
         A pretty representation of the date.
         """
 
-        if self.date == None:
-            return u"(Date unknown)"
+        if self.date is None:
+            return u"n.d."
 
-        return u"(%s)" % self.date
+        return u"%s" % self.date
 
     def format_title(self):
 
@@ -365,9 +391,11 @@ class zoteroItem(object):
 
             ja = JournalArticle(authors=authors, title=self.title, journal=self.publication, issue=self.issue,
                                 volume=self.volume,
-                                doi=self.doi, fpage=fpage, lpage=lpage)
+                                doi=self.doi, fpage=fpage, lpage=lpage, year=self.format_date())
 
             return ja.get_citation()
+
+        return self.simple_format()
 
     def hashKey(self):
 
