@@ -41,17 +41,13 @@ class LibZotero(object):
 		"""
 
     info_query = u"""
-		select items.itemID, fields.fieldName, itemDataValues.value, items.key
-		from items, itemData, fields, itemDataValues
+		select items.itemID, fields.fieldName, itemDataValues.value, items.key, itemTypes.typeName
+		from items, itemData, fields, itemDataValues, itemTypes
 		where
 			items.itemID = itemData.itemID
 			and itemData.fieldID = fields.fieldID
 			and itemData.valueID = itemDataValues.valueID
-			and (fields.fieldName = "date"
-				or fields.fieldName = "publicationTitle"
-				or fields.fieldName = "volume"
-				or fields.fieldName = "issue"
-				or fields.fieldName = "title")
+			and itemTypes.itemTypeID = items.itemTypeID
 		"""
 
     author_query = u"""
@@ -169,23 +165,28 @@ class LibZotero(object):
             self.index = {}
             self.collection_index = []
             self.search_cache = {}
+
             # Copy the zotero database to the gnotero copy
             shutil.copyfile(self.zotero_database, self.gnotero_database)
             self.conn = sqlite3.connect(self.gnotero_database)
             self.cur = self.conn.cursor()
+
             # First create a list of deleted items, so we can ignore those later
             deleted = []
             self.cur.execute(self.deleted_query)
             for item in self.cur.fetchall():
                 deleted.append(item[0])
+
             # Retrieve information about date, publication, volume, issue and
             # title
             self.cur.execute(self.info_query)
             for item in self.cur.fetchall():
                 item_id = item[0]
                 key = item[3]
+
                 if item_id not in deleted:
                     item_name = item[1]
+
                     # Parse date fields, because we only want a year or a #
                     # 'special' date
                     if item_name == u"date":
@@ -194,9 +195,10 @@ class LibZotero(object):
                             if sd in item[2].lower():
                                 item_value = sd
                                 break
+
                         # Dates can have months, days, and years, or just a
                         # year, and can be split by '-' and '/' characters.
-                        if item_value == None:
+                        if item_value is None:
                             # Detect whether the date should be split
                             if u'/' in item[2]:
                                 split = u'/'
@@ -205,7 +207,7 @@ class LibZotero(object):
                             else:
                                 split = None
                             # If not, just use the last four characters
-                            if split == None:
+                            if split is None:
                                 item_value = item[2][-4:]
                             # Else take the first slice that is four characters
                             else:
@@ -216,10 +218,12 @@ class LibZotero(object):
                                         break
                     else:
                         item_value = item[2]
+
                     if item_id not in self.index:
-                        self.index[item_id] = zotero_item(item_id, \
-                                                          noteProvider=self.noteProvider)
+                        self.index[item_id] = zotero_item(item_id, noteProvider=self.noteProvider)
                         self.index[item_id].key = key
+                        self.index[item_id].item_type = item[4]
+
                     if item_name == u"publicationTitle":
                         self.index[item_id].publication = unicode(item_value)
                     elif item_name == u"date":
@@ -230,6 +234,7 @@ class LibZotero(object):
                         self.index[item_id].issue = item_value
                     elif item_name == u"title":
                         self.index[item_id].title = unicode(item_value)
+
 
             # Retrieve author information
             self.cur.execute(self.author_query)
