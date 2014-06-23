@@ -26,6 +26,7 @@ term_title = None, u"title"
 
 cache = {}
 
+from bibliographydatabase import *
 
 class zoteroItem(object):
     """Represents a single zotero item."""
@@ -92,6 +93,10 @@ class zoteroItem(object):
                 self.key = item[u"key"]
             else:
                 self.key = None
+            if u"typeName" in item:
+                self.item_type = item[u"typeName"]
+            else:
+                self.item_type = None
         else:
             self.title = None
             self.collections = []
@@ -103,6 +108,7 @@ class zoteroItem(object):
             self.fulltext = None
             self.date = None
             self.key = None
+            self.item_type = None
             if isinstance(init, int):
                 self.id = init
             else:
@@ -312,6 +318,9 @@ class zoteroItem(object):
         if self.simple_format_str is None:
             self.simple_format_str = self.format_author() + u" " + self.format_date()
         return self.simple_format_str
+
+    def JATS_format(self):
+        pass
 
     def hashKey(self):
 

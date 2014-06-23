@@ -520,6 +520,7 @@ def main():
 
         for item in results:
             print item.simple_format()
+            print item.item_type
 
         return
 
