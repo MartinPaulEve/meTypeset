@@ -140,8 +140,9 @@ class zoteroItem(object):
                             match = True
                 if not match and term_type in term_author:
                     for author in self.authors:
-                        if term in author.lower():
-                            match = True
+                        for author_component in author:
+                            if term in author_component.lower():
+                                match = True
                 if not match and self.date is not None and term_type in term_date:
                     if term in self.date:
                         match = True
@@ -171,22 +172,33 @@ class zoteroItem(object):
         self.note = self.noteProvider.search(self)
         return self.note
 
-    def format_author(self):
+    def format_single_author(self, author):
+        return u'{0}, {1}'.format(author[0], author[1])
 
+    def format_multiple_author(self, authors):
+        author_string = u''
+
+        for author in authors[:-1]:
+            author_string += u'{0}, {1}, '.format(author[0], author[1])
+
+        for author in authors[-1:]:
+            author_string += u'& {0}, {1}'.format(author[0], author[1])
+
+    def format_author(self):
         """
         Returns:
         A pretty representation of the author.
         """
 
-        if self.authors == []:
-            return u"Unkown author"
+        if len(self.authors) == 0:
+            return u"Unknown author"
         if len(self.authors) > 5:
-            return u"%s et al." % self.authors[0]
+            return u"%s et al." % self.format_single_author(self.authors[0])
         if len(self.authors) > 2:
-            return u", ".join(self.authors[:-1]) + u", & " + self.authors[-1]
+            return self.format_multiple_author(self.authors)
         if len(self.authors) == 2:
-            return self.authors[0] + u" & " + self.authors[1]
-        return self.authors[0]
+            return self.format_single_author(self.authors[0]) + u" & " + self.format_single_author(self.authors[1])
+        return self.format_single_author(self.authors[0])
 
     def format_date(self):
 
