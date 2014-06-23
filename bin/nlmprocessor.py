@@ -16,6 +16,7 @@ Options:
     --noimageprocessing                             Disable unoconv image processing
     -s, --settings <settings_file>                  Settings file
     -v, --version                                   Show version.
+    -z, --zotero                                    Enable Zotero integration for references.
 """
 
 from teitonlm import TeiToNlm

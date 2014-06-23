@@ -43,6 +43,8 @@ class GV (Debuggable):
 
         self.settings.args['--aggression'] = 11
 
+        self.use_zotero = self.settings.args['--zotero']
+
         self.database_file_path = \
             self.settings.clean_path(self.settings.concat_path(os.path.join(self.settings.script_dir,
                                                                             'database'),
