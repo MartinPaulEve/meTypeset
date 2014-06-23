@@ -173,16 +173,27 @@ class zoteroItem(object):
         return self.note
 
     def format_single_author(self, author):
-        return u'{0}, {1}'.format(author[0], author[1])
+        if len(author) > 1:
+            return u'{0}, {1}'.format(author[0], author[1])
+        else:
+            return author[0]
 
     def format_multiple_author(self, authors):
         author_string = u''
 
         for author in authors[:-1]:
-            author_string += u'{0}, {1}, '.format(author[0], author[1])
+            if len(author) > 1:
+                author_string += u'{0}, {1}, '.format(author[0], author[1])
+            else:
+                author_string += author[0]
 
         for author in authors[-1:]:
-            author_string += u'& {0}, {1}'.format(author[0], author[1])
+            if len(author) > 1:
+                author_string += u'& {0}, {1}'.format(author[0], author[1])
+            else:
+                author_string += author[0]
+
+        return author_string
 
     def format_author(self):
         """
