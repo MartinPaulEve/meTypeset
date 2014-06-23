@@ -508,8 +508,7 @@ def main():
 
         term = args['<query>']
 
-        term = re.sub(r'(.+?)(\(.+?\))(.*)', r'\1\3', term)
-        term = re.sub(r'[\-,\.\<\>\(\)\;\:\@\'\#\~\}\{\[\]\"\d\!\\/]', '', term)
+        term = re.sub(r'[\-,\.\<\>\(\)\;\:\@\'\#\~\}\{\[\]\"\!\\/]', '', term)
         term = term.replace(u'“', u'')
         term = re.sub(u'[^\s]+?\s[Ee]dition', u' ', term)
         term = term.replace(u'\'s', u'')

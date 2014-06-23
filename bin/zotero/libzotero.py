@@ -248,6 +248,10 @@ class LibZotero(Debuggable):
                         self.index[item_id].doi = unicode(item_value)
                     elif item_name == u"pages":
                         self.index[item_id].pages = unicode(item_value)
+                    elif item_name == u"place":
+                        self.index[item_id].place = unicode(item_value)
+                    elif item_name == u"publisher":
+                        self.index[item_id].publisher = unicode(item_value)
                     else:
                         self.debug.print_debug(self, u'Unindexed field: {0}'.format(item_name))
 
