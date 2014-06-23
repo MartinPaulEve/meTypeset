@@ -401,6 +401,13 @@ class zoteroItem(object):
 
             return book.get_citation()
 
+        elif self.item_type == 'bookSection':
+            chapter = BookChapter(authors=authors, title=self.title, book_title=self.publication,
+                                  fpage=fpage, lpage=lpage, year=self.format_date(), place=self.place,
+                                  publisher=self.publisher)
+
+            return chapter.get_citation()
+
         return self.simple_format()
 
     def hashKey(self):

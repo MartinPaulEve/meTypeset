@@ -45,7 +45,8 @@ class Person():
                 u'</name>'.format(self.lastname, self.firstname)
 
 class BookChapter():
-    def __init__(self, authors=None, title='', book_title='', publisher='', place='', year='', editors=None):
+    def __init__(self, authors=None, title='', book_title='', publisher='', place='', year='', fpage='', lpage='',
+                 editors=None):
         if authors is None:
             self.authors = []
         else:
@@ -61,6 +62,8 @@ class BookChapter():
         self.year = year
         self.publisher = publisher
         self.place = place
+        self.fpage = fpage
+        self.lpage = lpage
 
     @staticmethod
     def object_type():
@@ -84,19 +87,19 @@ class BookChapter():
                         u'<person-group person-group-type="author">' \
                             u'{0}' \
                         u'</person-group>' \
-                        u'<article-title>{5}</article-title>' \
-                        u'<source>{1}</source>' \
+                        u'<article-title>{1}</article-title>' \
+                        u'<source>{2}</source>' \
                         u'<date>' \
-                            u'<year>{2}</year>' \
+                            u'<year>{3}</year>' \
                         u'</date>' \
                         u'<person-group person-group-type="editor">' \
-                            u'{5}' \
+                            u'{4}' \
                         u'</person-group>' \
-                        u'<publisher-loc>{3}</publisher-loc>' \
-                        u'<publisher-name>{4}</publisher-name>' \
+                        u'<publisher-loc>{5}</publisher-loc>' \
+                        u'<publisher-name>{6}</publisher-name>' \
                     u'</element-citation>' \
-                u'</ref>'.format(author_block, self.book_title, self.year, self.place, self.publisher, editor_block,
-                                 self.title)
+                u'</ref>'.format(author_block, self.title, self.book_title, self.year, editor_block, self.place,
+                                 self.publisher)
 
 class Book():
     def __init__(self, authors=None, title='', publisher='', place='', year='', editors=None):
@@ -539,7 +542,8 @@ def main():
         bare_gv.debug.print_debug(bare_gv, "%d results for %s" % (len(results), term))
 
         for item in results:
-            print item.JATS_format()
+            interactive = Interactive(bare_gv)
+            interactive.print_(item.JATS_format())
 
         return
 
