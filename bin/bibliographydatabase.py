@@ -484,6 +484,8 @@ class BibliographyDatabase(Debuggable):
             term = term.replace(u'\'s', u'')
             term = term.replace(u'’s', u'')
             term = term.replace(u'’', u'')
+            term = term.replace(u'Ed.', u'')
+            term = term.replace(u'Ed', u'')
             term = term.replace(u'”', u'')
             term = re.sub(r'[Aa]ccessed', '', term)
             term = re.sub(r'meTypesetbr', '', term)
@@ -495,7 +497,7 @@ class BibliographyDatabase(Debuggable):
 
             if len(results) < 3:
                 for item in results:
-                    print item.simple_format()
+                    print item.JATS_format()
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) >= self.aggression and not self.gv.use_zotero:
