@@ -249,7 +249,6 @@ class LibZotero(Debuggable):
                     else:
                         self.debug.print_debug(self, u'Unindexed field: {0}'.format(item_name))
 
-
             # Retrieve author information
             self.cur.execute(self.author_query)
             for item in self.cur.fetchall():
