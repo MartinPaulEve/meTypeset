@@ -107,6 +107,7 @@ class LibZotero(Debuggable):
         self.storage_path = os.path.join(self.zotero_path, u"storage")
         self.zotero_database = os.path.join(self.zotero_path, u"zotero.sqlite")
         self.noteProvider = noteProvider
+
         if os.name == u"nt":
             home_folder = os.environ[u"USERPROFILE"].decode( \
                 sys.getfilesystemencoding())
@@ -117,14 +118,18 @@ class LibZotero(Debuggable):
             self.debug.print_debug(self, u"zotero.__init__(): you appear to be running an unsupported OS")
 
         self.gnotero_database = os.path.join(home_folder, u".gnotero.sqlite")
+
         # Remember search results so results speed up over time
         self.search_cache = {}
+
         # Check whether verbosity is turned on
         self.verbose = "-v" in sys.argv
+
         # These dates are treated as special and are not parsed into a year
         # representation
         self.special_dates = u"in press", u"submitted", u"in preparation", \
                              u"unpublished"
+
         # These extensions are recognized as fulltext attachments
         self.attachment_ext = u".pdf", u".epub"
 
@@ -239,6 +244,10 @@ class LibZotero(Debuggable):
                         self.index[item_id].issue = item_value
                     elif item_name == u"title":
                         self.index[item_id].title = unicode(item_value)
+                    elif item_name == u"DOI":
+                        self.index[item_id].doi = unicode(item_value)
+                    else:
+                        self.debug.print_debug(self, u'Unindexed field: {0}'.format(item_name))
 
 
             # Retrieve author information

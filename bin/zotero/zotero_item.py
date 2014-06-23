@@ -53,46 +53,62 @@ class zoteroItem(object):
                 self.id = item[u"item_id"]
             else:
                 self.id = None
+
             if u"publicationTitle" in item:
                 self.publication = item[u"publicationTitle"]
             else:
                 self.publication = None
+
             if u"title" in item:
                 self.title = item[u"title"]
             else:
                 self.title = None
+
             if u"author" in item:
                 self.authors = item[u"author"]
             else:
                 self.authors = []
+
             if u"date" in item:
                 self.date = item[u"date"]
             else:
                 self.date = None
+
             if u"issue" in item:
                 self.issue = item[u"issue"]
             else:
                 self.issue = None
+
             if u"volume" in item:
                 self.volume = item[u"volume"]
             else:
                 self.volume = None
+
             if u"fulltext" in item:
                 self.fulltext = item[u"fulltext"]
             else:
                 self.fulltext = None
+
             if u"collections" in item:
                 self.collections = item[u"collections"]
             else:
                 self.collections = []
+
             if u"tags" in item:
                 self.tags = item[u"tags"]
             else:
                 self.tags = []
+
             if u"key" in item:
                 self.key = item[u"key"]
             else:
                 self.key = None
+
+            if u"DOI" in item:
+                self.doi = item[u"DOI"]
+            else:
+                self.doi = None
+
             if u"typeName" in item:
                 self.item_type = item[u"typeName"]
             else:
@@ -109,6 +125,7 @@ class zoteroItem(object):
             self.date = None
             self.key = None
             self.item_type = None
+            self.doi = None
             if isinstance(init, int):
                 self.id = init
             else:
@@ -330,7 +347,7 @@ class zoteroItem(object):
                     p = Person('', author[0])
                 authors.append(p)
 
-            ja = JournalArticle(authors=authors)
+            ja = JournalArticle(authors=authors, doi=self.doi)
 
             return ja.get_citation()
 
