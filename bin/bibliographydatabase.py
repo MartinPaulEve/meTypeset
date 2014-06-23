@@ -175,25 +175,40 @@ class JournalArticle():
         for author in self.authors:
             author_block += author.get_citation()
 
-        return u'<ref>'  \
-                    u'<element-citation publication-type="journal">' \
-                        u'<person-group person-group-type="author">' \
-                            u'{0}' \
-                            u'</person-group>' \
-                            u'<article-title>{1}</article-title>' \
-                            u'<source>{2}</source>' \
-                            u'<date>' \
-                                u'<year>{3}</year>' \
-                            u'</date>' \
-                            u'<volume>{4}</volume>' \
-                            u'<issue>{5}</issue>' \
-                            u'<fpage>{6}</fpage>' \
-                            u'<lpage>{7}</lpage>' \
-                            u'<pub-id pub-id-type="doi">{8}</pub-id>' \
-                        u'</element-citation>' \
-                u'</ref>'.format(author_block, self.title, self.journal, self.year, self.volume, self.issue, self.fpage,
-                                self.lpage, self.doi)
+        ret = u'<ref>'
+        ret += u'<element-citation publication-type="journal">'
 
+        if author_block != '':
+            ret += u'<person-group person-group-type="author">{0}</person-group>'.format(author_block)
+
+        if self.title != '':
+            ret += u'<article-title>{0}</article-title>'.format(self.title)
+
+        if self.journal != '':
+            ret += u'<source>{0}</source>'.format(self.journal)
+
+        ret += u'<date><year>{0}</year></date>'.format(self.year)
+
+        if self.volume != '':
+            ret += u'<volume>{0}</volume>'.format(self.volume)
+
+        if self.issue != '':
+            ret += u'<issue>{0}</issue>'.format(self.issue)
+
+        if self.fpage != '' and self.fpage is not None:
+            ret += u'<fpage>{0}</fpage>'.format(self.fpage)
+
+        if self.lpage != '' and self.lpage is not None:
+            ret += u'<lpage>{0}</lpage>'.format(self.lpage)
+
+        if self.doi != '':
+            ret += u'<pub-id pub-id-type="doi">{0}</pub-id>'.format(self.doi)
+
+
+        ret += u'</element-citation>'
+        ret += u'</ref>'
+
+        return ret
 
 class BibliographyDatabase(Debuggable):
     def __init__(self, global_variables):
