@@ -249,7 +249,6 @@ class LibZotero(Debuggable):
                     elif item_name == u"pages":
                         self.index[item_id].pages = unicode(item_value)
                     elif item_name == u"place":
-                        print item_value
                         self.index[item_id].place = unicode(item_value)
                     elif item_name == u"publisher":
                         self.index[item_id].publisher = unicode(item_value)
