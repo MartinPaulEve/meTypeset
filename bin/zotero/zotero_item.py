@@ -379,21 +379,27 @@ class zoteroItem(object):
                 fpage = self.pages.split('-')[0].strip()
                 lpage = self.pages.split('-')[1].strip()
 
+        authors = []
+
+        for author in self.authors:
+            if len(author) > 1:
+                p = Person(author[1], author[0])
+            else:
+                p = Person('', author[0])
+            authors.append(p)
+
         if self.item_type == 'journalArticle':
-            authors = []
-
-            for author in self.authors:
-                if len(author) > 1:
-                    p = Person(author[1], author[0])
-                else:
-                    p = Person('', author[0])
-                authors.append(p)
-
             ja = JournalArticle(authors=authors, title=self.title, journal=self.publication, issue=self.issue,
                                 volume=self.volume,
                                 doi=self.doi, fpage=fpage, lpage=lpage, year=self.format_date())
 
             return ja.get_citation()
+
+        elif self.item_type == 'book':
+            book = Book(authors=authors, title=self.title, year=self.format_date(), place=self.place,
+                        publisher=self.publisher)
+
+            return book.get_citation()
 
         return self.simple_format()
 
