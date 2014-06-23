@@ -114,6 +114,11 @@ class zoteroItem(object):
             else:
                 self.item_type = None
 
+            if u"pages" in item:
+                self.pages = item[u"pages"]
+            else:
+                self.pages = None
+
         else:
             self.title = None
             self.collections = []
@@ -127,6 +132,7 @@ class zoteroItem(object):
             self.key = None
             self.item_type = None
             self.doi = None
+            self.pages = None
             if isinstance(init, int):
                 self.id = init
             else:
@@ -338,6 +344,15 @@ class zoteroItem(object):
         return self.simple_format_str
 
     def JATS_format(self):
+        page_regex = re.compile('^\s*\d+\s*-\s*\d+\s*$')
+        fpage = None
+        lpage = None
+
+        if self.pages is not None:
+            if page_regex.match(self.pages):
+                fpage = self.pages.split('-')[0].strip()
+                lpage = self.pages.split('-')[1].strip()
+
         if self.item_type == 'journalArticle':
             authors = []
 
@@ -350,7 +365,7 @@ class zoteroItem(object):
 
             ja = JournalArticle(authors=authors, title=self.title, journal=self.publication, issue=self.issue,
                                 volume=self.volume,
-                                doi=self.doi)
+                                doi=self.doi, fpage=fpage, lpage=lpage)
 
             return ja.get_citation()
 

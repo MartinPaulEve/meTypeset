@@ -10,7 +10,7 @@ Options:
     -d, --debug                                     Enable debug output.
     -h, --help                                      Show this screen.
     -v, --version                                   Show version.
-
+    -z, --zotero                                    Enable Zotero integration for references.
 """
 
 __author__ = "Martin Paul Eve"
