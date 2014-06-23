@@ -31,7 +31,7 @@ import uuid
 from lxml import etree
 from docopt import docopt
 from bare_globals import GV
-
+from interactive import Interactive
 
 class Person():
     def __init__(self, firstname='', lastname=''):
@@ -154,6 +154,8 @@ class JournalArticle():
     def __init__(self, authors=None, title='', journal='', issue='', volume='', fpage='', lpage='', year='', doi=''):
         if authors is None:
             self.authors = []
+        else:
+            self.authors = authors
         self.title = title
         self.journal = journal
         self.issue = issue
@@ -448,7 +450,7 @@ class BibliographyDatabase(Debuggable):
 
     def process_zotero(self):
         from zotero import libzotero
-        zotero = libzotero.LibZotero(unicode(self.gv.settings.get_setting(u'zotero', self)))
+        zotero = libzotero.LibZotero(unicode(self.gv.settings.get_setting(u'zotero', self)), self.gv)
 
         manipulate = NlmManipulate(self.gv)
         master_tree = manipulate.load_dom_tree()
@@ -496,9 +498,13 @@ def main():
 
     bare_gv = GV(args)
 
+    if args['--debug']:
+        bare_gv.debug.enable_debug(True)
+        bare_gv.debug.enable_prompt(Interactive(bare_gv))
+
     if args['zotero']:
         from zotero import libzotero
-        zotero = libzotero.LibZotero(unicode(bare_gv.settings.get_setting(u'zotero', bare_gv)))
+        zotero = libzotero.LibZotero(unicode(bare_gv.settings.get_setting(u'zotero', bare_gv)), bare_gv)
 
         term = args['<query>']
 
@@ -516,16 +522,12 @@ def main():
 
         results = zotero.search(term.strip())
 
-        print "%d results for %s" % (len(results), term)
+        bare_gv.debug.print_debug(bare_gv, "%d results for %s" % (len(results), term))
 
         for item in results:
-            print item.simple_format()
-            print item.item_type
+            print item.JATS_format()
 
         return
-
-    if args['--debug']:
-        bare_gv.debug.enable_debug()
 
     bibliography_database_instance = BibliographyDatabase(bare_gv)
     bibliography_database_instance.run()
