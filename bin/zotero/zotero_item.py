@@ -388,7 +388,7 @@ class zoteroItem(object):
                 p = Person('', author[0])
             authors.append(p)
 
-        if self.item_type == 'journalArticle':
+        if self.item_type == 'journalArticle' or self.item_type == 'magazineArticle':
             ja = JournalArticle(authors=authors, title=self.title, journal=self.publication, issue=self.issue,
                                 volume=self.volume,
                                 doi=self.doi, fpage=fpage, lpage=lpage, year=self.format_date())
@@ -408,7 +408,7 @@ class zoteroItem(object):
 
             return chapter.get_citation()
 
-        return self.simple_format()
+        return None
 
     def hashKey(self):
 
