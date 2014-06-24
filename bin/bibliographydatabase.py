@@ -494,10 +494,17 @@ class BibliographyDatabase(Debuggable):
             term = term.replace(u'’', u'')
             term = term.replace(u' Ed. ', u' ')
             term = term.replace(u' Ed ', u' ')
+            term = term.replace(u' Trans. ', u' ')
+            term = term.replace(u' Trans ', u' ')
+            term = term.replace(u' trans ', u' ')
+            term = term.replace(u' trans. ', u' ')
+            term = term.replace(u' by. ', u' ')
+            term = term.replace(u' by ', u' ')
             term = term.replace(u' ed. ', u' ')
             term = term.replace(u' ed ', u' ')
             term = term.replace(u' In ', u' ')
             term = term.replace(u' in ', u' ')
+            term = term.replace(u' and ', u' ')
             term = term.replace(u'”', u'')
             term = re.sub(r'[Aa]ccessed', '', term)
             term = re.sub(r'meTypesetbr', '', term)
@@ -519,7 +526,7 @@ class BibliographyDatabase(Debuggable):
                     ref = etree.fromstring(res)
                     if 'id' in element.attrib:
                         ref.attrib['id'] = element.attrib['id']
-                        
+
                     element.addnext(ref)
 
                     original_term = re.sub(u'--', u'', original_term)
