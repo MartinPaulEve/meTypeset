@@ -212,6 +212,8 @@ class JournalArticle():
         ret += u'</ref>'
 
         ret = ret.replace('&', '&amp;')
+        ret = ret.replace('<i>', '<italic>')
+        ret = ret.replace('</i>', '</italic>')
 
         return ret
 
