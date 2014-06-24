@@ -99,7 +99,7 @@ class BookChapter():
                         u'<publisher-name>{6}</publisher-name>' \
                     u'</element-citation>' \
                 u'</ref>'.format(author_block, self.title, self.book_title, self.year, editor_block, self.place,
-                                 self.publisher)
+                                 self.publisher).replace('&', '&amp;')
 
 class Book():
     def __init__(self, authors=None, title='', publisher='', place='', year='', editors=None):
@@ -150,7 +150,7 @@ class Book():
                         u'<publisher-loc>{3}</publisher-loc>' \
                         u'<publisher-name>{4}</publisher-name>' \
                     u'</element-citation>' \
-                u'</ref>'.format(author_block, self.title, self.year, self.place, self.publisher, editor_block)
+                u'</ref>'.format(author_block, self.title, self.year, self.place, self.publisher, editor_block).replace('&', '&amp;')
 
 
 class JournalArticle():
@@ -210,6 +210,8 @@ class JournalArticle():
 
         ret += u'</element-citation>'
         ret += u'</ref>'
+
+        ret = ret.replace('&', '&amp;')
 
         return ret
 
@@ -475,7 +477,8 @@ class BibliographyDatabase(Debuggable):
         tree = master_tree.xpath('//back/ref-list/ref')
 
         for element in tree:
-            term = manipulate.get_stripped_text(element)
+            original_term = manipulate.get_stripped_text(element)
+            term = original_term
 
             #term = re.sub(r'(.+?)(\(.+?\))(.*)', r'\1\3', term)
             term = re.sub(r'(?<![0-9])[1-9][0-9]{0,2}(?![0-9])', r'', term)
@@ -507,8 +510,23 @@ class BibliographyDatabase(Debuggable):
                 results = zotero.search(term.strip())
 
             if len(results) == 1:
-                for item in results:
-                    print item.JATS_format()
+                res = results[0].JATS_format()
+
+                if res is not None:
+                    ref = etree.fromstring(res)
+                    element.addnext(ref)
+
+                    original_term = re.sub(u'--', u'', original_term)
+
+                    comment = etree.Comment(original_term)
+                    ref.addnext(comment)
+
+                    element.tag = 'REMOVE'
+
+        etree.strip_elements(master_tree, 'REMOVE')
+
+        manipulate.save_tree(master_tree)
+
 
     def run(self):
         if int(self.gv.settings.args['--aggression']) >= self.aggression and not self.gv.use_zotero:
