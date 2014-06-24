@@ -517,6 +517,9 @@ class BibliographyDatabase(Debuggable):
 
                 if res is not None:
                     ref = etree.fromstring(res)
+                    if 'id' in element.attrib:
+                        ref.attrib['id'] = element.attrib['id']
+                        
                     element.addnext(ref)
 
                     original_term = re.sub(u'--', u'', original_term)
