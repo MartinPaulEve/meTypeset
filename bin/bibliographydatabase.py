@@ -512,11 +512,10 @@ class BibliographyDatabase(Debuggable):
 
             results = zotero.search(term.strip())
 
-            while len(results) == 0 and len(term.split(' ')) > 2:
+            while len(results) == 0 and len(term.strip().split(' ')) > 2:
                 # no results found.
                 # begin iterating backwards
-
-                term = ' '.join(term.split(' ')[:-1])
+                term = ' '.join(term.strip().split(' ')[:-1])
                 results = zotero.search(term.strip())
 
             if len(results) == 1:
