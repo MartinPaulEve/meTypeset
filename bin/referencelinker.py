@@ -12,6 +12,7 @@ Options:
     -h, --help                                      Show this screen.
     --nogit                                         Disable git debug filesystem (only of use with --debug)
     -v, --version                                   Show version.
+    -z, --zotero                                    Enable Zotero integration for references.
 """
 
 from teimanipulate import *
