@@ -22,6 +22,7 @@ The modfications to the OxGarage stack contained within this project are Copyrig
 * Full table support
 * Metadata handling from platform-generated input
 * Built-in bibliographic database
+* Zotero integration for looking up citations
 
 ##Running meTypeset
 
@@ -57,6 +58,7 @@ Options:
     -p, --proprietary                               Enables proprietary math parsing. Requires omml2mml.xsl
     -s, --settings <settings_file>                  Settings file
     -v, --version                                   Show version.
+    -z, --zotero                                    Enable Zotero integration for references.
 ```
 
 When running with the doc command, input should be a Word DOC file.
@@ -111,7 +113,7 @@ Options:
     --interactive                                   Prompt the user to assist in interactive tagging
     -h, --help                                      Show this screen.
     -v, --version                                   Show version.
-
+    -z, --zotero                                    Enable Zotero integration for references.
 ```
 
 ###NLM processor
@@ -135,6 +137,7 @@ Options:
     --noimageprocessing                             Disable unoconv image processing
     -s, --settings <settings_file>                  Settings file
     -v, --version                                   Show version.
+    -z, --zotero                                    Enable Zotero integration for references.
 ```
 
 ##Troubleshooting
@@ -189,6 +192,8 @@ The [metadata merge](bin/metadata.py) merges in a metadata heading with the NLM.
 ###Bibliographic Database
 The [bibliographic database](bin/bibliographydatabase.py) inserts fully marked-up JATS element-citation blocks for citations that it has encountered previously. These can be imported by using the "bibscan" command.
 
+If the user has specified the --zotero option and set the mt:zotero setting to a valid local Zotero database, the bibliographic database will look up citations from Zotero instead of its internal database. meTypeset will place the original citation given by the user into a comment immediately below the reference found in Zotero. References from Zotero will only be imported if one and only one match is found for a string. meTypeset will begin with the whole reference string from the original document, then sequentially eliminate words until there are only three left. If it has not found a Zotero reference by this point, it will leave the original mixed-citation in place.
+
 ###Chain
 Finally, an [optional additional XSL](bin/xslchainer.py) file can be specified to be transformed by passing the --chain option.
 
@@ -207,4 +212,5 @@ Additional contributions were made, in alphabetical order) by:
 
 * [Rodrigo DLG](https://github.com/josille) (josille@gmail.com)
 * [Alex Garnett](https://github.com/axfelix) (axfelix@gmail.com)
+* [Sebastiaan Mathot](https://github.com/smathot) (http://www.cogsci.nl/) (for [Zotero integration](https://github.com/smathot/qnotero))
 * [Dulip Withanage](https://github.com/withanage) (dulip.withanage@gmail.com)

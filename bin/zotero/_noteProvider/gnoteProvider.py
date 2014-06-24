@@ -1,6 +1,7 @@
 #-*- coding:utf-8 -*-
 
 """
+Originally (c) Sebastiaan Mathot 2011
 This file is part of Gnotero.
 
 Gnotero is free software: you can redistribute it and/or modify
