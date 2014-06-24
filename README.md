@@ -2,7 +2,7 @@
 
 meTypeset is a tool to covert from Microsoft Word .docx format to NLM/JATS-XML for scholarly/scientific article typesetting.
 
-meTypeset is a fork of the OxGarage stack and uses TEI as an intemediary format to facilitate interchange. Components are licensed under the Mozilla Public Licence version 1.1 and the Creative Commons Attribution-Sharealike 3.0 clauses, according to the various original sources of the fork.
+meTypeset is a fork of the OxGarage stack and uses TEI as an intemediary format to facilitate interchange. Components are licensed under the GPL v2 and the Creative Commons Attribution-Sharealike 3.0 clauses, according to the various original sources of the fork.
 
 The transforms within this software can be invoked in several different ways:
 
