@@ -477,15 +477,21 @@ class BibliographyDatabase(Debuggable):
         for element in tree:
             term = manipulate.get_stripped_text(element)
 
-            term = re.sub(r'(.+?)(\(.+?\))(.*)', r'\1\3', term)
-            term = re.sub(r'[\-,\.\<\>\(\)\;\:\@\'\#\~\}\{\[\]\"\d\!\\/]', '', term)
+            #term = re.sub(r'(.+?)(\(.+?\))(.*)', r'\1\3', term)
+            term = re.sub(r'(?<![0-9])[1-9][0-9]{0,2}(?![0-9])', r'', term)
+            term = re.sub(r'[\-,\.\<\>\(\)\;\:\@\'\#\~\}\{\[\]\"\!\\/]', '', term)
             term = re.sub(u'[^\s]+?\s[Ee]dition', u' ', term)
+            term = re.sub(u'\s.\s', u' ', term)
             term = term.replace(u'“', u'')
             term = term.replace(u'\'s', u'')
             term = term.replace(u'’s', u'')
             term = term.replace(u'’', u'')
-            term = term.replace(u'Ed.', u'')
-            term = term.replace(u'Ed', u'')
+            term = term.replace(u' Ed. ', u' ')
+            term = term.replace(u' Ed ', u' ')
+            term = term.replace(u' ed. ', u' ')
+            term = term.replace(u' ed ', u' ')
+            term = term.replace(u' In ', u' ')
+            term = term.replace(u' in ', u' ')
             term = term.replace(u'”', u'')
             term = re.sub(r'[Aa]ccessed', '', term)
             term = re.sub(r'meTypesetbr', '', term)
@@ -493,9 +499,14 @@ class BibliographyDatabase(Debuggable):
 
             results = zotero.search(term.strip())
 
-            print "%d results for %s" % (len(results), term)
+            while len(results) == 0 and term.strip() != '':
+                # no results found.
+                # begin iterating backwards
 
-            if len(results) < 3:
+                term = ' '.join(term.split(' ')[:-1])
+                results = zotero.search(term.strip())
+
+            if len(results) == 1:
                 for item in results:
                     print item.JATS_format()
 

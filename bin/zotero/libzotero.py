@@ -363,7 +363,7 @@ class LibZotero(Debuggable):
         if not self.update():
             return []
         if query in self.search_cache:
-            self.debug.print_debug(self, u"zotero.search(): retrieving results for '%s' from cache" % query)
+            #self.debug.print_debug(self, u"zotero.search(): retrieving results for '%s' from cache" % query)
             return self.search_cache[query]
         t = time.time()
         terms = self.parse_query(query)
@@ -372,7 +372,7 @@ class LibZotero(Debuggable):
             if item.match(terms):
                 results.append(item)
         self.search_cache[query] = results
-        self.debug.print_debug(self, u"zotero.search(): search for '%s' completed in %.3fs" % (query, time.time() - t))
+        #self.debug.print_debug(self, u"zotero.search(): search for '%s' completed in %.3fs" % (query, time.time() - t))
 
         return results
 
