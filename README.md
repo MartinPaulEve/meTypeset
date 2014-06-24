@@ -23,6 +23,7 @@ The modfications to the OxGarage stack contained within this project are Copyrig
 * Metadata handling from platform-generated input
 * Built-in bibliographic database
 * Zotero integration for looking up citations
+* Free software
 
 ##Running meTypeset
 
@@ -206,7 +207,7 @@ The parser attempts to parse headings that are all capitals, all-bold or of a su
 
 meTypeset is a fork of the [TEI Consortium's OxGarage stylesheets](https://github.com/TEIC/Stylesheets).
 
-The lead developer is Dr. [Martin Paul Eve](https://www.martineve.com).
+The lead developer is Dr. [Martin Paul Eve](https://www.martineve.com) (martin@martineve.com).
 
 Additional contributions were made, in alphabetical order) by:
 
