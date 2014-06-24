@@ -485,6 +485,7 @@ class BibliographyDatabase(Debuggable):
             term = re.sub(r'[\-,\.\<\>\(\)\;\:\@\'\#\~\}\{\[\]\"\!\\/]', '', term)
             term = re.sub(u'[^\s]+?\s[Ee]dition', u' ', term)
             term = re.sub(u'\s.\s', u' ', term)
+            term = re.sub(u'(?<=[A-Z])\.', u' ', term)
             term = term.replace(u'“', u'')
             term = term.replace(u'\'s', u'')
             term = term.replace(u'’s', u'')
@@ -502,7 +503,7 @@ class BibliographyDatabase(Debuggable):
 
             results = zotero.search(term.strip())
 
-            while len(results) == 0 and term.strip() != '':
+            while len(results) == 0 and len(term.split(' ')) > 2:
                 # no results found.
                 # begin iterating backwards
 
