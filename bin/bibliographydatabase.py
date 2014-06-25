@@ -46,13 +46,18 @@ class Person():
 
 class BookChapter():
     def __init__(self, authors=None, title='', book_title='', publisher='', place='', year='', fpage='', lpage='',
-                 editors=None):
+                 editors=None, translators=None, doi=''):
         if authors is None:
             self.authors = []
         else:
             self.authors = authors
 
         if editors is None:
+            self.editors = []
+        else:
+            self.editors = editors
+
+        if translators is None:
             self.editors = []
         else:
             self.editors = editors
@@ -64,6 +69,7 @@ class BookChapter():
         self.place = place
         self.fpage = fpage
         self.lpage = lpage
+        self.doi = doi
 
     @staticmethod
     def object_type():
@@ -82,24 +88,45 @@ class BookChapter():
             for editor in self.editors:
                 editor_block += editor.get_citation()
 
-        return u'<ref>'  \
-                    u'<element-citation publication-type="bookchapter">' \
-                        u'<person-group person-group-type="author">' \
-                            u'{0}' \
-                        u'</person-group>' \
-                        u'<article-title>{1}</article-title>' \
-                        u'<source>{2}</source>' \
-                        u'<date>' \
-                            u'<year>{3}</year>' \
-                        u'</date>' \
-                        u'<person-group person-group-type="editor">' \
-                            u'{4}' \
-                        u'</person-group>' \
-                        u'<publisher-loc>{5}</publisher-loc>' \
-                        u'<publisher-name>{6}</publisher-name>' \
-                    u'</element-citation>' \
-                u'</ref>'.format(author_block, self.title, self.book_title, self.year, editor_block, self.place,
-                                 self.publisher).replace('&', '&amp;')
+        ret = u'<ref>'
+        ret += u'<element-citation publication-type="bookchapter">'
+
+        if author_block != '':
+            ret += u'<person-group person-group-type="author">{0}</person-group>'.format(author_block)
+
+        if self.title != '':
+            ret += u'<article-title>{0}</article-title>'.format(self.title)
+
+        if self.book_title != '':
+            ret += u'<source>{0}</source>'.format(self.book_title)
+
+        ret += u'<date><year>{0}</year></date>'.format(self.year)
+
+        if editor_block != '':
+            ret += u'<person-group person-group-type="editor">{0}</person-group>'.format(editor_block)
+
+        ret += u'<publisher-loc>{0}</publisher-loc>'.format(self.place)
+
+        ret += u'<publisher-name>{0}</publisher-name>'.format(self.publisher)
+
+        if self.fpage != '' and self.fpage is not None:
+            ret += u'<fpage>{0}</fpage>'.format(self.fpage)
+
+        if self.lpage != '' and self.lpage is not None:
+            ret += u'<lpage>{0}</lpage>'.format(self.lpage)
+
+        if self.doi != '' and self.doi is not None:
+            ret += u'<pub-id pub-id-type="doi">{0}</pub-id>'.format(self.doi)
+
+
+        ret += u'</element-citation>'
+        ret += u'</ref>'
+
+        ret = ret.replace('&', '&amp;')
+        ret = ret.replace('<i>', '<italic>')
+        ret = ret.replace('</i>', '</italic>')
+
+        return ret
 
 class Book():
     def __init__(self, authors=None, title='', publisher='', place='', year='', editors=None):
@@ -204,7 +231,7 @@ class JournalArticle():
         if self.lpage != '' and self.lpage is not None:
             ret += u'<lpage>{0}</lpage>'.format(self.lpage)
 
-        if self.doi != '':
+        if self.doi != '' and self.doi is not None:
             ret += u'<pub-id pub-id-type="doi">{0}</pub-id>'.format(self.doi)
 
 

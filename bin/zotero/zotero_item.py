@@ -433,7 +433,7 @@ class zoteroItem(object):
         elif self.item_type == 'bookSection':
             chapter = BookChapter(authors=authors, title=self.title, book_title=self.publication,
                                   fpage=fpage, lpage=lpage, year=self.format_date(), place=self.place,
-                                  publisher=self.publisher, editors=editors)
+                                  publisher=self.publisher, editors=editors, doi=self.doi)
 
             return chapter.get_citation()
 
