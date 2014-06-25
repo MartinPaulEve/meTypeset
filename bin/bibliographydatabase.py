@@ -416,7 +416,7 @@ class BibliographyDatabase(Debuggable):
                             break
 
                         for permute in itertools.permutations(list_split, length):
-                            key = match.groups(0)[0] + ''.join(permute).strip()
+                            key = unicode(match.groups(0)[0]) + ''.join(permute).strip()
 
                             if isinstance(key, unicode):
                                 key = key.encode("utf-16le")
