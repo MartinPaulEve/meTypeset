@@ -53,18 +53,6 @@ class LibZotero(Debuggable):
 			and itemTypes.itemTypeID = items.itemTypeID
 		"""
 
-    author_query = u"""
-		select items.itemID, creatorData.lastName, creatorData.firstName
-		from items, itemCreators, creators, creatorData, creatorTypes
-		where
-			items.itemID = itemCreators.itemID
-			and itemCreators.creatorID = creators.creatorID
-			and creators.creatorDataID = creatorData.creatorDataID
-			and itemCreators.creatorTypeID = creatorTypes.creatorTypeID
-			and creatorTypes.creatorType == "author"
-		order by itemCreators.orderIndex
-		"""
-
     collection_query = u"""
 		select items.itemID, collections.collectionName
 		from items, collections, collectionItems
@@ -84,6 +72,20 @@ class LibZotero(Debuggable):
 		"""
 
     deleted_query = u"select itemID from deletedItems"
+
+    @staticmethod
+    def creator_query(creator_type):
+        return u"""
+		select items.itemID, creatorData.lastName, creatorData.firstName
+		from items, itemCreators, creators, creatorData, creatorTypes
+		where
+			items.itemID = itemCreators.itemID
+			and itemCreators.creatorID = creators.creatorID
+			and creators.creatorDataID = creatorData.creatorDataID
+			and itemCreators.creatorTypeID = creatorTypes.creatorTypeID
+			and creatorTypes.creatorType == "{0}"
+		order by itemCreators.orderIndex
+		""".format(creator_type)
 
     def __init__(self, zotero_path, global_variables, noteProvider=None):
         Debuggable.__init__(self, 'libZotero')
@@ -258,7 +260,7 @@ class LibZotero(Debuggable):
                         self.debug.print_debug(self, u'Unindexed field: {0}'.format(item_name))
 
             # Retrieve author information
-            self.cur.execute(self.author_query)
+            self.cur.execute(self.creator_query('author'))
             for item in self.cur.fetchall():
                 item_id = item[0]
                 if item_id not in deleted:
@@ -266,6 +268,36 @@ class LibZotero(Debuggable):
                     # next two columns represent lastname and firstname
                     new_authors = item[1:]
                     self.index[item_id].authors.append(new_authors)
+
+            # Retrieve editor information
+            self.cur.execute(self.creator_query('editor'))
+            for item in self.cur.fetchall():
+                item_id = item[0]
+                if item_id not in deleted:
+                    # slice tuple as first column is an integer index
+                    # next two columns represent lastname and firstname
+                    new_authors = item[1:]
+                    self.index[item_id].editors.append(new_authors)
+
+            # Retrieve translator information
+            self.cur.execute(self.creator_query('translator'))
+            for item in self.cur.fetchall():
+                item_id = item[0]
+                if item_id not in deleted:
+                    # slice tuple as first column is an integer index
+                    # next two columns represent lastname and firstname
+                    new_authors = item[1:]
+                    self.index[item_id].translators.append(new_authors)
+
+            # Retrieve translator information
+            self.cur.execute(self.creator_query('bookAuthor'))
+            for item in self.cur.fetchall():
+                item_id = item[0]
+                if item_id not in deleted:
+                    # slice tuple as first column is an integer index
+                    # next two columns represent lastname and firstname
+                    new_authors = item[1:]
+                    self.index[item_id].book_authors.append(new_authors)
 
             # Retrieve collection information
             self.cur.execute(self.collection_query)

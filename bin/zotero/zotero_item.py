@@ -71,6 +71,21 @@ class zoteroItem(object):
             else:
                 self.authors = []
 
+            if u"editor" in item:
+                self.editors = item[u"editor"]
+            else:
+                self.editors = []
+
+            if u"translator" in item:
+                self.translators = item[u"translator"]
+            else:
+                self.translators = []
+
+            if u"bookAuthor" in item:
+                self.book_authors = item[u"bookAuthor"]
+            else:
+                self.book_authors = []
+
             if u"date" in item:
                 self.date = item[u"date"]
             else:
@@ -136,6 +151,9 @@ class zoteroItem(object):
             self.collections = []
             self.publication = None
             self.authors = []
+            self.editors = []
+            self.translators = []
+            self.book_authors = []
             self.tags = []
             self.issue = None
             self.volume = None
@@ -390,6 +408,15 @@ class zoteroItem(object):
                 p = Person('', author[0])
             authors.append(p)
 
+        editors = []
+
+        for editor in self.editors:
+            if len(editor) > 1:
+                p = Person(editor[1], editor[0])
+            else:
+                p = Person('', editor[0])
+            editors.append(p)
+
         if self.item_type == 'journalArticle' or self.item_type == 'magazineArticle':
             ja = JournalArticle(authors=authors, title=self.title, journal=self.publication, issue=self.issue,
                                 volume=self.volume,
@@ -406,7 +433,7 @@ class zoteroItem(object):
         elif self.item_type == 'bookSection':
             chapter = BookChapter(authors=authors, title=self.title, book_title=self.publication,
                                   fpage=fpage, lpage=lpage, year=self.format_date(), place=self.place,
-                                  publisher=self.publisher)
+                                  publisher=self.publisher, editors=editors)
 
             return chapter.get_citation()
 
