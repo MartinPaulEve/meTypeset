@@ -59,9 +59,9 @@ class BookChapter():
             self.editors = editors
 
         if translators is None:
-            self.editors = []
+            self.translators = []
         else:
-            self.editors = editors
+            self.translators = translators
 
         self.title = title
         self.book_title = book_title
@@ -82,12 +82,13 @@ class BookChapter():
         for author in self.authors:
             author_block += author.get_citation()
 
-        editor_block = ''
+        translator_block = ''
+        for translator in self.translators:
+            translator_block += translator.get_citation()
 
-        # note that this kind of check will always be necessary when forward-migrating database schema
-        if hasattr(self, 'editors'):
-            for editor in self.editors:
-                editor_block += editor.get_citation()
+        editor_block = ''
+        for editor in self.editors:
+            editor_block += editor.get_citation()
 
         ret = u'<ref>'
         ret += u'<element-citation publication-type="bookchapter">'
@@ -105,6 +106,9 @@ class BookChapter():
 
         if editor_block != '':
             ret += u'<person-group person-group-type="editor">{0}</person-group>'.format(editor_block)
+
+        if translator_block != '':
+            ret += u'<person-group person-group-type="translator">{0}</person-group>'.format(translator_block)
 
         ret += u'<publisher-loc>{0}</publisher-loc>'.format(self.place)
 
@@ -131,7 +135,7 @@ class BookChapter():
 
 
 class Book():
-    def __init__(self, authors=None, title='', publisher='', place='', year='', editors=None, doi=''):
+    def __init__(self, authors=None, title='', publisher='', place='', year='', editors=None, doi='', translators=None):
         if authors is None:
             self.authors = []
         else:
@@ -141,6 +145,11 @@ class Book():
             self.editors = []
         else:
             self.editors = editors
+
+        if translators is None:
+            self.translators = []
+        else:
+            self.translators = translators
 
         self.title = title
         self.year = year
@@ -159,12 +168,13 @@ class Book():
         for author in self.authors:
             author_block += author.get_citation()
 
-        editor_block = ''
+        translator_block = ''
+        for translator in self.translators:
+            translator_block += translator.get_citation()
 
-        # note that this kind of check will always be necessary when forward-migrating database schema
-        if hasattr(self, 'editors'):
-            for editor in self.editors:
-                editor_block += editor.get_citation()
+        editor_block = ''
+        for editor in self.editors:
+            editor_block += editor.get_citation()
 
         ret = u'<ref>'
         ret += u'<element-citation publication-type="book">'
@@ -179,6 +189,9 @@ class Book():
 
         if editor_block != '':
             ret += u'<person-group person-group-type="editor">{0}</person-group>'.format(editor_block)
+
+        if translator_block != '':
+            ret += u'<person-group person-group-type="translator">{0}</person-group>'.format(translator_block)
 
         ret += u'<publisher-loc>{0}</publisher-loc>'.format(self.place)
 
@@ -199,11 +212,18 @@ class Book():
 
 
 class JournalArticle():
-    def __init__(self, authors=None, title='', journal='', issue='', volume='', fpage='', lpage='', year='', doi=''):
+    def __init__(self, authors=None, title='', journal='', issue='', volume='', fpage='', lpage='', year='', doi='',
+                 translators=None):
         if authors is None:
             self.authors = []
         else:
             self.authors = authors
+
+        if translators is None:
+            self.translators = []
+        else:
+            self.translators = translators
+
         self.title = title
         self.journal = journal
         self.issue = issue
@@ -223,6 +243,10 @@ class JournalArticle():
         for author in self.authors:
             author_block += author.get_citation()
 
+        translator_block = ''
+        for translator in self.translators:
+            translator_block += translator.get_citation()
+
         ret = u'<ref>'
         ret += u'<element-citation publication-type="journal">'
 
@@ -234,6 +258,9 @@ class JournalArticle():
 
         if self.journal != '':
             ret += u'<source>{0}</source>'.format(self.journal)
+
+        if translator_block != '':
+            ret += u'<person-group person-group-type="translator">{0}</person-group>'.format(translator_block)
 
         ret += u'<date><year>{0}</year></date>'.format(self.year)
 
