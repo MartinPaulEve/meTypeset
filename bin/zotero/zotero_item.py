@@ -224,6 +224,10 @@ class zoteroItem(object):
                     if term in self.date:
                         match = True
 
+                if not match and self.doi is not None:
+                    if term in self.doi.lower():
+                        match = True
+
                 if not match and self.title is not None and term_type in \
                         term_title and term in self.title.lower():
                     match = True
