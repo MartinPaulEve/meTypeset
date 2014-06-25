@@ -426,7 +426,7 @@ class zoteroItem(object):
 
         elif self.item_type == 'book':
             book = Book(authors=authors, title=self.title, year=self.format_date(), place=self.place,
-                        publisher=self.publisher)
+                        publisher=self.publisher, doi=self.doi)
 
             return book.get_citation()
 
