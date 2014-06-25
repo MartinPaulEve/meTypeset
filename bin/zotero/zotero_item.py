@@ -417,23 +417,32 @@ class zoteroItem(object):
                 p = Person('', editor[0])
             editors.append(p)
 
+        translators = []
+
+        for translator in self.translators:
+            if len(translator) > 1:
+                p = Person(translator[1], translator[0])
+            else:
+                p = Person('', translator[0])
+            translators.append(p)
+
         if self.item_type == 'journalArticle' or self.item_type == 'magazineArticle':
             ja = JournalArticle(authors=authors, title=self.title, journal=self.publication, issue=self.issue,
-                                volume=self.volume,
-                                doi=self.doi, fpage=fpage, lpage=lpage, year=self.format_date())
+                                volume=self.volume, doi=self.doi, fpage=fpage, lpage=lpage, year=self.format_date(),
+                                translators=translators)
 
             return ja.get_citation()
 
         elif self.item_type == 'book':
             book = Book(authors=authors, title=self.title, year=self.format_date(), place=self.place,
-                        publisher=self.publisher, doi=self.doi)
+                        publisher=self.publisher, doi=self.doi, translators=translators)
 
             return book.get_citation()
 
         elif self.item_type == 'bookSection':
             chapter = BookChapter(authors=authors, title=self.title, book_title=self.publication,
                                   fpage=fpage, lpage=lpage, year=self.format_date(), place=self.place,
-                                  publisher=self.publisher, editors=editors, doi=self.doi)
+                                  publisher=self.publisher, editors=editors, doi=self.doi, translators=translators)
 
             return chapter.get_citation()
 
