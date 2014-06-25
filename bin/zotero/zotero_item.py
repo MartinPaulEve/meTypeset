@@ -208,6 +208,18 @@ class zoteroItem(object):
                             if term in author_component.lower():
                                 match = True
 
+                if not match and term_type in term_author:
+                    for author in self.editors:
+                        for author_component in author:
+                            if term in author_component.lower():
+                                match = True
+
+                if not match and term_type in term_author:
+                    for author in self.translators:
+                        for author_component in author:
+                            if term in author_component.lower():
+                                match = True
+
                 if not match and self.date is not None and term_type in term_date:
                     if term in self.date:
                         match = True
