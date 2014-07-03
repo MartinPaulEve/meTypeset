@@ -146,6 +146,11 @@ class zoteroItem(object):
             else:
                 self.publisher = None
 
+            if u"uri" in item:
+                self.uri = item[u"uri"]
+            else:
+                self.uri = None
+
         else:
             self.title = None
             self.collections = []
@@ -162,6 +167,7 @@ class zoteroItem(object):
             self.key = None
             self.item_type = None
             self.doi = None
+            self.uri = None
             self.pages = None
             self.publisher = None
             self.place = None
@@ -185,70 +191,69 @@ class zoteroItem(object):
         global term_collection, term_author, term_title, term_date, \
             term_publication, term_tag
 
-        # Author is a required field. Without it we don't search
-        if len(self.authors) > 0:
-            # Do all criteria match?
-            match_all = True
-            # Walk through all search terms
-            for term_type, term in terms:
-                match = False
-                if term_type in term_tag:
-                    for tag in self.tags:
-                        if term in tag.lower():
-                            match = True
 
-                if term_type in term_collection:
-                    for collection in self.collections:
-                        if term in collection.lower():
-                            match = True
-
-                if not match and term_type in term_author:
-                    for author in self.authors:
-                        for author_component in author:
-                            if term in author_component.lower():
-                                match = True
-
-                if not match and term_type in term_author:
-                    for author in self.editors:
-                        for author_component in author:
-                            if term in author_component.lower():
-                                match = True
-
-                if not match and term_type in term_author:
-                    for author in self.translators:
-                        for author_component in author:
-                            if term in author_component.lower():
-                                match = True
-
-                if not match and self.date is not None and term_type in term_date:
-                    if term in self.date:
+        # Do all criteria match?
+        match_all = True
+        # Walk through all search terms
+        for term_type, term in terms:
+            match = False
+            if term_type in term_tag:
+                for tag in self.tags:
+                    if term in tag.lower():
                         match = True
 
-                if not match and self.doi is not None:
-                    if term in self.doi.lower():
+            if term_type in term_collection:
+                for collection in self.collections:
+                    if term in collection.lower():
                         match = True
 
-                if not match and self.title is not None and term_type in \
-                        term_title and term in self.title.lower():
+            if not match and term_type in term_author:
+                for author in self.authors:
+                    for author_component in author:
+                        if term in author_component.lower():
+                            match = True
+
+            if not match and term_type in term_author:
+                for author in self.editors:
+                    for author_component in author:
+                        if term in author_component.lower():
+                            match = True
+
+            if not match and term_type in term_author:
+                for author in self.translators:
+                    for author_component in author:
+                        if term in author_component.lower():
+                            match = True
+
+            if not match and self.date is not None and term_type in term_date:
+                if term in self.date:
                     match = True
 
-                if not match and self.publication is not None and term_type in \
-                        term_publication and term in self.publication.lower():
+            if not match and self.doi is not None:
+                if term in self.doi.lower():
                     match = True
 
-                if not match and self.place is not None and term_type in \
-                        term_publication and term in self.place.lower():
-                    match = True
+            if not match and self.title is not None and term_type in \
+                    term_title and term in self.title.lower():
+                match = True
 
-                if not match and self.publisher is not None and term_type in \
-                        term_publication and term in self.publisher.lower():
-                    match = True
+            if not match and self.publication is not None and term_type in \
+                    term_publication and term in self.publication.lower():
+                match = True
 
-                if not match:
-                    match_all = False
-                    break
-            return match_all
-        return False
+            if not match and self.place is not None and term_type in \
+                    term_publication and term in self.place.lower():
+                match = True
+
+            if not match and self.publisher is not None and term_type in \
+                    term_publication and term in self.publisher.lower():
+                match = True
+
+            if not match:
+                match_all = False
+                break
+        return match_all
+
 
     def get_note(self):
 
@@ -461,6 +466,12 @@ class zoteroItem(object):
                                   publisher=self.publisher, editors=editors, doi=self.doi, translators=translators)
 
             return chapter.get_citation()
+
+        elif self.item_type == 'webpage':
+            website = Website(authors=authors, title=self.title, website_title=self.publication,
+                              year=self.format_date(), url=self.url)
+
+            return website.get_citation()
 
         return None
 
