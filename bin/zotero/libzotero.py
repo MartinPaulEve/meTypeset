@@ -238,7 +238,7 @@ class LibZotero(Debuggable):
                         self.index[item_id].key = key
                         self.index[item_id].item_type = item[4]
 
-                    if item_name == u"publicationTitle" or item_name == u'bookTitle':
+                    if item_name == u"publicationTitle" or item_name == u'bookTitle' or item_name == 'websiteTitle':
                         self.index[item_id].publication = unicode(item_value)
                     elif item_name == u"date":
                         self.index[item_id].date = item_value
@@ -256,6 +256,8 @@ class LibZotero(Debuggable):
                         self.index[item_id].place = unicode(item_value)
                     elif item_name == u"publisher":
                         self.index[item_id].publisher = unicode(item_value)
+                    elif item_name == u"url":
+                        self.index[item_id].url = unicode(item_value)
                     else:
                         self.debug.print_debug(self, u'Unindexed field: {0}'.format(item_name))
 

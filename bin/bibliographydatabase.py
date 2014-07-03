@@ -33,6 +33,7 @@ from docopt import docopt
 from bare_globals import GV
 from interactive import Interactive
 
+
 class Person():
     def __init__(self, firstname='', lastname=''):
         self.firstname = firstname
@@ -43,6 +44,57 @@ class Person():
                     u'<surname>{0}</surname>' \
                     u'<given-names>{1}</given-names>' \
                 u'</name>'.format(self.lastname, self.firstname)
+
+
+class Website():
+    def __init__(self, authors=None, title='', website_title='', year='', url=''):
+        if authors is None:
+            self.authors = []
+        else:
+            self.authors = authors
+
+        self.website_title = website_title
+        self.title = title
+        self.book_title = website_title
+        self.year = year
+        self.url = url
+
+    @staticmethod
+    def object_type():
+        return "website"
+
+    def get_citation(self):
+
+        author_block = ''
+        for author in self.authors:
+            author_block += author.get_citation()
+
+        ret = u'<ref>'
+        ret += u'<element-citation publication-type="journal">'
+
+        if author_block != '':
+            ret += u'<person-group person-group-type="author">{0}</person-group>'.format(author_block)
+
+        if self.title != '':
+            ret += u'<article-title>{0}</article-title>'.format(self.title)
+
+        if self.book_title != '':
+            ret += u'<source>{0}</source>'.format(self.website_title)
+
+        ret += u'<date><year>{0}</year></date>'.format(self.year)
+
+        if self.url != '' and self.url is not None:
+            ret += u'<uri>{0}</uri>'.format(self.url)
+
+
+        ret += u'</element-citation>'
+        ret += u'</ref>'
+
+        ret = ret.replace('&', '&amp;')
+        ret = ret.replace('<i>', '<italic>')
+        ret = ret.replace('</i>', '</italic>')
+
+        return ret
 
 
 class BookChapter():
@@ -576,6 +628,8 @@ class BibliographyDatabase(Debuggable):
             term = term.replace(u' ed ', u' ')
             term = term.replace(u' In ', u' ')
             term = term.replace(u' in ', u' ')
+            term = term.replace(u' print ', u' ')
+            term = term.replace(u' Print ', u' ')
             term = term.replace(u' and ', u' ')
             term = term.replace(u'”', u'')
             term = re.sub(r'[Aa]ccessed', '', term)
