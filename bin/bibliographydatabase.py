@@ -235,7 +235,7 @@ class Book():
             ret += u'<person-group person-group-type="author">{0}</person-group>'.format(author_block)
 
         if self.title != '':
-            ret += u'<article-title>{0}</article-title>'.format(self.title)
+            ret += u'<source>{0}</source>'.format(self.title)
 
         ret += u'<date><year>{0}</year></date>'.format(self.year)
 
