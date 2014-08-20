@@ -25,6 +25,7 @@ A class that assists with bibliography classification.
 """
 
 from debug import Debuggable
+import codecs
 
 
 class BibliographyClassifier(Debuggable):
@@ -39,7 +40,8 @@ class BibliographyClassifier(Debuggable):
         language_list = self.gv.settings.get_setting('reference-languages', self).split(',')
 
         for language in language_list:
-            with open ('{0}/language/ref_marker_{1}.txt'.format(self.gv.script_dir, language), 'r') as lang_file:
+            with codecs.open('{0}/language/ref_marker_{1}.txt'.format(self.gv.script_dir, language),
+                             encoding='utf-8') as lang_file:
                 lines = lang_file.read().split('\n')
 
                 for line in lines:
