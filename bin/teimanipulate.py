@@ -357,7 +357,6 @@ class TeiManipulate(Manipulate):
 
         return True
 
-
     def find_references_from_cue(self, cue, tree):
         # load the DOM
 
