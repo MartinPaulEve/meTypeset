@@ -113,7 +113,7 @@ of this software, even if advised of the possibility of such damage.
 					 select="concat(number(descendant::wp:extent[1]/@cx) div 360000,'cm')"/>
 			  <xsl:attribute name="height"
 					 select="concat(number(descendant::wp:extent[1]/@cy) div 360000,'cm')"/>
-				 <xsl:variable name="media-url" select="descendant::pic:cNvPr/@descr"/>
+				 <xsl:variable name="media-url" select="descendant::pic:cNvPr[1]/@descr"/>
 			 <xsl:choose>
 				 <xsl:when test="starts-with($media-url,'movie::' )">
 					 <xsl:attribute name="url">
@@ -160,8 +160,7 @@ of this software, even if advised of the possibility of such damage.
 			          </figure>
 			      </xsl:when>
 			      <xsl:otherwise>
-			          <xsl:element name="head">
-			              <xsl:text>unable to handle picture</xsl:text></xsl:element>
+    	              <xsl:message>WARNING -- CONTENT DROPPED: Unable to handle picture</xsl:message>
 			      </xsl:otherwise>
 			    </xsl:choose>
                     </xsl:otherwise>
