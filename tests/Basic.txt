@@ -431,3 +431,23 @@ Library           Collections
     ${secs}=    Get Element    ${xml}    body/sec/p
     Elements Should Match    ${secs}    <p><bold>Povidone iodine.</bold> This is some text that links to (<ext-link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple">"Table 1."</ext-link>). </p>    normalize_whitespace=yes
     [Teardown]    Remove Directory    033    recursive=True
+
+034 Deleted text handling
+    [Tags]    italic    034    deleted
+    ${result} =    Run Process    python ../bin/meTypeset.py doc 034.doc ./034 -d --nogit    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./034/nlm/out.xml
+    ${paragraph}=    Get Element    ${xml}    body/sec/p
+    Elements Should Match    ${paragraph}    <p>Test document</p>
+    [Teardown]    Remove Directory    034    recursive=True
+
+035 Deleted text preservation
+    [Tags]    italic    035    deleted
+    ${result} =    Run Process    python ../bin/meTypeset.py doc 034.doc ./034 -d --nogit --includedeleted    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./034/nlm/out.xml
+    ${paragraph}=    Get Element    ${xml}    body/sec/p
+    Elements Should Match    ${paragraph}    <p>Test document with deleted text</p>
+    [Teardown]    Remove Directory    034    recursive=True
