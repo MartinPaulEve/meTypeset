@@ -160,7 +160,7 @@ of this software, even if advised of the possibility of such damage.
 			          </figure>
 			      </xsl:when>
 			      <xsl:otherwise>
-    	              <xsl:message>WARNING -- CONTENT DROPPED: Unable to handle picture</xsl:message>
+    	              <!--<xsl:message>WARNING -- CONTENT DROPPED: Unable to handle picture</xsl:message>-->
 			      </xsl:otherwise>
 			    </xsl:choose>
                     </xsl:otherwise>
