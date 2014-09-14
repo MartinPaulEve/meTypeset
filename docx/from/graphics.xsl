@@ -9,6 +9,7 @@
                 xmlns:dcmitype="http://purl.org/dc/dcmitype/"
                 xmlns:iso="http://www.iso.org/ns/1.0"
                 xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                 xmlns:mml="http://www.w3.org/1998/Math/MathML"
                 xmlns:mo="http://schemas.microsoft.com/office/mac/office/2008/main"
                 xmlns:mv="urn:schemas-microsoft-com:mac:vml"
@@ -81,97 +82,107 @@ of this software, even if advised of the possibility of such damage.
     <xsl:key name="W" match="image" use="@url"/>
     <xsl:key name="H" match="image" use="@url"/>
 
-    <xsl:template match="w:drawing">
-      <xsl:param name="n" tunnel="yes"/>
+    <xsl:template match="w:drawing[not(ancestor::mc:Choice)]">
+        <xsl:param name="n" tunnel="yes"/>
         <xsl:choose>
             <xsl:when test="$convert-graphics='true'">
                 <xsl:choose>
-                    <xsl:when test="descendant::a:blip[1]/@r:embed">
+                    <xsl:when test="descendant::a:blip[1]/@r:embed">                        
                         <xsl:element name="graphic">
-			    <xsl:variable name="c">
-			      <xsl:choose>
-			      <xsl:when test="ancestor::w:tbl">
-				<xsl:number level="any" from="w:tbl"/>
-			      </xsl:when>
-			      <xsl:otherwise>
-				<xsl:number level="any"/>
-			      </xsl:otherwise>
-			      </xsl:choose>
-			    </xsl:variable>
-			    <xsl:attribute name="n">
-			      <xsl:choose>
-				<xsl:when test="number($n)">
-				  <xsl:value-of select="($n * 100) + $c"/>
-				</xsl:when>
-				<xsl:otherwise>
-				  <xsl:text>100</xsl:text>
-				  <xsl:number level="any"/>
-				</xsl:otherwise>
-			      </xsl:choose>
-			    </xsl:attribute>
-			  <xsl:attribute name="width"
-					 select="concat(number(descendant::wp:extent[1]/@cx) div 360000,'cm')"/>
-			  <xsl:attribute name="height"
-					 select="concat(number(descendant::wp:extent[1]/@cy) div 360000,'cm')"/>
-				 <xsl:variable name="media-url" select="descendant::pic:cNvPr[1]/@descr"/>
-			 <xsl:choose>
-				 <xsl:when test="starts-with($media-url,'movie::' )">
-					 <xsl:attribute name="url">
-						 <!-- The proper way to do it would be to extract the name from this
-						      <xsl:value-of select="substring-after($media-url, 'movie::')"/>
-						-->
-						 <xsl:value-of select="descendant::pic:cNvPr/@name"/>
-					 </xsl:attribute>
-					 <xsl:attribute name="mimeType">video/x-something</xsl:attribute>
-				 </xsl:when>
-
-				 <xsl:otherwise>
-					 <xsl:attribute name="url">
-						 <xsl:variable name="rid" select="descendant::a:blip[1]/@r:embed"/>
-						 <xsl:value-of select="document(concat($wordDirectory,'/word/_rels/document.xml.rels'))//rel:Relationship[@Id=$rid]/@Target"/>
-					 </xsl:attribute>
-				 </xsl:otherwise>
-			 </xsl:choose>
-
-				 <!-- inline or block -->
-			  <xsl:attribute name="rend">
+                            <xsl:variable name="c">
+                                <xsl:choose>
+                                    <xsl:when test="ancestor::w:tbl">
+                                        <xsl:number level="any" from="w:tbl"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:number level="any"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:variable>
+    			    
+                            <xsl:attribute name="n">
+                                <xsl:choose>
+                                    <xsl:when test="number($n)">
+                                        <xsl:value-of select="($n * 100) + $c"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:text>100</xsl:text>
+                                        <xsl:number level="any"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:attribute>
+                                
+                            <xsl:attribute name="width" select="concat(number(descendant::wp:extent[1]/@cx) div 360000,'cm')"/>
+                            <xsl:attribute name="height" select="concat(number(descendant::wp:extent[1]/@cy) div 360000,'cm')"/>
+                            
+                            <xsl:variable name="media-url" select="descendant::pic:cNvPr[1]/@descr"/>
+                                
+                            <xsl:choose>
+                                <xsl:when test="starts-with($media-url,'movie::' )">
+                                    <xsl:attribute name="url">
+                                        <!-- The proper way to do it would be to extract the name from this
+                                        <xsl:value-of select="substring-after($media-url, 'movie::')"/>
+                                        -->
+                                        <xsl:value-of select="descendant::pic:cNvPr/@name"/>
+                                    </xsl:attribute>
+                            
+                                    <xsl:attribute name="mimeType">video/x-something</xsl:attribute>
+                                </xsl:when>
+                            
+                                <xsl:otherwise>
+                                    <xsl:attribute name="url">
+                                    <xsl:variable name="rid" select="descendant::a:blip[1]/@r:embed"/>
+                                    <xsl:value-of select="document(concat($wordDirectory,'/word/_rels/document.xml.rels'))//rel:Relationship[@Id=$rid]/@Target"/>
+                                        <!--<xsl:message><xsl:value-of select="document(concat($wordDirectory,'/word/_rels/document.xml.rels'))//rel:Relationship[@Id=$rid]/@Target"/></xsl:message>-->
+                                </xsl:attribute>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                                
+                            <!-- inline or block -->
+                            <xsl:attribute name="rend">
                                 <xsl:choose>
                                     <xsl:when test="wp:anchor">block</xsl:when>
                                     <xsl:otherwise>inline</xsl:otherwise>
                                 </xsl:choose>
                             </xsl:attribute>
-			    <xsl:if test=".//wp:docPr/@descr">
-			      <xsl:element name="desc">
-				<xsl:value-of select=".//wp:docPr/@descr"/>
-			      </xsl:element>
-			    </xsl:if>                            
+                                
+                            <xsl:if test=".//wp:docPr/@descr">
+                                <xsl:element name="desc">
+                                    <xsl:value-of select=".//wp:docPr/@descr"/>
+                                </xsl:element>
+                            </xsl:if>                            
                         </xsl:element>
+                        
                     </xsl:when>
+                    
                     <xsl:otherwise>
-			    <xsl:choose>
-			      <xsl:when test="@r:link">
-			          <figure>
-			              <desc>
-				<xsl:text>Linked Graphic: </xsl:text>
-				<xsl:variable name="rid" select="@r:link"/>
-				<xsl:value-of
-				    select="document(concat($wordDirectory,'/word/_rels/document.xml.rels'))//rel:Relationship[@Id=$rid]/@Target"/>
-			              </desc>
-			          </figure>
-			      </xsl:when>
-			      <xsl:otherwise>
-    	              <!--<xsl:message>WARNING CONTENT DROPPED: Unable to handle picture</xsl:message>-->
-			      </xsl:otherwise>
-			    </xsl:choose>
+                        <xsl:choose>
+                            <xsl:when test="@r:link">
+                                <figure>
+                                    <desc>
+                                        <xsl:text>Linked Graphic: </xsl:text>
+                                        <xsl:variable name="rid" select="@r:link"/>
+                                        <xsl:value-of select="document(concat($wordDirectory,'/word/_rels/document.xml.rels'))//rel:Relationship[@Id=$rid]/@Target"/>
+                                    </desc>
+                                </figure>
+                            </xsl:when>
+                            
+                            <xsl:otherwise>
+                                <!--<xsl:message>WARNING CONTENT DROPPED: Unable to handle picture</xsl:message>-->
+                            </xsl:otherwise>
+                            
+                        </xsl:choose>
                     </xsl:otherwise>
+                    
                 </xsl:choose>
             </xsl:when>
-            <xsl:otherwise>
-                <w:drawing>
-                    <xsl:apply-templates mode="iden"/>
-                </w:drawing>
-            </xsl:otherwise>
-        </xsl:choose>
+            
+        <xsl:otherwise>
+            <w:drawing>
+                <xsl:apply-templates mode="iden"/>
+            </w:drawing>
+        </xsl:otherwise>
+    </xsl:choose>
     </xsl:template>
     
     <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">

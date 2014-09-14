@@ -91,7 +91,7 @@ class CaptionClassifier(Debuggable):
         # <p>Figure 1: Martin Eve at the pub<graphic xlink:href="media/image1.jpeg" position="float"
         # orientation="portrait" xlink:type="simple"/>
 
-        self.debug.print_debug(self, u'Attempting to classify captions for graphics objects')
+        self.debug.print_debug(self, u'Attempting to classify captions for graphics objects [sibling]')
 
         manipulate = NlmManipulate(self.gv)
 
@@ -222,7 +222,7 @@ class CaptionClassifier(Debuggable):
         # <p>Figure 1: Martin Eve at the pub<graphic xlink:href="media/image1.jpeg" position="float"
         # orientation="portrait" xlink:type="simple"/>
 
-        self.debug.print_debug(self, u'Attempting to classify captions for graphics objects')
+        self.debug.print_debug(self, u'Attempting to classify captions for graphics objects [plain]')
 
         manipulate = NlmManipulate(self.gv)
 
@@ -329,25 +329,36 @@ class CaptionClassifier(Debuggable):
             old_title = None
 
             if p is not None and p.tag == 'p':
-                text = manipulate.get_stripped_text(p)
+                cont = True
+                for sub in p:
+                    if sub.tag == 'graphic':
+                        cont = False
 
-                if table_regex_colon.match(text):
-                    use_next = True
-                    separator = ':'
-                elif table_regex_dot.match(text):
-                    use_next = True
-                    separator = '.'
-
-            if not use_next:
-                if pprev is not None and pprev.tag == 'p':
-                    text = manipulate.get_stripped_text(pprev)
+                if cont:
+                    text = manipulate.get_stripped_text(p)
 
                     if table_regex_colon.match(text):
-                        use_previous = True
+                        use_next = True
                         separator = ':'
                     elif table_regex_dot.match(text):
-                        use_previous = True
+                        use_next = True
                         separator = '.'
+
+            if not use_next:
+                cont = True
+                for sub in pprev:
+                    if sub.tag == 'graphic':
+                        cont = False
+                if cont:
+                    if pprev is not None and pprev.tag == 'p':
+                        text = manipulate.get_stripped_text(pprev)
+
+                        if table_regex_colon.match(text):
+                            use_previous = True
+                            separator = ':'
+                        elif table_regex_dot.match(text):
+                            use_previous = True
+                            separator = '.'
 
             if not use_next or use_previous:
                 # see if the title in this section potentially contains text we can match
