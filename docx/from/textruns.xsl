@@ -628,7 +628,9 @@ of this software, even if advised of the possibility of such damage.
     <xsl:template match="w:rPr/w:del"/>
 
     <xsl:template match="w:delText">
-      <xsl:apply-templates/>
+    	<xsl:element name="meTypesetDeleted">
+      		<xsl:apply-templates/>
+    	</xsl:element>
     </xsl:template>
 
     <xsl:template match="w:ins">

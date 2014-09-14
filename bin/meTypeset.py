@@ -16,6 +16,7 @@ Options:
     -c, --clean                                     Produce final XML, not intermediate markup with additional metadata
     -d, --debug                                     Enable debug output
     -i, --identifiers                               Generate unique identifiers for all supported NLM elements
+    --includedeleted                                Keep deleted text (track changes)
     --interactive                                   Enable step-by-step interactive mode
     -h, --help                                      Show this screen.
     -m, --metadata <metadata_file>                  Metadata file

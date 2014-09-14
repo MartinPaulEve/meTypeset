@@ -852,7 +852,20 @@ class TeiManipulate(Manipulate):
         self.save_tree(tree)
         self.debug.print_debug(self, u'Cleaned {0} nested item bibliographic tags during cleanup'.format(count))
 
+    def handle_metypesetdeleted(self, keep):
+        tree = self.load_dom_tree()
+
+        if keep:
+            etree.strip_tags(tree, '{http://www.tei-c.org/ns/1.0}meTypesetDeleted')
+        else:
+            etree.strip_elements(tree, '{http://www.tei-c.org/ns/1.0}meTypesetDeleted', with_tail=False)
+
+        self.save_tree(tree)
+        self.debug.print_debug(self, u'Handled deleted text')
+
     def run(self):
+        self.handle_metypesetdeleted(self.gv.settings.args['--includedeleted'])
+
         if int(self.gv.settings.args['--aggression']) > int(self.gv.settings.get_setting('wmfimagereplace', self,
                                                                                          domain='aggression')):
             # convert .wmf image links to png
