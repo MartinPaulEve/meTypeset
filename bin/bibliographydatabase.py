@@ -313,10 +313,10 @@ class JournalArticle():
 
         ret += u'<date><year>{0}</year></date>'.format(self.year)
 
-        if self.volume != '':
+        if self.volume != '' and self.volume is not None:
             ret += u'<volume>{0}</volume>'.format(self.volume)
 
-        if self.issue != '':
+        if self.issue != '' and self.volume is not None:
             ret += u'<issue>{0}</issue>'.format(self.issue)
 
         if self.fpage != '' and self.fpage is not None:
