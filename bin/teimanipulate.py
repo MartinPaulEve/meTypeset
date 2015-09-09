@@ -278,8 +278,8 @@ class TeiManipulate(Manipulate):
                     ref_parent = ref.getparent()
 
                     ref_parent.addnext(ref)
-
-                    ref_parent.getparent().remove(ref_parent)
+                    if ref_parent.getparent() is not None:  
+                      ref_parent.getparent().remove(ref_parent)
         else:
             for ref in tree.xpath(xpath, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'}):
                 ref.tag = 'p'
