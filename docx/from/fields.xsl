@@ -127,7 +127,7 @@ of this software, even if advised of the possibility of such damage.
 	</xsl:when>
 	<xsl:when test="contains(@w:instr,'SEQ')"/><!-- not sure -->
 	<xsl:otherwise>
-	  <xsl:message terminate="yes">fldSimple: unrecognized type <xsl:value-of select="@w:instr"/></xsl:message>
+	  <xsl:message terminate="no">fldSimple: unrecognized type <xsl:value-of select="@w:instr"/></xsl:message>
 	</xsl:otherwise>
       </xsl:choose>
     </xsl:template>
