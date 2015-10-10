@@ -451,3 +451,14 @@ Library           Collections
     ${paragraph}=    Get Element    ${xml}    body/sec/p
     Elements Should Match    ${paragraph}    <p>Test document with deleted text</p>
     [Teardown]    Remove Directory    034    recursive=True
+
+036 Zotero crash
+    [Tags]    italic    036    zotero
+    ${result} =    Run Process    python ../bin/meTypeset.py docx 036.docx ./034 -d --nogit    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    Should Not Contain    ${result.stderr}    cannot find or open
+    Should Not Contain    ${result.stdout}    ERROR
+    ${xml}=    Parse XML    ./036/nlm/out.xml
+    ${paragraph}=    Get Element    ${xml}    body/sec/p
+    [Teardown]    Remove Directory    034    recursive=True
