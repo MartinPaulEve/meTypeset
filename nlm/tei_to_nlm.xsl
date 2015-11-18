@@ -148,7 +148,7 @@
         <!-- Here we dig through the teiHeader to extract what we need to create journal metadata
      and article metadata. First, journal metadata: -->
         <xsl:element name="journal-meta">
-          <journal-id journal-id-type="publisher">
+s          <journal-id journal-id-type="publisher">
           <xsl:choose>
           <xsl:when test="TEI/teiHeader[1]/fileDesc[1]/publicationStmt[1]/publisher[1]/choice[1]/abbr[1]">
             
@@ -386,12 +386,44 @@
     <xsl:copy-of select = "."/>
   </xsl:template>
   
-
   <xsl:template match="p | ab">
-    <xsl:element name="p">
-      <xsl:apply-templates />
-    </xsl:element>    
+    
+      <xsl:element name="p">
+        <xsl:choose>
+          <xsl:when test="@rend = 'Interview'">
+            <xsl:if test="preceding::*[1][@rend != 'Interview']">
+            <speech>
+              <xsl:attribute name="id">     
+                <xsl:value-of select="count(preceding::p[@rend = 'Interview'])+1"/>
+              </xsl:attribute>
+              <xsl:if test="preceding-sibling::p[@rend!='Interview']"></xsl:if>
+              <xsl:variable name='speaker' select="substring-before(./text(), ':')"/>
+              <xsl:variable name='text' select="substring-after(./text(), ':')"/>
+              <speaker><xsl:value-of select='$speaker'/></speaker>
+              <p><xsl:value-of select='$text'/>
+                <xsl:apply-templates select="child::node()"/>
+              </p>
+              <xsl:for-each select="following-sibling::p[@rend='Interview']">
+                <xsl:variable name='speaker' select="substring-before(./text(), ':')"/>
+                <xsl:variable name='text' select="substring-after(./text(), ':')"/>
+                <speaker><xsl:value-of select='$speaker'/></speaker>
+                <xsl:variable name='text' select="substring-after(./text(), ':')"/>
+                <p>
+                  <xsl:value-of select='$text'/>
+                  <xsl:apply-templates select="child::node()"/>
+                </p>
+              </xsl:for-each>
+            </speech>
+            </xsl:if>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates />
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:element>
+    
   </xsl:template>
+  
 
   <!-- New list types added, according to nlm 
   order           Ordered list. Prefix character is a number or a letter, depending on style.
@@ -641,14 +673,17 @@ $pattern = '\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?!["&\'<>])[[:graph:]])+)\b';
       <xsl:apply-templates />
     </xsl:element>
   </xsl:template>
-  
+ 
+ 
 <!-- Notes (footnotes/endnotes). -->
   <xsl:template match="note">
         <xsl:element name="xref">
-      <xsl:attribute name="ref-type">fn</xsl:attribute>
-      <xsl:attribute name="rid">
-        <xsl:text>bib</xsl:text><xsl:value-of select="generate-id()"/>
-      </xsl:attribute>
+         
+          <xsl:attribute name="ref-type">fn</xsl:attribute>
+          <xsl:attribute name="rid">
+              <xsl:text>bib</xsl:text><xsl:value-of select="generate-id()"/>
+          </xsl:attribute>
+          <xsl:value-of select="count(preceding::note)+1"/>
     </xsl:element>
   </xsl:template>
 
