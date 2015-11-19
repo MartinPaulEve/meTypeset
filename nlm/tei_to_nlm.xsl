@@ -400,8 +400,9 @@ s          <journal-id journal-id-type="publisher">
               <xsl:variable name='speaker' select="substring-before(./text(), ':')"/>
               <xsl:variable name='text' select="substring-after(./text(), ':')"/>
               <speaker><xsl:value-of select='$speaker'/></speaker>
-              <p><xsl:value-of select='$text'/>
-                <xsl:apply-templates select="child::node()"/>
+              <p>
+                <xsl:value-of select='$text'/>
+                <xsl:apply-templates select="./child::node()//tei:note"/>
               </p>
               <xsl:for-each select="following-sibling::p[@rend='Interview']">
                 <xsl:variable name='speaker' select="substring-before(./text(), ':')"/>
@@ -409,8 +410,9 @@ s          <journal-id journal-id-type="publisher">
                 <speaker><xsl:value-of select='$speaker'/></speaker>
                 <xsl:variable name='text' select="substring-after(./text(), ':')"/>
                 <p>
-                  <xsl:value-of select='$text'/>
-                  <xsl:apply-templates select="child::node()"/>
+                  <xsl:variable name='text' select="substring-after(./text(), ':')"/>
+                  <xsl:value-of select='$text'/> 
+                  <xsl:apply-templates select="./child::node()//tei:note"/>
                 </p>
               </xsl:for-each>
             </speech>
