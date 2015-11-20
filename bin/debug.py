@@ -48,7 +48,7 @@ class Debug(object):
                 repo.init()
                 self.git_objects.append(repo)
         except:
-            self.fatal_error(self, 'Output directory {0} already exists'.format(path))
+            self.fatal_error(self, 'Output directory {0} already exists or could not init git. If you are running with --debug, try installing GitPython.'.format(path))
 
     def print_debug(self, module, message):
         """
