@@ -106,5 +106,5 @@ R09 Regex crash
     Should Not Contain    ${result.stderr}    cannot find or open
     Should Not Contain    ${result.stdout}    ERROR
     ${xml}=    Parse XML    ./R09/nlm/out.xml
-    ${paragraph}=    Get Element    ${xml}    body/sec/p
+    Should Be Equal As Integers    ${result.rc}    0
     [Teardown]    Remove Directory    R09    recursive=True
