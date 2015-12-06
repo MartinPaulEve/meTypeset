@@ -352,7 +352,7 @@ class ReferenceLinker(Debuggable):
 
             text = manipulate.get_stripped_text(p)
 
-            reference_test = re.compile('\((?P<text>.+?)\)')
+            reference_test = re.compile('\((?P<text>[^%]+?)\)')
             matches = reference_test.finditer(text)
 
             # exclude any square brackets with numbers inside
