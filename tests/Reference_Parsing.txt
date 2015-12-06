@@ -88,7 +88,7 @@ R07 Reference block with trailing acknowledgements
 
 R08 Multiblock reference handling with sequential non-reference items (graceful fail)
     [Tags]    references    ref-list    R08
-    ${result} =    Run Process    python ../bin/meTypeset.py docx HeadingInReferencesSplitLineBreakFail.docx -s testsettings.xml ./R08 -d --nogit    shell=True
+    ${result} =    Run Process    python ../bin/meTypeset.py docx HeadingInReferencesSplitLineBreakFail.docx -s testsettings.xml ./R08 -d --nogit    shell=True    timeout=20s
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./R08/nlm/out.xml
@@ -97,3 +97,14 @@ R08 Multiblock reference handling with sequential non-reference items (graceful 
     Elements Should Match    ${body}    <body> <sec> <title>A Document</title> <p>Some Text</p> </sec> <sec reflist="yes"> <title/> <p>Final extra information</p> <p rend="ref">Another reference that should not be parsed 2014</p> <p rend="ref">Another second reference that should not be parsed 2014</p> <p rend="ref">A final reference that should not be parsed 2014</p> </sec> </body>    normalize_whitespace=yes
     Elements Should Match    ${paragraph}    <ref-list> <ref> <mixed-citation>An Author, <italic>A Reference</italic> (London: Publisher, 2014)</mixed-citation> </ref> <ref> <mixed-citation>Another Author, <italic>A Reference</italic> (London: Publisher, 2014)http://www.martineve.com</mixed-citation> </ref> <ref> <mixed-citation>A Third Author, A Reference (London: Publisher, 2014)</mixed-citation> </ref> <ref> <mixed-citation>A Fourth Author, <italic>A Reference</italic> (London: Publisher, 2014)some extra informationhttp://www.ohdear.com </mixed-citation> </ref> </ref-list>    normalize_whitespace=yes
     [Teardown]    Remove Directory    R08    recursive=True
+
+R09 Regex crash
+    [Tags]    references    ref-list    R09
+    ${result} =    Run Process    python ../bin/meTypeset.py docx R09.docx ./R09 -d --nogit    shell=True    timeout=10s
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    Should Not Contain    ${result.stderr}    cannot find or open
+    Should Not Contain    ${result.stdout}    ERROR
+    ${xml}=    Parse XML    ./R09/nlm/out.xml
+    ${paragraph}=    Get Element    ${xml}    body/sec/p
+    [Teardown]    Remove Directory    R09    recursive=True
