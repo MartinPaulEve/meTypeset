@@ -662,6 +662,7 @@ class ReferenceLinker(Debuggable):
 
         for p in tree.xpath('//xref[@ref-type="bibr"]'):
             text = manipulate.get_stripped_text(p)
+            prompt.print_(prompt.colorize('green',("-" * 80)))
 
             if 'rid' in p.attrib and p.attrib['rid'] == 'TO_LINK':
                 prompt.print_(u"Found an unhandled reference marker: {0}".format(text))
