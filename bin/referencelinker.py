@@ -197,13 +197,7 @@ class ReplaceStub(Debuggable):
 
                 in_string = etree.tostring(self.paragraph)
 
-                regex = u'\((?P<text>.*?'
-
-                # add each word and allow for tags in between. Do not allow the term "xref" to appear.
-                for sub_string in self.replace_text.split(' '):
-                    regex += u'[^(xref)]*?'
-
-                regex += u')\)'
+                regex = u'\((?P<text>(?!.*xref).*?)\)'
 
                 xref_before = u'<xref ref-type="bibr" ' \
                               u'id="{0}" rid="{1}">'.format(u'ID{0}'.format(unicode(uuid.uuid4())), self.link_text)
@@ -358,7 +352,7 @@ class ReferenceLinker(Debuggable):
 
             text = manipulate.get_stripped_text(p)
 
-            reference_test = re.compile('\((?P<text>.+?)\)')
+            reference_test = re.compile('\((?P<text>[^%]+?)\)')
             matches = reference_test.finditer(text)
 
             # exclude any square brackets with numbers inside
