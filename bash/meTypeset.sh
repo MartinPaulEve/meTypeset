@@ -34,7 +34,7 @@ _meTypeset()
 				elif [ $COMP_CWORD -eq 3 ]; then
 					COMPREPLY=( $(compgen -d ${cur}) )
 				elif [ $COMP_CWORD -ge 4 ]; then
-					COMPREPLY=( $(compgen -W '-a --aggression --chain -c --clean -d --debug -h --help -i --identifiers --interactive -m --metadata --nogit --noimageprocessing --nolink --purenlm --puretei --prettytei -p --proprietary -s --settings -v --version -z --zotero' -- $cur) )
+					COMPREPLY=( $(compgen -W '-a --aggression --chain -c --clean -d --debug -h --help -i --identifiers --interactive -m --metadata --nogit --noimageprocessing --nolink --nometa --purenlm --puretei --prettytei -p --proprietary -s --settings -v --version -z --zotero' -- $cur) )
 				fi
 			;;
 		esac
@@ -109,7 +109,7 @@ _nlm()
 			;;
 			*)
 				if [ $COMP_CWORD -ge 2 ]; then
-					COMPREPLY=( $(compgen -W '-a --aggression --chain -c --clean -d --debug -h --help -i --identifiers --nogit --noimageprocessing -s --settings -v --version -z --zotero' -- $cur) )
+					COMPREPLY=( $(compgen -W '-a --aggression --chain -c --clean -d --debug -h --help -i --identifiers --nogit --noimageprocessing --nometa -s --settings -v --version -z --zotero' -- $cur) )
 				fi
 			;;
 		esac

@@ -23,6 +23,7 @@ Options:
     --nogit                                         Disable git debug filesystem (only of use with --debug)
     --noimageprocessing                             Disable unoconv image processing
     --nolink                                        Do not run reference linker
+    --nometa                                        Do not merge front matter
     --purenlm                                       Die after performing NLM XSLT step
     --puretei                                       Die after performing TEI XSLT step
     --prettytei                                     Indent and format intermediary TEI
@@ -215,7 +216,8 @@ class MeTypeset (Debuggable):
                 cc.run_graphics()
 
             # run metadata merge
-            metadata.run()
+            if not (self.args['--nometa']):
+                metadata.run()
 
             if self.args['--interactive']:
                 bibliography_classifier.run_prompt(True)
