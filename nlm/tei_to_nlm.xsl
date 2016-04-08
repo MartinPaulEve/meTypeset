@@ -398,20 +398,22 @@
             <xsl:value-of select="concat('s',string($count))"/>
           </xsl:attribute>
         <speaker><xsl:value-of select='$speaker'/></speaker>
-        <p><xsl:value-of select="hi"/></p>
+          <p>
+            <xsl:apply-templates/>
+          </p>
         </speech>
         </xsl:when>
       <xsl:when test="@rend ='Indent Quote'">
         <xsl:variable name='iq' select="./text()"/>
-          <distp-quote>
+          <disp-quote>
             <xsl:attribute name="id">     
               <xsl:variable name="count" select="count(preceding::p[@rend = 'Indent Quote'])+1"/>
               <xsl:value-of select="concat('IQ',string($count))"/>
             </xsl:attribute>
             <p>
-              <xsl:value-of select='$iq'/>
+              <xsl:apply-templates/>
             </p>
-          </distp-quote>
+          </disp-quote>
       </xsl:when>
       <xsl:when test="@rend ='Starting Quote'">
         <xsl:variable name='sq' select="./text()"/>
@@ -421,7 +423,7 @@
             <xsl:value-of select="concat('SQ',string($count))"/>
           </xsl:attribute>
           <p>
-          <xsl:value-of select='$sq'/>
+            <xsl:apply-templates/>
           </p>
         </disp-quote>
       </xsl:when>
