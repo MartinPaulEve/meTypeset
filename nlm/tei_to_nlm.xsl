@@ -403,21 +403,27 @@
         </xsl:when>
       <xsl:when test="@rend ='Indent Quote'">
         <xsl:variable name='iq' select="./text()"/>
-          <blockquote>
+          <distp-quote>
             <xsl:attribute name="id">     
               <xsl:variable name="count" select="count(preceding::p[@rend = 'Indent Quote'])+1"/>
               <xsl:value-of select="concat('IQ',string($count))"/>
             </xsl:attribute>
-            <xsl:value-of select='$iq'/></blockquote>
+            <p>
+              <xsl:value-of select='$iq'/>
+            </p>
+          </distp-quote>
       </xsl:when>
       <xsl:when test="@rend ='Starting Quote'">
         <xsl:variable name='sq' select="./text()"/>
-        <blockquote>
+        <disp-quote>
           <xsl:attribute name="id">     
             <xsl:variable name="count" select="count(preceding::p[@rend = 'Starting Quote'])+1"/>
             <xsl:value-of select="concat('SQ',string($count))"/>
           </xsl:attribute>
-          <xsl:value-of select='$sq'/></blockquote>
+          <p>
+          <xsl:value-of select='$sq'/>
+          </p>
+        </disp-quote>
       </xsl:when>
         <xsl:otherwise>
         <xsl:apply-templates/>
