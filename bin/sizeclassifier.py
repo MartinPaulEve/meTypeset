@@ -326,7 +326,7 @@ class SizeClassifier(Debuggable):
             if verify != div:
                 self.debug.write_error(self, u'Size elements were disordered', '002')
                 self.debug.print_debug(self, u'WARNING: size elements were disordered')
-                return False
+                return True
 
             position += 1
 
