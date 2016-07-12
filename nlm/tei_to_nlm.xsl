@@ -415,6 +415,18 @@
             </p>
           </disp-quote>
       </xsl:when>
+      <xsl:when test="@rend ='Quote'">
+        <xsl:variable name='qt' select="./text()"/>
+          <disp-quote>
+            <xsl:attribute name="id">     
+              <xsl:variable name="count" select="count(preceding::p[@rend = 'Quote'])+1"/>
+              <xsl:value-of select="concat('QT',string($count))"/>
+            </xsl:attribute>
+            <p>
+              <xsl:apply-templates/>
+            </p>
+          </disp-quote>
+      </xsl:when>
       <xsl:when test="@rend ='Starting Quote'">
         <xsl:variable name='sq' select="./text()"/>
         <disp-quote>
