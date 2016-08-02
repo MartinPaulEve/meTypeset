@@ -963,6 +963,9 @@ have a shot at styling it. -->
   <xsl:template match="hi[@rend='overline']">
     <xsl:element name="overline"><xsl:apply-templates /></xsl:element>
   </xsl:template>
-
+   <!-- small caps -->
+   <xsl:template match="hi[@rend='smallcaps']">
+        <xsl:element name="sc"><xsl:apply-templates /></xsl:element>
+   </xsl:template>
 
 </xsl:stylesheet>
