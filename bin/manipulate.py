@@ -114,6 +114,8 @@ class Manipulate(Debuggable):
 
     @staticmethod
     def get_stripped_text(element):
+        if element is None:
+ 	  return ''
         text = element.text
 
         if text is None:
