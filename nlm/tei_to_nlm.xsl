@@ -967,5 +967,9 @@ have a shot at styling it. -->
    <xsl:template match="hi[@rend='smallcaps']">
         <xsl:element name="sc"><xsl:apply-templates /></xsl:element>
    </xsl:template>
+    <!--superscript -->
+    <xsl:template match="hi[@rend='superscript']">
+        <xsl:element name="sup"><xsl:apply-templates /></xsl:element>
+    </xsl:template>
 
 </xsl:stylesheet>
