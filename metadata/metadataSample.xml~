@@ -47,6 +47,6 @@
             credited.</license-p></license></permissions>
         
        
-        <abstract><p></p></abstract>
+        <abstract><p>This is a sample abstract that forms part of the metadataSample.xml file in meTypeset.</p></abstract>
     </article-meta>
 </metadata>

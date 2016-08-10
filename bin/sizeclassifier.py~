@@ -210,8 +210,11 @@ class SizeClassifier(Debuggable):
                 size = 100
                 message[div] = 'No title found in this block'
             else:
-                size = title[0].attrib['meTypesetSize']
-                message[div] = manipulate.get_stripped_text(title[0]).strip()
+		if title[0].attrib['meTypesetSize']: 
+                	size = title[0].attrib['meTypesetSize']
+	                message[div] = manipulate.get_stripped_text(title[0]).strip()
+                else:
+                      print title[0]
 
             stack.append((size, div))
         first = True
@@ -326,7 +329,7 @@ class SizeClassifier(Debuggable):
             if verify != div:
                 self.debug.write_error(self, u'Size elements were disordered', '002')
                 self.debug.print_debug(self, u'WARNING: size elements were disordered')
-                return True
+                return False
 
             position += 1
 

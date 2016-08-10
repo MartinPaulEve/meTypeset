@@ -388,8 +388,63 @@
   
 
   <xsl:template match="p | ab">
-    <xsl:element name="p">
-      <xsl:apply-templates />
+    <xsl:element name="p">      <xsl:choose>
+      <xsl:when test="@rend ='Interview'">
+          
+        <xsl:variable name='speaker' select="substring-before(./text()[1], ':')"/>
+        <speech>
+          <xsl:attribute name="id">     
+            <xsl:variable name="count" select="count(preceding::p[@rend = 'Interview'])+1"/>
+            <xsl:value-of select="concat('s',string($count))"/>
+          </xsl:attribute>
+        <speaker><xsl:value-of select='$speaker'/></speaker>
+          <p>
+            <xsl:apply-templates/>
+          </p>
+        </speech>
+        </xsl:when>
+      <xsl:when test="@rend ='Indent Quote'">
+        <xsl:variable name='iq' select="./text()"/>
+          <disp-quote>
+            <xsl:attribute name="id">     
+              <xsl:variable name="count" select="count(preceding::p[@rend = 'Indent Quote'])+1"/>
+              <xsl:value-of select="concat('IQ',string($count))"/>
+            </xsl:attribute>
+            <p>
+              <xsl:apply-templates/>
+            </p>
+          </disp-quote>
+      </xsl:when>
+      <xsl:when test="@rend ='Quote'">
+        <xsl:variable name='qt' select="./text()"/>
+          <disp-quote>
+            <xsl:attribute name="id">     
+              <xsl:variable name="count" select="count(preceding::p[@rend = 'Quote'])+1"/>
+              <xsl:value-of select="concat('QT',string($count))"/>
+            </xsl:attribute>
+            <p>
+              <xsl:apply-templates/>
+            </p>
+          </disp-quote>
+      </xsl:when>
+      <xsl:when test="@rend ='Starting Quote'">
+        <xsl:variable name='sq' select="./text()"/>
+        <disp-quote>
+          <xsl:attribute name="id">     
+            <xsl:variable name="count" select="count(preceding::p[@rend = 'Starting Quote'])+1"/>
+            <xsl:value-of select="concat('SQ',string($count))"/>
+          </xsl:attribute>
+          <p>
+            <xsl:apply-templates/>
+          </p>
+        </disp-quote>
+      </xsl:when>
+        <xsl:otherwise>
+        <xsl:apply-templates/>
+        </xsl:otherwise>
+      </xsl:choose>
+      
+      
     </xsl:element>    
   </xsl:template>
 
@@ -908,6 +963,13 @@ have a shot at styling it. -->
   <xsl:template match="hi[@rend='overline']">
     <xsl:element name="overline"><xsl:apply-templates /></xsl:element>
   </xsl:template>
-
+   <!-- small caps -->
+   <xsl:template match="hi[@rend='smallcaps']">
+        <xsl:element name="sc"><xsl:apply-templates /></xsl:element>
+   </xsl:template>
+    <!--superscript -->
+    <xsl:template match="hi[@rend='superscript']">
+        <xsl:element name="sup"><xsl:apply-templates /></xsl:element>
+    </xsl:template>
 
 </xsl:stylesheet>
