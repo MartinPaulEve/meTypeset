@@ -370,7 +370,7 @@ class NlmManipulate(Manipulate):
 
                     text = self.get_stripped_text(p)
 
-                    year_test = re.compile('((19|20)\d{2}[a-z]?)|(n\.d\.)')
+                    year_test = re.compile('((18|19|20)\d{2}[a-z]?)|(n\.d\.)')
 
                     match = year_test.findall(text)
 
@@ -390,7 +390,7 @@ class NlmManipulate(Manipulate):
                             count += 1
                             p.attrib['rend'] = 'ref'
                         else:
-                            page_test = re.compile('(((19|20)\d{2})\-((19|20)\d{2}))')
+                            page_test = re.compile('(((18|19|20)\d{2})\-((18|19|20)\d{2}))')
                             is_page_range = page_test.search(text)
 
                             if not is_page_range:
@@ -402,7 +402,7 @@ class NlmManipulate(Manipulate):
                         count += 1
                         p.attrib['rend'] = 'ref'
                     else:
-                        page_test = re.compile('(((19|20)\d{2})\-((19|20)\d{2}))')
+                        page_test = re.compile('(((18|19|20)\d{2})\-((18|19|20)\d{2}))')
                         is_page_range = page_test.search(text)
 
                         if not is_page_range:
@@ -574,7 +574,7 @@ class NlmManipulate(Manipulate):
         for ref in tree.xpath('//back/ref-list/ref'):
             text = self.get_stripped_text(ref)
 
-            year_test = re.compile('((19|20)\d{2}[a-z]?)|(n\.d\.)')
+            year_test = re.compile('((18|19|20)\d{2}[a-z]?)|(n\.d\.)')
             match = year_test.findall(text)
 
             if not match and ref.getprevious() is not None:
