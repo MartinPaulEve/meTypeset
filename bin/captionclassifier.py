@@ -143,8 +143,8 @@ class CaptionClassifier(Debuggable):
                     parent = parent.getparent()
                     if parent is not None:
                         titles = parent.xpath('title')
-                else:
-                    titles = []
+                    else:
+                        titles = []
 
                 if len(titles) > 0:
                     p = titles[0]
