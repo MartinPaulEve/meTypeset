@@ -83,7 +83,7 @@ R07 Reference block with trailing acknowledgements
     ${paragraph}=    Get Element    ${xml}    back/ref-list
     ${body}=    Get Element    ${xml}    body
     Elements Should Match    ${body}    <body> <sec> <title>A Document</title> <p>Some text</p> </sec> <sec> <title/> <p>The author would like to thank Helen Eve for her eternal patience with the development of this typesetter.</p> </sec> </body>    normalize_whitespace=yes
-    Elements Should Match    ${paragraph}    <ref-list> <ref> <mixed-citation>An author reference 2014</mixed-citation> </ref> <ref> <mixed-citation>Another reference 2014</mixed-citation> </ref> <ref> <mixed-citation>A final reference 2014</mixed-citation> </ref> </ref-list>    normalize_whitespace=yes
+    Elements Should Match    ${paragraph}    <ref-list> <ref> <mixed-citation>An author reference 1814</mixed-citation> </ref> <ref> <mixed-citation>Another reference 1914</mixed-citation> </ref> <ref> <mixed-citation>A final reference 2014</mixed-citation> </ref> </ref-list>    normalize_whitespace=yes
     [Teardown]    Remove Directory    R07    recursive=True
 
 R08 Multiblock reference handling with sequential non-reference items (graceful fail)
@@ -108,3 +108,13 @@ R09 Regex crash
     ${xml}=    Parse XML    ./R09/nlm/out.xml
     Should Be Equal As Integers    ${result.rc}    0
     [Teardown]    Remove Directory    R09    recursive=True
+
+R10 List numbering when changes tracked
+    [Tags]    references    ref-list    R10
+    ${result} =    Run Process    python ../bin/meTypeset.py docx ListNumbering.docx -s testsettings.xml ./R10 -d --nogit    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./R10/nlm/out.xml
+    ${paragraph}=    Get Element    ${xml}    back/ref-list
+    Elements Should Match    ${paragraph}    <ref-list> <ref> <mixed-citation>Holick MF. Vitamin D deficiency. <italic>N. Engl. J. Med.</italic> 2007;357(3):266-281.</mixed-citation> </ref> <ref> <mixed-citation>Bischoff-Ferrari HA, Dawson-Hughes B, Staehelin HB, et al. Fall prevention with supplemental and active forms of vitamin D: a meta-analysis of randomised controlled trials. <italic>BMJ</italic>. 2009;339:b3692.</mixed-citation> </ref> <ref> <mixed-citation>Atkins GJ, Anderson PH, Findlay DM, et al. Metabolism of vitamin D3 in human osteoblasts: evidence for autocrine and paracrine activities of 1 alpha, 25-dihydroxyvitamin D3. <italic>Bone </italic>2007; 40:1517-28.</mixed-citation> </ref> <ref> <mixed-citation>Mark BL, Carson JA. Vitamin D and autoimmune disease--implications for practice from the multiple sclerosis literature. <italic>J Am Diet Assoc</italic> 2006; 106:418-24.</mixed-citation> </ref> <ref> <mixed-citation>Lappe JM, Travers-Gustafson D, Davies KM, et al. Vitamin D and calcium supplementation reduces cancer risk: results of a randomized trial. <italic> Am J Clin Nutr</italic> 2007; 85:1586-91.</mixed-citation> </ref> <ref> <mixed-citation>Ross AC, Manson JE, Abrams SA, et al. The 2011 report on dietary reference intakes for calcium and vitamin D from the Institute of Medicine: what clinicians need to know. <italic>J. Clin. Endocrinol. Metab.</italic> 2011;96(1):53-58.</mixed-citation> </ref> <ref> <mixed-citation>Holick MF, Binkley NC, Bischoff-Ferrari HA, et al. Evaluation, treatment, and prevention of vitamin D deficiency: an Endocrine Society clinical practice guideline. <italic>J. Clin. Endocrinol. Metab.</italic> 2011;96(7):1911-1930.</mixed-citation> </ref> <ref> <mixed-citation>Peiris AN, Bailey BA, Guha BN, et al. Can a model predictive of vitamin D status be developed from common laboratory tests and demographic parameters? <italic>Southern Medical Journal</italic> 2011: 104(9):636-9.</mixed-citation> </ref> <ref> <mixed-citation>Cranney A, Weiler HA, O'Donnell S, and Puil L. Summary of evidence-based review on vitamin D efficacy in relation to bone health. <italic>Am J Clin Nutr</italic> 2008;88(suppl): 513S-9S.</mixed-citation> </ref> </ref-list>  normalize_whitespace=yes
+    [Teardown]    Remove Directory    R10    recursive=True

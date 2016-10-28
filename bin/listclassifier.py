@@ -449,7 +449,7 @@ class ListClassifier(Debuggable):
             return
 
         # select all p elements followed by another p element
-        expression = u'//tei:p[contains("(0123456789ivxlcmdIVXLCMD", substring(., 1, 1))]'
+        expression = u'//tei:p[contains("(0123456789ivxlcmdIVXLCMD", substring(., 1, 1)) and not(@rend="Bibliography")]'
 
         elements = tree.xpath(expression, namespaces={'tei': 'http://www.tei-c.org/ns/1.0'})
 
