@@ -64,7 +64,7 @@ class TeiManipulate(Manipulate):
 
     def do_list_bibliography(self, xpath):
         found = False
-        year_test = re.compile('((18|19|20)\d{2}[a-z]?)|(n\.d\.)')
+        year_test =  re.compile('((1|2)\d{3}[a-z]?)|(n\.d\.)')
 
         for last_list in xpath:
             if last_list.tag.endswith('list'):
@@ -382,7 +382,7 @@ class TeiManipulate(Manipulate):
         last = None
 
         # pre-compile all needed regular expressions
-        year_test = re.compile('((18|19|20)\d{2}[a-z]?)|(n\.d\.)')
+        year_test =  re.compile('((1|2)\d{3}[a-z]?)|(n\.d\.)')
         blank_text = re.compile('XXXX')
         numeric_start_test = re.compile('^(?P<start>[\[{(]*?[\d\.]+[\]})]*?\s*?).+')
         break_index = 0
