@@ -429,7 +429,7 @@ Library           Collections
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./033/nlm/out.xml
     ${secs}=    Get Element    ${xml}    body/sec/p
-    Elements Should Match    ${secs}    <p><bold>Povidone iodine.</bold> This is some text that links to (<ext-link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple">"Table 1."</ext-link>). </p>    normalize_whitespace=yes
+    Elements Should Match    ${secs}    <p><bold>Povidone iodine.</bold> This is some text that links to (<ext-link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.medscape.com/content/2003/00/45/63/456300/456300_tab.html" ext-link-type="uri" xlink:type="simple"> "Table 1." </ext-link>). </p>    normalize_whitespace=yes
     [Teardown]    Remove Directory    033    recursive=True
 
 034 Deleted text handling

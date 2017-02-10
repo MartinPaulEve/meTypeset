@@ -35,11 +35,8 @@ R03 Link parsing with external link (tests re-assembly order)
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./R03/LinkSubElements.xml
     ${secs}=    Get Element    ${xml}    body/sec/p
-    ${xref}=    Get Element    ${secs}    xref
     ${link}=    Get Element    ${secs}    ext-link
-    Should Be Equal As Strings    ${secs.text}    Some text (
-    Should Be Equal As Strings    ${xref.text}    to link
-    Should Be Equal As Strings    ${xref.tail}    ) and\ \
+    Should Be Equal As Strings    ${secs.text}    Some text (to link) and\ \
     Should Be Equal As Strings    ${link.text}    a link
     Should Be Equal As Strings    ${link.tail}    \ text.
     [Teardown]    Remove Directory    R03    recursive=True
@@ -116,5 +113,31 @@ R10 List numbering when changes tracked
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./R10/nlm/out.xml
     ${paragraph}=    Get Element    ${xml}    back/ref-list
-    Elements Should Match    ${paragraph}    <ref-list> <ref> <mixed-citation>Holick MF. Vitamin D deficiency. <italic>N. Engl. J. Med.</italic> 2007;357(3):266-281.</mixed-citation> </ref> <ref> <mixed-citation>Bischoff-Ferrari HA, Dawson-Hughes B, Staehelin HB, et al. Fall prevention with supplemental and active forms of vitamin D: a meta-analysis of randomised controlled trials. <italic>BMJ</italic>. 2009;339:b3692.</mixed-citation> </ref> <ref> <mixed-citation>Atkins GJ, Anderson PH, Findlay DM, et al. Metabolism of vitamin D3 in human osteoblasts: evidence for autocrine and paracrine activities of 1 alpha, 25-dihydroxyvitamin D3. <italic>Bone </italic>2007; 40:1517-28.</mixed-citation> </ref> <ref> <mixed-citation>Mark BL, Carson JA. Vitamin D and autoimmune disease--implications for practice from the multiple sclerosis literature. <italic>J Am Diet Assoc</italic> 2006; 106:418-24.</mixed-citation> </ref> <ref> <mixed-citation>Lappe JM, Travers-Gustafson D, Davies KM, et al. Vitamin D and calcium supplementation reduces cancer risk: results of a randomized trial. <italic> Am J Clin Nutr</italic> 2007; 85:1586-91.</mixed-citation> </ref> <ref> <mixed-citation>Ross AC, Manson JE, Abrams SA, et al. The 2011 report on dietary reference intakes for calcium and vitamin D from the Institute of Medicine: what clinicians need to know. <italic>J. Clin. Endocrinol. Metab.</italic> 2011;96(1):53-58.</mixed-citation> </ref> <ref> <mixed-citation>Holick MF, Binkley NC, Bischoff-Ferrari HA, et al. Evaluation, treatment, and prevention of vitamin D deficiency: an Endocrine Society clinical practice guideline. <italic>J. Clin. Endocrinol. Metab.</italic> 2011;96(7):1911-1930.</mixed-citation> </ref> <ref> <mixed-citation>Peiris AN, Bailey BA, Guha BN, et al. Can a model predictive of vitamin D status be developed from common laboratory tests and demographic parameters? <italic>Southern Medical Journal</italic> 2011: 104(9):636-9.</mixed-citation> </ref> <ref> <mixed-citation>Cranney A, Weiler HA, O'Donnell S, and Puil L. Summary of evidence-based review on vitamin D efficacy in relation to bone health. <italic>Am J Clin Nutr</italic> 2008;88(suppl): 513S-9S.</mixed-citation> </ref> </ref-list>  normalize_whitespace=yes
+    Elements Should Match    ${paragraph}    <ref-list> <ref> <mixed-citation>Holick MF. Vitamin D deficiency. <italic>N. Engl. J. Med.</italic> 2007;357(3):266-281.</mixed-citation> </ref> <ref> <mixed-citation>Bischoff-Ferrari HA, Dawson-Hughes B, Staehelin HB, et al. Fall prevention with supplemental and active forms of vitamin D: a meta-analysis of randomised controlled trials. <italic>BMJ</italic>. 2009;339:b3692.</mixed-citation> </ref> <ref> <mixed-citation>Atkins GJ, Anderson PH, Findlay DM, et al. Metabolism of vitamin D3 in human osteoblasts: evidence for autocrine and paracrine activities of 1 alpha, 25-dihydroxyvitamin D3. <italic>Bone </italic>2007; 40:1517-28.</mixed-citation> </ref> <ref> <mixed-citation>Mark BL, Carson JA. Vitamin D and autoimmune disease--implications for practice from the multiple sclerosis literature. <italic>J Am Diet Assoc</italic> 2006; 106:418-24.</mixed-citation> </ref> <ref> <mixed-citation>Lappe JM, Travers-Gustafson D, Davies KM, et al. Vitamin D and calcium supplementation reduces cancer risk: results of a randomized trial. <italic> Am J Clin Nutr</italic> 2007; 85:1586-91.</mixed-citation> </ref> <ref> <mixed-citation>Ross AC, Manson JE, Abrams SA, et al. The 2011 report on dietary reference intakes for calcium and vitamin D from the Institute of Medicine: what clinicians need to know. <italic>J. Clin. Endocrinol. Metab.</italic> 2011;96(1):53-58.</mixed-citation> </ref> <ref> <mixed-citation>Holick MF, Binkley NC, Bischoff-Ferrari HA, et al. Evaluation, treatment, and prevention of vitamin D deficiency: an Endocrine Society clinical practice guideline. <italic>J. Clin. Endocrinol. Metab.</italic> 2011;96(7):1911-1930.</mixed-citation> </ref> <ref> <mixed-citation>Peiris AN, Bailey BA, Guha BN, et al. Can a model predictive of vitamin D status be developed from common laboratory tests and demographic parameters? <italic>Southern Medical Journal</italic> 2011: 104(9):636-9.</mixed-citation> </ref> <ref> <mixed-citation>Cranney A, Weiler HA, O'Donnell S, and Puil L. Summary of evidence-based review on vitamin D efficacy in relation to bone health. <italic>Am J Clin Nutr</italic> 2008;88(suppl): 513S-9S.</mixed-citation> </ref> </ref-list>    normalize_whitespace=yes
     [Teardown]    Remove Directory    R10    recursive=True
+
+R11 Fuller Inline Reference
+    [Tags]    references    inline    R01
+    ${result} =    Run Process    python ../bin/meTypeset.py docx Parenthetical.docx ./para -d --nogit    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./para/nlm/out.xml
+    ${paragraph2}=    Get Element    ${xml}    body/sec/p[2]/xref
+    ${paragraph9}=    Get Element    ${xml}    body/sec/p[9]/xref
+    ${paragraph8}=    Get Element    ${xml}    body/sec/p[8]/xref
+    ${paragraph7}=    Get Element    ${xml}    body/sec/p[7]/xref
+    ${paragraph6}=    Get Element    ${xml}    body/sec/p[6]/xref
+    ${paragraph5}=    Get Element    ${xml}    body/sec/p[5]/xref
+    ${paragraph4}=    Get Element    ${xml}    body/sec/p[4]/xref
+    ${paragraph3}=    Get Element    ${xml}    body/sec/p[3]
+    ${paragraph}=    Get Element    ${xml}    body/sec/p[1]/xref
+    Should Be Equal As Strings    ${paragraph.text}    Martin Eve, p. 45
+    Should Be Equal As Strings    ${paragraph2.text}    345
+    Should Be Equal As Strings    ${paragraph3.text}    As I Note (AIN)
+    Should Be Equal As Strings    ${paragraph4.text}    p. 345
+    Should Be Equal As Strings    ${paragraph5.text}    Eve, p. 3
+    Should Be Equal As Strings    ${paragraph6.text}    Alex, P. 45
+    Should Be Equal As Strings    ${paragraph7.text}    Silva, Rodrigues, Oliveira, & da F. Costa, 2013
+    Should Be Equal As Strings    ${paragraph8.text}    Eve 54
+    Should Be Equal As Strings    ${paragraph9.text}    Eve, 54
+    [Teardown]    Remove Directory    para    recursive=True
