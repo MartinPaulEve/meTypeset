@@ -200,6 +200,9 @@ If the user has specified the --zotero option and set the mt:zotero setting to a
 ###Chain
 Finally, an [optional additional XSL](bin/xslchainer.py) file can be specified to be transformed by passing the --chain option.
 
+###Regression testing
+We are building a suite of regression tests to be supplemented every time we fix a bug in the parser. This ensures that future fixes don't undo our work so far. If you find a bug, please consider creating the _smallest possible_ document that you feel can demonstrate this so that we can write a test for it before fixing.
+
 #Getting the best results from the parser
 The parser works best with good input. If you use the provided styles for headings in Word/OpenOffice/LibreOffice then meTypeset will correctly nest these up to nine levels deep. The parser will also handle tables, graphics and other elements, although captions are best detected when placed immediately before or after the element in question. Bibliographies are best detected when placed at the end of the document, either in a section entitled "References" (or similar) or formatted properly with a single line per element with a date in each. Alternatively, you can use a bibliographic manager such as Zotero or Mendeley and these will be handled. The reference linker works best with paranthetical references (Eve 2014) that correlate to a unique bibliographic entry.
 
@@ -209,7 +212,7 @@ The parser attempts to parse headings that are all capitals, all-bold or of a su
 
 meTypeset is a fork of the [TEI Consortium's OxGarage stylesheets](https://github.com/TEIC/Stylesheets).
 
-The lead developer is Dr. [Martin Paul Eve](https://www.martineve.com) (martin@martineve.com).
+The lead developer is Professor [Martin Paul Eve](https://www.martineve.com) (martin.eve@bbk.ac.uk).
 
 Additional contributions were made, in alphabetical order) by:
 
