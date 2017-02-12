@@ -352,7 +352,7 @@ class ReferenceLinker(Debuggable):
 
             text = manipulate.get_stripped_text(p)
 
-            reference_test = re.compile('(?:\((?P<text>((?:[A-Z]{1}[a-z\s,\.\d\;&]+)*|(?:p?P?\.?\s?\d+))|.+\<ref\s.+)\))')
+            reference_test = re.compile('(?:\((?P<text>((?:[A-Z]{1}[a-z\s,\.\d\;&]+)*|(?:(?:\d{4}\s)?[A-Z]+[\s\,](?:[A-Z]{1}[a-z\s,\.\d\;&]*)?(?:\d{4})?(?:[a-z\s,\.\d\;&]+)*)|(?:p?P?\.?\s?\d+))|.+\<ref\s.+)\))')
             matches = reference_test.finditer(text)
 
             # exclude any square brackets with numbers inside
