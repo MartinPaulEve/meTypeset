@@ -141,3 +141,23 @@ R11 Fuller Inline Reference
     Should Be Equal As Strings    ${paragraph8.text}    Eve 54
     Should Be Equal As Strings    ${paragraph9.text}    Eve, 54
     [Teardown]    Remove Directory    para    recursive=True
+
+R12 Cited Acronyms
+    [Tags]    references    inline    R01
+    ${result} =    Run Process    python ../bin/meTypeset.py docx AcronymCite.docx ./acro -d --nogit    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./acro/nlm/out.xml
+    ${paragraph2}=    Get Element    ${xml}    body/sec/p[2]/xref
+    ${paragraph9}=    Get Element    ${xml}    body/sec/p[9]/xref
+    ${paragraph8}=    Get Element    ${xml}    body/sec/p[8]/xref
+    ${paragraph6}=    Get Element    ${xml}    body/sec/p[6]/xref
+    ${paragraph4}=    Get Element    ${xml}    body/sec/p[4]/xref
+    ${paragraph}=    Get Element    ${xml}    body/sec/p[1]
+    Should Be Equal As Strings    ${paragraph.text}    A test (IPCC).
+    Should Be Equal As Strings    ${paragraph2.text}    IPCC, p. 54
+    Should Be Equal As Strings    ${paragraph4.text}    IPCC 2015
+    Should Be Equal As Strings    ${paragraph6.text}    IPCC Report 2015
+    Should Be Equal As Strings    ${paragraph8.text}    IPCC Report 2015, 95
+    Should Be Equal As Strings    ${paragraph9.text}    2015 IPCC Report, p. 54
+    [Teardown]    Remove Directory    acro    recursive=True
