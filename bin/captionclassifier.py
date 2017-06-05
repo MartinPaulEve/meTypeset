@@ -318,11 +318,11 @@ class CaptionClassifier(Debuggable):
         table_ids = []
         table_regex_dot = re.compile('^.+?[\s\-]*\d+\..+')
         table_regex_colon = re.compile('^.+?[\s\-]*\d+\:.+')
-        caption_element = None
 
         separator = ':'
 
         for table in tables:
+            caption_element = None
             use_next = False
             use_previous = False
             used_title = False
