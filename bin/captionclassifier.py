@@ -20,6 +20,7 @@ from nlmmanipulate import NlmManipulate
 from lxml import etree
 import uuid
 import re
+import editdistance
 
 
 class CaptionClassifier(Debuggable):
@@ -317,6 +318,7 @@ class CaptionClassifier(Debuggable):
         table_ids = []
         table_regex_dot = re.compile('^.+?[\s\-]*\d+\..+')
         table_regex_colon = re.compile('^.+?[\s\-]*\d+\:.+')
+        caption_element = None
 
         separator = ':'
 
@@ -466,6 +468,33 @@ class CaptionClassifier(Debuggable):
                             etree.strip_tags(tree, 'REMOVE')
 
                             self.debug.print_debug(self, u'Moved table and siblings to parent section')
+
+            # If none of that worked, try to find caption in table rows
+            if caption_element is None:
+                table_rows = table.find("table").getchildren()
+
+                # Check if first row has fewer columns than others
+                # Therefore not likely to be data or a header
+                columns_count = {}
+                first_column = {}
+                row_number = 0
+
+                for row in table_rows:
+                    row_number += 1
+                    columns_count[row_number] = len(row.getchildren())
+                    first_column[row_number] = row.getchildren()[0].text
+                    fewest_columns = min(columns_count, key=columns_count.get)
+
+                if columns_count[1] == fewest_columns and columns_count[2] != fewest_columns:
+                    # If it has fewest columns, also check Levenshtein distance
+                    if editdistance.eval(first_column[1], first_column[2]) > editdistance.eval(first_column[2], first_column[3]):
+
+                        # OK, we have something, move it
+                        caption_element = etree.Element('caption')
+                        caption_element.text = first_column[1]
+                        NlmManipulate.append_safe(table, caption_element, self)
+                        table.find("table").remove(table_rows[0])
+
 
         paragraphs = tree.xpath('//p')
 
