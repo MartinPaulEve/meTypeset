@@ -485,8 +485,9 @@ class CaptionClassifier(Debuggable):
                     first_column[row_number] = row.getchildren()[0].text
                     fewest_columns = min(columns_count, key=columns_count.get)
 
-                if columns_count[1] == fewest_columns and columns_count[2] != fewest_columns:
+                if len(columns_count) > 2 and columns_count[1] == fewest_columns and columns_count[2] != fewest_columns:
                     # If it has fewest columns, also check Levenshtein distance
+                    # To ensure this row is unlike the others
                     if editdistance.eval(first_column[1], first_column[2]) > editdistance.eval(first_column[2], first_column[3]):
 
                         # OK, we have something, move it
