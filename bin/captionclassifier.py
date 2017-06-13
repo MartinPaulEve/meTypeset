@@ -20,6 +20,7 @@ from nlmmanipulate import NlmManipulate
 from lxml import etree
 import uuid
 import re
+import editdistance
 
 
 class CaptionClassifier(Debuggable):
@@ -321,6 +322,7 @@ class CaptionClassifier(Debuggable):
         separator = ':'
 
         for table in tables:
+            caption_element = None
             use_next = False
             use_previous = False
             used_title = False
@@ -466,6 +468,34 @@ class CaptionClassifier(Debuggable):
                             etree.strip_tags(tree, 'REMOVE')
 
                             self.debug.print_debug(self, u'Moved table and siblings to parent section')
+
+            # If none of that worked, try to find caption in table rows
+            if caption_element is None:
+                table_rows = table.find("table").getchildren()
+
+                # Check if first row has fewer columns than others
+                # Therefore not likely to be data or a header
+                columns_count = {}
+                first_column = {}
+                row_number = 0
+
+                for row in table_rows:
+                    row_number += 1
+                    columns_count[row_number] = len(row.getchildren())
+                    first_column[row_number] = row.getchildren()[0].text
+                    fewest_columns = min(columns_count, key=columns_count.get)
+
+                if len(columns_count) > 2 and columns_count[1] == fewest_columns and columns_count[2] != fewest_columns:
+                    # If it has fewest columns, also check Levenshtein distance
+                    # To ensure this row is unlike the others
+                    if editdistance.eval(first_column[1], first_column[2]) > editdistance.eval(first_column[2], first_column[3]):
+
+                        # OK, we have something, move it
+                        caption_element = etree.Element('caption')
+                        caption_element.text = first_column[1]
+                        NlmManipulate.append_safe(table, caption_element, self)
+                        table.find("table").remove(table_rows[0])
+
 
         paragraphs = tree.xpath('//p')
 
