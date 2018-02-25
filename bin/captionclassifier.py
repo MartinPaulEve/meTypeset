@@ -505,6 +505,23 @@ class CaptionClassifier(Debuggable):
         tree.write(self.gv.nlm_temp_file_path)
 
 
+    def run_ext_link_compliance(self):
+        self.debug.print_debug(self, u'Attempting to correct any mis-nested graphics elements')
+
+        manipulate = NlmManipulate(self.gv)
+
+        tree = manipulate.load_dom_tree()
+        bad_links = tree.xpath('//ext-link/graphic')
+
+        for link in bad_links:
+            link_parent = link.getparent()
+            parent = link_parent.getparent()
+            parent.insert(parent.index(link_parent)+1, link)
+
+        tree.write(self.gv.nlm_file_path)
+        tree.write(self.gv.nlm_temp_file_path)
+
+
 def main():
     args = docopt(__doc__, version='meTypeset 0.1')
     bare_gv = GV(args)
@@ -520,6 +537,8 @@ def main():
     if args['all'] or args['graphics']:
         table_classifier_instance.run_graphics()
 
+    if args['all'] or args['enforce']:
+        table_classifier_instance.run_ext_link_compliance()
 
 if __name__ == '__main__':
     main()

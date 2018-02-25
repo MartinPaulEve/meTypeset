@@ -16,3 +16,13 @@ Library           Collections
     ${attr}=    Get Element Attribute    ${image}    {http://www.w3.org/1999/xlink}href
     Should Be Equal    ${attr}    media/image1.png
     [Teardown]    Remove Directory    601    recursive=True
+
+602 Ext-Link Compliance
+    [Tags]    images    602
+    ${result} =    Run Process    python ../bin/meTypeset.py docx extlink.docx ./602 -d --nogit    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./602/nlm/out.xml    keep_clark_notation=no
+    ${image}=    Get Element    ${xml}    body/sec/p/graphic
+    Elements Should Match    ${image}    <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="media/image1.png" position="float" orientation="portrait" xlink:type="simple"/>
+    [Teardown]    Remove Directory    602    recursive=True

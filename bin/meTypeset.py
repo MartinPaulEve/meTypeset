@@ -215,6 +215,8 @@ class MeTypeset (Debuggable):
                                                                                  self, domain='aggression')):
                 cc.run_graphics()
 
+            cc.run_ext_link_compliance()
+
             # run metadata merge
             if not (self.args['--nometa']):
                 metadata.run()
