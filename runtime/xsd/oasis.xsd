@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.niso.org/standards/z39-96/ns/oasis-exchange/table" xmlns:oasis="http://www.niso.org/standards/z39-96/ns/oasis-exchange/table" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <xs:import schemaLocation="JATS-journalpublishing-oasis-article1.xsd"/>
+  <xs:import namespace="http://www.w3.org/1998/Math/MathML" schemaLocation="ncbi-mathml2/mathml2.xsd"/>
+  <xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlink.xsd"/>
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+  <xs:element name="table">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="oasis:tgroup"/>
+      </xs:sequence>
+      <xs:attribute name="frame">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="top"/>
+            <xs:enumeration value="bottom"/>
+            <xs:enumeration value="topbot"/>
+            <xs:enumeration value="all"/>
+            <xs:enumeration value="sides"/>
+            <xs:enumeration value="none"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="colsep" type="xs:NMTOKEN"/>
+      <xs:attribute name="rowsep" type="xs:NMTOKEN"/>
+      <xs:attribute name="id" type="xs:ID"/>
+      <xs:attribute ref="xml:base"/>
+      <xs:attribute name="content-type"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tgroup">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="oasis:colspec"/>
+        <xs:element minOccurs="0" ref="oasis:thead"/>
+        <xs:element ref="oasis:tbody"/>
+      </xs:sequence>
+      <xs:attribute name="cols" use="required" type="xs:NMTOKEN"/>
+      <xs:attribute name="colsep" type="xs:NMTOKEN"/>
+      <xs:attribute name="rowsep" type="xs:NMTOKEN"/>
+      <xs:attribute name="align">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="left"/>
+            <xs:enumeration value="right"/>
+            <xs:enumeration value="center"/>
+            <xs:enumeration value="justify"/>
+            <xs:enumeration value="char"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="id" type="xs:ID"/>
+      <xs:attribute ref="xml:base"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="colspec">
+    <xs:complexType>
+      <xs:attribute name="colnum" type="xs:NMTOKEN"/>
+      <xs:attribute name="colname" type="xs:NMTOKEN"/>
+      <xs:attribute name="colwidth"/>
+      <xs:attribute name="colsep" type="xs:NMTOKEN"/>
+      <xs:attribute name="rowsep" type="xs:NMTOKEN"/>
+      <xs:attribute name="align">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="left"/>
+            <xs:enumeration value="right"/>
+            <xs:enumeration value="center"/>
+            <xs:enumeration value="justify"/>
+            <xs:enumeration value="char"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="char"/>
+      <xs:attribute name="charoff" type="xs:NMTOKEN"/>
+      <xs:attribute name="id" type="xs:ID"/>
+      <xs:attribute ref="xml:base"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="thead">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="oasis:row"/>
+      </xs:sequence>
+      <xs:attribute name="valign">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="top"/>
+            <xs:enumeration value="middle"/>
+            <xs:enumeration value="bottom"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="id" type="xs:ID"/>
+      <xs:attribute ref="xml:base"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tbody">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="oasis:row"/>
+      </xs:sequence>
+      <xs:attribute name="valign">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="top"/>
+            <xs:enumeration value="middle"/>
+            <xs:enumeration value="bottom"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="id" type="xs:ID"/>
+      <xs:attribute ref="xml:base"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="row">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="oasis:entry"/>
+      </xs:sequence>
+      <xs:attribute name="rowsep" type="xs:NMTOKEN"/>
+      <xs:attribute name="valign">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="top"/>
+            <xs:enumeration value="middle"/>
+            <xs:enumeration value="bottom"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="id" type="xs:ID"/>
+      <xs:attribute ref="xml:base"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="entry">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="email"/>
+        <xs:element ref="ext-link"/>
+        <xs:element ref="uri"/>
+        <xs:element ref="hr"/>
+        <xs:element ref="inline-supplementary-material"/>
+        <xs:element ref="related-article"/>
+        <xs:element ref="related-object"/>
+        <xs:element ref="disp-formula"/>
+        <xs:element ref="disp-formula-group"/>
+        <xs:element ref="break"/>
+        <xs:element ref="citation-alternatives"/>
+        <xs:element ref="element-citation"/>
+        <xs:element ref="mixed-citation"/>
+        <xs:element ref="nlm-citation"/>
+        <xs:element ref="bold"/>
+        <xs:element ref="fixed-case"/>
+        <xs:element ref="italic"/>
+        <xs:element ref="monospace"/>
+        <xs:element ref="overline"/>
+        <xs:element ref="roman"/>
+        <xs:element ref="sans-serif"/>
+        <xs:element ref="sc"/>
+        <xs:element ref="strike"/>
+        <xs:element ref="underline"/>
+        <xs:element ref="ruby"/>
+        <xs:element ref="chem-struct"/>
+        <xs:element ref="inline-formula"/>
+        <xs:element ref="def-list"/>
+        <xs:element ref="list"/>
+        <xs:element ref="tex-math"/>
+        <xs:element ref="mml:math"/>
+        <xs:element ref="p"/>
+        <xs:element ref="abbrev"/>
+        <xs:element ref="milestone-end"/>
+        <xs:element ref="milestone-start"/>
+        <xs:element ref="named-content"/>
+        <xs:element ref="styled-content"/>
+        <xs:element ref="alternatives"/>
+        <xs:element ref="array"/>
+        <xs:element ref="code"/>
+        <xs:element ref="graphic"/>
+        <xs:element ref="media"/>
+        <xs:element ref="preformat"/>
+        <xs:element ref="inline-graphic"/>
+        <xs:element ref="private-char"/>
+        <xs:element ref="fn"/>
+        <xs:element ref="target"/>
+        <xs:element ref="xref"/>
+        <xs:element ref="sub"/>
+        <xs:element ref="sup"/>
+      </xs:choice>
+      <xs:attribute name="colname" type="xs:NMTOKEN"/>
+      <xs:attribute name="namest" type="xs:NMTOKEN"/>
+      <xs:attribute name="nameend" type="xs:NMTOKEN"/>
+      <xs:attribute name="morerows" type="xs:NMTOKEN"/>
+      <xs:attribute name="colsep" type="xs:NMTOKEN"/>
+      <xs:attribute name="rowsep" type="xs:NMTOKEN"/>
+      <xs:attribute name="align">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="left"/>
+            <xs:enumeration value="right"/>
+            <xs:enumeration value="center"/>
+            <xs:enumeration value="justify"/>
+            <xs:enumeration value="char"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="char"/>
+      <xs:attribute name="charoff" type="xs:NMTOKEN"/>
+      <xs:attribute name="valign">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="top"/>
+            <xs:enumeration value="middle"/>
+            <xs:enumeration value="bottom"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="id" type="xs:ID"/>
+      <xs:attribute ref="xml:base"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

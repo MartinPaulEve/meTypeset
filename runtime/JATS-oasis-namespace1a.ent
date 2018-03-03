@@ -1,0 +1,191 @@
+<!-- ============================================================= -->
+<!--  MODULE:    OASIS Table Namespace Module                      -->
+<!--  VERSION:   ANSI/NISO JATS Version 1.0 (Z39.96-2012)          -->
+<!--  DATE:      July 2013                                         -->
+<!--                                                               -->
+<!-- ============================================================= -->
+
+<!-- ============================================================= -->
+<!--                    PUBLIC DOCUMENT TYPE DEFINITION            -->
+<!--                        TYPICAL INVOCATION                     -->
+<!--
+"-//NLM//DTD JATS OASIS Table No Namespace Prefix Module v1.1d1 20130915//EN"
+     Delivered as file "JATS-oasis-namespace1.ent"                 -->
+<!-- ============================================================= -->
+
+
+<!-- ============================================================= -->
+<!-- SYSTEM:     OASIS-Table Version of the Journal Publishing DTD -->
+<!--             of the JATS DTD Suite                             -->
+<!--                                                               -->
+<!-- PURPOSE:    Establish a prefix for the OASIS CALS Exchange    -->
+<!--             Table model, typically "oasis" (<oasis:table>).   -->
+<!--                                                               -->
+<!-- TAG SET SPONSOR                                               -->
+<!--             National Center for Biotechnology                 -->
+<!--                Information (NCBI)                             -->
+<!--             National Library of Medicine (NLM)                -->
+<!--                                                               -->
+<!-- CREATED FOR:                                                  -->
+<!--             This module was created for the JATS DTD Suite.   -->
+<!--             Digital archives and publishers may use the       -->
+<!--             DTD as is for markup of journal literature or     -->
+<!--             related material for archiving and transferring   -->
+<!--             such material between archives or create a        -->
+<!--             custom XML DTD from the Suite for                 -->
+<!--             these purposes.                                   -->
+<!--                                                               -->
+<!--             This DTD is in the public domain. An organization -->
+<!--             that wishes to create its own DTD from the suite  -->
+<!--             may do so without permission from NLM.            -->
+<!--                                                               -->
+<!--             The suite has been set up to be extended using a  -->
+<!--             new DTD file and a new DTD-specific customization -->
+<!--             module to redefine the many Parameter Entities.   -->
+<!--             Do not modify the suite directly or redistribute  -->
+<!--             modified versions of the suite.                   -->
+<!--                                                               -->
+<!--             In the interest of maintaining consistency and    -->
+<!--             clarity for potential users, NLM requests:        -->
+<!--                                                               -->
+<!--             1. If you create a DTD from the JATS DTD Suite    -->
+<!--                and intend to stay compatible with the suite,  -->
+<!--                then please include the following statement    -->
+<!--                as a comment in all of your DTD modules:       -->
+<!--                   "Created from, and fully compatible with,   -->
+<!--                    the ANSI/NISO Z39.96 Journal Article Tag   -->
+<!--                    Suite (JATS)."                             -->
+<!--                                                               -->
+<!--             2. If you alter one or more modules of the suite, -->
+<!--                then please rename your version and all its    -->
+<!--                modules to avoid any confusion with the        -->
+<!--                original suite. Also, please include the       -->
+<!--                following statement as a comment in all your   -->
+<!--                DTD modules:                                   -->
+<!--                   "Based in part on, but not fully compatible -->
+<!--                    with, the ANSI/NISO Z39.96 Journal Article -->
+<!--                    Tag Suite (JATS)."                         -->
+<!--                                                               -->
+<!-- ORIGINAL CREATION DATE:                                       -->
+<!--             February 2012                                     -->
+<!--                                                               -->
+<!-- CREATED BY: Mulberry Technologies, Inc. for the NISO Z39.96   -->
+<!--             Working Group. Mulberry Technologies was          -->
+<!--             supported by National Center for Biotechnology    -->
+<!--             Information (NCBI), a center of the US National   -->
+<!--             Library of Medicine (NLM).                        -->
+<!--                                                               -->
+<!--             The Journal Publishing DTD is built from the      -->
+<!--             Archiving and Interchange DTD Suite.              -->
+<!--                                                               -->
+<!--             Suggestions for refinements and enhancements to   -->
+<!--             this DTD should be sent in email to:              -->
+<!--                 jats@ncbi.nlm.nih.gov                         -->
+<!-- ============================================================= -->
+
+
+<!-- ============================================================= -->
+<!--                    DTD VERSION/CHANGE HISTORY                 -->
+<!-- ============================================================= -->
+<!--
+
+Version  Reason/Occasion                   (who) vx.x (yyyy-mm-dd)
+   
+     =============================================================
+
+     Details concerning ANSI/NISO Z39.96-2012 JATS-based DTDs, XSDs, 
+     RNGs and supporting documentation are available at
+           http://jats.nlm.nih.gov/1.0/
+                                                                   -->
+
+<!-- ============================================================= -->
+<!--                    OASIS NAMESPACE SETUP                      -->
+<!-- ============================================================= -->
+
+
+<!--                    NAME OASIS NAMESPACE BASE URI              -->
+<!--                    Set the oasis namespace URI.               -->
+<!ENTITY % oasis.xmlns   
+      "http://www.niso.org/standards/z39-96/ns/oasis-exchange/table" >
+
+
+<!--                    NAME OASIS NAMESPACE PREFIX                -->
+<!--                    Set the namespace prefix for the OASIS tables
+                        to the JATS-named prefix "oasis". 
+                        Implementor's Note: This parameter entity
+                        should always be set, even if you need to turn
+                        off the namespace prefix.                  -->
+<!ENTITY % oasis.prefix "oasis"                                      >
+
+
+<!--                    NAME OASIS NAMESPACE PREFIX                -->
+<!--                    Construct the OASIS namespace prefix to be 
+                        used in the xmlns pseudo-attribute from:
+                          - the word "xmlns", 
+                          - a colon, and 
+                          - the prefix just defined in %oasis.prefix;
+                        Implementor's Note: This is the parameter 
+                        entity that can be set off to get rid of the
+                        OASIS namespace prefix, turning "oasis:table"
+                        into "table", for example. Removing the prefix
+                        is accomplished by setting this parameter 
+                        entity to "xmlns". Caution: Note the lack of 
+                        a colon.                                   -->
+<!ENTITY % oasis.xmlns.attrname
+                        "xmlns"                                      >
+
+
+<!--                    SET OASIS NAMESPACE PREFIX                 -->
+<!--                    Set the OASIS prefix string to the prefix
+                        "oasis" plus a colon ==> "oasis:" for use
+                        in the QNames of elements. This is NOT used in
+                        setting up the OASIS prefix in the XMLNS
+                        pseudo-attribute, only for naming elements.
+                        Implementor's Note:
+                        To turn off the prefix, set this parameter
+                        entity to the null string "".              -->
+<!ENTITY % oasis.pfx    ""                                           >
+
+
+<!--                    DEFAULT NAMESPACE-OASIS TABLE EXCHANGE     -->
+<!--                    The default namespace to be used when
+                        calling in the OASIS Open Exchange (CALS)
+                        Table Model. This is set on the article level
+                        as well as on the OASIS table elements.
+                        Implementor's Note: The parameter entity is
+                        constructed from the parameter entities set 
+                        above.                                     -->
+<!ENTITY % oasis.xmlns.attrib
+     "%oasis.xmlns.attrname; 
+                        CDATA               #FIXED '%oasis.xmlns;'"  >
+
+
+<!-- ============================================================= -->
+<!--                    PARAMETER ENTITIES FOR QUALIFIED NAMES     -->
+<!--                    Implementor's Note: the following QNames   -->
+<!--                    are set up to include the OASIS prefix, by -->
+<!--                    default "oasis". Following the practice of -->
+<!--                    MathML, DOcBook, et al., a parameter entity-->
+<!--                    named "xyz.qname" defines the qualified    -->
+<!--                    name for each element. These parameter     -->
+<!--                    entities all contain an "o" in front of    -->
+<!--                    them ("otable.qname", otgroup.qname)       -->
+<!--                    because the XHTML table model uses the     -->
+<!--                    same QName parameter entity naming         -->
+<!--                    convention. The "o" is used for the NISO   -->
+<!--                    JATS entities to avoid parameter entity    -->
+<!--                    name clashes.                              -->
+<!-- ============================================================= -->
+
+<!ENTITY % otable.qname  "%oasis.pfx;table"                          >
+<!ENTITY % otgroup.qname "%oasis.pfx;tgroup"                         >
+<!ENTITY % otbody.qname  "%oasis.pfx;tbody"                          >
+<!ENTITY % othead.qname  "%oasis.pfx;thead"                          >
+<!ENTITY % ocol.qname    "%oasis.pfx;col"                            >
+<!ENTITY % ocolspec.qname        
+                         "%oasis.pfx;colspec"                        >
+<!ENTITY % orow.qname    "%oasis.pfx;row"                            >
+<!ENTITY % oentry.qname  "%oasis.pfx;entry"                          >
+
+
+<!-- ================== End OASIS Namespace Setup  =============== -->

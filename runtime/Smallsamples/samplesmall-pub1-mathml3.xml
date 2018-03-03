@@ -1,0 +1,214 @@
+<?xml version="1.0" ?>
+<!--<!DOCTYPE article PUBLIC
+"-//NLM//DTD JATS (Z39.96) Journal Publishing DTD v1.1d1 20130915//EN"
+"../JATS-journalpublishing1.dtd">-->
+<!DOCTYPE article SYSTEM "../JATS-journalpublishing1-mathml3.dtd">
+<article xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:mml="http://www.w3.org/1998/Math/MathML"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ dtd-version="1.1d1"
+ xml:lang="en">
+<!-- SYSTEM:  JATS DTD Suite                             -->
+<!-- Updated July 2007 An archival journal article with minimal 
+Front Matter, a Table, and Citations for testing         -->
+<!-- =============== Front Matter (Metadata) =========== -->
+<front>
+<journal-meta>
+<journal-id>Lapdeb-1</journal-id>
+<issn>03-647-1</issn>
+<publisher><publisher-name>Mulberry Technologies, Inc.</publisher-name></publisher>
+</journal-meta>
+<article-meta>
+<article-id pub-id-type="publisher-id">ArchivalTest1</article-id>
+<title-group>
+<article-title>Archival DTD Test Article</article-title>
+<subtitle>(Just a small one for parsing)</subtitle>
+</title-group>
+<contrib-group>
+<contrib  id="Prime-jjb" rid="aff-1">
+<name-alternatives>
+<name><surname>Jones</surname>
+<given-names>John Browning</given-names>
+<prefix>The Honorable</prefix><suffix>III</suffix>
+</name>
+<name  specific-use="Indexing"><surname>Jones</surname>
+<given-names>JBB</given-names>
+</name>
+<name name-style="eastern" xml:lang="ja-Jpan"  specific-use="Honorary">
+<surname>flower-characters here</surname>
+<given-names>flower-characters here</given-names>
+</name>
+</name-alternatives>
+</contrib>
+<contrib>
+<name><surname>Jones</surname>
+<given-names>John Browning</given-names>
+<prefix>The Honorable</prefix><suffix>III</suffix>
+</name>
+</contrib>
+<aff-alternatives  id="aff-1" >
+<aff><institution xmlns:xlink="http://www.w3.org/1999/xlink" 
+xlink:type="simple">County Jail</institution> down Aberdeen way
+</aff>
+<aff>
+<institution xmlns:xlink="http://www.w3.org/1999/xlink" 
+xlink:type="simple">Montgomery County Jail</institution>
+<uri xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+ xlink:href="http://www.archiemcphee.com">Archie McPhee</uri>
+</aff>
+</aff-alternatives>
+  </contrib-group>
+<pub-date iso-8601-date="2004">
+<year>2004</year></pub-date>
+<elocation-id>Sample-test-only-id</elocation-id>
+<permissions>
+<copyright-year>2004</copyright-year>
+</permissions>
+</article-meta>
+</front>
+<!-- =============== Body Matter (Content) =========== -->
+<body>
+<p>This is a list inside a paragraph:
+<list list-type="order" prefix-word="Test">
+<list-item><label>1.</label><p>Poodles</p></list-item>
+<list-item><label>2.</label><p>Persian Cats</p></list-item>
+<list-item><label>3.</label><p>Weaver Finches</p></list-item>
+<list-item><label>4.</label><p>Gechos</p></list-item>
+</list>
+</p>
+<p>This following is an XHTML table, inside a
+Table Wrapper %lt;table-wrap&gt; wrapper.</p>
+<!-- AN XHTML Table for testing -->
+<table-wrap id="table-wrap-XHTML" position="anchor">
+<label>Table 1</label>
+<caption><title>XHTML Table</title>
+<p>Additional caption material</p>
+</caption>
+<alternatives>
+<table>
+<tbody>
+<tr>
+<td>A cell!</td>
+<td>Another</td>
+<td>Still a third&gt;</td>
+</tr>
+<tr>
+<td>2 A cell!</td>
+<td>An xref: <xref ref-type="statement" rid="statement16">See the 
+statement</xref></td>
+<td>2 Still a third&mdash;</td>
+</tr>
+</tbody>
+</table>
+<textual-form>
+  A cell!   Another   Still a third&mdash;
+  2 A cell! An xref<sup>16</sup>  2 Still a third&gt;
+</textual-form>
+<graphic id="Tab-1" xlink:href="Xhtml-tab-1.jpg"  content-type="XHTML-table-graphic" specific-use="For cell-phones" xml:lang="en"/> 
+</alternatives>
+</table-wrap>
+<sec sec-type="methods">
+<title>There be <sans-serif>statements</sans-serif> here.</title>
+<statement id="statement11">
+<p>The IDREFs need to point to something</p>
+</statement>
+<code>Here there be XML tags:
+&lt;sec&gt;
+&lt;title&gt;There be &lt;inline-formula&gt;a + b&lt;/inline-formula&gt; complex titles here.&lt;/title&gt;
+&lt;p&gt;The big ones fall hard.&lt;/p&gt;
+&lt;p&gt;Fish heads, eat them in the soup.&lt;/p&gt;
+&lt;/sec&gt;
+</code>
+<statement id="statement15">
+<p>No Matter How Wise You Get, Wet Birds Don't 
+Fly at Night</p>
+</statement>
+<statement id="statement16">
+<p>Post Hoc Propter Ergo Hoc</p>
+</statement>
+<p>And here is an executable example:
+<alternatives>
+<code>class; a + b + c</code>
+<code>&lt;code%gt;class; a + b + c&lt;/code%gt;</code>
+<code><ext-link specific-use="run on browsers" 
+xlink:href="some real link or other"/></code>
+</alternatives>
+</p>
+<p>And here be MathML: EM4 cells, stably transfected with Flag-HA-DAT, Myc-His-DAT,
+or both, were reacted with cross-linker and solubilized in Triton X-100
+as above. There is no reason to have this formula,
+'bold-italic'<inline-formula>
+<!-- THIS IS AN INVALID MATHML 3.0 EQUATION, BUT IS VALID IN MATHML 2.0 -->
+<!--<mml:math name="joe">
+<mml:semantics>
+<mml:mrow><mml:msub><mml:mi mathvariant="blood-italic">Q</mml:mi>
+<mml:mrow><mml:mn>10</mml:mn></mml:mrow></mml:msub><mml:mo>=
+</mml:mo><mml:msup><mml:mrow><mml:mrow><mml:mo>(</mml:mo><mml:mrow>
+<mml:mfrac><mml:mrow><mml:msub><mml:mi>M</mml:mi><mml:mn>2</mml:mn></mml:msub>
+</mml:mrow><mml:mrow><mml:msub><mml:mi>M</mml:mi><mml:mn>1</mml:mn>
+</mml:msub></mml:mrow></mml:mfrac></mml:mrow><mml:mo>)</mml:mo></mml:mrow>
+</mml:mrow><mml:mrow><mml:mn>10</mml:mn><mml:mo>/</mml:mo><mml:msub><mml:mi>T
+</mml:mi><mml:mn>1</mml:mn></mml:msub><mml:mo>-</mml:mo><mml:msub><mml:mi>
+T</mml:mi><mml:mn>2</mml:mn></mml:msub></mml:mrow></mml:msup></mml:mrow>
+<mml:annotation>Required: content unknown</mml:annotation>
+</mml:semantics></mml:math>--></inline-formula> here. Five microliters of
+anti-Myc 9E10 (Santa Cruz Biotechnology) was added to 1.0 ml of Triton
+X-100 extracts, and the mixture was incubated for 1 h at 4&#x00B0;C.
+Twenty microliters of rec-protein G Sepharose (Zymed) was added, and the
+mixture was incubated for 1 h at 4&#x00B0;C, washed three times in 0.5
+ml of lysis buffer, and eluted in 45 &#x03BC;l of 2&#x00D7; Laemmli
+sample buffer without reducing agent.</p>
+<p>And here be MathML: EM4 cells, stably transfected with Flag-HA-DAT, Myc-His-DAT,
+or both, were reacted with cross-linker and solubilized in Triton X-100
+as above. There is no reason to have this formula,
+'bold-italic'<inline-formula>
+<!-- THIS IS A VALID MATHML 3.0 EQUATION -->
+<mml:math>
+<mml:semantics>
+<mml:mrow><mml:msub><mml:mi mathvariant="bold-italic">Q</mml:mi>
+<mml:mrow><mml:mn>10</mml:mn></mml:mrow></mml:msub><mml:mo>=
+</mml:mo><mml:msup><mml:mrow><mml:mrow><mml:mo>(</mml:mo><mml:mrow>
+<mml:mfrac><mml:mrow><mml:msub><mml:mi>M</mml:mi><mml:mn>2</mml:mn></mml:msub>
+</mml:mrow><mml:mrow><mml:msub><mml:mi>M</mml:mi><mml:mn>1</mml:mn>
+</mml:msub></mml:mrow></mml:mfrac></mml:mrow><mml:mo>)</mml:mo></mml:mrow>
+</mml:mrow><mml:mrow><mml:mn>10</mml:mn><mml:mo>/</mml:mo><mml:msub><mml:mi>T
+</mml:mi><mml:mn>1</mml:mn></mml:msub><mml:mo>-</mml:mo><mml:msub><mml:mi>
+T</mml:mi><mml:mn>2</mml:mn></mml:msub></mml:mrow></mml:msup></mml:mrow>
+<mml:annotation>Required: content unknown</mml:annotation>
+</mml:semantics></mml:math></inline-formula> here. Five microliters of
+anti-Myc 9E10 (Santa Cruz Biotechnology) was added to 1.0 ml of Triton
+X-100 extracts, and the mixture was incubated for 1 h at 4&#x00B0;C.
+Twenty microliters of rec-protein G Sepharose (Zymed) was added, and the
+mixture was incubated for 1 h at 4&#x00B0;C, washed three times in 0.5
+ml of lysis buffer, and eluted in 45 &#x03BC;l of 2&#x00D7; Laemmli
+sample buffer without reducing agent.</p>
+</sec>
+</body>
+<!-- =============== Back Matter (Ancillary) ======= -->
+<back>
+<ack><p>We thank you all.</p></ack>
+<ref-list>
+<title>Bibliography</title>
+<p>Just a reference or two for testing:</p>
+<ref>
+<mixed-citation>A citation ain't nothing but a 
+sandwich &mdash; personal communication 
+</mixed-citation>
+</ref>
+<ref>
+<mixed-citation>
+<name>
+<surname>Piggy</surname> 
+<prefix>Ms.</prefix></name>
+<article-title>Can't Help Lovin&rsquo; That 
+Frog of Mine</article-title>;
+<source>Swine Review</source>, <issue>145</issue>:
+<fpage>12</fpage>&ndash;<lpage>24</lpage>; 
+<year>2003</year>. 
+<trans-title xml:lang="cpe">Ant-cay Elp-hay 
+Ovin&rsquo;-lay At-thay Og-fray of-ay Ine-may</trans-title>
+</mixed-citation>
+</ref>
+</ref-list>
+</back>
+</article>

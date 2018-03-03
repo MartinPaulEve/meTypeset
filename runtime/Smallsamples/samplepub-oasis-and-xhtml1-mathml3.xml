@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--<!DOCTYPE article
+PUBLIC
+  "-//NLM//DTD JATS (Z39.96) Journal Publishing DTD with OASIS Tables v1.1d1 20130915//EN" 
+  "../JATS-journalpublishing-oasis-article1-mathml3.dtd"> -->
+<!DOCTYPE article SYSTEM "../JATS-journalpublishing-oasis-article1-mathml3.dtd">
+<article 
+     dtd-version="1.1d1" 
+     xml:lang="en" 
+     xmlns:mml="http://www.w3.org/1998/Math/MathML" 
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:oasis="http://www.niso.org/standards/z39-96/ns/oasis-exchange/table" >
+<front>
+<!-- SYSTEM:  JATS DTD Suite                              -->
+<!-- November 2002 An archival journal article with minimal 
+     Front Matter and an OASIS and an XHTML-based Table
+     for testing                                          -->
+<!-- =============== Front Matter (Metadata) ===========  -->
+<journal-meta>
+<journal-id>MRKP</journal-id>
+<journal-title-group>
+<journal-title>Markup Languages: Theory and Practice</journal-title> 
+</journal-title-group>
+<issn>xxx</issn>
+<publisher><publisher-name>xxx</publisher-name>
+</publisher>
+</journal-meta>
+<article-meta>
+<article-id pub-id-type="publisher-id">Table Test</article-id>
+<title-group>
+<article-title>Table Article</article-title>
+</title-group>
+<pub-date iso-8601-date="2004">
+<year>2004</year>
+</pub-date>
+</article-meta>
+</front>
+<!-- =============== Body Matter (Content) =========== -->
+<body>
+<p>This is a paragraph</p>
+<p>This following is an OASIS/CALS table, inside a
+Table Wrapper %lt;table-wrap&gt; wrapper.</p>
+<!-- AN OASIS Table for testing -->
+<table-wrap id="table-wrap-OASIS-with-NS" position="anchor">
+<label id="dala">Table 1</label>
+<caption id="dalb"><title id="dalc">OASIS Table</title>
+<p id="dald">Additional caption material</p>
+</caption>
+<oasis:table id="dale" xmlns:oasis="http://www.niso.org/standards/z39-96/ns/oasis-exchange/table">
+<oasis:tgroup cols="3" id="dalf">
+<oasis:colspec colnum="1" colname="col1" colwidth="2*" colsep="1" rowsep="1" align="left" id="dalg"/>
+<oasis:colspec colnum="2" colname="col2" colwidth="4*" colsep="1" rowsep="1" align="left"/>
+<oasis:colspec colnum="3" colname="col3" colwidth="*" colsep="1" rowsep="1" align="right"/>
+<oasis:tbody id="dalh">
+<oasis:row id="dali">
+<oasis:entry id="dalj">A cell! <bold>the very first cell</bold></oasis:entry>
+<oasis:entry>Another cell with a 
+<list list-type="ordered" id="dalk">
+<list-item id="dall"><p id="dalm">List item the first</p></list-item>
+<list-item><p>List item the second</p></list-item>
+<list-item><p>List item the third</p></list-item>
+</list></oasis:entry>
+<oasis:entry>Still a third&gt;</oasis:entry>
+</oasis:row>
+<oasis:row>
+<oasis:entry>2 A cell!</oasis:entry>
+<oasis:entry namest="col2" nameend="col3">A spanning Entry</oasis:entry>
+</oasis:row>
+</oasis:tbody>
+</oasis:tgroup>
+</oasis:table>
+</table-wrap>
+
+<!-- AN XHTML Table for testing -->
+<table-wrap id="table-wrap-XHTML" position="anchor">
+<label id="daln">Table 1</label>
+<caption id="dalo"><title id="dalp">XHTML Table</title>
+<p id="dalq">Additional caption material</p>
+</caption>
+<table id="dalr">
+<tbody id="dals">
+<tr id="dalt">
+<td id="dalu">A cell!</td>
+<td>Another</td>
+<td>Still a third&gt; with a <chem-struct> chem chem</chem-struct></td>
+</tr>
+<tr>
+<td>2 A cell!</td>
+<td>An xref: See the statement below.</td>
+<td>2 Still a third&gt;</td>
+</tr>
+</tbody>
+</table>
+</table-wrap>
+<p>And here be MathML: EM4 cells, stably transfected with Flag-HA-DAT, Myc-His-DAT,
+or both, were reacted with cross-linker and solubilized in Triton X-100
+as above. There is no reason to have this formula,
+'bold-italic'<inline-formula>
+<!-- THIS IS AN INVALID MATHML 3.0 EQUATION, BUT IS VALID IN MATHML 2.0 -->
+<!--  UNCOMMENT THIS EQUATION TO PROVE YOU ARE USING MATHML 3.0
+      THIS IS NOT VALID MATHML 3.0 -->
+<!--<mml:math name="joe">
+<mml:semantics>
+<mml:mrow><mml:msub><mml:mi mathvariant="blood-italic">Q</mml:mi>
+<mml:mrow><mml:mn>10</mml:mn></mml:mrow></mml:msub><mml:mo>=
+</mml:mo><mml:msup><mml:mrow><mml:mrow><mml:mo>(</mml:mo><mml:mrow>
+<mml:mfrac><mml:mrow><mml:msub><mml:mi>M</mml:mi><mml:mn>2</mml:mn></mml:msub>
+</mml:mrow><mml:mrow><mml:msub><mml:mi>M</mml:mi><mml:mn>1</mml:mn>
+</mml:msub></mml:mrow></mml:mfrac></mml:mrow><mml:mo>)</mml:mo></mml:mrow>
+</mml:mrow><mml:mrow><mml:mn>10</mml:mn><mml:mo>/</mml:mo><mml:msub><mml:mi>T
+</mml:mi><mml:mn>1</mml:mn></mml:msub><mml:mo>-</mml:mo><mml:msub><mml:mi>
+T</mml:mi><mml:mn>2</mml:mn></mml:msub></mml:mrow></mml:msup></mml:mrow>
+<mml:annotation>Required: content unknown</mml:annotation>
+</mml:semantics></mml:math>-->
+
+</inline-formula> here. Five microliters of
+anti-Myc 9E10 (Santa Cruz Biotechnology) was added to 1.0 ml of Triton
+X-100 extracts, and the mixture was incubated for 1 h at 4&#x00B0;C.
+Twenty microliters of rec-protein G Sepharose (Zymed) was added, and the
+mixture was incubated for 1 h at 4&#x00B0;C, washed three times in 0.5
+ml of lysis buffer, and eluted in 45 &#x03BC;l of 2&#x00D7; Laemmli
+sample buffer without reducing agent.</p>
+<p>And here be MathML: EM4 cells, stably transfected with Flag-HA-DAT, Myc-His-DAT,
+or both, were reacted with cross-linker and solubilized in Triton X-100
+as above. There is no reason to have this formula,
+'bold-italic'<inline-formula>
+<!-- THIS IS A VALID MATHML 3.0 EQUATION -->
+<mml:math>
+<mml:semantics>
+<mml:mrow><mml:msub><mml:mi mathvariant="bold-italic">Q</mml:mi>
+<mml:mrow><mml:mn>10</mml:mn></mml:mrow></mml:msub><mml:mo>=
+</mml:mo><mml:msup><mml:mrow><mml:mrow><mml:mo>(</mml:mo><mml:mrow>
+<mml:mfrac><mml:mrow><mml:msub><mml:mi>M</mml:mi><mml:mn>2</mml:mn></mml:msub>
+</mml:mrow><mml:mrow><mml:msub><mml:mi>M</mml:mi><mml:mn>1</mml:mn>
+</mml:msub></mml:mrow></mml:mfrac></mml:mrow><mml:mo>)</mml:mo></mml:mrow>
+</mml:mrow><mml:mrow><mml:mn>10</mml:mn><mml:mo>/</mml:mo><mml:msub><mml:mi>T
+</mml:mi><mml:mn>1</mml:mn></mml:msub><mml:mo>-</mml:mo><mml:msub><mml:mi>
+T</mml:mi><mml:mn>2</mml:mn></mml:msub></mml:mrow></mml:msup></mml:mrow>
+<mml:annotation>Required: content unknown</mml:annotation>
+</mml:semantics></mml:math></inline-formula> here. Five microliters of
+anti-Myc 9E10 (Santa Cruz Biotechnology) was added to 1.0 ml of Triton
+X-100 extracts, and the mixture was incubated for 1 h at 4&#x00B0;C.
+Twenty microliters of rec-protein G Sepharose (Zymed) was added, and the
+mixture was incubated for 1 h at 4&#x00B0;C, washed three times in 0.5
+ml of lysis buffer, and eluted in 45 &#x03BC;l of 2&#x00D7; Laemmli
+sample buffer without reducing agent.</p>   
+</body>
+</article>

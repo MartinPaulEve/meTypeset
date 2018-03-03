@@ -1,0 +1,129 @@
+<!-- ============================================================= -->
+<!--  MODULE:    JATS MathML 3.0 Modules                           -->
+<!--  DATE:      November 2013                                     -->
+<!--                                                               -->
+<!-- ============================================================= -->
+
+<!-- ============================================================= -->
+<!--                    PUBLIC DOCUMENT TYPE DEFINITION            -->
+<!--                        TYPICAL INVOCATION                     -->
+<!--
+"-//NLM//DTD JATS (Z39.96) JATS MathML 3.0 Modules v1.1d1 20130915//EN"
+     Delivered as file "JATS-mathml3-modules1.ent"                 -->
+<!-- ============================================================= -->
+
+<!-- ============================================================= -->
+<!-- SYSTEM:     JATS DTD Suite                                    -->
+<!--                                                               -->
+<!-- PURPOSE:    To name any modules needed for MathML 3.0 (since  -->
+<!--             NISo JATS V1.0 was MathMl 2.0, and the two are    -->
+<!--             not backwards compatible.                         -->
+<!--                                                               -->
+<!-- CONTAINS:   Modules declarations for MathML 3.0               -->
+<!--                                                               -->
+<!-- TAG SET SPONSOR                                               -->
+<!--             National Center for Biotechnology                 -->
+<!--                Information (NCBI)                             -->
+<!--             National Library of Medicine (NLM)                -->
+<!--                                                               -->
+<!-- CREATED FOR:                                                  -->
+<!--             This DTD was created from the JATS DTD Suite.     -->
+<!--             Digital archives and publishers may use the       -->
+<!--             DTD as is for markup of journal literature or     -->
+<!--             related material for archiving and transferring   -->
+<!--             such material between archives or create a        -->
+<!--             custom XML DTD from the Suite for                 -->
+<!--             these purposes.                                   -->
+<!--                                                               -->
+<!--             This DTD is in the public domain. An organization -->
+<!--             that wishes to create its own DTD from the suite  -->
+<!--             may do so without permission from NLM.            -->
+<!--                                                               -->
+<!--             The suite has been set up to be extended using a  -->
+<!--             new DTD file and a new DTD-specific customization -->
+<!--             module to redefine the many Parameter Entities.   -->
+<!--             Do not modify the suite directly or redistribute  -->
+<!--             modified versions of the suite.                   -->
+<!--                                                               -->
+<!--             In the interest of maintaining consistency and    -->
+<!--             clarity for potential users, NLM requests:        -->
+<!--                                                               -->
+<!--             1. If you create a DTD from the JATS DTD Suite    -->
+<!--                and intend to stay compatible with the suite,  -->
+<!--                then please include the following statement    -->
+<!--                as a comment in all of your DTD modules:       -->
+<!--                   "Created from, and fully compatible with,   -->
+<!--                    the ANSI/NISO Z39.96 Journal Article Tag   -->
+<!--                    Suite (JATS)."                             -->
+<!--                                                               -->
+<!--             2. If you alter one or more modules of the suite, -->
+<!--                then please rename your version and all its    -->
+<!--                modules to avoid any confusion with the        -->
+<!--                original suite. Also, please include the       -->
+<!--                following statement as a comment in all your   -->
+<!--                DTD modules:                                   -->
+<!--                   "Based in part on, but not fully compatible -->
+<!--                    with, the ANSI/NISO Z39.96 Journal Article -->
+<!--                    Tag Suite (JATS)."                         -->
+<!--                                                               -->
+<!-- ORIGINAL CREATION DATE:                                       -->
+<!--             November 2013                                     -->
+<!--                                                               -->
+<!-- CREATED BY: Mulberry Technologies, Inc. for the NISO Z39.96   -->
+<!--             Working Group. Mulberry Technologies was          -->
+<!--             supported by National Center for Biotechnology    -->
+<!--             Information (NCBI), a center of the US National   -->
+<!--             Library of Medicine (NLM).                        -->
+<!--                                                               -->
+<!--             The Journal Publishing DTD is built from the      -->
+<!--             Archiving and Interchange DTD Suite.              -->
+<!--                                                               -->
+<!--             Suggestions for refinements and enhancements to   -->
+<!--             this DTD should be sent in email to:              -->
+<!--                 jats@ncbi.nlm.nih.gov                         -->
+<!-- ============================================================= -->
+
+
+<!-- ============================================================= -->
+<!--                    DTD VERSION/CHANGE HISTORY                 -->
+<!-- ============================================================= -->
+<!--
+
+Version  Reason/Occasion                   (who) vx.x (yyyy-mm-dd)
+
+     =============================================================
+                                                                   -->
+
+<!-- ============================================================= -->
+<!--                     MATHML 3.0 MODULES (Invoked for V1d1)     -->
+<!-- ============================================================= -->
+
+
+<!--                    MATHML 3.0 QUALIFIED NAMES                 -->
+<!ENTITY % mathml-qname.mod
+                        PUBLIC
+"-//W3C//ENTITIES MathML 3.0 Qualified Names 1.0//EN"
+"mathml3-qname1.mod"                                                 >
+
+
+<!--                    MATHML 3.0 DTD                             -->
+<!ENTITY % mathml.dtd   PUBLIC
+"-//W3C//DTD MathML 3.0//EN" 
+"mathml3.dtd"                                                        >
+
+
+<!--                    MATHML 3.0 EXTRA ENTITIES                  -->
+<!ENTITY % ent-mmlextra
+                        PUBLIC
+"-//W3C//ENTITIES Extra for MathML 3.0//EN" 
+"mathml/mmlextra.ent"                                                >
+
+
+<!--                    MATHML 3.0 ALIASES                         -->
+<!ENTITY % ent-mmlalias
+                        PUBLIC
+"-//W3C//ENTITIES Aliases for MathML 3.0//EN" 
+"mathml/mmlalias.ent"                                                >
+
+
+<!-- =================== End MathML 3.0 Modules ================== -->

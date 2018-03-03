@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--<!DOCTYPE article
+PUBLIC
+  "-//NLM//DTD JATS (Z39.96) Journal Publishing DTD with OASIS Tables v1.1d1 20130915//EN" 
+  "../JATS-journalpublishing-oasis-article1.dtd"> -->
+<!DOCTYPE article SYSTEM "../JATS-journalpublishing-oasis-article1.dtd">
+<!--      OASIS TABLE WITH NAMESPACE PREFIX  "oasis"  -->
+<article 
+       dtd-version="1.1d1" 
+      xml:lang="en" 
+      xmlns:mml="http://www.w3.org/1998/Math/MathML" 
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:oasis="http://www.niso.org/standards/z39-96/ns/oasis-exchange/table"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<front>
+<!-- SYSTEM:  JATS DTD Suite                             -->
+<!-- November 2002 An archival journal article with minimal 
+     Front Matter, an OASIS and an XHTML-based Table, and Citations 
+     for testing                                          -->
+<!-- =============== Front Matter (Metadata) ===========  -->
+<journal-meta>
+<journal-id>MRKP</journal-id>
+<journal-title-group>
+<journal-title>Markup Languages: Theory and Practice</journal-title> 
+<journal-title>Markup Languages</journal-title> 
+<journal-subtitle>Old Facefull</journal-subtitle> 
+<journal-subtitle>The would-be That Was</journal-subtitle>
+</journal-title-group>
+<issn>good question</issn>
+<publisher><publisher-name>MIT Press, on occasion</publisher-name>
+</publisher>
+</journal-meta>
+<article-meta>
+<article-id pub-id-type="publisher-id">ArchivalTest1</article-id>
+<title-group>
+<article-title>Archival DTD Test Article</article-title>
+<subtitle>(Just a small subtitle for parsing)</subtitle>
+</title-group>
+<contrib-group>
+<contrib>
+<name><surname>Jones</surname>
+<given-names>John Browning</given-names>
+<prefix>The Honorable</prefix><suffix>III</suffix>
+</name>
+</contrib>
+<contrib>
+<name-alternatives>
+<string-name>Prince Charles</string-name>
+<string-name>A Prince of a Prince</string-name>
+</name-alternatives>
+</contrib>
+<aff>My Old Ivy-covered HAlls</aff>
+</contrib-group>
+<pub-date iso-8601-date="2004">
+<year>2004</year></pub-date>
+<fpage>23</fpage>
+<permissions>
+<copyright-year>2004-2005</copyright-year>
+</permissions>
+</article-meta>
+</front>
+<!-- =============== Body Matter (Content) =========== -->
+<body>
+<!-- An OASIS Table for testing. Uses a nameswpace with prefrix "oasis" -->
+<table-wrap id="table-wrap-OASIS" position="anchor">
+<label>Table 1</label>
+<caption id="dal0"><title id="dala">An OASIS Table</title>
+<p id="dalb">Additional caption material</p>
+</caption>
+<oasis:table  
+   xmlns:oasis="http://www.niso.org/standards/z39-96/ns/oasis-exchange/table" >
+<oasis:tgroup cols="3">
+<oasis:colspec id ="dalc" colnum="1" colname="col1" colwidth="2*" colsep="1" rowsep="1" align="left"/>
+<oasis:colspec colnum="2" colname="col2" colwidth="4*" colsep="1" rowsep="1" align="left"/>
+<oasis:colspec colnum="3" colname="col3" colwidth="*" colsep="1" rowsep="1" align="right"/>
+<oasis:tbody id="dal1">
+<oasis:row id="dal2">
+<oasis:entry id="dal3">A cell!</oasis:entry>
+<oasis:entry>Another</oasis:entry>
+<oasis:entry>Still a third&gt;</oasis:entry>
+</oasis:row>
+<oasis:row>
+<oasis:entry>A cell! <bold>the very first cell</bold></oasis:entry>
+<oasis:entry>Another cell with a 
+<list list-type="ordered">
+<list-item><p>List item the first</p></list-item>
+<list-item><p>List item the second</p></list-item>
+<list-item><p>List item the third</p></list-item>
+</list></oasis:entry>
+<oasis:entry>Still a third&gt;</oasis:entry>
+</oasis:row>
+<oasis:row>
+<oasis:entry>2 A cell!</oasis:entry>
+<oasis:entry namest="col2" nameend="col3">An xref: <xref ref-type="statement" rid="statement16">See the 
+statement</xref></oasis:entry>
+<oasis:entry>2 Still a third&gt;</oasis:entry>
+</oasis:row>
+</oasis:tbody>
+</oasis:tgroup>
+</oasis:table>
+</table-wrap>
+<statement id="statement16">
+<p>Post Hoc Propter Ergo Hoc</p>
+</statement>
+</body>
+<!-- =============== Back Matter (Ancillary) ======= -->
+<back>
+<ack><p>We thank you all.</p></ack>
+<glossary><title>Glossary</title>
+<def-list>
+<title>Def-List Title</title>
+<def-item>
+<term>Term</term>
+<def><p>Definition</p></def></def-item>
+<def-item>
+<term>Second Term</term>
+<def><p>And another definition</p></def></def-item>
+</def-list>
+<glossary>
+<related-article related-article-type="fake">Some words 
+maybe including a
+<uri>http://www.thedog.com</uri> or 
+<email>thedog@poodle.com</email>
+</related-article>
+<def-list>
+<title>Def-List Title</title>
+<def-item>
+<term>First Term</term>
+<def><p>And its definition</p></def></def-item>
+<def-item>
+<term>The Second Term</term>
+<def><p>Still another definition</p></def></def-item>
+</def-list>
+</glossary>
+</glossary>
+<ref-list>
+<title>Bibliography</title>
+<p>Just a reference or two for testing:</p>
+<ref>
+<mixed-citation >A citation ain't nothing but a 
+sandwich — personal communication 
+</mixed-citation>
+</ref>
+<ref>
+<mixed-citation>
+<name>
+<surname>Piggy</surname> 
+<prefix>Ms.</prefix></name>
+<article-title>Can't Help Lovin’ That 
+Frog of Mine</article-title>;
+<source>Swine Review</source>, <issue>145</issue>:
+<fpage>12</fpage>–<lpage>24</lpage>; 
+<year>2003</year>. 
+<trans-title xml:lang="cpe">Ant-cay Elp-hay 
+Ovin’-lay At-thay Og-fray of-ay Ine-may</trans-title>
+</mixed-citation>
+</ref>
+</ref-list>
+</back>
+</article>
