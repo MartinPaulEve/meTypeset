@@ -547,7 +547,7 @@ class NlmManipulate(Manipulate):
         reference_terms = []
 
         for language in language_list:
-            with open ('{0}/language/ref_marker_{1}.txt'.format(self.gv.script_dir, language), 'r') as lang_file:
+            with open ('{0}/language/ref_marker_{1}.txt'.format(self.gv.script_dir, language), 'r', encoding="utf8") as lang_file:
                 lines = lang_file.read().split('\n')
 
                 for line in lines:

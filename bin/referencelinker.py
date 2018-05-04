@@ -49,7 +49,7 @@ class ReplaceObject(Debuggable):
         if 'id' in self.reference_to_link.attrib:
             bib_id = self.reference_to_link.attrib['id']
         else:
-            self.reference_to_link.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+            self.reference_to_link.attrib['id'] = u'ID{0}'.format(uuid.uuid4())
             bib_id = self.reference_to_link.attrib['id']
 
         self.paragraph.attrib['rid'] = bib_id
@@ -83,7 +83,7 @@ class ReplaceStub(Debuggable):
         new_element = etree.Element('xref')
         new_element.attrib['rid'] = link_text
         new_element.attrib['ref-type'] = 'bibr'
-        new_element.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+        new_element.attrib['id'] = u'ID{0}'.format(uuid.uuid4())
         new_element.text = self.replace_text
         new_element.tail = ''.join(before_after[1:])
 
@@ -104,7 +104,7 @@ class ReplaceStub(Debuggable):
         new_element = etree.Element('xref')
         new_element.attrib['rid'] = link_text
         new_element.attrib['ref-type'] = 'bibr'
-        new_element.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+        new_element.attrib['id'] = u'ID{0}'.format(uuid.uuid4())
         new_element.text = self.replace_text
         new_element.tail = ''.join(before_after[1:])
 
@@ -200,7 +200,7 @@ class ReplaceStub(Debuggable):
                 regex = u'\((?P<text>(?!.*xref).*?)\)'
 
                 xref_before = u'<xref ref-type="bibr" ' \
-                              u'id="{0}" rid="{1}">'.format(u'ID{0}'.format(unicode(uuid.uuid4())), self.link_text)
+                              u'id="{0}" rid="{1}">'.format(u'ID{0}'.format(uuid.uuid4()), self.link_text)
                 xref_after = u'</xref>'
 
                 new_text = re.sub(regex, u'({0}\g<text>{1})'.format(xref_before, xref_after), in_string, 1)

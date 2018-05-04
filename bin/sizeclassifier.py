@@ -88,7 +88,7 @@ class SizeClassifier(Debuggable):
                                    u'Explicitly specified size variations and their frequency of '
                                    u'occurrence: {0}'.format(str(sizes)))
         new_sizes = {}
-        for size, frequency in sizes.iteritems():
+        for size, frequency in sizes.items():
             if float(frequency) < float(self.max_headings):
                 new_sizes[size] = frequency
         sizes = new_sizes
@@ -103,7 +103,7 @@ class SizeClassifier(Debuggable):
         headings = {}
 
         # correlate tag sizes specified by true word headings ("heading 1", "heading 2" etc.) to our index
-        for size, frequency in sizes.iteritems():
+        for size, frequency in sizes.items():
             if float(frequency) < float(self.max_headings) and float(size) > float(self.size_cutoff):
                 sorted_list.append(size)
 
@@ -134,7 +134,7 @@ class SizeClassifier(Debuggable):
             headings = dict(headings.items() + {'H1': 100, 'H2': 90, 'H3': 80, 'H4': 70, 'H5': 60, 'H6': 50, 'H7': 40,
                                                 'H8': 30, 'H9': 20}.items())
 
-        for key, value in headings.iteritems():
+        for key, value in headings.items():
             self.debug.print_debug(self, u'Changing {0} to size {1}'.format(key, value))
             self.handle_heading(manipulate, key, float(value))
 
@@ -237,7 +237,7 @@ class SizeClassifier(Debuggable):
                     root_div = div
                     dict_thresholds[float(root_size)] = position
 
-                    for item in dict_thresholds.iterkeys():
+                    for item in dict_thresholds.keys():
                         dict_thresholds[item] = position
 
                     self.debug.print_debug(self, u'Heading {0} ("{1}") was same size as root. '
@@ -297,7 +297,7 @@ class SizeClassifier(Debuggable):
                     previous_div.addnext(div)
 
                     dict_thresholds[float(size)] = position
-                    for item in dict_thresholds.iterkeys():
+                    for item in dict_thresholds.keys():
                         if float(dict_thresholds[item]) < float(size):
                             dict_thresholds[item] = position
 

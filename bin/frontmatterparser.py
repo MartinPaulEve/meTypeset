@@ -42,8 +42,8 @@ class FrontMatterParser:
 				guess2score[guess2] -= guess2number
 				guess2number += 1
 				#print operator.itemgetter(1)
-			print guess2score.iteritems()
-			print type(operator.itemgetter(1))
+			print(guess2score.iteritems())
+			print(type(operator.itemgetter(1)))
 			name[0] = max(guess2score.iteritems(), key=operator.itemgetter(1))[0]
 
 		striptags_name = re.sub(r'<.*>','',name[0])
