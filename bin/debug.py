@@ -97,4 +97,4 @@ class Debuggable(object):
         self.module_name = module_name
 
     def get_module_name(self):
-        return unicode(self.module_name, 'utf-8')
+        return self.module_name

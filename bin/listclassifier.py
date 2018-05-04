@@ -227,7 +227,7 @@ class ListClassifier(Debuggable):
 
     def process_dash_list(self, tree, manipulate, treestring):
 
-        if not str.encode('>-') in treestring:
+        if not u'>-' in treestring:
             return
 
         # select all p elements followed by another p element
@@ -591,7 +591,7 @@ class ListClassifier(Debuggable):
 
         manipulate = TeiManipulate(self.gv)
 
-        string_version = etree.tostring(tree)
+        string_version = etree.tostring(tree, encoding="unicode")
 
         # look for dash separated list
         # - Item 1

@@ -195,7 +195,7 @@ class ReplaceStub(Debuggable):
                 # this requires a more complex approach: we will fallback to the less safe method of using tostring
                 # doing a regex replace and then re-encapsulating with fromstring
 
-                in_string = etree.tostring(self.paragraph)
+                in_string = etree.tostring(self.paragraph, encoding="unicode")
 
                 regex = u'\((?P<text>(?!.*xref).*?)\)'
 
