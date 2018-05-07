@@ -609,7 +609,7 @@ class NlmManipulate(Manipulate):
             else:
                 self.debug.print_debug(self, u'Tagging element "{0}" as reference item'.format(refs.tag))
                 refs.tag = 'ref'
-                refs.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+                refs.attrib['id'] = u'ID{0}'.format(uuid.uuid4())
 
                 if 'rend' in refs.attrib:
                         del refs.attrib['rend']

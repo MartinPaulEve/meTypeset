@@ -208,7 +208,7 @@ class ReplaceStub(Debuggable):
                 try:
                     new_element = etree.fromstring(new_text)
 
-                    if etree.tostring(new_element) == in_string:
+                    if etree.tostring(new_element, encoding="unicode") == in_string:
                         self.debug.print_debug(self, u'Did not link {0} stub'.format(self.replace_text))
                     else:
                         # a change has been made

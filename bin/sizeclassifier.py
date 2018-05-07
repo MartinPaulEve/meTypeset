@@ -127,12 +127,12 @@ class SizeClassifier(Debuggable):
             headings = {'title': 100, 'heading 1': 100, 'heading 2': 90, 'heading 3': 80, 'heading 4': 70,
                         'heading 5': 60, 'heading 6': 50, 'heading 7': 40, 'heading 8': 30, 'heading 9': 20}
 
-            headings = dict(headings.items() + {'Title': 100, 'Heading 1': 100, 'Heading 2': 90, 'Heading 3': 80,
+            headings.update({'Title': 100, 'Heading 1': 100, 'Heading 2': 90, 'Heading 3': 80,
                                                 'Heading 4': 70, 'Heading 5': 60, 'Heading 6': 50, 'Heading 7': 40,
-                                                'Heading 8': 30, 'Heading 9': 20}.items())
+                                                'Heading 8': 30, 'Heading 9': 20})
 
-            headings = dict(headings.items() + {'H1': 100, 'H2': 90, 'H3': 80, 'H4': 70, 'H5': 60, 'H6': 50, 'H7': 40,
-                                                'H8': 30, 'H9': 20}.items())
+            headings.update({'H1': 100, 'H2': 90, 'H3': 80, 'H4': 70, 'H5': 60, 'H6': 50, 'H7': 40,
+                                                'H8': 30, 'H9': 20})
 
         for key, value in headings.items():
             self.debug.print_debug(self, u'Changing {0} to size {1}'.format(key, value))
@@ -543,7 +543,7 @@ class SizeClassifier(Debuggable):
 
         self.encapsulate_headings(manipulate, tree)
 
-        backup_tree = etree.tostring(tree)
+        backup_tree = etree.tostring(tree, encoding="unicode")
 
         stack, tree = self.nest_headings(manipulate, tree)
 
@@ -555,7 +555,7 @@ class SizeClassifier(Debuggable):
             manipulate.save_tree(tree)
 
         # re-nest headings where a single heading and nothing else is found within a section
-        backup_tree = etree.tostring(tree)
+        backup_tree = etree.tostring(tree, encoding="unicode")
 
         tree = self.renest_headings(manipulate, tree)
 

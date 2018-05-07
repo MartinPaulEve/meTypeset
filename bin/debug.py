@@ -28,10 +28,10 @@ class Debug(object):
 
     def print_(self, module, message):
         if self.prompt is None:
-            print(u'[{0}] {1}'.format(module.get_module_name(), unicode(message)))
+            print(u'[{0}] {1}'.format(module.get_module_name(), message))
         else:
             self.prompt.print_(u'[{0}] {1}'.format(self.prompt.colorize('red', module.get_module_name()),
-                                                   unicode(message)))
+                                                   message))
 
     def get_module_name(self):
         return 'Debugger'
@@ -57,9 +57,6 @@ class Debug(object):
         @param message: the debug message to print
         """
         if self.debug:
-
-            if not isinstance(message, unicode):
-                self.fatal_error(self, u'A non unicode string was passed to the debugger')
 
             self.print_(module, message)
 

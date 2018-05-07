@@ -210,8 +210,7 @@ class Interactive(Debuggable):
         # use print() explicitly to display prompts.
         # http://bugs.python.org/issue1927
         if prompt:
-            if isinstance(prompt, unicode):
-                prompt = prompt.encode(self._encoding(), 'replace')
+            prompt = prompt.encode(self._encoding(), 'replace')
             print(prompt, end=' ')
 
         try:
@@ -262,8 +261,6 @@ class Interactive(Debuggable):
         """
         if not isinstance(a, basestring) or not isinstance(b, basestring):
             # Non-strings: use ordinary equality.
-            a = unicode(a)
-            b = unicode(b)
             if a == b:
                 return a, b
             else:
@@ -310,11 +307,9 @@ class Interactive(Debuggable):
         """
         if isinstance(path, (list, tuple)):
             return separator.join(self.displayable_path(p) for p in path)
-        elif isinstance(path, unicode):
-            return path
         elif not isinstance(path, str):
             # A non-string object: just get its unicode representation.
-            return unicode(path)
+            return path
 
         try:
             return path.decode(self._fsencoding(), 'ignore')
@@ -343,7 +338,7 @@ class Interactive(Debuggable):
         if self.gv.settings.get_setting('color', self) == 'True':
             return self._colordiff(a, b, highlight)
         else:
-            return unicode(a), unicode(b)
+            return a,b
 
     def print_(self, *strings):
         """Like print, but rather than raising an error when a character
@@ -351,19 +346,14 @@ class Interactive(Debuggable):
         replaces it.
         """
         if strings:
-            if isinstance(strings[0], unicode):
                 txt = u' '.join(strings)
-            else:
-                txt = ' '.join(strings)
         else:
             txt = u''
-        if isinstance(txt, unicode):
-            txt = txt.encode(self._encoding(), 'replace')
+        txt = txt.encode(self._encoding(), 'replace')
         print(txt)
 
     def color_diff_suffix(self, a, b, highlight='red'):
         """Colorize the differing suffix between two strings."""
-        a, b = unicode(a), unicode(b)
         if not self.gv.settings.get_setting('color', self) == 'True':
             return a, b
 

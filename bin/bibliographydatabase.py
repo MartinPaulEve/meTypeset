@@ -348,7 +348,7 @@ class BibliographyDatabase(Debuggable):
 
     def process_zotero(self):
         from zotero import libzotero
-        zotero = libzotero.LibZotero(unicode(self.gv.settings.get_setting(u'zotero', self)), self.gv)
+        zotero = libzotero.LibZotero(self.gv.settings.get_setting(u'zotero', self), self.gv)
 
         manipulate = NlmManipulate(self.gv)
         master_tree = manipulate.load_dom_tree()
@@ -433,7 +433,7 @@ def main():
 
     if args['zotero']:
         from zotero import libzotero
-        zotero = libzotero.LibZotero(unicode(bare_gv.settings.get_setting(u'zotero', bare_gv)), bare_gv)
+        zotero = libzotero.LibZotero(bare_gv.settings.get_setting(u'zotero', bare_gv), bare_gv)
 
         term = args['<query>']
 

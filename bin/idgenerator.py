@@ -50,7 +50,7 @@ class IdGenerator(Debuggable):
             self.debug.print_debug(self, u'Assigning ID to all {0} elements'.format(element))
             for item in tree.xpath(u'//{0}'.format(element)):
                 if not 'id' in item.attrib:
-                    item.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+                    item.attrib['id'] = u'ID{0}'.format(uuid.uuid4())
 
         tree.write(self.gv.nlm_file_path)
         tree.write(self.gv.nlm_temp_file_path)
