@@ -570,7 +570,7 @@ class TeiManipulate(Manipulate):
             # change all sub-elements to ref
             for element in change_element:
                 if element.tag == '{http://www.tei-c.org/ns/1.0}head':
-                    self.debug.print_debug(self, u'Dropping head element: {0}'.format(etree.tostring(element)))
+                    self.debug.print_debug(self, u'Dropping head element: {0}'.format(etree.tostring(element, encoding="unicode")))
                     change_element.remove(element)
                 elif element.tag == '{http://www.tei-c.org/ns/1.0}p':
                     outer = etree.Element('p')

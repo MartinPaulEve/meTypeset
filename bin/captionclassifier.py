@@ -34,7 +34,7 @@ class CaptionClassifier(Debuggable):
         element.text = before_after[0]
 
         new_element = etree.Element('xref')
-        new_element.attrib['rid'] = unicode(id)
+        new_element.attrib['rid'] = id
         new_element.attrib['ref-type'] = ref_type
         new_element.text = replace_text
         new_element.tail = ''.join(before_after[1:])
@@ -46,7 +46,7 @@ class CaptionClassifier(Debuggable):
         before_after = element.tail.split(replace_text, 1)
 
         new_element = etree.Element('xref')
-        new_element.attrib['rid'] = unicode(id)
+        new_element.attrib['rid'] = id
         new_element.attrib['ref-type'] = ref_type
         new_element.text = replace_text
         new_element.tail = ''.join(before_after[1:])
@@ -207,7 +207,7 @@ class CaptionClassifier(Debuggable):
                     graphic.tail = graphic.tail.replace(caption, '')
 
                 if not 'id' in graphic.attrib:
-                    graphic.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+                    graphic.attrib['id'] = u'ID{0}'.format(uuid.uuid4())
 
                 graphic_titles.append(title)
                 graphic_ids.append(graphic.attrib['id'])
@@ -291,7 +291,7 @@ class CaptionClassifier(Debuggable):
                     graphic.tail = graphic.tail.replace(caption, '')
 
                 if not 'id' in graphic.attrib:
-                    graphic.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+                    graphic.attrib['id'] = u'ID{0}'.format(uuid.uuid4())
 
                 graphic_titles.append(title)
                 graphic_ids.append(graphic.attrib['id'])
@@ -432,7 +432,7 @@ class CaptionClassifier(Debuggable):
                 table.insert(1, caption_element)
 
                 if not 'id' in table.attrib:
-                    table.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+                    table.attrib['id'] = u'ID{0}'.format(uuid.uuid4())
 
                 table_titles.append(title)
                 table_ids.append(table.attrib['id'])

@@ -2,7 +2,7 @@
 
 """
 Originally (c) Sebastiaan Mathot 2011
-Modifications (c) 2014 Martin Paul Eve
+Modifications (c) 2014, 2018 Martin Paul Eve
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -101,8 +101,6 @@ class LibZotero(Debuggable):
         Keyword arguments:
         noteProvider	--	A noteProvider object. (default=None)
         """
-
-        assert (isinstance(zotero_path, unicode))
 
         self.debug.print_debug(self, u"zotero.__init__(): zotero_path = %s" % zotero_path)
 
@@ -239,7 +237,7 @@ class LibZotero(Debuggable):
                         self.index[item_id].item_type = item[4]
 
                     if item_name == u"publicationTitle" or item_name == u'bookTitle' or item_name == 'websiteTitle':
-                        self.index[item_id].publication = unicode(item_value)
+                        self.index[item_id].publication = item_value
                     elif item_name == u"date":
                         self.index[item_id].date = item_value
                     elif item_name == u"volume":
@@ -247,17 +245,17 @@ class LibZotero(Debuggable):
                     elif item_name == u"issue":
                         self.index[item_id].issue = item_value
                     elif item_name == u"title":
-                        self.index[item_id].title = unicode(item_value)
+                        self.index[item_id].title = item_value
                     elif item_name == u"DOI":
-                        self.index[item_id].doi = unicode(item_value)
+                        self.index[item_id].doi = item_value
                     elif item_name == u"pages":
-                        self.index[item_id].pages = unicode(item_value)
+                        self.index[item_id].pages = item_value
                     elif item_name == u"place":
-                        self.index[item_id].place = unicode(item_value)
+                        self.index[item_id].place = item_value
                     elif item_name == u"publisher":
-                        self.index[item_id].publisher = unicode(item_value)
+                        self.index[item_id].publisher = item_value
                     elif item_name == u"url":
-                        self.index[item_id].url = unicode(item_value)
+                        self.index[item_id].url = item_value
                     else:
                         self.debug.print_debug(self, u'Unindexed field: {0}'.format(item_name))
 
@@ -425,5 +423,4 @@ def valid_location(path):
     True if path is a valid Zotero folder, False otherwise.
     """
 
-    assert (isinstance(path, unicode))
     return os.path.exists(os.path.join(path, u"zotero.sqlite"))

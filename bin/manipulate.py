@@ -132,7 +132,7 @@ class Manipulate(Debuggable):
         obj = objectify.fromstring(text)
         # noinspection PyProtectedMember
         obj.teiHeader.fileDesc.titleStmt.title._setText(new_value)
-        return etree.tostring(obj.getroottree())
+        return etree.tostring(obj.getroottree(), encoding="unicode")
 
     def load_dom_read(self):
         # load the DOM for read only access

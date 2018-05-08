@@ -547,7 +547,7 @@ class NlmManipulate(Manipulate):
         reference_terms = []
 
         for language in language_list:
-            with open ('{0}/language/ref_marker_{1}.txt'.format(self.gv.script_dir, language), 'r') as lang_file:
+            with open ('{0}/language/ref_marker_{1}.txt'.format(self.gv.script_dir, language), 'r', encoding="utf8") as lang_file:
                 lines = lang_file.read().split('\n')
 
                 for line in lines:
@@ -609,7 +609,7 @@ class NlmManipulate(Manipulate):
             else:
                 self.debug.print_debug(self, u'Tagging element "{0}" as reference item'.format(refs.tag))
                 refs.tag = 'ref'
-                refs.attrib['id'] = u'ID{0}'.format(unicode(uuid.uuid4()))
+                refs.attrib['id'] = u'ID{0}'.format(uuid.uuid4())
 
                 if 'rend' in refs.attrib:
                         del refs.attrib['rend']

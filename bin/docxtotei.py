@@ -27,6 +27,7 @@ class DocxToTei(Debuggable):
         Creates the appropriate java command to run Saxon
         @return: a string to run on the command line
         """
+        # gv.tei_file_path currently dies on spaces in filenames in Python 3
         cmd = ["java", "-classpath", self.gv.java_class_path,
                "-Dxml.catalog.files="+self.gv.runtime_catalog_path,
                "net.sf.saxon.Transform",

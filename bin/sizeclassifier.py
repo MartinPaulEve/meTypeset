@@ -88,7 +88,7 @@ class SizeClassifier(Debuggable):
                                    u'Explicitly specified size variations and their frequency of '
                                    u'occurrence: {0}'.format(str(sizes)))
         new_sizes = {}
-        for size, frequency in sizes.iteritems():
+        for size, frequency in sizes.items():
             if float(frequency) < float(self.max_headings):
                 new_sizes[size] = frequency
         sizes = new_sizes
@@ -103,7 +103,7 @@ class SizeClassifier(Debuggable):
         headings = {}
 
         # correlate tag sizes specified by true word headings ("heading 1", "heading 2" etc.) to our index
-        for size, frequency in sizes.iteritems():
+        for size, frequency in sizes.items():
             if float(frequency) < float(self.max_headings) and float(size) > float(self.size_cutoff):
                 sorted_list.append(size)
 
@@ -127,14 +127,14 @@ class SizeClassifier(Debuggable):
             headings = {'title': 100, 'heading 1': 100, 'heading 2': 90, 'heading 3': 80, 'heading 4': 70,
                         'heading 5': 60, 'heading 6': 50, 'heading 7': 40, 'heading 8': 30, 'heading 9': 20}
 
-            headings = dict(headings.items() + {'Title': 100, 'Heading 1': 100, 'Heading 2': 90, 'Heading 3': 80,
+            headings.update({'Title': 100, 'Heading 1': 100, 'Heading 2': 90, 'Heading 3': 80,
                                                 'Heading 4': 70, 'Heading 5': 60, 'Heading 6': 50, 'Heading 7': 40,
-                                                'Heading 8': 30, 'Heading 9': 20}.items())
+                                                'Heading 8': 30, 'Heading 9': 20})
 
-            headings = dict(headings.items() + {'H1': 100, 'H2': 90, 'H3': 80, 'H4': 70, 'H5': 60, 'H6': 50, 'H7': 40,
-                                                'H8': 30, 'H9': 20}.items())
+            headings.update({'H1': 100, 'H2': 90, 'H3': 80, 'H4': 70, 'H5': 60, 'H6': 50, 'H7': 40,
+                                                'H8': 30, 'H9': 20})
 
-        for key, value in headings.iteritems():
+        for key, value in headings.items():
             self.debug.print_debug(self, u'Changing {0} to size {1}'.format(key, value))
             self.handle_heading(manipulate, key, float(value))
 
@@ -237,7 +237,7 @@ class SizeClassifier(Debuggable):
                     root_div = div
                     dict_thresholds[float(root_size)] = position
 
-                    for item in dict_thresholds.iterkeys():
+                    for item in dict_thresholds.keys():
                         dict_thresholds[item] = position
 
                     self.debug.print_debug(self, u'Heading {0} ("{1}") was same size as root. '
@@ -297,7 +297,7 @@ class SizeClassifier(Debuggable):
                     previous_div.addnext(div)
 
                     dict_thresholds[float(size)] = position
-                    for item in dict_thresholds.iterkeys():
+                    for item in dict_thresholds.keys():
                         if float(dict_thresholds[item]) < float(size):
                             dict_thresholds[item] = position
 
@@ -543,7 +543,7 @@ class SizeClassifier(Debuggable):
 
         self.encapsulate_headings(manipulate, tree)
 
-        backup_tree = etree.tostring(tree)
+        backup_tree = etree.tostring(tree, encoding="unicode")
 
         stack, tree = self.nest_headings(manipulate, tree)
 
@@ -555,7 +555,7 @@ class SizeClassifier(Debuggable):
             manipulate.save_tree(tree)
 
         # re-nest headings where a single heading and nothing else is found within a section
-        backup_tree = etree.tostring(tree)
+        backup_tree = etree.tostring(tree, encoding="unicode")
 
         tree = self.renest_headings(manipulate, tree)
 
