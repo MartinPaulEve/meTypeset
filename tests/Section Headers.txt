@@ -36,7 +36,7 @@ Library           Collections
     #    </sec>
     #</sec>
     #</body>
-    ${result} =    Run Process    python ../bin/meTypeset.py docx Sec005.docx ./501 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx Sec005.docx ./501 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./501/nlm/out.xml
@@ -105,7 +105,7 @@ Library           Collections
     #    </sec>
     #    </sec>
     #</body>
-    ${result} =    Run Process    python ../bin/meTypeset.py docx Sec004.docx ./502 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx Sec004.docx ./502 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./502/nlm/out.xml
@@ -143,7 +143,7 @@ Library           Collections
     #    <p>Line 2 under heading 22</p>
     #    </sec>
     #</body>
-    ${result} =    Run Process    python ../bin/meTypeset.py docx Sec003.docx ./503 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx Sec003.docx ./503 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./503/nlm/out.xml
@@ -200,7 +200,7 @@ Library           Collections
     #    </sec>
     #    </sec>
     #</body>
-    ${result} =    Run Process    python ../bin/meTypeset.py docx Sec002.docx ./504 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx Sec002.docx ./504 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./504/nlm/out.xml
@@ -261,7 +261,7 @@ Library           Collections
     #    </sec>
     #    </sec>
     #</body>
-    ${result} =    Run Process    python ../bin/meTypeset.py docx Sec001.docx ./505 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx Sec001.docx ./505 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./505/nlm/out.xml
@@ -314,7 +314,7 @@ Library           Collections
     #    </sec>
     #    </sec>
     #</body>
-    ${result} =    Run Process    python ../bin/meTypeset.py docx Sec006.docx ./506 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx Sec006.docx ./506 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./506/nlm/out.xml
@@ -324,7 +324,7 @@ Library           Collections
 
 507 Properly styled word headings
     [Tags]    sectionheaders    sizeclassifier    507
-    ${result} =    Run Process    python ../bin/meTypeset.py docx StyledHeadings1.docx ./507 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx StyledHeadings1.docx ./507 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./507/nlm/out.xml
@@ -334,7 +334,7 @@ Library           Collections
 
 508 Root size lower than cutoff size
     [Tags]    sectionheaders    sizeclassifier    508
-    ${result} =    Run Process    python ../bin/meTypeset.py docx 508.docx ./508 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx 508.docx ./508 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./508/nlm/out.xml
@@ -344,7 +344,7 @@ Library           Collections
 
 509 Size normalization
     [Tags]    sectionheaders    sizeclassifier    509
-    ${result} =    Run Process    python ../bin/meTypeset.py docx SizeNormalization.docx ./509 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx SizeNormalization.docx ./509 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./509/nlm/out.xml
@@ -354,7 +354,7 @@ Library           Collections
 
 510 Complex headings
     [Tags]    sectionheaders    sizeclassifier    510
-    ${result} =    Run Process    python ../bin/meTypeset.py docx ComplexHeadings.docx ./510 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx ComplexHeadings.docx ./510 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./510/nlm/out.xml
@@ -364,7 +364,7 @@ Library           Collections
 
 511 List normalization
     [Tags]    sectionheaders    sizeclassifier    511
-    ${result} =    Run Process    python ../bin/meTypeset.py docx ListsAsHeadings.docx ./511 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx ListsAsHeadings.docx ./511 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./511/nlm/out.xml
@@ -374,7 +374,7 @@ Library           Collections
 
 512 Miscategorised quotation introduction
     [Tags]    sectionheaders    sizeclassifier    512
-    ${result} =    Run Process    python ../bin/meTypeset.py docx MiscategorisedHeading.docx ./512 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx MiscategorisedHeading.docx ./512 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./512/nlm/out.xml
@@ -384,7 +384,7 @@ Library           Collections
 
 513 Renesting mechanism
     [Tags]    sectionheaders    sizeclassifier    513
-    ${result} =    Run Process    python ../bin/meTypeset.py docx Renesting.docx ./513 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx Renesting.docx ./513 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./513/nlm/out.xml
@@ -394,7 +394,7 @@ Library           Collections
 
 514 Split bold handling
     [Tags]    sectionheaders    sizeclassifier    514
-    ${result} =    Run Process    python ../bin/meTypeset.py tei BrokenLineTEI.xml ./514 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py tei BrokenLineTEI.xml ./514 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./514/nlm/out.xml
@@ -404,7 +404,7 @@ Library           Collections
 
 556 Test line breaks
     [Tags]    linebreaks    556    formatting
-    ${result} =    Run Process    python ../bin/meTypeset.py docx LineBreak.docx ./556 -s ./linebreakson.xml -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx LineBreak.docx ./556 -s ./linebreakson.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./556/nlm/out.xml
@@ -423,7 +423,7 @@ Library           Collections
 
 557 Test line breaks off
     [Tags]    linebreaks    557    formatting
-    ${result} =    Run Process    python ../bin/meTypeset.py docx LineBreak.docx ./557 -s ./linebreaksoff.xml -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx LineBreak.docx ./557 -s ./linebreaksoff.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./557/nlm/out.xml
@@ -436,7 +436,7 @@ Library           Collections
 
 558 Test line breaks in table: this does a genuine break replacement even when turned off
     [Tags]    linebreaks    558    formatting
-    ${result} =    Run Process    python ../bin/meTypeset.py docx LineBreaksInTable.docx ./558 -s ./linebreaksoff.xml -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx LineBreaksInTable.docx ./558 -s ./linebreaksoff.xml -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./558/nlm/out.xml

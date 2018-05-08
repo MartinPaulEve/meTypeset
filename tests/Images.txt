@@ -8,7 +8,7 @@ Library           Collections
 *** Test Cases ***
 601 WMF conversion
     [Tags]    images    601
-    ${result} =    Run Process    python ../bin/meTypeset.py docx WMF.docx ./601 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx WMF.docx ./601 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./601/nlm/out.xml    keep_clark_notation=no
@@ -19,7 +19,7 @@ Library           Collections
 
 602 Ext-Link Compliance
     [Tags]    images    602
-    ${result} =    Run Process    python ../bin/meTypeset.py docx extlink.docx ./602 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx extlink.docx ./602 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./602/nlm/out.xml    keep_clark_notation=no

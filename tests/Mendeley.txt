@@ -8,7 +8,7 @@ Library           Collections
 *** Test Cases ***
 M01 Mendeley Inline JSON Field
     [Tags]    metadata    mendeley    bibliographymanagers    M01
-    ${result} =    Run Process    ../bin/meTypeset.py docx ./Mendeley.docx ./M01 -d --nogit    shell=True
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx ./Mendeley.docx ./M01 -d --nogit    shell=True
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./M01/nlm/out.xml
