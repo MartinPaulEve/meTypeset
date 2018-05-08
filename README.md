@@ -1,4 +1,4 @@
-#meTypeset
+# meTypeset
 
 meTypeset is a tool to covert from Microsoft Word .docx format to NLM/JATS-XML for scholarly/scientific article typesetting.
 
@@ -12,7 +12,7 @@ The transforms within this software can be invoked in several different ways:
 
 The modfications to the OxGarage stack contained within this project are Copyright Martin Paul Eve 2014 and released under the licenses specified in each respective file.
 
-##Features
+## Features
 
 * Automated Microsoft Word (docx) to JATS XML
 * Intelligent size processing and section grouping algorithm
@@ -25,7 +25,7 @@ The modfications to the OxGarage stack contained within this project are Copyrig
 * Zotero integration for looking up citations
 * Free software
 
-##Running meTypeset
+## Running meTypeset
 
 First off, ensure you have the correct stack installed for your environment. meTypeset needs a valid python environment, a valid Java environment, the command line tools "unzip", "basename", "unoconv" and a shell interpreter (eg Bash). Saxon, which is required, is pre-bundled. It has been shown to work correctly on *Nix derivatives and Mac OS X. Please see the file INSTALL.md for @ppKrauss's Ubuntu installation instructions.
 
@@ -78,25 +78,25 @@ When running with the bibscan command, input should be an NLM XML file, from whi
 
 Note well that best results come from Word DOCX file and the "doc", "ODT" and "other" commands are provided as helper methods but rely on unoconv to correctly convert the file.
 
-###Bash Completion
+### Bash Completion
 If you would like to enable bash completion for meTypeset, simply copy the bash/meTypeset.sh file into your /etc/bash_completion.d folder.
 
-##Unparseable Elements
+## Unparseable Elements
 
 Occasionally, meTypeset will encounter a document with a greater number of idiosyncracies than it can handle. In this event, an error log will be written to "errors.txt" in the path specified by the [mt:error configuration value](bin/settings.xml). This document consists of a list of errors, each line beginning with a \[ERROR_NUMBER\] text (eg \[001\]).
 
 Furthermore, the parser will attempt to append an attribute named "rend" to the tags that it felt most problematic with the error number specified within (eg \<p rend="error-001"\>. This is designed to aid visual tools in analysing the problematic areas.
 
-###List of Error Codes and Tagging Behaviour
+### List of Error Codes and Tagging Behaviour
 
 * 001 - the number of linebreaks found in the document exceeded 80. The parser will mark up elements containing more than 3 comments with rend="error-001"
 * 002 - a serious problem occurred in the size classifier that would disorder the document. The parser will revert to single-level headings.
 
-##Other tools
+## Other tools
 
 Some portions of the meTypeset stack can be run independently of the main application.
 
-###Reference linker
+### Reference linker
 The reference linker will scan an NLM document for paranthetical references and match them up to ref elements.
 
 If called with the "scan" option, the reference linker will attempt to match text in brackets to likely reference list elements.
@@ -119,7 +119,7 @@ Options:
     -z, --zotero                                    Enable Zotero integration for references.
 ```
 
-###NLM processor
+### NLM processor
 The NLM processor will run the specific post-TEI stages of meTypeset. This is most useful for reference linking, table/graphic heading/caption classification and document cleanup.
 
 ```
@@ -143,32 +143,32 @@ Options:
     -z, --zotero                                    Enable Zotero integration for references.
 ```
 
-##Troubleshooting
+## Troubleshooting
 
 I am getting errors like "UnicodeEncodeError: 'ascii' codec can't encode character u'\xa0' in position 20: ordinal not in range(128)"
 
 Solution: Set the environment variable PYTHONIOENCODING=UTF-8
 
-#Developer Information
+# Developer Information
 
-##Main Function and Initialization
+## Main Function and Initialization
 meTypeset works on a modular basis. The initial call to [meTypeset](bin/meTypeset.py) creates a new instance of the meTypeset class. This, in turn, initializes the debugger and the global settings variable class. It also parses the command line options using [docopt](http://docopt.org/).
 
 The main module then sequentially calls the submodules and classifiers that handle different processes in the parsing of the document. Whether or not these modules are called is defined by the --aggression switch. Aggression levels correlate to the risk involved in running each of the procedures as some are more statistically likely to fail and also to falsely classify other parts of the document.
 
-##docx and docxextracted Procedure
+## docx and docxextracted Procedure
 
-###Extraction and setup
+### Extraction and setup
 If the command argument given is docx or docxextracted, the first call is to the [DOCX to TEI parser](bin/docxtotei.py). This module extracts the docx file (if argument was "docx") to a temporary folder, copies across all necessary [transform stylesheets](docx/from), extracts any media files embedded in the word document to the "media" folder and then calls [Saxon](runtime/saxon9.jar) to perform an initial transform to TEI format.
 
-###Size Classifier
+### Size Classifier
 If the appropriate aggression level is set, the next step is to proceed to the [Size Classifier](bin/sizeclassifier.py). This module handles classification of sizes and headings within the document. Taking a given minimum size cutoff (16) as a basis, it classifies text above this level as a heading, so long as no more than 40 headings of this size exist in a document. It then proceeds to organize these headings into different nested sub-levels using a [TEI-Manipulator](bin/teimanipulator.py) object to do the heavy lifting. The procedure for all this is as follows:
 
 1. Classify all bold headings as root-level titles
 2. Process well-formed Word headings and correlate them to other sizes in the document (i.e. Word's "heading 2" correlates to the second largest size heading specified elsewhere by font size, for example)
 3. Organize these headings into sections, including downsizing of heading elements that try to be larger than the root node
 
-###List Classifier
+### List Classifier
 While properly formatted Word lists are handled in the XML transforms, we often encounter documents where the user has employed a variety of homegrown stylings, such as successive paragraphs beginning with (1) etc. [This module](bin/listclassifier.py) has three steps:
 
 1. Classify lists beginning with -
@@ -177,40 +177,40 @@ While properly formatted Word lists are handled in the XML transforms, we often 
 
 The final step is the most difficult. If we find a list at the end of the document in the \[1\] format that is /not referenced elsewhere/, then we treat it as a bibliography. If, however, we find a list in this format, but then additional mentions of \[1\] and \[2\] earlier in the document, then we assume that this is ad-hoc footnote syntax and convert to that, instead.
 
-###Bibliographic Addins Classifier
+### Bibliographic Addins Classifier
 The [bibliographic addins classifier](bin/bibliographyaddins.py) processes Zotero and Mendeley references, enclosing them within the format that the [bibliography classifier](bin/bibliographyclassifier.py) can then subsequently handle. It then [optionally](bin/settings.py) drops any other addins that we don't know about to avoid courrupted text and JSON strings in the document.
 
-###Bibliography Classifier
+### Bibliography Classifier
 The [bibliography classifier](bin/bibliographyclassifier.py) converts marked-up paragraphs into proper bibliography format ready for post-processing and reference parsing.
 
-###Miscellaneous TEI Transformations
+### Miscellaneous TEI Transformations
 The [TEI Manipulator](bin/teimanipulate.py) then changes WMF files into PNG images for maximum compatibility and removes any empty tags and sections that consist /only/ of title elements.
 
-###NLM Transformation
+### NLM Transformation
 The [TEI to NLM transform](bin/teitonlm.py) procedure is then called, which as with the DOCX to TEI portion calls Saxon on a stylesheet.
 
-###Metadata Merge
+### Metadata Merge
 The [metadata merge](bin/metadata.py) merges in a metadata heading with the NLM. Ideally, this is produced by a plugin in your journal/content management system.
 
-###Bibliographic Database
+### Bibliographic Database
 The [bibliographic database](bin/bibliographydatabase.py) inserts fully marked-up JATS element-citation blocks for citations that it has encountered previously. These can be imported by using the "bibscan" command.
 
 If the user has specified the --zotero option and set the mt:zotero setting to a valid local Zotero database, the bibliographic database will look up citations from Zotero instead of its internal database. meTypeset will place the original citation given by the user into a comment immediately below the reference found in Zotero. References from Zotero will only be imported if one and only one match is found for a string. meTypeset will begin with the whole reference string from the original document, then sequentially eliminate words until there are only three left. If it has not found a Zotero reference by this point, it will leave the original mixed-citation in place.
 
-###Chain
+### Chain
 Finally, an [optional additional XSL](bin/xslchainer.py) file can be specified to be transformed by passing the --chain option.
 
-###Regression testing
+### Regression testing
 We are building a suite of regression tests to be supplemented every time we fix a bug in the parser. This ensures that future fixes don't undo our work so far. If you find a bug, please consider creating the _smallest possible_ document that you feel can demonstrate this so that we can write a test for it before fixing.
 
-#Getting the best results from the parser
+# Getting the best results from the parser
 The parser works best with good input. If you use the provided styles for headings in Word/OpenOffice/LibreOffice then meTypeset will correctly nest these up to nine levels deep. The parser will also handle tables, graphics and other elements, although captions are best detected when placed immediately before or after the element in question. Bibliographies are best detected when placed at the end of the document, either in a section entitled "References" (or similar) or formatted properly with a single line per element with a date in each. Alternatively, you can use a bibliographic manager such as Zotero or Mendeley and these will be handled. The reference linker works best with paranthetical references (Eve 2014) that correlate to a unique bibliographic entry.
 
 The parser attempts to parse headings that are all capitals, all-bold or of a substantially different size to the body text. It may, however, have difficulty nesting these. The parser will not handle drawings or aligned formatting made in a Word document; the JATS/NLM spec simply doesn't provide for this. Don't, therefore, draw ascii art tables and expect them to parse! Likewise, including extensive front-matter in a document may cause problems and it is often best removed. meTypeset does not yet handle front-matter parsing, so this can cause problems for the size classifier/nesting mechanism.
 
-#Credits
+# Credits
 
-meTypeset is a fork of the [TEI Consortium's OxGarage stylesheets](https://github.com/TEIC/Stylesheets).
+meTypeset wraps around a fork of the [TEI Consortium's OxGarage stylesheets](https://github.com/TEIC/Stylesheets).
 
 The lead developer is Professor [Martin Paul Eve](https://www.martineve.com) (martin.eve@bbk.ac.uk).
 
