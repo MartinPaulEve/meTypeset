@@ -27,7 +27,7 @@ The modfications to the OxGarage stack contained within this project are Copyrig
 
 ## Running meTypeset
 
-First off, ensure you have the correct stack installed for your environment. meTypeset needs a valid python environment, a valid Java environment, the command line tools "unzip", "basename", "unoconv" and a shell interpreter (eg Bash). Saxon, which is required, is pre-bundled. It has been shown to work correctly on *Nix derivatives and Mac OS X. Please see the file INSTALL.md for @ppKrauss's Ubuntu installation instructions.
+First off, ensure you have the correct stack installed for your environment. meTypeset needs a valid *python 3* environment, a valid Java environment, the command line tools "unzip", "basename", "unoconv" and a shell interpreter (eg Bash). Saxon, which is required, is pre-bundled. It has been shown to work correctly on *Nix derivatives and Mac OS X. Please see the file INSTALL.md for @ppKrauss's Ubuntu installation instructions.
 
 ```
 meTypeset: text parsing library to convert word documents to the JATS XML format
