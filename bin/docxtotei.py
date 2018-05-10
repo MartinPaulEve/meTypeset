@@ -34,7 +34,7 @@ class DocxToTei(Debuggable):
                "-x", "org.apache.xml.resolver.tools.ResolvingXMLReader",
                "-y", "org.apache.xml.resolver.tools.ResolvingXMLReader",
                "-r",  "org.apache.xml.resolver.tools.CatalogResolver",
-               "-o", self.gv.tei_file_path,
+               "-o", self.gv.settings.clean_path(self.gv.tei_file_path),
                self.gv.word_document_xml,
                self.gv.docx_to_tei_stylesheet
                ]
@@ -182,3 +182,6 @@ class DocxToTei(Debuggable):
 
                 if os.path.exists(self.gv.unoconv_folder_path):
                     shutil.rmtree(self.gv.unoconv_folder_path)
+
+            # update path to TEI from normalized saxon output
+            self.gv.tei_file_path = self.gv.settings.clean_path(self.gv.tei_file_path)
