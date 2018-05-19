@@ -216,6 +216,7 @@ class MeTypeset (Debuggable):
                 cc.run_graphics()
 
             cc.run_ext_link_compliance()
+            manipulate.double_p_compliance()
 
             # run metadata merge
             if not (self.args['--nometa']):

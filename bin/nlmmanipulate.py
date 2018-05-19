@@ -65,6 +65,22 @@ class NlmManipulate(Manipulate):
 
         self.save_tree(tree)
 
+    def double_p_compliance(self):
+        self.debug.print_debug(self, u'Attempting to correct any mis-nested paragraph elements')
+
+        manipulate = NlmManipulate(self.gv)
+
+        tree = manipulate.load_dom_tree()
+        bad_ps = tree.xpath('//p/p')
+
+        for p in bad_ps:
+            p_parent = p.getparent()
+            parent = p_parent.getparent()
+            parent.insert(parent.index(p_parent)+1, p)
+
+        self.save_tree(tree)
+
+
     @staticmethod
     def handle_nested_elements(iter_node, move_node, node, node_parent, outer_node, tag_name, tail_stack,
                                tail_stack_objects):
@@ -505,6 +521,7 @@ class NlmManipulate(Manipulate):
         self.handle_stranded_reference_titles_from_cues()
         self.clean_refs()
         self.remove_empty_elements('//fn-group')
+        self.remove_empty_elements('//p')
         self.remove_empty_elements('//ref-list')
 
     def find_reference_list(self):

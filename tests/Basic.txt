@@ -464,3 +464,13 @@ Library           Collections
     ${xml}=    Parse XML    ./036/nlm/out.xml
     ${paragraph}=    Get Element    ${xml}    body/sec/p
     [Teardown]    Remove Directory    036    recursive=True
+
+037 Double P
+    [Tags]    037
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx doubleP.docx ./037 -d --nogit    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./037/nlm/out.xml
+    ${paragraph}=    Get Element    ${xml}    body/sec/p
+    Element Should Exist    ${paragraph}
+    [Teardown]    Remove Directory    037    recursive=True
