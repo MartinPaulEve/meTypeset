@@ -132,25 +132,37 @@ of this software, even if advised of the possibility of such damage.
     </xsl:template>
     
     
-    <xsl:template name="paragraph-wp-preparse">
+ 	<xsl:template name="paragraph-wp-preparse">
     	<xsl:param name="style"/>
     	<xsl:variable name="leftval" select="w:pPr/w:ind/@w:left"></xsl:variable>
     	<xsl:choose>
     		<xsl:when test="w:pPr/w:ind[@w:left] and not(w:pPr/w:ind/@w:left='0')">
     			<!--Debug element: <xsl:element name="p">Style: <xsl:value-of select="$leftval"/></xsl:element>-->
-    			<cit>
-    			<quote>
-    				<xsl:call-template name="paragraph-wp">
-    					<xsl:with-param name="style" select="$style"/>
-    				</xsl:call-template>
-    			</quote>
-    			</cit>
+				<!-- ensure that disp-quotes cannot appear inside tables -->
+				<xsl:variable name="anc" select="./ancestor::*"></xsl:variable>
+				<xsl:choose>
+					<xsl:when test="./ancestor::*/name() = 'w:tbl'">
+						<xsl:call-template name="paragraph-wp">
+    						<xsl:with-param name="style" select="$style"/>
+    					</xsl:call-template>
+					</xsl:when>
+					<xsl:otherwise>
+						<cit>
+						<quote>
+							<xsl:call-template name="paragraph-wp">
+								<xsl:with-param name="style" select="$style"/>
+							</xsl:call-template>
+						</quote>
+						</cit>
+					</xsl:otherwise>
+				</xsl:choose>
     		</xsl:when>
     		<xsl:otherwise>
     			<xsl:call-template name="paragraph-wp">
     				<xsl:with-param name="style" select="$style"/>
     			</xsl:call-template>
     		</xsl:otherwise>
+
     	</xsl:choose>
     </xsl:template>
     
