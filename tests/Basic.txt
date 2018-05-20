@@ -474,3 +474,12 @@ Library           Collections
     ${paragraph}=    Get Element    ${xml}    body/sec/p
     Element Should Exist    ${paragraph}
     [Teardown]    Remove Directory    037    recursive=True
+
+038 Disp quotes inside tables
+    [Tags]    038
+    ${result} =    Run Process    python3 ../bin/meTypeset.py docx nested_quote_inside_table.docx ./038 -d --nogit    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./038/nlm/out.xml
+    Element Should Not Exist    ${xml}    body//disp-quote
+    [Teardown]    Remove Directory    038    recursive=True
