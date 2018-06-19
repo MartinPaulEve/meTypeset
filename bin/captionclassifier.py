@@ -482,7 +482,10 @@ class CaptionClassifier(Debuggable):
                 for row in table_rows:
                     row_number += 1
                     columns_count[row_number] = len(row.getchildren())
-                    first_column[row_number] = row.getchildren()[0].text
+                    try:
+                        first_column[row_number] = row.getchildren()[0].text
+                    except:
+                        first_column[row_number] = ""
                     fewest_columns = min(columns_count, key=columns_count.get)
 
                 if len(columns_count) > 2 and columns_count[1] == fewest_columns and columns_count[2] != fewest_columns:
