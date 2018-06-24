@@ -490,5 +490,5 @@ Library           Collections
     Log    ${result.stdout}
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./039/nlm/out.xml
-    Element Should Exist    ${xml}    table/tr
+    Element Should Exist    ${xml}    body//table/tr
     [Teardown]    Remove Directory    039    recursive=True
