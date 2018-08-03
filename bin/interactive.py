@@ -90,7 +90,7 @@ class Interactive(Debuggable):
 
             # Mark the option's shortcut letter for display.
             if not require and ((default is None and not numrange and first) or
-                    (isinstance(default, basestring) and
+                    (isinstance(default, str) and
                      found_letter.lower() == default.lower())):
                 # The first option is the default; mark it.
                 show_letter = '[%s]' % found_letter.upper()
@@ -195,7 +195,7 @@ class Interactive(Debuggable):
             if resp:
                 resp = resp[0]
                 if resp in letters:
-                    return resp
+                    return  resp
 
             # Prompt for new input.
             resp = self.input_(fallback_prompt)
@@ -210,15 +210,14 @@ class Interactive(Debuggable):
         # use print() explicitly to display prompts.
         # http://bugs.python.org/issue1927
         if prompt:
-            prompt = prompt.encode(self._encoding(), 'replace')
             print(prompt, end=' ')
 
         try:
-            resp = raw_input()
+            resp = input()
         except EOFError:
             self.debug.print_debug('stdin stream ended while input required')
 
-        return resp.decode(sys.stdin.encoding or 'utf8', 'ignore')
+        return resp.encode(sys.stdin.encoding or 'utf8', 'ignore').decode('utf-8')
 
     def _encoding(self):
         """Tries to guess the encoding used by the terminal."""
@@ -259,7 +258,7 @@ class Interactive(Debuggable):
         highlighted intelligently to show differences; other values are
         stringified and highlighted in their entirety.
         """
-        if not isinstance(a, basestring) or not isinstance(b, basestring):
+        if not isinstance(a, str) or not isinstance(b, str):
             # Non-strings: use ordinary equality.
             if a == b:
                 return a, b
@@ -350,7 +349,7 @@ class Interactive(Debuggable):
         else:
             txt = u''
         txt = txt.encode(self._encoding(), 'replace')
-        print(txt)
+        print(txt.decode('utf-8'))
 
     def color_diff_suffix(self, a, b, highlight='red'):
         """Colorize the differing suffix between two strings."""
