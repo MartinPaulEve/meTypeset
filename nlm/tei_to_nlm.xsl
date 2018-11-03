@@ -894,7 +894,7 @@ have a shot at styling it. -->
   <!-- Text style markup. -->
   <xsl:template match="hi[matches(@rend, 'bold|italic|underline|overline|subscript|superscript')]">
       <xsl:call-template name="tokenize">
-        <xsl:with-param name="string" select="@rend"/>
+        <xsl:with-param name="string" select="normalize-space(@rend)"/>
         <xsl:with-param name="delim" select="' '"/>
       </xsl:call-template>
   </xsl:template>
