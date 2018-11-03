@@ -902,24 +902,26 @@ have a shot at styling it. -->
   <xsl:template name="tokenize">
     <xsl:param name="string" />
     <xsl:param name="delim" />
-
-    <xsl:choose>
-      <xsl:when test="contains($string, $delim)">
-        <xsl:element name="{substring-before($string,$delim)}">
-          <xsl:call-template name="tokenize">
-          <xsl:with-param name="string" select="substring-after($string, $delim)" />
-          <xsl:with-param name="delim" select="$delim" />
-        </xsl:call-template>
-        </xsl:element>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:variable name="string" select="replace($string,'superscript','sup')"/>
-        <xsl:variable name="string" select="replace($string,'subscript','sub')"/>
-        <xsl:element name="{$string}">
-          <xsl:apply-templates/>
-        </xsl:element>
-      </xsl:otherwise>
-    </xsl:choose>
+    
+    <xsl:if test="matches($string, 'bold|italic|underline|overline|subscript|superscript')">
+      <xsl:choose>
+        <xsl:when test="contains($string, $delim)">
+          <xsl:element name="{substring-before($string,$delim)}">
+            <xsl:call-template name="tokenize">
+            <xsl:with-param name="string" select="substring-after($string, $delim)" />
+            <xsl:with-param name="delim" select="$delim" />
+          </xsl:call-template>
+          </xsl:element>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:variable name="string" select="replace($string,'superscript','sup')"/>
+          <xsl:variable name="string" select="replace($string,'subscript','sub')"/>
+          <xsl:element name="{$string}">
+            <xsl:apply-templates/>
+          </xsl:element>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
   </xsl:template>
 
 
