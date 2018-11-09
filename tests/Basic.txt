@@ -88,7 +88,7 @@ Library           Collections
     Log    ${result.stderr}
     ${xml}=    Parse XML    ./005/nlm/out.xml
     ${body}=    Get Element    ${xml}    body
-    Elements Should Match    ${body}    <body><sec><title>This should be treated as a title.</title><p>This shouldn't.</p><p><bold>This </bold>shouldn't.</p></sec><sec><title>This should.</title></sec></body>    normalize_whitespace=yes
+    Elements Should Match    ${body}    <body><sec><title><italic>This should be treated as a title.</italic></title><p>This shouldn't.</p><p><bold>This </bold>shouldn't.</p></sec><sec><title>This should.</title></sec></body>    normalize_whitespace=yes
     [Teardown]    Remove Directory    005    recursive=True
 
 006 Basic footnote test
