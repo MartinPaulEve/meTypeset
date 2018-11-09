@@ -395,7 +395,7 @@ class CaptionClassifier(Debuggable):
                 # likely this is a table identifier
                 split_title = text.split(separator)
 
-                title = split_title[0]
+                title = split_title[0].strip()
                 caption = (''.join(split_title[1:])).strip()
 
                 # strip all formatting from caption for ease of parsing
