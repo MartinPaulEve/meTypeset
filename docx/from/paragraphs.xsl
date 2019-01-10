@@ -347,10 +347,19 @@ of this software, even if advised of the possibility of such damage.
 	  <xsl:variable name="quoted-text" select="concat('[^',$dblq,']+',$dblq,'([^',$dblq,']+)',$dblq,'?.*')"/>
 	  <xsl:variable name="clean-term" select="fn:replace($term,$quoted-text,'$1')"/>
 	  <xsl:variable name="span" select="fn:replace(substring-after($term,$usr),$quoted-text,'$1')"/>
+		<xsl:variable name="index-name-pattern" select="'[^XE](\s)*(.*)(\\f)(\s)?(\S)?'"/>
+		<xsl:variable name="index-name">
+			<xsl:choose>
+				<xsl:when test="matches($term,$index-name-pattern)">
+					<xsl:value-of select="fn:replace($term,$index-name-pattern,'$5')"></xsl:value-of>
+				</xsl:when>
+				<xsl:otherwise>XE</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 	  <xsl:variable name="see">
 	    <xsl:value-of select="fn:replace(substring-after($term,$ust),$quoted-text,'$1')"/>
 	  </xsl:variable>
-	  <index indexName="XE">
+		<index indexName="{$index-name}">
 	    <xsl:if test="normalize-space($span)">
 	      <xsl:attribute name="spanTo">
 		<xsl:text>#</xsl:text>
