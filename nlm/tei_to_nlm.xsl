@@ -864,10 +864,16 @@ at the same time explain them. -->
     </styled-content>
   </xsl:template>
   
+  <xsl:template match="index">
+    <index name="{current()/@indexName}">
+      <xsl:apply-templates/>  
+    </index> 
+  </xsl:template>
+  
   <xsl:template match="term">
-    <styled-content style-type="term" style="font-style: italic;">
+    <term>
       <xsl:apply-templates />
-    </styled-content>
+    </term>
   </xsl:template>
   
 <!-- Line breaks are equivalent to <break/>, but cannot appear in paragraphs 

@@ -347,19 +347,52 @@ of this software, even if advised of the possibility of such damage.
 	  <xsl:variable name="quoted-text" select="concat('[^',$dblq,']+',$dblq,'([^',$dblq,']+)',$dblq,'?.*')"/>
 	  <xsl:variable name="clean-term" select="fn:replace($term,$quoted-text,'$1')"/>
 	  <xsl:variable name="span" select="fn:replace(substring-after($term,$usr),$quoted-text,'$1')"/>
-		<xsl:variable name="index-name-pattern" select="'[^XE](\s)*(.*)(\\f)(\s)?(\S)?'"/>
-		<xsl:variable name="index-name">
-			<xsl:choose>
-				<xsl:when test="matches($term,$index-name-pattern)">
-					<xsl:value-of select="fn:replace($term,$index-name-pattern,'$5')"></xsl:value-of>
-				</xsl:when>
-				<xsl:otherwise>XE</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
+		
 	  <xsl:variable name="see">
 	    <xsl:value-of select="fn:replace(substring-after($term,$ust),$quoted-text,'$1')"/>
 	  </xsl:variable>
-		<index indexName="{$index-name}">
+		<index>
+			<xsl:variable name="attribs">
+				<xsl:for-each select="tokenize(fn:replace($term, $dblq, ''), '\s\\')">
+					<item>
+						<xsl:if test="starts-with(., 'f')">
+							<xsl:attribute name="index-type">
+								<xsl:value-of select="normalize-space(substring-after(., 'f '))"/>
+							</xsl:attribute>
+						</xsl:if>
+						<xsl:if test="starts-with(., 'b')">
+							<xsl:attribute name="content-type">font-weight:bold;</xsl:attribute>
+						</xsl:if>
+						<xsl:if test="starts-with(., 'i')">
+							<xsl:attribute name="content-type">font-style:italic;</xsl:attribute>
+						</xsl:if>
+						
+						<xsl:if test="starts-with(., 'y')">
+							<xsl:attribute name="specific-type">yomi</xsl:attribute>
+						</xsl:if>
+						
+						<xsl:if test="starts-with(., 't')">
+							<xsl:attribute name="see-element">
+								<xsl:value-of select="substring-after(., 't ')"/>
+							</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="."/>
+						
+					</item>
+				</xsl:for-each>
+			</xsl:variable>
+			<xsl:choose>
+				<xsl:when test="exists($attribs/tei:item/@index-type)">
+					<xsl:attribute name="index-type"><xsl:value-of select="$attribs/tei:item/@index-type"/></xsl:attribute>
+				</xsl:when>
+				<xsl:otherwise><xsl:attribute name="index-type">XE</xsl:attribute></xsl:otherwise>
+			</xsl:choose>
+			<xsl:if test="exists($attribs/tei:item/@content-type)">
+				<xsl:attribute name="content-type"><xsl:value-of select="$attribs/tei:item/@content-type"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="exists($attribs/tei:item/@specific-use)">
+				<xsl:attribute name="specific-use"><xsl:value-of select="$attribs/tei:item/@specific-use"/></xsl:attribute>
+			</xsl:if>
 	    <xsl:if test="normalize-space($span)">
 	      <xsl:attribute name="spanTo">
 		<xsl:text>#</xsl:text>
