@@ -356,19 +356,19 @@ of this software, even if advised of the possibility of such damage.
 				<xsl:for-each select="tokenize(fn:replace($term, $dblq, ''), '\s\\')">
 					<item>
 						<xsl:if test="starts-with(., 'f')">
-							<xsl:attribute name="index-type">
+							<xsl:attribute name="indexName">
 								<xsl:value-of select="normalize-space(substring-after(., 'f '))"/>
 							</xsl:attribute>
 						</xsl:if>
 						<xsl:if test="starts-with(., 'b')">
-							<xsl:attribute name="content-type">font-weight:bold;</xsl:attribute>
+							<xsl:attribute name="style">font-weight:bold;</xsl:attribute>
 						</xsl:if>
 						<xsl:if test="starts-with(., 'i')">
-							<xsl:attribute name="content-type">font-style:italic;</xsl:attribute>
+							<xsl:attribute name="style">font-style:italic;</xsl:attribute>
 						</xsl:if>
 						
 						<xsl:if test="starts-with(., 'y')">
-							<xsl:attribute name="specific-type">yomi</xsl:attribute>
+							<xsl:attribute name="rend">yomi</xsl:attribute>
 						</xsl:if>
 						
 						<xsl:if test="starts-with(., 't')">
@@ -382,16 +382,16 @@ of this software, even if advised of the possibility of such damage.
 				</xsl:for-each>
 			</xsl:variable>
 			<xsl:choose>
-				<xsl:when test="exists($attribs/tei:item/@index-type)">
-					<xsl:attribute name="index-type"><xsl:value-of select="$attribs/tei:item/@index-type"/></xsl:attribute>
+				<xsl:when test="exists($attribs/tei:item/@indexName)">
+					<xsl:attribute name="indexName"><xsl:value-of select="$attribs/tei:item/@indexName"/></xsl:attribute>
 				</xsl:when>
-				<xsl:otherwise><xsl:attribute name="index-type">XE</xsl:attribute></xsl:otherwise>
+				<xsl:otherwise><xsl:attribute name="indexName">XE</xsl:attribute></xsl:otherwise>
 			</xsl:choose>
-			<xsl:if test="exists($attribs/tei:item/@content-type)">
-				<xsl:attribute name="content-type"><xsl:value-of select="$attribs/tei:item/@content-type"/></xsl:attribute>
+			<xsl:if test="exists($attribs/tei:item/@style)">
+				<xsl:attribute name="style"><xsl:value-of select="$attribs/tei:item/@style"/></xsl:attribute>
 			</xsl:if>
-			<xsl:if test="exists($attribs/tei:item/@specific-use)">
-				<xsl:attribute name="specific-use"><xsl:value-of select="$attribs/tei:item/@specific-use"/></xsl:attribute>
+			<xsl:if test="exists($attribs/tei:item/@rend)">
+				<xsl:attribute name="rend"><xsl:value-of select="$attribs/tei:item/@rend"/></xsl:attribute>
 			</xsl:if>
 	    <xsl:if test="normalize-space($span)">
 	      <xsl:attribute name="spanTo">

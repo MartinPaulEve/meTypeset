@@ -865,9 +865,16 @@ at the same time explain them. -->
   </xsl:template>
   
   <xsl:template match="index">
-    <index name="{current()/@indexName}">
-      <xsl:apply-templates/>  
-    </index> 
+    <index-term index-type="{current()/@indexName}">
+      <xsl:if test="exists(current()/@style)">
+        <xsl:attribute name="content-type"><xsl:value-of select="current()/@style"/></xsl:attribute>
+      </xsl:if>
+     
+      <xsl:if test="exists(current()/@rend)">
+        <xsl:attribute name="specific-use"><xsl:value-of select="current()/@rend"/></xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates/>
+    </index-term> 
   </xsl:template>
   
   <xsl:template match="term">
