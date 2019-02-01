@@ -352,6 +352,7 @@ of this software, even if advised of the possibility of such damage.
 	    <xsl:value-of select="fn:replace(substring-after($term,$ust),$quoted-text,'$1')"/>
 	  </xsl:variable>
 		<index>
+			
 			<xsl:variable name="attribs">
 				<xsl:for-each select="tokenize(fn:replace($term, $dblq, ''), '\s\\')">
 					<item>

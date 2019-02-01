@@ -864,8 +864,12 @@ at the same time explain them. -->
     </styled-content>
   </xsl:template>
   
+  
   <xsl:template match="index">
-    <index-term index-type="{current()/@indexName}">
+    <index-term id="{generate-id(.)}">
+      <xsl:if test="exists(current()/@indexName)">
+        <xsl:attribute name=" index-type"><xsl:value-of select="current()/@indexName"/></xsl:attribute>
+      </xsl:if>
       <xsl:if test="exists(current()/@style)">
         <xsl:attribute name="content-type"><xsl:value-of select="current()/@style"/></xsl:attribute>
       </xsl:if>
