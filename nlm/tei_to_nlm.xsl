@@ -531,6 +531,11 @@ to simplify a bit. -->
 <!-- For ref elements, we need to distinguish between internal and external 
 because NLM handles them differently. -->
     <xsl:choose>
+      <xsl:when test="@type='see'">
+        <see>
+          <xsl:apply-templates></xsl:apply-templates>
+        </see>
+      </xsl:when>
 <!-- Internal reference. -->
       <xsl:when test="starts-with(@target, '#')">
         <xsl:element name="xref">

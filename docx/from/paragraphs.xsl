@@ -421,7 +421,7 @@ of this software, even if advised of the possibility of such damage.
 	  <term>
 	    <xsl:value-of select="normalize-space($term)"/>
 	    <xsl:if test="normalize-space($xr)">
-	      <ref type="xr">
+	      <ref type="see">
 		<xsl:value-of select="normalize-space($xr)"/>
 	      </ref>
 	    </xsl:if>
