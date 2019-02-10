@@ -906,7 +906,7 @@ have a shot at styling it. -->
     <xsl:if test="matches($string, 'bold|italic|underline|overline|subscript|superscript')">
       <xsl:choose>
         <xsl:when test="contains($string, $delim)">
-          <xsl:element name="{substring-before($string,$delim)}">
+          <xsl:element name="q-{substring-before($string,$delim)}">
             <xsl:call-template name="tokenize">
             <xsl:with-param name="string" select="substring-after($string, $delim)" />
             <xsl:with-param name="delim" select="$delim" />
