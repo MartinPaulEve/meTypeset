@@ -531,6 +531,11 @@ to simplify a bit. -->
 <!-- For ref elements, we need to distinguish between internal and external 
 because NLM handles them differently. -->
     <xsl:choose>
+      <xsl:when test="@type='see'">
+        <see>
+          <xsl:apply-templates></xsl:apply-templates>
+        </see>
+      </xsl:when>
 <!-- Internal reference. -->
       <xsl:when test="starts-with(@target, '#')">
         <xsl:element name="xref">
@@ -864,10 +869,27 @@ at the same time explain them. -->
     </styled-content>
   </xsl:template>
   
+  
+  <xsl:template match="index">
+    <index-term id="{generate-id(.)}">
+      <xsl:if test="exists(current()/@indexName)">
+        <xsl:attribute name=" index-type"><xsl:value-of select="current()/@indexName"/></xsl:attribute>
+      </xsl:if>
+      <xsl:if test="exists(current()/@style)">
+        <xsl:attribute name="content-type"><xsl:value-of select="current()/@style"/></xsl:attribute>
+      </xsl:if>
+     
+      <xsl:if test="exists(current()/@rend)">
+        <xsl:attribute name="specific-use"><xsl:value-of select="current()/@rend"/></xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates/>
+    </index-term> 
+  </xsl:template>
+  
   <xsl:template match="term">
-    <styled-content style-type="term" style="font-style: italic;">
+    <term>
       <xsl:apply-templates />
-    </styled-content>
+    </term>
   </xsl:template>
   
 <!-- Line breaks are equivalent to <break/>, but cannot appear in paragraphs 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns:prop="http://schemas.openxmlformats.org/officeDocument/2006/custom-properties"
                 xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
                 xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties"
@@ -27,7 +28,7 @@
                 xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
                 xmlns="http://www.tei-c.org/ns/1.0"
                 version="2.0"
-                exclude-result-prefixes="a cp dc dcterms dcmitype prop     iso m mml mo mv o pic r rel     tbx tei teidocx v xs ve w10 w wne wp">
+                exclude-result-prefixes="a cp dc dcterms dcmitype fn prop iso m mml mo mv o pic r rel tbx tei teidocx v xs ve w10 w wne wp">
     
     
     <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl" scope="stylesheet" type="stylesheet">
@@ -73,7 +74,8 @@ of this software, even if advised of the possibility of such damage.
    </doc>
     
    <xsl:variable name="dblq">"</xsl:variable>
-   <xsl:variable name="dblqplusr">" \r "</xsl:variable>
+   <xsl:variable name="usr">\r</xsl:variable>
+   <xsl:variable name="ust">\t</xsl:variable>
     <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
       <desc>
          <p>Calls the named template paragraph-wp that can be overriden.</p>
@@ -246,21 +248,12 @@ of this software, even if advised of the possibility of such damage.
 		</xsl:variable>
 		<xsl:choose>
 		  <xsl:when test="$rends/tei:r='index'">
-		    <index>
-		      <term>
-		      <xsl:for-each
-			  select="current-group()//w:instrText">
-			<xsl:choose>
-			  <xsl:when test=".='XE'"/>
-			  <xsl:when test="normalize-space(.)=$dblq"/>
-			  <xsl:when test="starts-with(normalize-space(.),$dblqplusr)"/>
-			  <xsl:otherwise>
-			    <xsl:apply-templates/>
-			  </xsl:otherwise>
-			</xsl:choose>
-		      </xsl:for-each>
-		      </term>
-		    </index>
+		    <xsl:call-template name="process-index-term">
+		      <xsl:with-param name="term">
+			<xsl:value-of
+			    select="current-group()//w:instrText" separator=""/>
+		      </xsl:with-param>
+		    </xsl:call-template>
 		  </xsl:when>
 		  <xsl:when test="$rends/tei:r='SEQ'">
 		    <xsl:variable name="What"
@@ -338,6 +331,104 @@ of this software, even if advised of the possibility of such damage.
 	</xsl:when>
 	<xsl:otherwise>
 	  <xsl:apply-templates/>
+	</xsl:otherwise>
+      </xsl:choose>
+    </xsl:template>
+
+    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
+      <desc>Named template for handling processing of index terms.
+	First insert main index enty, then recurse by index level</desc>
+    </doc>
+    <xsl:template name="process-index-term">
+      <xsl:param name="term"/>
+      <xsl:param name="xr"/>
+      <xsl:choose>
+	<xsl:when test="starts-with($term,'XE') or starts-with($term,' XE')">
+	  <xsl:variable name="quoted-text" select="concat('[^',$dblq,']+',$dblq,'([^',$dblq,']+)',$dblq,'?.*')"/>
+	  <xsl:variable name="clean-term" select="fn:replace($term,$quoted-text,'$1')"/>
+	  <xsl:variable name="span" select="fn:replace(substring-after($term,$usr),$quoted-text,'$1')"/>
+		
+	  <xsl:variable name="see">
+	    <xsl:value-of select="fn:replace(substring-after($term,$ust),$quoted-text,'$1')"/>
+	  </xsl:variable>
+		<index>
+			
+			<xsl:variable name="attribs">
+				<xsl:for-each select="tokenize(fn:replace($term, $dblq, ''), '\s\\')">
+					<item>
+						<xsl:if test="starts-with(., 'f')">
+							<xsl:attribute name="indexName">
+								<xsl:value-of select="normalize-space(substring-after(., 'f '))"/>
+							</xsl:attribute>
+						</xsl:if>
+						<xsl:if test="starts-with(., 'b')">
+							<xsl:attribute name="style">font-weight:bold;</xsl:attribute>
+						</xsl:if>
+						<xsl:if test="starts-with(., 'i')">
+							<xsl:attribute name="style">font-style:italic;</xsl:attribute>
+						</xsl:if>
+						
+						<xsl:if test="starts-with(., 'y')">
+							<xsl:attribute name="rend">yomi</xsl:attribute>
+						</xsl:if>
+						
+						<xsl:if test="starts-with(., 't')">
+							<xsl:attribute name="see-element">
+								<xsl:value-of select="substring-after(., 't ')"/>
+							</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="."/>
+						
+					</item>
+				</xsl:for-each>
+			</xsl:variable>
+			<xsl:choose>
+				<xsl:when test="exists($attribs/tei:item/@indexName)">
+					<xsl:attribute name="indexName"><xsl:value-of select="$attribs/tei:item/@indexName"/></xsl:attribute>
+				</xsl:when>
+				<xsl:otherwise><xsl:attribute name="indexName">XE</xsl:attribute></xsl:otherwise>
+			</xsl:choose>
+			<xsl:if test="exists($attribs/tei:item/@style)">
+				<xsl:attribute name="style"><xsl:value-of select="$attribs/tei:item/@style"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="exists($attribs/tei:item/@rend)">
+				<xsl:attribute name="rend"><xsl:value-of select="$attribs/tei:item/@rend"/></xsl:attribute>
+			</xsl:if>
+	    <xsl:if test="normalize-space($span)">
+	      <xsl:attribute name="spanTo">
+		<xsl:text>#</xsl:text>
+		<xsl:value-of select="normalize-space($span)"/>
+	      </xsl:attribute>
+	    </xsl:if>
+	    <xsl:call-template name="process-index-term">
+	      <xsl:with-param name="term"  select="normalize-space($clean-term)"/>
+	      <xsl:with-param name="xr"  select="normalize-space($see)"/>
+	    </xsl:call-template>
+	  </index>
+	</xsl:when>
+	<xsl:when test="contains($term,':')">
+	  <xsl:call-template name="process-index-term">
+	    <xsl:with-param name="term" select="substring-before($term,':')"/>
+	  </xsl:call-template>
+	  <index>
+	    <xsl:call-template name="process-index-term">
+	      <xsl:with-param name="term" select="substring-after($term,':')"/>
+	      <xsl:with-param name="xr"  select="normalize-space($xr)"/>
+	    </xsl:call-template>
+	  </index>
+	</xsl:when>
+	<xsl:when test="normalize-space($term)">
+	  <term>
+	    <xsl:value-of select="normalize-space($term)"/>
+	    <xsl:if test="normalize-space($xr)">
+	      <ref type="see">
+		<xsl:value-of select="normalize-space($xr)"/>
+	      </ref>
+	    </xsl:if>
+	  </term>
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:message>[4. <xsl:value-of select="$term"/>]</xsl:message>
 	</xsl:otherwise>
       </xsl:choose>
     </xsl:template>

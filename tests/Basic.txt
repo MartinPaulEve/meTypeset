@@ -492,3 +492,27 @@ Library           Collections
     ${xml}=    Parse XML    ./039/nlm/out.xml
     Element Should Exist    ${xml}    body//table/tr
     [Teardown]    Remove Directory    039    recursive=True
+
+040 Field Codes
+    [Tags]    040
+    ${result} =   Run Process    python3 ../bin/meTypeset.py docx FieldCodes.docx ./040 -d --nogit    shell=True
+    Log    ${result.stdout}
+    Log    ${result.stderr}
+    ${xml}=    Parse XML    ./040/nlm/out.xml
+    ${XE1}=    Get Element    ${xml}    body/sec/sec/sec/p/index-term/[@id="d2e52"]
+    Elements Should Match    ${XE1}     <index-term id="d2e52" index-type="XE"><term>Index entry</term></index-term>
+    ${XE2}=    Get Element    ${xml}    body/sec/sec/sec/p/index-term/[@id="d2e57"]
+    Elements Should Match    ${XE2}     <index-term id="d2e57" index-type="XE"><term>Index entry</term><index-term id="d2e60"><term>Sub entry</term><index-term id="d2e63"><term>Sub entry of sub entry</term></index-term></index-term></index-term>
+    ${XE3}=    Get Element    ${xml}    body/sec/sec/sec/p/index-term/[@id="d2e68"]
+    Elements Should Match    ${XE3} 	<index-term id="d2e68" index-type="NameIndex"><term>Smith, John</term></index-term>
+    ${XE4}=    Get Element    ${xml}    body/sec/sec/sec/p/index-term/[@id="d2e73"]
+    Elements Should Match    ${XE4}	    <index-term id="d2e73" index-type="XE" content-type="font-style:italic;"><term>Smith, John</term></index-term>
+    ${XE5}=    Get Element    ${xml}    body/sec/sec/sec/p/index-term/[@id="d2e78"]
+    Elements Should Match    ${XE5}	    <index-term id="d2e78" index-type="XE" content-type="font-weight:bold;"><term>Smith, John</term></index-term>
+    ${XE6}=    Get Element    ${xml}    body/sec/sec/sec/p/index-term/[@id="d2e83"]
+    Elements Should Match    ${XE6}     <index-term id="d2e83" index-type="XE" content-type="font-weight:bold; font-style:italic;"><term>Smith, John</term></index-term>
+    ${XE7}=    Get Element    ${xml}    body/sec/sec/sec/p/index-term/[@id="d2e96"]
+    Elements Should Match    ${XE7}     <index-term id="d2e96" index-type="XE" specific-use="yomi"><term>&#26085;&#26412;</term></index-term>
+    ${XE8}=    Get Element    ${xml}    body/sec/sec/sec/p/index-term/[@id="d2e103"]
+    Elements Should Match    ${XE8}     <index-term id="d2e103" index-type="NameIndex" content-type="font-weight:bold;"><term>Smith</term><index-term id="d2e106"><term>Smith, John</term></index-term></index-term>
+    [Teardown]    Remove Directory    040    recursive=True
