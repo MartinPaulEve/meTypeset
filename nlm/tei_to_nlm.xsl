@@ -914,7 +914,7 @@ have a shot at styling it. -->
   </xsl:template>
   
   <!-- Text style markup. -->
-  <xsl:template match="hi[matches(@rend, 'bold|italic|underline|overline|subscript|superscript')]">
+  <xsl:template match="hi[matches(@rend, 'bold|italic|underline|overline|subscript|superscript|smallcaps')]">
       <xsl:call-template name="tokenize">
         <xsl:with-param name="string" select="normalize-space(@rend)"/>
         <xsl:with-param name="delim" select="' '"/>
@@ -925,7 +925,7 @@ have a shot at styling it. -->
     <xsl:param name="string" />
     <xsl:param name="delim" />
     
-    <xsl:if test="matches($string, 'bold|italic|underline|overline|subscript|superscript')">
+    <xsl:if test="matches($string, 'bold|italic|underline|overline|subscript|superscript|smallcaps')">
       <xsl:choose>
         <xsl:when test="contains($string, $delim)">
           <xsl:choose>
@@ -948,6 +948,7 @@ have a shot at styling it. -->
         <xsl:otherwise>
           <xsl:variable name="string" select="replace($string,'superscript','sup')"/>
           <xsl:variable name="string" select="replace($string,'subscript','sub')"/>
+          <xsl:variable name="string" select="replace($string,'smallcaps','sc')"/>
           <xsl:element name="{$string}">
             <xsl:apply-templates/>
           </xsl:element>
