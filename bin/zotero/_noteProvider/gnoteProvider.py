@@ -25,7 +25,7 @@ import subprocess
 try:
 	import Levenshtein
 except:
-	print "zotero._noteProvider.gnoteProvider: failed to import Levenshtein"
+	print("zotero._noteProvider.gnoteProvider: failed to import Levenshtein")
 
 class GnoteProvider(object):
 
@@ -45,14 +45,14 @@ class GnoteProvider(object):
 		# Determine the location of the gnote notes
 		if os.path.exists(os.path.join(home_folder, ".local/share/gnote")):
 			self.path = os.path.join(home_folder, ".local/share/gnote")
-			print "libgnote.__init__(): gnote path is %s" % self.path
+			print("libgnote.__init__(): gnote path is %s" % self.path)
 
 		elif os.path.exists(os.path.join(home_folder, ".gnote")):
 			self.path = os.path.join(home_folder, ".gnote")
-			print "libgnote.__init__(): gnote path is %s" % self.path
+			print("libgnote.__init__(): gnote path is %s" % self.path)
 
 		else:
-			print "libgnote.__init__(): failed to locate Gnote"
+			print("libgnote.__init__(): failed to locate Gnote")
 			self.path = None
 
 	def search(self, item):
@@ -114,14 +114,14 @@ class GnoteProvider(object):
 			return None
 
 		elif len(matches) == 1:
-			print "libgnote.search(): 1 note found matching %s (%s)" % (item.authors[0], item.date)
+			print("libgnote.search(): 1 note found matching %s (%s)" % (item.authors[0], item.date))
 
 		else:
 
 			# If there are multiple matches, try to figure out which note is most likely
 			# the actual note
 
-			print "libgnote.search(): %d matches found, sorting by relevance" % len(matches)
+			print("libgnote.search(): %d matches found, sorting by relevance" % len(matches))
 			matches.sort(key=lambda m: m.matchScore(item))
 
 		return matches[0]
