@@ -28,6 +28,7 @@
 
   <xsl:include href="../common2/functions.xsl"/> 
 
+  
   <xsl:template match="/">
     <article dtd-version="3.0" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <xsl:if test="TEI/@xml:lang">
@@ -914,7 +915,9 @@ have a shot at styling it. -->
   </xsl:template>
   
   <!-- Text style markup. -->
-  <xsl:template match="hi[matches(@rend, 'bold|italic|underline|overline|subscript|superscript|smallcaps')]">
+  <xsl:variable name="textStyles" select="'bold|italic|underline|overline|subscript|superscript|smallcaps'"/>
+  
+  <xsl:template match="hi[matches(@rend, $textStyles)]">
       <xsl:call-template name="tokenize">
         <xsl:with-param name="string" select="normalize-space(@rend)"/>
         <xsl:with-param name="delim" select="' '"/>
@@ -925,11 +928,11 @@ have a shot at styling it. -->
     <xsl:param name="string" />
     <xsl:param name="delim" />
     
-    <xsl:if test="matches($string, 'bold|italic|underline|overline|subscript|superscript|smallcaps')">
+    <xsl:if test="matches($string, $textStyles)">
       <xsl:choose>
         <xsl:when test="contains($string, $delim)">
           <xsl:choose>
-            <xsl:when test="$string = 'bold' or $string = 'italic' or $string = 'underline' or $string = 'overline' or $string='subscript' or $string='superscript' or $string = 'heading'">
+            <xsl:when test="starts-with($string,'bold') or starts-with($string,'italic') or starts-with($string ,'underline') or starts-with($string,'overline') or starts-with($string,'subscript') or starts-with($string,'superscript') or starts-with($string,'heading')">
               <xsl:element name="{substring-before($string,$delim)}">
                 <xsl:call-template name="tokenize">
                   <xsl:with-param name="string" select="substring-after($string, $delim)" />
