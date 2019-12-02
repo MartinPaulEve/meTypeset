@@ -927,12 +927,12 @@ have a shot at styling it. -->
   <xsl:template name="tokenize">
     <xsl:param name="string" />
     <xsl:param name="delim" />
-    
-    <xsl:if test="matches($string, $textStyles)">
+    <xsl:choose>
+    <xsl:when test="matches($string, $textStyles)">
       <xsl:choose>
         <xsl:when test="contains($string, $delim)">
           <xsl:choose>
-            <xsl:when test="starts-with($string,'bold') or starts-with($string,'italic') or starts-with($string ,'underline') or starts-with($string,'overline') or starts-with($string,'subscript') or starts-with($string,'superscript') or starts-with($string,'heading')">
+            <xsl:when test="$string = 'bold' or contains($string,'italic') or $string = 'underline' or $string = 'overline' or $string='subscript' or $string='superscript' or $string = 'heading'">
               <xsl:element name="{substring-before($string,$delim)}">
                 <xsl:call-template name="tokenize">
                   <xsl:with-param name="string" select="substring-after($string, $delim)" />
@@ -957,7 +957,12 @@ have a shot at styling it. -->
           </xsl:element>
         </xsl:otherwise>
       </xsl:choose>
-    </xsl:if>
+    </xsl:when>
+    <xsl:otherwise>
+      <styled-content style="{$string }"></styled-content>
+      <xsl:apply-templates/>
+    </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 
