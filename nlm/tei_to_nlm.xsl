@@ -925,43 +925,45 @@ have a shot at styling it. -->
   </xsl:template>
 
   <xsl:template name="tokenize">
-    <xsl:param name="string" />
-    <xsl:param name="delim" />
+    <xsl:param name="string"/>
+    <xsl:param name="delim"/>
     <xsl:choose>
-    <xsl:when test="matches($string, $textStyles)">
-      <xsl:choose>
-        <xsl:when test="contains($string, $delim)">
-          <xsl:choose>
-            <xsl:when test="$string = 'bold' or contains($string,'italic') or $string = 'underline' or $string = 'overline' or $string='subscript' or $string='superscript' or $string = 'heading'">
-              <xsl:element name="{substring-before($string,$delim)}">
+      <xsl:when test="matches($string, $textStyles)">
+        <xsl:choose>
+          <xsl:when test="contains($string, $delim)">
+            <xsl:choose>
+              <xsl:when
+                test="$string = 'bold' or contains($string, 'italic') or $string = 'underline' or $string = 'overline' or $string = 'subscript' or $string = 'superscript' or $string = 'heading'">
+                <xsl:element name="{substring-before($string,$delim)}">
+                  <xsl:call-template name="tokenize">
+                    <xsl:with-param name="string" select="substring-after($string, $delim)"/>
+                    <xsl:with-param name="delim" select="$delim"/>
+                  </xsl:call-template>
+                </xsl:element>
+              </xsl:when>
+              <xsl:otherwise>
                 <xsl:call-template name="tokenize">
-                  <xsl:with-param name="string" select="substring-after($string, $delim)" />
-                  <xsl:with-param name="delim" select="$delim" />
+                  <xsl:with-param name="string" select="substring-after($string, $delim)"/>
+                  <xsl:with-param name="delim" select="$delim"/>
                 </xsl:call-template>
-              </xsl:element>
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:call-template name="tokenize">
-              <xsl:with-param name="string" select="substring-after($string, $delim)" />
-              <xsl:with-param name="delim" select="$delim" />
-            </xsl:call-template>
+            <xsl:variable name="string" select="replace($string, 'superscript', 'sup')"/>
+            <xsl:variable name="string" select="replace($string, 'subscript', 'sub')"/>
+            <xsl:variable name="string" select="replace($string, 'smallcaps', 'sc')"/>
+            <xsl:element name="{$string}">
+              <xsl:apply-templates/>
+            </xsl:element>
           </xsl:otherwise>
         </xsl:choose>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:variable name="string" select="replace($string,'superscript','sup')"/>
-          <xsl:variable name="string" select="replace($string,'subscript','sub')"/>
-          <xsl:variable name="string" select="replace($string,'smallcaps','sc')"/>
-          <xsl:element name="{$string}">
-            <xsl:apply-templates/>
-          </xsl:element>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:when>
-    <xsl:otherwise>
-      <styled-content style="{$string }"></styled-content>
-      <xsl:apply-templates/>
-    </xsl:otherwise>
+      </xsl:when>
+      <xsl:otherwise>
+        <styled-content
+          style='{replace(replace($string, "color\((\d{6})\)","color:#$1"),"background\(([a-z]+)\)","background:$1")}'> </styled-content>
+        <xsl:apply-templates/>
+      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
