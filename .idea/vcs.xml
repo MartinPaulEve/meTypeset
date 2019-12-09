@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/265" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/265/common2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/265/docx" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/265/nlm" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/265/tei" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/FieldCodes" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/FieldCodes/common2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/FieldCodes/docx" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/FieldCodes/nlm" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/FieldCodes/tei" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/ImageCaptionInItalics" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/ImageCaptionInItalics/common2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/ImageCaptionInItalics/docx" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/ImageCaptionInItalics/media" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/ImageCaptionInItalics/nlm" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/ImageCaptionInItalics/tei" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/MA_test" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/MA_test/common2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/MA_test/docx" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/MA_test/nlm" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/MA_test/tei" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/NB1" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/NB1/common2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/NB1/docx" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/NB1/nlm" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/NB1/tei" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/issue306" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/issue306/common2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/issue306/docx" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/issue306/nlm" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/issue306/tei" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/issue329-MT" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/issue329-MT/common2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/issue329-MT/docx" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tests/heiup/issue329-MT/tei" vcs="Git" />
+  </component>
+</project>

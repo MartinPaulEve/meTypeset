@@ -646,20 +646,23 @@ $pattern = '\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?!["&\'<>])[[:graph:]])+)\b';
       <xsl:apply-templates />
     </xsl:element>
   </xsl:template>
-  
-<!-- Notes (footnotes/endnotes). -->
+
+  <!-- Notes (footnotes/endnotes). -->
   <xsl:template match="note">
-        <xsl:element name="xref">
-      <xsl:attribute name="ref-type">fn</xsl:attribute>
-      <xsl:attribute name="rid">
-        <xsl:text>bib</xsl:text><xsl:value-of select="generate-id()"/>
-      </xsl:attribute>
-    </xsl:element>
+    <xsl:if test="not(ancestor::hi/@rend='footnote_reference')">
+      <xsl:element name="xref">
+        <xsl:attribute name="ref-type">fn</xsl:attribute>
+        <xsl:attribute name="rid">
+          <xsl:text>bib</xsl:text>
+          <xsl:value-of select="generate-id()"/>
+        </xsl:attribute>
+      </xsl:element>
+    </xsl:if>
   </xsl:template>
 
 
-  
-  
+
+
 <!-- Figures and graphics. -->
   <xsl:template match="figure">
     <xsl:element name="fig">
