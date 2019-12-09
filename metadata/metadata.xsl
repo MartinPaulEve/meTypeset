@@ -19,10 +19,12 @@
     <xsl:param name="metadataFile">metadata.xml</xsl:param>
     <xsl:param name="metadata" select="document(concat('file:////', $metadataFile))" />
     
-    <xsl:output method="xml" doctype-public="-//NLM//DTD JATS (Z39.96) Journal Publishing DTD v1.0 20120330//EN" doctype-system="JATS-journalpublishing1.dtd" xpath-default-namespace="" indent="yes"></xsl:output>
+    <xsl:output method="xml" doctype-public="-//NLM//DTD JATS (Z39.96) Journal Publishing DTD v1.0 20120330//EN" doctype-system="https://jats.nlm.nih.gov/publishing/1.1/JATS-journalpublishing1.dtd" xpath-default-namespace="" indent="yes"></xsl:output>
        
     <xsl:template match="/">
         <xsl:element name="article">
+            <xsl:namespace name="mml" select="'http://www.w3.org/1998/Math/MathML'"/>
+            <xsl:namespace name="xlink" select="'http://www.w3.org/1999/xlink'"/>
             <xsl:apply-templates />
         </xsl:element>
     </xsl:template>
