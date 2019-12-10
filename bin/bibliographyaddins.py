@@ -127,7 +127,9 @@ class OtherHandler(Debuggable):
         tei_manipulator.drop_addin('//*', ' ADDIN', 'EndNote',
                                    'hi', 'unknown_addin_text', self, u'addin',
                                    drop == 'True')
-
+        tei_manipulator.drop_addin('//*', ' ADDIN', 'PAPERS2_CITATIONS',
+                                   'hi', 'unknown_addin_text', self, u'addin',
+                                   drop == 'True')
         if len(object_list) > 0:
             self.debug.print_debug(self, u'Handled {0} unknown addin tags'.format(len(object_list)))
 
