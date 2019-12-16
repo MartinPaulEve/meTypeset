@@ -265,26 +265,29 @@
         <!-- footnotes (endnotes) -->
         <xsl:element name="fn-group">
           <xsl:for-each select="//note">
-            <xsl:element name="fn">
-              <xsl:attribute name="id">
-                <xsl:text>bib</xsl:text><xsl:value-of select="generate-id()"/>
-              </xsl:attribute>
-            <xsl:choose>
-              <xsl:when test="not(child::p)">
-                <xsl:element name="p">
-                  <xsl:apply-templates />
-                </xsl:element>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:apply-templates />
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:element>
+            <xsl:if test="not(ancestor::hi[@rend='footnote_reference'])">
+              <xsl:element name="fn">
+                <xsl:attribute name="id">
+                  <xsl:text>bib</xsl:text>
+                  <xsl:value-of select="generate-id()"/>
+                </xsl:attribute>
+                <xsl:choose>
+                  <xsl:when test="not(child::p)">
+                    <xsl:element name="p">
+                      <xsl:apply-templates/>
+                    </xsl:element>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:apply-templates/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:element>
+            </xsl:if>
           </xsl:for-each>
         </xsl:element>
-        
-        
-<!-- Appendices first. -->
+
+
+        <!-- Appendices first. -->
         <xsl:if test="TEI/text/back/div[@type='appendix']">
           <xsl:element name="app-group">
             <xsl:for-each select="TEI/text/back/div[@type='appendix']">
