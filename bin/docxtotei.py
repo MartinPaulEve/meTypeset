@@ -155,7 +155,7 @@ class DocxToTei(Debuggable):
             doc_prop = open(os.path.join(self.gv.docx_temp_folder_path, 'docProps', 'core.xml'), 'r+')
             contents = doc_prop.read()
 
-            contents = re.sub('\&\s', '\&amp;\s', contents)
+            contents = re.sub('\&(\s)', '\&amp;\1', contents)
 
             doc_prop.seek(0)
             doc_prop.write(contents)
