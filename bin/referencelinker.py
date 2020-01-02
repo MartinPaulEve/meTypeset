@@ -662,7 +662,7 @@ class ReferenceLinker(Debuggable):
                 prompt.print_(u"Found an unhandled reference marker: {0}".format(text))
             elif 'rid' in p.attrib:
                 remote = next((x for x in ref_items if 'id' in x.attrib and (x.attrib['id'] == p.attrib['rid'])), None)
-                remote_text = manipulate.get_stripped_text(remote)
+                remote_text = manipulate.get_stripped_text(remote) if remote else ''
                 prompt.print_(u"Found a handled reference marker: \"{0}\" which links to \"{1}\"".format(text,
                                                                                                          remote_text))
 
