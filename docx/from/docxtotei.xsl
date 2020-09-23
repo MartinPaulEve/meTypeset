@@ -489,6 +489,7 @@ of this software, even if advised of the possibility of such damage.
 		  select="document($relsDoc)//rel:Relationship[@Id=$rid]/@Target"/>
 	    </xsl:otherwise>
 	  </xsl:choose>
+	  <xsl:if test="@w:anchor">#<xsl:value-of select="@w:anchor" /></xsl:if>
 	</xsl:attribute>
 	<xsl:apply-templates/>
       </ref>
