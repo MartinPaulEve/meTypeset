@@ -480,11 +480,16 @@ of this software, even if advised of the possibility of such damage.
 	      <xsl:value-of
 		  select="document(concat($wordDirectory,'/word/_rels/endnotes.xml.rels'))//rel:Relationship[@Id=$rid]/@Target"/>
 	    </xsl:when>
+	    <xsl:when test="ancestor::w:footnote">
+	      <xsl:value-of
+		  select="document(concat($wordDirectory,'/word/_rels/footnotes.xml.rels'))//rel:Relationship[@Id=$rid]/@Target"/>
+	    </xsl:when>
 	    <xsl:otherwise>
 	      <xsl:value-of
 		  select="document($relsDoc)//rel:Relationship[@Id=$rid]/@Target"/>
 	    </xsl:otherwise>
 	  </xsl:choose>
+	  <xsl:if test="@w:anchor">#<xsl:value-of select="@w:anchor" /></xsl:if>
 	</xsl:attribute>
 	<xsl:apply-templates/>
       </ref>
