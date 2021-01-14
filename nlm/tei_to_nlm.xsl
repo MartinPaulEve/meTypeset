@@ -466,12 +466,40 @@
       <xsl:choose>
         <xsl:when test="parent::row/@role='label'">
           <xsl:element name="th">
-            <xsl:apply-templates />
+            <xsl:copy-of select="@*"></xsl:copy-of>
+            <xsl:choose>
+              <xsl:when test="p">
+                <xsl:apply-templates />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:for-each-group select="node()" group-adjacent="boolean(not(local-name() = 'lb'))">
+                  <xsl:if test="current-grouping-key()">
+                    <p>
+                      <xsl:apply-templates select="current-group()"></xsl:apply-templates>
+                    </p>   
+                  </xsl:if>
+                </xsl:for-each-group>
+	      </xsl:otherwise>
+            </xsl:choose>
           </xsl:element>
         </xsl:when>
         <xsl:otherwise>
           <xsl:element name="td">
-            <xsl:apply-templates />
+            <xsl:copy-of select="@*"></xsl:copy-of>
+            <xsl:choose>
+              <xsl:when test="p">
+                <xsl:apply-templates />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:for-each-group select="node()" group-adjacent="boolean(not(local-name() = 'lb'))">
+                  <xsl:if test="current-grouping-key()">
+                    <p>
+                      <xsl:apply-templates select="current-group()"></xsl:apply-templates>
+                    </p>   
+                  </xsl:if>
+                </xsl:for-each-group>
+	      </xsl:otherwise>
+            </xsl:choose>
           </xsl:element>
         </xsl:otherwise>
       </xsl:choose>
