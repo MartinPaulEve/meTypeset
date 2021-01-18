@@ -996,11 +996,8 @@ have a shot at styling it. -->
         </xsl:choose>
       </xsl:when>
       <xsl:otherwise>
-      <!--<styled-content
-          style='{replace(replace($string, "color\((\d{6})\)","color:#$1"),"background\(([a-z]+)\)","background:$1")}'> </styled-content>
-        <xsl:apply-templates/>-->          
         <styled-content
-          style='{replace(replace($string, "color\((\d{6})\)","color:#$1"),"background\(([a-z]+)\)","background:$1")}'><xsl:apply-templates/></styled-content>
+          style='{replace(replace($string, "color\((.{6})\)","color:#$1"),"background\(([a-z]+)\)","background:$1")}'><xsl:apply-templates/></styled-content>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
