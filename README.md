@@ -2,7 +2,7 @@
 
 meTypeset is a tool to covert from Microsoft Word .docx format to NLM/JATS-XML for scholarly/scientific article typesetting.
 
-meTypeset is a fork of the OxGarage stack and uses TEI as an intemediary format to facilitate interchange. Components are licensed under the GPL v2 and the Creative Commons Attribution-Sharealike 3.0 clauses, according to the various original sources of the fork.
+meTypeset is a fork of the OxGarage stack and uses TEI as an intemediary format to facilitate interchange. Components are licensed under the GPL v2 or later and the Creative Commons Attribution-Sharealike 3.0 clauses, according to the various original sources of the fork.
 
 The transforms within this software can be invoked in several different ways:
 
@@ -11,6 +11,8 @@ The transforms within this software can be invoked in several different ways:
 2. A limited set of the transforms can be called through any renderer capable of parsing XSLT 1.0. This will not include the meTypeset classifier stages.
 
 The modfications to the OxGarage stack contained within this project are Copyright Martin Paul Eve 2014 and released under the licenses specified in each respective file.
+
+Please see the COPYING file for further details on licensing.
 
 ## Features
 
