@@ -210,7 +210,7 @@ class SizeClassifier(Debuggable):
                 size = 100
                 message[div] = 'No title found in this block'
             else:
-                size = title[0].attrib['meTypesetSize']
+                size = title[0].attrib.get('meTypesetSize') or 100
                 message[div] = manipulate.get_stripped_text(title[0]).strip()
 
             stack.append((size, div))

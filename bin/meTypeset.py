@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """meTypeset: text parsing library to convert word documents to the JATS XML format
 
 Usage:

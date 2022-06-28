@@ -28,6 +28,7 @@
 
   <xsl:include href="../common2/functions.xsl"/> 
 
+  
   <xsl:template match="/">
     <article dtd-version="3.0" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <xsl:if test="TEI/@xml:lang">
@@ -264,26 +265,29 @@
         <!-- footnotes (endnotes) -->
         <xsl:element name="fn-group">
           <xsl:for-each select="//note">
-            <xsl:element name="fn">
-              <xsl:attribute name="id">
-                <xsl:text>bib</xsl:text><xsl:value-of select="generate-id()"/>
-              </xsl:attribute>
-            <xsl:choose>
-              <xsl:when test="not(child::p)">
-                <xsl:element name="p">
-                  <xsl:apply-templates />
-                </xsl:element>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:apply-templates />
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:element>
+            <xsl:if test="not(ancestor::hi[@rend='footnote_reference'])">
+              <xsl:element name="fn">
+                <xsl:attribute name="id">
+                  <xsl:text>bib</xsl:text>
+                  <xsl:value-of select="generate-id()"/>
+                </xsl:attribute>
+                <xsl:choose>
+                  <xsl:when test="not(child::p)">
+                    <xsl:element name="p">
+                      <xsl:apply-templates/>
+                    </xsl:element>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:apply-templates/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:element>
+            </xsl:if>
           </xsl:for-each>
         </xsl:element>
-        
-        
-<!-- Appendices first. -->
+
+
+        <!-- Appendices first. -->
         <xsl:if test="TEI/text/back/div[@type='appendix']">
           <xsl:element name="app-group">
             <xsl:for-each select="TEI/text/back/div[@type='appendix']">
@@ -462,12 +466,40 @@
       <xsl:choose>
         <xsl:when test="parent::row/@role='label'">
           <xsl:element name="th">
-            <xsl:apply-templates />
+            <xsl:copy-of select="@*"></xsl:copy-of>
+            <xsl:choose>
+              <xsl:when test="p">
+                <xsl:apply-templates />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:for-each-group select="node()" group-adjacent="boolean(not(local-name() = 'lb'))">
+                  <xsl:if test="current-grouping-key()">
+                    <p>
+                      <xsl:apply-templates select="current-group()"></xsl:apply-templates>
+                    </p>   
+                  </xsl:if>
+                </xsl:for-each-group>
+	      </xsl:otherwise>
+            </xsl:choose>
           </xsl:element>
         </xsl:when>
         <xsl:otherwise>
           <xsl:element name="td">
-            <xsl:apply-templates />
+            <xsl:copy-of select="@*"></xsl:copy-of>
+            <xsl:choose>
+              <xsl:when test="p">
+                <xsl:apply-templates />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:for-each-group select="node()" group-adjacent="boolean(not(local-name() = 'lb'))">
+                  <xsl:if test="current-grouping-key()">
+                    <p>
+                      <xsl:apply-templates select="current-group()"></xsl:apply-templates>
+                    </p>   
+                  </xsl:if>
+                </xsl:for-each-group>
+	      </xsl:otherwise>
+            </xsl:choose>
           </xsl:element>
         </xsl:otherwise>
       </xsl:choose>
@@ -646,20 +678,24 @@ $pattern = '\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?!["&\'<>])[[:graph:]])+)\b';
       <xsl:apply-templates />
     </xsl:element>
   </xsl:template>
-  
-<!-- Notes (footnotes/endnotes). -->
+
+  <!-- Notes (footnotes/endnotes). -->
   <xsl:template match="note">
-        <xsl:element name="xref">
-      <xsl:attribute name="ref-type">fn</xsl:attribute>
-      <xsl:attribute name="rid">
-        <xsl:text>bib</xsl:text><xsl:value-of select="generate-id()"/>
-      </xsl:attribute>
-    </xsl:element>
+    <xsl:if test="not(ancestor::hi/@rend='footnote_reference')">
+      <xsl:element name="xref">
+        <xsl:attribute name="ref-type">fn</xsl:attribute>
+        <xsl:attribute name="rid">
+          <xsl:text>bib</xsl:text>
+          <xsl:value-of select="generate-id()"/>
+        </xsl:attribute>
+      </xsl:element>
+    </xsl:if>
+
   </xsl:template>
 
 
-  
-  
+
+
 <!-- Figures and graphics. -->
   <xsl:template match="figure">
     <xsl:element name="fig">
@@ -914,7 +950,10 @@ have a shot at styling it. -->
   </xsl:template>
   
   <!-- Text style markup. -->
-  <xsl:template match="hi[matches(@rend, 'bold|italic|underline|overline|subscript|superscript|smallcaps')]">
+  <xsl:variable name="textStyles" select="'bold|italic|underline|overline|subscript|superscript|smallcaps'"/>
+  
+  <!--<xsl:template match="hi[matches(@rend, $textStyles)]">-->
+  <xsl:template match="hi[@rend]">
       <xsl:call-template name="tokenize">
         <xsl:with-param name="string" select="normalize-space(@rend)"/>
         <xsl:with-param name="delim" select="' '"/>
@@ -922,39 +961,101 @@ have a shot at styling it. -->
   </xsl:template>
 
   <xsl:template name="tokenize">
-    <xsl:param name="string" />
-    <xsl:param name="delim" />
-    
-    <xsl:if test="matches($string, 'bold|italic|underline|overline|subscript|superscript|smallcaps')">
-      <xsl:choose>
-        <xsl:when test="contains($string, $delim)">
-          <xsl:choose>
-            <xsl:when test="$string = 'bold' or $string = 'italic' or $string = 'underline' or $string = 'overline' or $string='subscript' or $string='superscript' or $string = 'heading'">
-              <xsl:element name="{substring-before($string,$delim)}">
+    <xsl:param name="string"/>
+    <xsl:param name="delim"/>
+    <!--    <xsl:choose>
+      <xsl:when test="matches($string, $textStyles)">
+        <xsl:choose>
+          <xsl:when test="contains($string, $delim)">
+            <xsl:choose>
+              <xsl:when test="$string = 'bold' or contains($string, 'italic') or $string = 'underline' or $string = 'overline' or $string = 'subscript' or $string = 'superscript' or $string = 'heading'">
+                <xsl:element name="{substring-before($string,$delim)}">
+                  <xsl:call-template name="tokenize">
+                    <xsl:with-param name="string" select="substring-after($string, $delim)"/>
+                    <xsl:with-param name="delim" select="$delim"/>
+                  </xsl:call-template>
+                </xsl:element>
+              </xsl:when>
+              <xsl:otherwise>
                 <xsl:call-template name="tokenize">
-                  <xsl:with-param name="string" select="substring-after($string, $delim)" />
-                  <xsl:with-param name="delim" select="$delim" />
+                  <xsl:with-param name="string" select="substring-after($string, $delim)"/>
+                  <xsl:with-param name="delim" select="$delim"/>
                 </xsl:call-template>
-              </xsl:element>
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:call-template name="tokenize">
-              <xsl:with-param name="string" select="substring-after($string, $delim)" />
-              <xsl:with-param name="delim" select="$delim" />
-            </xsl:call-template>
+            <xsl:variable name="string" select="replace($string, 'superscript', 'sup')"/>
+            <xsl:variable name="string" select="replace($string, 'subscript', 'sub')"/>
+            <xsl:variable name="string" select="replace($string, 'smallcaps', 'sc')"/>
+            <xsl:element name="{$string}">
+              <xsl:apply-templates/>
+            </xsl:element>
           </xsl:otherwise>
         </xsl:choose>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:variable name="string" select="replace($string,'superscript','sup')"/>
-          <xsl:variable name="string" select="replace($string,'subscript','sub')"/>
-          <xsl:variable name="string" select="replace($string,'smallcaps','sc')"/>
-          <xsl:element name="{$string}">
-            <xsl:apply-templates/>
-          </xsl:element>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:if>
+      </xsl:when>
+      <xsl:otherwise>
+        <styled-content
+          style='{replace(replace($string, "color\((.{6})\)","color:#$1"),"background\(([a-z]+)\)","background:$1")}'><xsl:apply-templates/></styled-content>
+      </xsl:otherwise>
+    </xsl:choose> -->
+    <xsl:choose>
+      <xsl:when test="contains($string, $delim)">
+        <xsl:call-template name="singleStyle">
+          <xsl:with-param name="string" select="substring-before($string, $delim)"/>
+          <xsl:with-param name="rest" select="substring-after($string, $delim)"/>
+          <xsl:with-param name="delim" select="$delim"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="singleStyle">
+          <xsl:with-param name="string" select="$string"/>
+          <xsl:with-param name="rest"/>
+          <xsl:with-param name="delim" select="$delim"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="singleStyle">
+    <xsl:param name="string"/>
+    <xsl:param name="rest"/>
+    <xsl:param name="delim"/>
+    <xsl:choose>
+      <xsl:when test="matches($string, $textStyles)">
+        <xsl:variable name="string" select="replace($string, 'superscript', 'sup')"/>
+        <xsl:variable name="string" select="replace($string, 'subscript', 'sub')"/>
+        <xsl:variable name="string" select="replace($string, 'smallcaps', 'sc')"/>
+        <xsl:element name="{$string}">
+          <xsl:choose>
+            <xsl:when test="$rest">
+              <xsl:call-template name="tokenize">
+                <xsl:with-param name="string" select="$rest"/>
+                <xsl:with-param name="delim" select="$delim"/>
+              </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <styled-content style='{replace(replace($string, "color\((.{6})\)","color:#$1"),"background\(([a-z]+)\)","background:$1")}'>
+          <xsl:choose>
+            <xsl:when test="$rest">
+              <xsl:call-template name="tokenize">
+                <xsl:with-param name="string" select="$rest"/>
+                <xsl:with-param name="delim" select="$delim"/>
+              </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </styled-content>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 
